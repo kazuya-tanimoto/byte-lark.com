@@ -35,7 +35,7 @@
     "@react-buddy/ide-toolbox": "^2.4.0",
     "@react-buddy/palette-chakra-ui": "^2.3.1",
     "@tanstack/react-query": "^5.45.0",
-    "axios": "^1.7.2",
+    "axios": "^1.12.0",
     "framer-motion": "^11.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
