@@ -13034,7 +13034,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright@npm:1.41.1, playwright@npm:^1.14.0, playwright@npm:^1.41.1":
+"playwright-core@npm:1.56.1":
+  version: 1.56.1
+  resolution: "playwright-core@npm:1.56.1"
+  bin:
+    playwright-core: cli.js
+  checksum: ffd40142b99c68678b387445d5b42f1fee4ab0b65d983058c37f342e5629f9cdbdac0506ea80a0dfd41a8f9f13345bad54e9a8c35826ef66dc765f4eb3db8da7
+  languageName: node
+  linkType: hard
+
+"playwright@npm:1.41.1, playwright@npm:^1.14.0":
   version: 1.41.1
   resolution: "playwright@npm:1.41.1"
   dependencies:
@@ -13046,6 +13055,21 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: 32d48c1f8ff881770a19c9245fb4191fc36b5e97ab5f48effa0b1cf5e83fa958f6fdd7e4268dd984aa306ac5fe9e4324510211910751fb52cebb9bae819d13ca
+  languageName: node
+  linkType: hard
+
+"playwright@npm:^1.55.1":
+  version: 1.56.1
+  resolution: "playwright@npm:1.56.1"
+  dependencies:
+    fsevents: "npm:2.3.2"
+    playwright-core: "npm:1.56.1"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    playwright: cli.js
+  checksum: 8e9965aede86df0f4722063385748498977b219630a40a10d1b82b8bd8d4d4e9b6b65ecbfa024331a30800163161aca292fb6dd7446c531a1ad25f4155625ab4
   languageName: node
   linkType: hard
 
@@ -13364,7 +13388,7 @@ __metadata:
     lefthook: "npm:^1.11.13"
     msw: "npm:^2.1.5"
     msw-storybook-addon: "npm:2.0.0--canary.122.b3ed3b1.0"
-    playwright: "npm:^1.41.1"
+    playwright: "npm:^1.55.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-error-boundary: "npm:^4.0.13"
