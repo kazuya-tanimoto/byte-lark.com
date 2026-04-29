@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git commit*)",
+            "command": "{ yarn check && yarn check:ts && yarn test:run; } 1>&2 || echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"Pre-commit checks failed. Run yarn check && yarn check:ts && yarn test:run to see details.\"}}'",
+            "timeout": 120,
+            "statusMessage": "Running pre-commit checks (lint/typecheck/test)..."
+          }
+        ]
+      }
+    ]
+  }
+}

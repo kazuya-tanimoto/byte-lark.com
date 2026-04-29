@@ -17,12 +17,12 @@
 #         - security
 #       run: bundle audit
 #
- pre-commit:
-   parallel: true
-   jobs:
-     - name: lint
-       run: yarn check {staged_files}
-
+# pre-commit:
+#   parallel: true
+#   jobs:
+#     - name: lint
+#       run: yarn check {staged_files}
+#
 #     - name: rubocop
 #       glob: "*.rb"
 #       exclude:
