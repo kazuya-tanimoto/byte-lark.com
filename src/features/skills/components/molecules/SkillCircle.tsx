@@ -8,7 +8,11 @@ import {
 } from "@chakra-ui/react";
 import type { JSX } from "react";
 
-export const SkillCircle = ({ name, icon, years }: Skill): JSX.Element => {
+export const SkillCircle = ({
+  name,
+  icon,
+  years,
+}: Omit<Skill, "id">): JSX.Element => {
   const progressValue = Math.min(years, 10) * 10;
   const displayYears = years >= 10 ? "10y+" : `${years}y+`;
 
