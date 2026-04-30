@@ -6,8 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Bash(git commit*)",
-            "command": "{ yarn check && yarn check:ts && yarn test:run; } 1>&2 || echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"Pre-commit checks failed. Run yarn check && yarn check:ts && yarn test:run to see details.\"}}'",
+            "command": "INPUT=$(cat); CMD=$(echo \"$INPUT\" | jq -r '.tool_input.command'); if echo \"$CMD\" | grep -qE '(^|[;&|][[:space:]]*)git[[:space:]]+commit([[:space:]]|$)'; then yarn check >&2 && yarn check:ts >&2 && yarn test:run >&2 || { echo 'Pre-commit checks failed.' >&2; exit 2; }; fi",
             "timeout": 120,
             "statusMessage": "Running pre-commit checks (lint/typecheck/test)..."
           }
