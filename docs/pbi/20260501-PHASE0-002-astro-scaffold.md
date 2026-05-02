@@ -1,0 +1,106 @@
+# 運営者は Astro 5 + Tailwind v4 + shadcn/ui の初期プロジェクトでローカル開発できる
+
+Status: NotStarted
+
+## 誰が
+- 運営者
+
+## 何をできる
+- `yarn dev` で Astro 開発サーバが起動し、最小限のページが表示される
+- `yarn build` で SSG ビルドが成功する
+- shadcn/ui の Button コンポーネント 1 つが repo 内に存在し、サンプルとして動く
+- Vitest / Playwright が設定済で起動可能
+
+## なんのために
+- Phase 1a 以降の実装基盤を確立するため
+- Tailwind v4 / shadcn/ui の統合方法を初期化時点で確定させるため
+- 関連: site-plan.md §6.4 / Decision Log #2 #21 / Phase 0
+
+## 受け入れ条件
+
+### Astro プロジェクト初期化
+- [ ] `yarn create astro@latest . --template minimal --typescript strict --install --git false` 相当でプロジェクト初期化済み（既存 `.git` 維持のため `--git false` 必須）
+- [ ] `package.json` の `packageManager` が `yarn@4.x` を維持している
+- [ ] `astro.config.mjs` に以下の integrations / plugin が登録されている：
+  - [ ] `@astrojs/mdx`
+  - [ ] `@astrojs/sitemap`
+  - [ ] `@astrojs/react`
+  - [ ] `@astrojs/rss`（pages 側で使用、依存追加）
+  - [ ] Vite plugin: **`@tailwindcss/vite`**（`@astrojs/tailwind` は使わない）
+
+### Tailwind v4 統合
+- [ ] `tailwind.config.ts` 相当の設定ファイルが存在する（v4 では CSS-first 設定だが、theme extension 用に config 持つ）
+- [ ] `src/styles/global.css` に Tailwind directives が記述されている
+
+### shadcn/ui 初期化
+- [ ] `npx shadcn@latest init` 相当が実行され、`components.json` が作成されている
+  - [ ] `style: default`（Phase 1b で再調整、Decision Log #21）
+  - [ ] `baseColor: slate`（Phase 1b で再調整）
+- [ ] `src/components/ui/button.tsx` が `npx shadcn@latest add button` で導入されている
+- [ ] `src/lib/utils.ts` に `cn()` ヘルパが存在する
+
+### Path alias
+- [ ] `tsconfig.json` の path alias が設定されている（`@/*` → `./src/*`）
+
+### テスト基盤
+- [ ] `vitest.config.ts` を新規作成（Astro + Vitest 構成、`@astrojs/check` と独立）
+- [ ] `playwright.config.ts` は main 上に残置済（PHASE0-001 で削除しない方針）。Astro 用に baseURL / webServer を最低限調整（旧 React Router 前提の URL があれば修正）
+
+### Node version pin
+- [ ] `.nvmrc` または `.tool-versions` に Node 20.x（または LTS）を pin
+
+### 動作確認
+- [ ] `yarn install` が成功
+- [ ] `yarn dev` 実行で Astro 開発サーバが起動し、`http://localhost:4321/`（Astro デフォルトポート）にアクセスできる
+- [ ] `yarn build` が成功する
+- [ ] `yarn check:ts`（または `astro check`）でエラーなし
+- [ ] feat/rebuild-astro 上で 1 コミットとして記録されている
+
+## 技術メモ
+- Astro + Tailwind v4 公式：https://docs.astro.build/en/guides/styling/
+- shadcn/ui Astro 公式：https://ui.shadcn.com/docs/installation/astro
+- Tailwind v4 統合は **Vite plugin (`@tailwindcss/vite`)** が公式（`@astrojs/tailwind` は Tailwind 3 legacy 専用）
+- Astro バージョン：5.x 系の最新
+- Yarn 4 (Berry) 維持：`packageManager` フィールド + `.yarnrc.yml` (PHASE0-001 で残置済)
+- shadcn コンポーネントは `src/components/ui/` 配下（`components.json` で指定）
+- React Island で shadcn を使うため `@astrojs/react` integration が必要
+
+### `yarn create astro` の衝突回避
+既存ファイル（biome.jsonc, .yarnrc.yml, playwright.config.ts 等）が残っているとプロンプトで衝突確認される場合がある。non-interactive 引数で進める or 都度 keep を選択。
+
+### shadcn init 時のプロンプト想定回答
+- TypeScript: yes
+- style: default（Phase 1b で再調整）
+- base color: slate（Phase 1b で再調整）
+- CSS variables: yes
+- React Server Components: no（Astro 文脈）
+- components.json 配置: ./components.json
+- alias: @/components, @/lib/utils
+
+## 備考
+### 想定 package.json scripts
+```json
+{
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "biome check src",
+    "check:ts": "astro check",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:e2e": "playwright test",
+    "fix": "biome check --write src"
+  }
+}
+```
+
+### 動作確認手順
+1. `yarn install`
+2. `yarn dev` → http://localhost:4321/ で Astro の最小ページが表示
+3. Ctrl+C で停止
+4. `yarn build` → `dist/` に静的ファイルが生成
+5. `cat src/components/ui/button.tsx` → shadcn の Button が見える
+
+## 実装ログ
+（未着手）
