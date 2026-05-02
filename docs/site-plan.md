@@ -1,6 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.5)
+# byte-lark.com サイト構築計画書 (v3.6)
 
-最終更新: 2026-05-02
+最終更新: 2026-05-03
+
+> v3.5 → v3.6 主な変更：運営者向け運用マニュアル `docs/operation-manual.md` を新規作成（シーン別フレーズ表 / 中断 signal リカバリー / トラブルシューティング Q1-Q5）。INDEX.md 着手ルールに「セッション開始時の必須チェック」（§5.8 検出スクリプト実行）を必須化、CLAUDE.md ヘッダーにも同等の必須化と operation-manual.md への誘導を追加。§14 row 1 想定箇所に operation-manual.md と INDEX.md セッション開始チェックを追加、運用ルール表に「運営者向けプロトコル変更」行を追加。
 
 > v3.4 → v3.5 主な変更：4 回目レビュー推奨を反映。§14 row 1（v3.x）の想定箇所列に PBI 内参照（INDEX.md / PHASE0-005 / PHASE0-009）を明示追加し row 2 と粒度統一、row 3 の `N 件` placeholder を `<件数> 件` に明確化、運用ルールに「改訂履歴の同期」「想定箇所列での 1 件ずつ突合」「将来の scripts 化検討」を追記。CLAUDE.md キックオフヘッダの参照をクリッカブルリンク化、INDEX.md 改訂履歴に v3.4 / v3.5 連動行を追記。
 
@@ -349,7 +351,7 @@ Astro の標準機能で完全対応：
 | `src/dev/`、`@react-buddy/*` 依存 | 削除 | — |
 | `src/stories/` Storybook 公式テンプレ | 削除 | — |
 | `CLAUDE.md`（プロジェクト規約） | **書き換え**（PHASE0-005、Astro/Tailwind/shadcn + 多セッション運用プロトコル） | 同パス |
-| `docs/site-plan.md` | 上書き（v2 → v3.5） | 本ファイル |
+| `docs/site-plan.md` | 上書き（v2 → v3.6） | 本ファイル |
 | `.github/workflows/codeql.yml` | 流用（言語自動検出で Astro 対応） | 同パス |
 | `.github/dependabot.yml` | 内容確認の上、依存先パッケージ名を更新（PHASE0-006） | 同パス |
 | `lefthook.yml` | **PHASE0-006 でゼロから書き起こし**（既存はテンプレコメントのみ） | 同パス |
@@ -490,7 +492,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 
 ## 12. 次アクション
 
-1. 本計画書 v3.5 のレビュー・確定（別セッション）
+1. 本計画書 v3.6 のレビュー・確定（別セッション）
 2. Phase 0 PBI 10 件のレビュー（別セッション、`docs/pbi/INDEX.md` 経由）
 3. Phase 0 実装着手：feat/rebuild-astro ブランチで Vite 削除 + Astro 初期化（別セッション、複数セッションに分かれる可能性あり）
 4. Phase 0 完了 → Retrospective Gate (PHASE0-009) 通過
@@ -500,6 +502,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 
 PBI フォーマット規約・状態管理・コミット規約は `docs/pbi/README.md` v2.2 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
+**運営者向け運用マニュアル**（シーン別フレーズ / リカバリー / トラブルシューティング）は `docs/operation-manual.md` を参照。
 
 ## 13. 法人化に伴う改訂
 
@@ -536,13 +539,14 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 
 | パターン | 想定箇所 | 確認コマンド |
 |---|---|---|
-| `v3.x` | site-plan.md タイトル / 改訂履歴 / 自己参照 / §6.7 既存資産取扱表 / §12 次アクション / **INDEX.md ロードマップ参照（line 74 周辺）** / **PHASE0-005 内 CLAUDE.md テンプレ（current: v3.x 行）** / **PHASE0-009 「計画書 v3.x と実態の差分」（line 30, 85 周辺）** | `grep -rn "v3\." docs/` |
+| `v3.x` | site-plan.md タイトル / 改訂履歴 / 自己参照 / §6.7 既存資産取扱表 / §12 次アクション / §14 自身の予防策説明 / **INDEX.md ロードマップ参照（line 74 周辺）** / **INDEX.md セッション開始時必須チェック注記** / **PHASE0-005 内 CLAUDE.md テンプレ（current: v3.x 行）** / **PHASE0-009 「計画書 v3.x と実態の差分」（line 30, 85 周辺）** / **operation-manual.md（v3.x 連動言及がある場合）** | `grep -rn "v3\." docs/` |
 | `v2.x` | README.md タイトル / 改訂履歴 / 各 PBI の README 参照（PHASE0-005 内含む） | `grep -rn "v2\." docs/` |
 | PHASE0-NNN 件数 / 範囲 | INDEX.md 表 / §7 ロードマップ / §7 フロー図（`PHASE0-001〜<N>`） / §12 次アクション / PHASE0-008 受け入れ条件 / PHASE0-009 受け入れ条件 | `grep -rn "PHASE0-\|<件数> 件" docs/`（`<件数>` は実値、例：`10 件`）|
 | 新規 PBI 追加時のリンク | INDEX.md 表 + 推奨着手順序図 / 関連 PBI の依存表記 | INDEX.md および関連 PBI を Read |
 | ファイルリネーム時 | INDEX.md / 各 PBI の参照 / site-plan §6.7 | `grep -rn "<旧ファイル名>" docs/` |
 | writing-workflow.md 作成タイミング | site-plan §6.4 ディレクトリ構成 + §11 + R-01 リスク対応 | `grep -rn "writing-workflow" docs/` |
 | 法人化関連の表記 / Phase 名 | site-plan §13 + 関連 PBI（Phase 1c 以降） | `grep -rn "法人化\|byte-lark 株式会社" docs/` |
+| 運営者向けプロトコル変更（フレーズ / リカバリー / トラブルシューティング） | operation-manual.md + CLAUDE.md ヘッダー + INDEX.md 着手ルール | `grep -rn "operation-manual\|中断 signal\|セッション開始時の必須チェック" docs/ CLAUDE.md` |
 
 ### 運用ルール
 
@@ -566,3 +570,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-05-02 | v3.3：差分レビュー反映。連動更新漏れ（§6.4 writing-workflow タイミング / §12 各バージョン・件数 / §13.4 誤字）修正、PBI 側の連動修正（PHASE0-009 範囲 + 計画書バージョン参照、PHASE0-008 Web Analytics Done 判定緩和、PHASE0-002 playwright.config.ts 表現、PHASE0-010 行数基準削除、PHASE0-006 ファイルリネーム、INDEX.md 構造整合） |
 | 2026-05-02 | v3.4：3 回目レビューで検出された連動更新漏れ再発（§6.7 v3.2、§7 フロー図 PHASE0-001〜009）を修正。再発防止のため §14 バージョン参照箇所一覧を新設。PHASE0-008 観測方法を具体化、CLAUDE.md にキックオフ暫定ヘッダ追加 |
 | 2026-05-02 | v3.5：4 回目レビュー推奨を反映。§14 row 1 想定箇所に PBI 内参照追加、row 3 placeholder 明確化、運用ルールに改訂履歴同期・1 件ずつ突合・scripts 化検討を追記。CLAUDE.md ヘッダのリンク化、INDEX.md 改訂履歴に v3.4/v3.5 連動行追記 |
+| 2026-05-03 | v3.6：運営者向け運用マニュアル `docs/operation-manual.md` 新規作成。INDEX.md 着手ルールに「セッション開始時の必須チェック」（§5.8 検出スクリプト実行）を必須化、CLAUDE.md ヘッダにも同等の必須化と operation-manual.md 誘導追加。§14 row 1 拡張、運用ルール表に「運営者向けプロトコル変更」行追加 |

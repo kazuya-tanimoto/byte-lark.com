@@ -103,10 +103,11 @@ Status: NotStarted
 - wip(pbi): PHASE0-NNN <note>    # 中間コミット
 
 ## Related Docs
-- docs/site-plan.md           Site construction plan (current: v3.5)
+- docs/site-plan.md           Site construction plan (current: v3.6)
 - docs/pbi/README.md          PBI format spec (v2.2)
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
+- docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）
 ```
 
 ## 実装ログ
