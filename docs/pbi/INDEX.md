@@ -26,6 +26,20 @@ PHASE0-005 完了後は `CLAUDE.md` の "How to start/end/draft" セクション
 ### 着手後・中断時・完了時の手順
 [docs/pbi/README.md](README.md) §5 を参照（着手時の手順 §5.3、中断時の手順 §5.4、完了済み PBI の扱い §5.5、コミット規約 §6）。
 
+### セッション開始時の必須チェック（v3.6 から必須化）
+PBI を着手する前に、以下を**必ず実行**：
+
+```bash
+# README §5.8 の検出スクリプト：InProgress なのに実装ログ entry が無い PBI を検出
+for f in $(grep -l "^Status: InProgress" docs/pbi/*.md); do
+  if ! grep -q "^### 20" "$f"; then
+    echo "WARNING: 実装ログ entry 無し → $f"
+  fi
+done
+```
+
+該当があれば、運営者に「<該当 PBI> が InProgress ですが実装ログが空です。前回の状況を覚えていますか？」と確認してから再開する（運営者操作の詳細は [docs/operation-manual.md](../operation-manual.md) §2 参照）。
+
 ---
 
 ## Phase 0：プロジェクト初期化
@@ -76,7 +90,7 @@ PHASE0-009 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 ## Phase 1a：サイト構成・各ページ実装
 
 PBI は **Phase 0 完了 + PHASE0-009 (Retrospective Gate) 通過後**に別セッションで起票する。  
-（v3.5 ロードマップ §7 の方針に従う）
+（v3.6 ロードマップ §7 の方針に従う）
 
 ---
 
@@ -108,3 +122,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-05-02 | site-plan v3.4 連動：line 74 のロードマップ参照を v3.4 に更新 |
 | 2026-05-02 | site-plan v3.5 連動：line 74 のロードマップ参照を v3.5 に更新（4 回目レビュー推奨#3 反映） |
 | 2026-05-02 | 着手ルール書き換え：循環参照（CLAUDE.md → INDEX.md → CLAUDE.md）を解消、PHASE0-005 完了前の SoT を「INDEX.md + README §5」に明示。CLAUDE.md ヘッダーにも README §5 への暫定誘導追加 |
+| 2026-05-03 | site-plan v3.6 連動：line 74 のロードマップ参照を v3.6 に更新、着手ルールに「セッション開始時の必須チェック」（§5.8 検出スクリプト実行）を追加・必須化、operation-manual.md への誘導追加 |
