@@ -2,6 +2,8 @@
 
 Status: NotStarted
 
+依存：PHASE0-002（Astro scaffold で `package.json` scripts と `.astro` 拡張子の存在が前提）/ PHASE0-004（Biome v2 へのアップグレード後、その CLI を hook で叩く）両方の完了後に着手する。
+
 ## 誰が
 - Claude
 
@@ -20,7 +22,7 @@ Status: NotStarted
 
 ### lefthook をゼロから書き起こす
 - [ ] `lefthook.yml` を以下方針で新規作成（既存はテンプレコメントのみのため、上書き）：
-  - [ ] **pre-commit**：軽量チェックのみ。`yarn check`（Biome）の staged ファイル限定
+  - [ ] **pre-commit**：軽量チェックのみ。`npx biome check --no-errors-on-unmatched {staged_files}`（biome を直叩き、`yarn check` 経由だと PHASE0-002 想定 scripts の `biome check src` で path 固定され `{staged_files}` フィルタが効かないため）
   - [ ] **pre-push**：重いチェック。`yarn check:ts`（astro check）+ `yarn test:run`
 - [ ] `lefthook install` で hook が `.git/hooks/` に展開される（postinstall で自動実行されるが、手動確認）
 - [ ] dummy commit でテスト：staged ファイルに対して Biome が走り、エラーがあれば commit がブロックされる
@@ -37,7 +39,7 @@ Status: NotStarted
 - [ ] 個別 group 設定があれば、Astro 系の group を追加するか判断（不要なら維持）
 
 ### 確認
-- [ ] feat/phase-0 上で 1 コミットとして記録されている
+- [ ] `feat/phase-0/pbi-007` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 - [ ] `git status` で `.github/workflows/*.yml.disabled` が反映されている
 
 ## 技術メモ
@@ -55,8 +57,8 @@ pre-commit:
   parallel: true
   commands:
     biome:
-      glob: "src/**/*.{ts,tsx,astro,js,jsx,json,md}"
-      run: yarn check {staged_files}
+      glob: "**/*.{ts,tsx,astro,js,jsx,json,md}"
+      run: npx biome check --no-errors-on-unmatched {staged_files}
 
 pre-push:
   parallel: false  # 順序を担保
@@ -66,6 +68,8 @@ pre-push:
     vitest:
       run: yarn test:run
 ```
+
+`yarn check` 経由ではなく biome を直叩きする理由：PHASE0-002 想定の `package.json` `"check": "biome check src"` は path 固定で、`yarn check {staged_files}` だと最終コマンドが `biome check src <files>` となり `{staged_files}` フィルタが事実上無効化される（`src/` 全体がチェック対象になる）。lefthook では biome CLI を直接呼ぶことで staged 限定を維持。`yarn check` は全体チェック用途で別途残す。
 
 ### Phase 1a で実施する CI 整備（参考、本 PBI スコープ外）
 

@@ -36,7 +36,7 @@ Status: NotStarted
 
 ### 確認
 - [ ] `yarn check:ts` でエラーなし
-- [ ] feat/phase-0 上で 1 コミットとして記録されている
+- [ ] `feat/phase-0/pbi-003` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
 - 取り込みコマンド例：

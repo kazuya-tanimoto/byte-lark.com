@@ -6,7 +6,7 @@ Status: NotStarted
 - 運営者
 
 ## 何をできる
-- main ブランチ（feat/phase-0 上での作業）から旧 Vite + React + Chakra 関連の全ファイル・依存が削除され、Astro 初期化に支障ない状態になっていることを確認できる
+- `feat/phase-0/pbi-001` sub-branch 上で旧 Vite + React + Chakra 関連の全ファイル・依存が削除され、Astro 初期化に支障ない状態になっていることを確認できる
 - 旧コードは `archive/vite-react-chakra` ブランチに退避済みで、必要時に参照可能
 
 ## なんのために
@@ -18,7 +18,7 @@ Status: NotStarted
 ### archive 確認
 - [ ] `archive/vite-react-chakra` ブランチが local + remote に存在し、旧コード一式が含まれている
 
-### 削除対象（feat/phase-0 上で削除）
+### 削除対象（feat/phase-0/pbi-001 sub-branch 上で削除）
 - [ ] `src/` ディレクトリ全体（Career.ts / Skill.ts / logo.png は PHASE0-003 で別途取り込み）
 - [ ] `public/` ディレクトリ（Astro 初期化で再生成）
 - [ ] `index.html`
@@ -28,7 +28,13 @@ Status: NotStarted
 - [ ] `tsconfig.json` / `tsconfig.node.json`
 - [ ] `tests/demo-todo-app.spec.ts` / `tests/example.spec.ts`（Playwright 公式デモ）
 - [ ] `DEVELOPMENT_LOG.md`（旧 Vite 学習ノート、archive で参照可能）
-- [ ] （`node_modules/` も削除推奨：容量とインデックス汚染回避、`yarn install` は PHASE0-002 で再実行）
+- [ ] `.storybook/`（Storybook 撤去、Decision #10）
+- [ ] `dist/`（旧 Vite ビルド成果物、容量・インデックス汚染回避）
+- [ ] `storybook-static/`（Storybook ビルド成果物）
+- [ ] `node_modules/`（容量とインデックス汚染回避、`yarn install` は PHASE0-002 で再実行）
+- [ ] `.junie/`（JetBrains AI Assistant 用ガイド、旧スタック前提で陳腐化。再導入時は新スタック前提で別 PBI 起票）
+- [ ] `.env.example`（Chromatic project token のコメントのみ、Storybook 撤去で役目終了）
+- [ ] `.aiignore`（JetBrains AI Assistant 規約、Claude Code は読まないため不要。本 repo は Claude Code 主体）
 
 ### 残置対象（削除しない）
 - [ ] `.git/`（ブランチ履歴維持）
@@ -46,7 +52,7 @@ Status: NotStarted
 
 ### 確認
 - [ ] `git status` で削除が反映されている
-- [ ] feat/phase-0 上で 1 コミットとして記録されている（コミットメッセージ例：`chore: remove vite/react/chakra resources for astro rebuild`）
+- [ ] `feat/phase-0/pbi-001` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
 - archive ブランチは既に存在（前段で push 済）

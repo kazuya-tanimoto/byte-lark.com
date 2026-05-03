@@ -28,10 +28,10 @@ Status: NotStarted
   - [ ] Author（Kazuya Tanimoto / GitHub link）
   - [ ] License（MIT、`LICENSE` ファイル参照）
   - [ ] Related Docs（docs/site-plan.md, docs/pbi/README.md, docs/pbi/INDEX.md, CLAUDE.md）
-- [ ] feat/phase-0 上で 1 コミットとして記録されている
+- [ ] `feat/phase-0/pbi-006` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
-- 既存 `README.md` パス：`/Users/kazuya/src/react-blog/README.md`（PHASE0-001 で残置済）
+- 既存 `README.md` パス：repo ルートの `README.md`（PHASE0-001 で残置済）
 - バッジ（CI status / Lighthouse score 等）は Phase 1a 後で追加候補（現時点の README に入れると壊れたバッジになる）
 - スクリーンショット・デモ URL も Phase 1a 後
 

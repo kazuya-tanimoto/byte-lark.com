@@ -19,7 +19,7 @@ Status: NotStarted
 ## 受け入れ条件
 
 ### Cloudflare Pages 接続
-- [ ] Cloudflare Pages に新規プロジェクト作成済み（プロジェクト名は `byte-lark` 等）
+- [ ] Cloudflare Pages に新規プロジェクト作成済み（プロジェクト名：`byte-lark`）
 - [ ] GitHub repo `kazuya-tanimoto/byte-lark.com` が接続されている
 - [ ] ビルド設定：
   - [ ] Build command: `yarn build`
@@ -41,6 +41,12 @@ Status: NotStarted
   - [ ] **Exclude Preview branches**: `feat/phase-*/pbi-*`（PBI sub-branch は preview しない、大量生成抑制）
 - [ ] 詳細は docs/pbi/README.md §10.8 参照
 
+### .gitignore 整備
+- [ ] `.gitignore` に `.wrangler/`（Wrangler / CF Pages local emulation の作業ディレクトリ）を追加
+
+### 確認
+- [ ] `feat/phase-0/pbi-008` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+
 ### 本 PBI スコープ外（後続 PBI / 後続 Phase で対応）
 - [ ] 本番（main）ブランチへのマージとビルド成功確認 → **PHASE0-010**（Retrospective Gate に集約）
 - [ ] カスタムドメイン `byte-lark.com` の DNS / CNAME 設定 → Phase 1a 末で別途実施
@@ -58,13 +64,14 @@ Status: NotStarted
 1. https://dash.cloudflare.com/?to=/:account/pages にログイン
 2. 「Create a project」→「Connect to Git」で GitHub 連携
 3. `byte-lark.com` repo を選択
-4. ビルド設定入力（上記）
-5. **Environment variables** に以下を追加：
+4. プロジェクト名：`byte-lark`
+5. ビルド設定入力（上記）
+6. **Environment variables** に以下を追加：
    - `YARN_VERSION=4.x`（具体バージョンは package.json `packageManager` と一致）
    - 必要なら `CF_PAGES_USE_COREPACK=1`
-6. デプロイ実行
-7. preview URL を確認
-8. プロジェクト Settings → Web Analytics を有効化（無料、Cookieless）
+7. デプロイ実行
+8. preview URL を確認
+9. プロジェクト Settings → Web Analytics を有効化（無料、Cookieless）
 
 ### 法人化後の検討事項
 - 法人化後は Cloudflare アカウントを **法人名義**に変更するか、または個人名義のまま運用するか判断（site-plan.md §13 検討事項）

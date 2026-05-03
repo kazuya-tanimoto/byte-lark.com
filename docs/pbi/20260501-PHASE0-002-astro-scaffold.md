@@ -19,7 +19,7 @@ Status: NotStarted
 ## 受け入れ条件
 
 ### Astro プロジェクト初期化
-- [ ] `yarn create astro@latest . --template minimal --typescript strict --install --git false` 相当でプロジェクト初期化済み（既存 `.git` 維持のため `--git false` 必須）
+- [ ] `yarn create astro@latest . --template minimal --typescript strict --install --no-git` 相当でプロジェクト初期化済み（既存 `.git` 維持のため `--no-git` 必須。create-astro CLI は boolean 否定を `--no-<flag>` 形式で受ける）
 - [ ] `package.json` の `packageManager` が `yarn@4.x` を維持している
 - [ ] `astro.config.mjs` に以下の integrations / plugin が登録されている：
   - [ ] `@astrojs/mdx`
@@ -44,17 +44,23 @@ Status: NotStarted
 
 ### テスト基盤
 - [ ] `vitest.config.ts` を新規作成（Astro + Vitest 構成、`@astrojs/check` と独立）
-- [ ] `playwright.config.ts` は main 上に残置済（PHASE0-001 で削除しない方針）。Astro 用に baseURL / webServer を最低限調整（旧 React Router 前提の URL があれば修正）
+- [ ] `playwright.config.ts` は main 上に残置済（PHASE0-001 で削除しない方針）。Astro 用に以下を最低限調整：
+  - [ ] `use.baseURL` を `http://localhost:4321`（Astro デフォルトポート）に設定
+  - [ ] `webServer.command` を `yarn dev`（または `yarn preview`）に設定し、`webServer.url` を baseURL と一致させる
+  - [ ] 旧 React Router 前提の URL 直書きが残っていれば削除
 
 ### Node version pin
 - [ ] `.nvmrc` または `.tool-versions` に Node 20.x（または LTS）を pin
+
+### .gitignore 整備
+- [ ] `.gitignore` に `.astro/`（Astro の generated types ディレクトリ）を追加
 
 ### 動作確認
 - [ ] `yarn install` が成功
 - [ ] `yarn dev` 実行で Astro 開発サーバが起動し、`http://localhost:4321/`（Astro デフォルトポート）にアクセスできる
 - [ ] `yarn build` が成功する
 - [ ] `yarn check:ts`（または `astro check`）でエラーなし
-- [ ] feat/phase-0 上で 1 コミットとして記録されている
+- [ ] `feat/phase-0/pbi-002` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
 - Astro + Tailwind v4 公式：https://docs.astro.build/en/guides/styling/

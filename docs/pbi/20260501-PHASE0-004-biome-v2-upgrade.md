@@ -15,11 +15,12 @@ Status: NotStarted
 ## 受け入れ条件
 - [ ] `package.json` の `@biomejs/biome` が v2 系最新に更新されている
 - [ ] `biome.jsonc` が v2 のスキーマに準拠している（`$schema` URL を v2 に更新）
+- [ ] `biome.jsonc` の旧 ignore（`src/dev/**/*`、`src/stories/**/*`）が削除されている（PHASE0-001 で `src/` 配下が一掃され `src/dev/` `src/stories/` は存在しないため、ignore も不要）
 - [ ] `.astro` ファイル向けの override **セクション枠**だけ用意されている（中身のルール追加は誤検知発生時に対応する方針、Phase 0 では空 override で OK）
 - [ ] `yarn check`（`biome check src`）が成功する（エラーゼロ）
 - [ ] `yarn fix`（`biome check --write src`）が成功する
 - [ ] 旧設定（v1 でしか有効でなかったオプション）が残存していない
-- [ ] feat/phase-0 上で 1 コミットとして記録されている
+- [ ] `feat/phase-0/pbi-004` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
 - Biome v2 移行ガイド：https://biomejs.dev/guides/upgrade-to-biome-v2/

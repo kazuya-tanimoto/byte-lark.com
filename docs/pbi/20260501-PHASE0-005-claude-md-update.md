@@ -16,17 +16,18 @@ Status: NotStarted
 ## 受け入れ条件
 
 - [ ] `CLAUDE.md` を備考セクションのテンプレで丸ごと差し替えた
+- [ ] 旧 NOTE ヘッダー（先頭の `> **NOTE (2026-05-02)**：本ファイルは旧 Vite/React/Chakra 前提...` ブロック一式）が削除されている
 - [ ] 検証 1：旧記述が完全にゼロ（`grep -E "Chakra|Storybook|yarn sb|atoms.*molecules.*organisms"` で 0 件）
 - [ ] 検証 2：多セッション運用の 3 セクションが存在（`grep -E "How to (start|end) (work|this session)|How to draft next-Phase"` で 3 件以上ヒット）
 - [ ] 検証 3：内容ベースで、以下 3 セクションすべてに必要な指示が含まれる：
   - [ ] **How to start work in this session**：`docs/site-plan.md` → `docs/pbi/INDEX.md` → 該当 PBI の参照順、InProgress 優先 → 最古 NotStarted、Status 更新と INDEX.md 同期
   - [ ] **How to end this session**：InProgress な PBI は `## 実装ログ` 追記、WIP コミット、Status 同期確認
   - [ ] **How to draft next-Phase PBIs**：前 Phase Done + Gate 通過確認、Gate の「申し送り」読込、各 PBI の実装ログ読込、INDEX.md 追加
-- [ ] feat/phase-0 上で 1 コミットとして記録されている
+- [ ] `feat/phase-0/pbi-005` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
-- 既存 CLAUDE.md パス：`/Users/kazuya/src/react-blog/CLAUDE.md`
-- グローバル CLAUDE.md (`/Users/kazuya/.claude/CLAUDE.md`) は触らない
+- 既存 CLAUDE.md パス：repo ルートの `CLAUDE.md`
+- グローバル CLAUDE.md（`~/.claude/CLAUDE.md`）は触らない
 - プロトコル本体は `docs/pbi/README.md` v2.3 に詳細記載済（§5 ライフサイクル / §6 コミット規約 / §10 ブランチ運用）。CLAUDE.md にはエッセンスを書き、詳細は README に誘導することでコンパクト化
 
 ## 備考

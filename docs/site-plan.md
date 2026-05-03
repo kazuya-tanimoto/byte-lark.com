@@ -354,6 +354,7 @@ Astro の標準機能で完全対応：
 | `src/stories/` Storybook 公式テンプレ | 削除 | — |
 | `CLAUDE.md`（プロジェクト規約） | **書き換え**（PHASE0-005、Astro/Tailwind/shadcn + 多セッション運用プロトコル） | 同パス |
 | `docs/site-plan.md` | 上書き（v2 → v3.7） | 本ファイル |
+| `docs/operation-manual.md` | **新規作成済**（v3.6 連動、運営者向けプロトコル） | 同パス |
 | `.github/workflows/codeql.yml` | 流用（言語自動検出で Astro 対応） | 同パス |
 | `.github/dependabot.yml` | 内容確認の上、依存先パッケージ名を更新（PHASE0-007） | 同パス |
 | `lefthook.yml` | **PHASE0-007 でゼロから書き起こし**（既存はテンプレコメントのみ） | 同パス |
