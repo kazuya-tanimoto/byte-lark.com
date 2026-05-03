@@ -234,7 +234,7 @@ PBI 関連のコミットは以下の prefix を使う：
 | prefix | 用途 | 例 |
 |---|---|---|
 | `feat(pbi):` | PBI を Done にした完了コミット | `feat(pbi): PHASE0-002 astro scaffold` |
-| `chore(pbi):` | PBI 起票・更新（実装は伴わない） | `chore(pbi): add PHASE0-009 retrospective gate` |
+| `chore(pbi):` | PBI 起票・更新（実装は伴わない） | `chore(pbi): add PHASE0-010 retrospective gate` |
 | `docs(pbi):` | PBI 規約・INDEX 等のドキュメント変更 | `docs(pbi): update README to v2` |
 | `wip(pbi):` | InProgress 中の中間コミット | `wip(pbi): PHASE0-002 tailwind v4 integration done, shadcn pending` |
 
@@ -347,7 +347,7 @@ git worktree remove ../<repo>-pbi-<NNN>
 
 ### 10.6 Phase 完了時（Phase ブランチを main へマージ）
 
-Retrospective Gate PBI（PHASE0-009 等）の受け入れ条件として実施：
+Retrospective Gate PBI（PHASE0-010 等）の受け入れ条件として実施：
 
 ```bash
 git checkout main

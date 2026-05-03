@@ -15,7 +15,7 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | **作業開始（初回 / 任意のタイミング）** | `PBIの対応して` / `次のタスク進めて` | INDEX.md → README §5 経由で次の PBI を特定 → §5.8 検出スクリプト実行 → 実装着手 |
 | **中断（コンテキスト消費 / 時間切れ）** | `ここまでで終了` / `中断します` / `今日はここまで` | InProgress な PBI の `## 実装ログ` に「やったこと / 残タスク / 学び / 想定外」追記 → WIP コミット → 報告 |
 | **再開（同一 PBI を続行）** | `続き進めて` / `再開して` | 該当 PBI の実装ログを読んで状況把握 → 続行 |
-| **Phase 0 全完了後の Phase 1a PBI 起票** | `Retrospective Gate (PHASE0-009) の申し送りに従って Phase 1a の PBI を起票して` | Gate PBI の「Phase 1a への申し送り」セクション + 各 Phase 0 PBI の実装ログを読み、Phase 1a PBI をドラフト |
+| **Phase 0 全完了後の Phase 1a PBI 起票** | `Retrospective Gate (PHASE0-010) の申し送りに従って Phase 1a の PBI を起票して` | Gate PBI の「Phase 1a への申し送り」セクション + 各 Phase 0 PBI の実装ログを読み、Phase 1a PBI をドラフト |
 | **並行 PBI 開始指示** | `PHASE1A-001 と PHASE1A-002 を別 worktree で並行で進めたい。worktree 切ってセッション 2 つ起動する手順教えて` | worktree + sub-branch のセットアップ手順を提示。運営者が別ターミナルで 2 つ目の Claude Code セッションを起動 |
 | **Phase 完了時の main マージ承認** | `Phase 0 完了確認、main へマージしていい？` | Gate PBI の受け入れ条件を再確認 → OK なら `git merge --no-ff` で main へマージ + push |
 | **計画書のレビュー依頼** | （別セッションでレビュープロンプトを使用） | レビュー結果を別セッションから持ち込み、本セッションで反映 |
@@ -37,7 +37,7 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 ### 必須
 
 - **セッション終了前に必ず一言**：「終了」「中断」「ここまで」のいずれかを言ってから閉じる
-- **GitHub UI 操作**：Cloudflare Pages 接続（PHASE0-007）、リポジトリ設定変更等、Claude が手元で完結できない操作は運営者がダッシュボード操作
+- **GitHub UI 操作**：Cloudflare Pages 接続（PHASE0-008）、リポジトリ設定変更等、Claude が手元で完結できない操作は運営者がダッシュボード操作
 - **main 保護設定**（プロジェクト初期化時 1 回）：GitHub UI の Branch protection rules で main への直接 push を禁止、PR 経由必須に
 - **Cloudflare Pages の Preview Branch Filter 設定**（プロジェクト初期化時 1 回）：CF Pages ダッシュボードで Custom branches に Include `feat/phase-*`、Exclude `feat/phase-*/pbi-*` を設定（PBI sub-branch を保持する運用のため、preview 大量生成を抑制）
 

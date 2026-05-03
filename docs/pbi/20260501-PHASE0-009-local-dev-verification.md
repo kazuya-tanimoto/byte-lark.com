@@ -27,7 +27,7 @@ Status: NotStarted
 
 ### 本番デプロイ確認
 - [ ] feat/phase-0 ブランチを main にマージ（マージ可能な状態 = コンフリクトなし）
-- [ ] main へのマージで PHASE0-007 で接続した **Cloudflare Pages の本番ビルド**が自動実行される
+- [ ] main へのマージで PHASE0-008 で接続した **Cloudflare Pages の本番ビルド**が自動実行される
 - [ ] 本番 URL にアクセスして最小ページが表示される
 - [ ] Cloudflare Web Analytics のスクリプト埋込が本番 HTML に存在することを確認（観測方法：DevTools の Network タブで `cloudflareinsights.com/beacon.min.js` が読込まれていること、または View Source で `<script ... data-cf-beacon=...>` の存在を確認。実データの反映は数時間かかる場合があるため、計測開始の確認は本 PBI スコープ外）
 
@@ -36,9 +36,9 @@ Status: NotStarted
 - [ ] 月次レビューで使用量 80% 到達を監視する旨を運営者がメモ（site-plan.md §9 R-14）
 
 ### Phase 0 完了確認
-- [ ] PHASE0-001〜007, 010 のすべてが Status: Done になっている
+- [ ] PHASE0-001〜008 のすべてが Status: Done になっている
 - [ ] INDEX.md がそれを反映している
-- [ ] **次セッションが PHASE0-009（Retrospective Gate）に着手できる状態**
+- [ ] **次セッションが PHASE0-010（Retrospective Gate）に着手できる状態**
 
 ## 技術メモ
 - 本 PBI は **検証 + デプロイ実行**。新規ファイル作成や設定変更は他の PBI で完了している前提
@@ -52,7 +52,7 @@ Status: NotStarted
 3. PR 作成 or 直接マージ → Cloudflare Pages 本番ビルド成功確認
 4. 本番 URL アクセス確認
 
-すべて pass で **Phase 0 全体完了** → 次セッションで PHASE0-009 (Retrospective Gate) に進む。
+すべて pass で **Phase 0 全体完了** → 次セッションで PHASE0-010 (Retrospective Gate) に進む。
 
 ### 失敗時の典型パターン
 - Tailwind v4 の CSS が読み込まれていない → `astro.config.mjs` の Vite plugin 設定確認

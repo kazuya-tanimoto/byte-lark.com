@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-05-02
+最終更新: 2026-05-03
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -53,11 +53,11 @@ done
 | PHASE0-003 | [data-migration](20260501-PHASE0-003-data-migration.md) | NotStarted |
 | PHASE0-004 | [biome-v2-upgrade](20260501-PHASE0-004-biome-v2-upgrade.md) | NotStarted |
 | PHASE0-005 | [claude-md-update](20260501-PHASE0-005-claude-md-update.md) | NotStarted |
-| PHASE0-010 | [readme-stub-update](20260502-PHASE0-010-readme-stub-update.md) | NotStarted |
-| PHASE0-006 | [lefthook-workflows-setup](20260501-PHASE0-006-lefthook-workflows-setup.md) | NotStarted |
-| PHASE0-007 | [cloudflare-pages-setup](20260501-PHASE0-007-cloudflare-pages-setup.md) | NotStarted |
-| PHASE0-008 | [local-dev-verification](20260501-PHASE0-008-local-dev-verification.md) | NotStarted |
-| **PHASE0-009** | [**retrospective-gate**](20260501-PHASE0-009-retrospective-gate.md) **(Gate)** | **NotStarted** |
+| PHASE0-006 | [readme-stub-update](20260502-PHASE0-006-readme-stub-update.md) | NotStarted |
+| PHASE0-007 | [lefthook-workflows-setup](20260501-PHASE0-007-lefthook-workflows-setup.md) | NotStarted |
+| PHASE0-008 | [cloudflare-pages-setup](20260501-PHASE0-008-cloudflare-pages-setup.md) | NotStarted |
+| PHASE0-009 | [local-dev-verification](20260501-PHASE0-009-local-dev-verification.md) | NotStarted |
+| **PHASE0-010** | [**retrospective-gate**](20260501-PHASE0-010-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
 ### Phase 0 推奨着手順序
 
@@ -71,25 +71,25 @@ PHASE0-002 (astro scaffold) ← 大きい、複数セッション可能性
 ┌─ PHASE0-003 (data + logo migration)
 ├─ PHASE0-004 (biome v2)
 ├─ PHASE0-005 (claude.md update)              ← ドキュメント整備グループ
-└─ PHASE0-010 (readme stub update)             ← ドキュメント整備グループ
+└─ PHASE0-006 (readme stub update)             ← ドキュメント整備グループ
    並列可だが、commit 衝突回避のため同セッション内では逐次推奨
   ↓
-PHASE0-006 (lefthook + workflows)
+PHASE0-007 (lefthook + workflows)
   ↓
-PHASE0-007 (cloudflare pages preview) ← 運営者の Cloudflare 操作含む
+PHASE0-008 (cloudflare pages preview) ← 運営者の Cloudflare 操作含む
   ↓
-PHASE0-008 (local + production verification) ← 全体動作ゲート
+PHASE0-009 (local + production verification) ← 全体動作ゲート
   ↓
-PHASE0-009 (retrospective gate) ← Phase 1a 移行前の必須ゲート
+PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 ```
 
-**並列可と書いた 003-005, 010 群について**：別セッションで分担すれば真に並列だが、同セッション内では `package.json` / `CLAUDE.md` 等の commit 衝突回避のため逐次推奨。
+**並列可と書いた 003-006 群について**：別セッションで分担すれば真に並列だが、同セッション内では `package.json` / `CLAUDE.md` 等の commit 衝突回避のため逐次推奨。
 
 ---
 
 ## Phase 1a：サイト構成・各ページ実装
 
-PBI は **Phase 0 完了 + PHASE0-009 (Retrospective Gate) 通過後**に別セッションで起票する。  
+PBI は **Phase 0 完了 + PHASE0-010 (Retrospective Gate) 通過後**に別セッションで起票する。  
 （v3.7 ロードマップ §7 の方針に従う）
 
 ---
@@ -124,3 +124,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-05-02 | 着手ルール書き換え：循環参照（CLAUDE.md → INDEX.md → CLAUDE.md）を解消、PHASE0-005 完了前の SoT を「INDEX.md + README §5」に明示。CLAUDE.md ヘッダーにも README §5 への暫定誘導追加 |
 | 2026-05-03 | site-plan v3.6 連動：line 74 のロードマップ参照を v3.6 に更新、着手ルールに「セッション開始時の必須チェック」（§5.8 検出スクリプト実行）を追加・必須化、operation-manual.md への誘導追加 |
 | 2026-05-03 | site-plan v3.7 連動：line 93 のロードマップ参照を v3.7 に更新（README §10 ブランチ運用追加に伴う） |
+| 2026-05-03 | PHASE0 PBI 番号を着手順序に整列（旧 010→新 006、旧 006→新 007、旧 007→新 008、旧 008→新 009、旧 009→新 010）。本日以前の改訂履歴に出てくる PBI 番号は当時の番号付けを参照 |

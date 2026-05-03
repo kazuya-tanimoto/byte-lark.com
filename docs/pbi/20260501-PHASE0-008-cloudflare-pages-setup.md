@@ -41,8 +41,8 @@ Status: NotStarted
   - [ ] **Exclude Preview branches**: `feat/phase-*/pbi-*`（PBI sub-branch は preview しない、大量生成抑制）
 - [ ] 詳細は docs/pbi/README.md §10.8 参照
 
-### 本 PBI スコープ外（PHASE0-008 / 後続 Phase で対応）
-- [ ] 本番（main）ブランチへのマージとビルド成功確認 → **PHASE0-008**
+### 本 PBI スコープ外（後続 PBI / 後続 Phase で対応）
+- [ ] 本番（main）ブランチへのマージとビルド成功確認 → **PHASE0-010**（Retrospective Gate に集約）
 - [ ] カスタムドメイン `byte-lark.com` の DNS / CNAME 設定 → Phase 1a 末で別途実施
 
 ## 技術メモ

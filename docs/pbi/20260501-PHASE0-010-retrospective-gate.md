@@ -19,7 +19,7 @@ Status: NotStarted
 ## 受け入れ条件
 
 ### Phase 0 完了確認
-- [ ] PHASE0-001 〜 PHASE0-008 および PHASE0-010 のすべてが Status: Done になっている
+- [ ] PHASE0-001 〜 PHASE0-009 のすべてが Status: Done になっている
 - [ ] `docs/pbi/INDEX.md` の Phase 0 セクションがすべて `[Done]` 表示
 - [ ] feat/phase-0 ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` がすべて成功する状態
 

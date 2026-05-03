@@ -32,14 +32,14 @@ Status: NotStarted
 
 ### 残置対象（削除しない）
 - [ ] `.git/`（ブランチ履歴維持）
-- [ ] `.github/`（PHASE0-006 で書き換え or 一時無効化）
+- [ ] `.github/`（PHASE0-007 で書き換え or 一時無効化）
 - [ ] `docs/`（計画書・PBI 保持）
 - [ ] `LICENSE`（流用）
-- [ ] `README.md`（PHASE0-010 でスタブ更新）
+- [ ] `README.md`（PHASE0-006 でスタブ更新）
 - [ ] `CLAUDE.md`（PHASE0-005 で書き換え）
 - [ ] `SECURITY.md`（流用）
 - [ ] `biome.jsonc`（PHASE0-004 で v2 化）
-- [ ] `lefthook.yml`（PHASE0-006 でゼロから書き起こし）
+- [ ] `lefthook.yml`（PHASE0-007 でゼロから書き起こし）
 - [ ] `playwright.config.ts`（PHASE0-002 で Astro 用に最低限調整、設定流用方針）
 - [ ] `.gitignore`
 - [ ] `.yarnrc.yml`（Yarn 4 nodeLinker 設定維持、PHASE0-002 以降の挙動に影響）
