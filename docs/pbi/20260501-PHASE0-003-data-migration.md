@@ -36,7 +36,7 @@ Status: NotStarted
 
 ### 確認
 - [ ] `yarn check:ts` でエラーなし
-- [ ] feat/rebuild-astro 上で 1 コミットとして記録されている
+- [ ] feat/phase-0 上で 1 コミットとして記録されている
 
 ## 技術メモ
 - 取り込みコマンド例：

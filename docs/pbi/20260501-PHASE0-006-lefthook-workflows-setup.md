@@ -37,7 +37,7 @@ Status: NotStarted
 - [ ] 個別 group 設定があれば、Astro 系の group を追加するか判断（不要なら維持）
 
 ### 確認
-- [ ] feat/rebuild-astro 上で 1 コミットとして記録されている
+- [ ] feat/phase-0 上で 1 コミットとして記録されている
 - [ ] `git status` で `.github/workflows/*.yml.disabled` が反映されている
 
 ## 技術メモ

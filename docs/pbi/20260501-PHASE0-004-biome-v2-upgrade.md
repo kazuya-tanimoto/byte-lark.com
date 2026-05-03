@@ -19,7 +19,7 @@ Status: NotStarted
 - [ ] `yarn check`（`biome check src`）が成功する（エラーゼロ）
 - [ ] `yarn fix`（`biome check --write src`）が成功する
 - [ ] 旧設定（v1 でしか有効でなかったオプション）が残存していない
-- [ ] feat/rebuild-astro 上で 1 コミットとして記録されている
+- [ ] feat/phase-0 上で 1 コミットとして記録されている
 
 ## 技術メモ
 - Biome v2 移行ガイド：https://biomejs.dev/guides/upgrade-to-biome-v2/

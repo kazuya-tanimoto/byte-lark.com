@@ -28,7 +28,7 @@ Status: NotStarted
   - [ ] Author（Kazuya Tanimoto / GitHub link）
   - [ ] License（MIT、`LICENSE` ファイル参照）
   - [ ] Related Docs（docs/site-plan.md, docs/pbi/README.md, docs/pbi/INDEX.md, CLAUDE.md）
-- [ ] feat/rebuild-astro 上で 1 コミットとして記録されている
+- [ ] feat/phase-0 上で 1 コミットとして記録されている
 
 ## 技術メモ
 - 既存 `README.md` パス：`/Users/kazuya/src/react-blog/README.md`（PHASE0-001 で残置済）

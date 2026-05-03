@@ -28,7 +28,7 @@ Status: NotStarted
   - [ ] **Yarn 4 (Berry) 対応の環境変数**：`YARN_VERSION=4.x` を Pages の Environment variables に設定（または `CF_PAGES_USE_COREPACK=1` で corepack 有効化）
 
 ### preview デプロイ
-- [ ] feat/rebuild-astro ブランチへの push で **preview デプロイ URL** が発行される
+- [ ] feat/phase-0 ブランチへの push で **preview デプロイ URL** が発行される
 - [ ] preview URL にアクセスして PHASE0-002 の最小ページが表示される
 
 ### Cloudflare Web Analytics

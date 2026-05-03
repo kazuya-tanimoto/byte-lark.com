@@ -54,7 +54,7 @@ Status: NotStarted
 - [ ] `yarn dev` 実行で Astro 開発サーバが起動し、`http://localhost:4321/`（Astro デフォルトポート）にアクセスできる
 - [ ] `yarn build` が成功する
 - [ ] `yarn check:ts`（または `astro check`）でエラーなし
-- [ ] feat/rebuild-astro 上で 1 コミットとして記録されている
+- [ ] feat/phase-0 上で 1 コミットとして記録されている
 
 ## 技術メモ
 - Astro + Tailwind v4 公式：https://docs.astro.build/en/guides/styling/

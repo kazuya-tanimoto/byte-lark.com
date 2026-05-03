@@ -21,7 +21,7 @@ Status: NotStarted
 ### Phase 0 完了確認
 - [ ] PHASE0-001 〜 PHASE0-008 および PHASE0-010 のすべてが Status: Done になっている
 - [ ] `docs/pbi/INDEX.md` の Phase 0 セクションがすべて `[Done]` 表示
-- [ ] feat/rebuild-astro ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` がすべて成功する状態
+- [ ] feat/phase-0 ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` がすべて成功する状態
 
 ### 学びの集約（本 PBI 内に書き出す）
 - [ ] 本 PBI の `## Phase 1a への申し送り` セクションに以下を記入：
@@ -36,14 +36,14 @@ Status: NotStarted
 - [ ] site-plan.md と Phase 0 実装結果に大きな差分があれば、本 PBI 内で記録
 
 ### マージ
-- [ ] feat/rebuild-astro ブランチを main にマージする（merge commit 維持で履歴を残す）：
+- [ ] feat/phase-0 ブランチを main にマージする（merge commit 維持で履歴を残す）：
   ```bash
   git checkout main
   git pull origin main
-  git merge --no-ff feat/rebuild-astro -m "Merge Phase 0: project initialization"
+  git merge --no-ff feat/phase-0 -m "Merge Phase 0: project initialization"
   git push origin main
   ```
-- [ ] feat/rebuild-astro は remote に保持（PBI 単位の checkout 用、削除しない）
+- [ ] feat/phase-0 は remote に保持（PBI 単位の checkout 用、削除しない）
 - [ ] マージ後、Cloudflare Pages の本番ビルドが成功する
 - [ ] 本 PBI の Status を Done に更新、INDEX.md 同期
 - [ ] 詳細手順は docs/pbi/README.md §10.6 参照

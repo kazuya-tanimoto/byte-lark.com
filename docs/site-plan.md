@@ -496,7 +496,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 
 1. 本計画書 v3.7 のレビュー・確定（別セッション）
 2. Phase 0 PBI 10 件のレビュー（別セッション、`docs/pbi/INDEX.md` 経由）
-3. Phase 0 実装着手：feat/rebuild-astro ブランチで Vite 削除 + Astro 初期化（別セッション、複数セッションに分かれる可能性あり）
+3. Phase 0 実装着手：feat/phase-0 ブランチで Vite 削除 + Astro 初期化（別セッション、複数セッションに分かれる可能性あり）
 4. Phase 0 完了 → Retrospective Gate (PHASE0-009) 通過
 5. 別セッションで Phase 1a PBI を起票（Gate の申し送りを反映）
 6. Phase 1a レビュー → Phase 1a 実装

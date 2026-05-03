@@ -7,7 +7,7 @@ Status: NotStarted
 
 ## 何をできる
 - ローカル：`yarn dev` 起動 + `yarn build` 成功 + Lint / Typecheck / Test 通過を確認できる
-- 本番：feat/rebuild-astro を main にマージし、Cloudflare Pages の本番ビルドが成功することを確認できる
+- 本番：feat/phase-0 を main にマージし、Cloudflare Pages の本番ビルドが成功することを確認できる
 - Phase 0 の最終ゲートとして、Phase 1a 着手可能な状態が整っていることが確認できる
 
 ## なんのために
@@ -26,7 +26,7 @@ Status: NotStarted
 - [ ] `yarn test:run` が成功（テストゼロでも exit 0、もしくはテスト 1 件以上で全 pass）
 
 ### 本番デプロイ確認
-- [ ] feat/rebuild-astro ブランチを main にマージ（マージ可能な状態 = コンフリクトなし）
+- [ ] feat/phase-0 ブランチを main にマージ（マージ可能な状態 = コンフリクトなし）
 - [ ] main へのマージで PHASE0-007 で接続した **Cloudflare Pages の本番ビルド**が自動実行される
 - [ ] 本番 URL にアクセスして最小ページが表示される
 - [ ] Cloudflare Web Analytics のスクリプト埋込が本番 HTML に存在することを確認（観測方法：DevTools の Network タブで `cloudflareinsights.com/beacon.min.js` が読込まれていること、または View Source で `<script ... data-cf-beacon=...>` の存在を確認。実データの反映は数時間かかる場合があるため、計測開始の確認は本 PBI スコープ外）

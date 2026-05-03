@@ -6,7 +6,7 @@ Status: NotStarted
 - 運営者
 
 ## 何をできる
-- main ブランチ（feat/rebuild-astro 上での作業）から旧 Vite + React + Chakra 関連の全ファイル・依存が削除され、Astro 初期化に支障ない状態になっていることを確認できる
+- main ブランチ（feat/phase-0 上での作業）から旧 Vite + React + Chakra 関連の全ファイル・依存が削除され、Astro 初期化に支障ない状態になっていることを確認できる
 - 旧コードは `archive/vite-react-chakra` ブランチに退避済みで、必要時に参照可能
 
 ## なんのために
@@ -18,7 +18,7 @@ Status: NotStarted
 ### archive 確認
 - [ ] `archive/vite-react-chakra` ブランチが local + remote に存在し、旧コード一式が含まれている
 
-### 削除対象（feat/rebuild-astro 上で削除）
+### 削除対象（feat/phase-0 上で削除）
 - [ ] `src/` ディレクトリ全体（Career.ts / Skill.ts / logo.png は PHASE0-003 で別途取り込み）
 - [ ] `public/` ディレクトリ（Astro 初期化で再生成）
 - [ ] `index.html`
@@ -46,7 +46,7 @@ Status: NotStarted
 
 ### 確認
 - [ ] `git status` で削除が反映されている
-- [ ] feat/rebuild-astro 上で 1 コミットとして記録されている（コミットメッセージ例：`chore: remove vite/react/chakra resources for astro rebuild`）
+- [ ] feat/phase-0 上で 1 コミットとして記録されている（コミットメッセージ例：`chore: remove vite/react/chakra resources for astro rebuild`）
 
 ## 技術メモ
 - archive ブランチは既に存在（前段で push 済）
