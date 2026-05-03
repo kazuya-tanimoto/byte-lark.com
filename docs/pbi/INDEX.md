@@ -90,7 +90,7 @@ PHASE0-009 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 ## Phase 1a：サイト構成・各ページ実装
 
 PBI は **Phase 0 完了 + PHASE0-009 (Retrospective Gate) 通過後**に別セッションで起票する。  
-（v3.6 ロードマップ §7 の方針に従う）
+（v3.7 ロードマップ §7 の方針に従う）
 
 ---
 
@@ -123,3 +123,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-05-02 | site-plan v3.5 連動：line 74 のロードマップ参照を v3.5 に更新（4 回目レビュー推奨#3 反映） |
 | 2026-05-02 | 着手ルール書き換え：循環参照（CLAUDE.md → INDEX.md → CLAUDE.md）を解消、PHASE0-005 完了前の SoT を「INDEX.md + README §5」に明示。CLAUDE.md ヘッダーにも README §5 への暫定誘導追加 |
 | 2026-05-03 | site-plan v3.6 連動：line 74 のロードマップ参照を v3.6 に更新、着手ルールに「セッション開始時の必須チェック」（§5.8 検出スクリプト実行）を追加・必須化、operation-manual.md への誘導追加 |
+| 2026-05-03 | site-plan v3.7 連動：line 93 のロードマップ参照を v3.7 に更新（README §10 ブランチ運用追加に伴う） |

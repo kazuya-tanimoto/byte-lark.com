@@ -35,6 +35,12 @@ Status: NotStarted
 - [ ] Cloudflare Pages プロジェクト設定 → Web Analytics を有効化（無料、Cookieless）
 - [ ] Astro 側の HTML に analytics スクリプトが自動注入されることを確認（Pages 統合の場合は不要、別途必要なら本 PBI スコープ外）
 
+### Preview Branch Filter（必須、PBI sub-branch 運用に必要）
+- [ ] CF Pages プロジェクト設定 → Branch deployments → Custom branches を選択：
+  - [ ] **Include Preview branches**: `feat/phase-*`（Phase ブランチのみ preview 生成）
+  - [ ] **Exclude Preview branches**: `feat/phase-*/pbi-*`（PBI sub-branch は preview しない、大量生成抑制）
+- [ ] 詳細は docs/pbi/README.md §10.8 参照
+
 ### 本 PBI スコープ外（PHASE0-008 / 後続 Phase で対応）
 - [ ] 本番（main）ブランチへのマージとビルド成功確認 → **PHASE0-008**
 - [ ] カスタムドメイン `byte-lark.com` の DNS / CNAME 設定 → Phase 1a 末で別途実施

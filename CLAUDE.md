@@ -7,6 +7,8 @@
 > **セッション開始時の必須チェック**：PBI 着手前に必ず INDEX.md「セッション開始時の必須チェック」セクションのスクリプトを実行（InProgress なのに実装ログ空の PBI を検出）。
 >
 > **運営者向け運用マニュアル**：[docs/operation-manual.md](docs/operation-manual.md)（運営者の操作シーン別フレーズ / 中断 signal 忘れリカバリー / トラブルシューティング）。
+>
+> **ブランチ運用**：[docs/pbi/README.md](docs/pbi/README.md) §10（Phase ブランチ + 常時 PBI sub-branch + worktree による並行作業 / merge --no-ff / sub-branch マージ後保持 / CF Pages Preview Branch Filter / main 保護 / Hotfix）。
 
 ## Build & Test Commands
 - `yarn dev`: Start dev server

@@ -27,7 +27,7 @@ Status: NotStarted
 - [ ] 本 PBI の `## Phase 1a への申し送り` セクションに以下を記入：
   - [ ] **確定した技術前提**：実際に動いた構成（Astro バージョン、Tailwind 統合方法、shadcn セットアップ手順、Yarn linker 設定 等）
   - [ ] **発生した想定外と回避策**：Phase 0 の各 PBI 実装ログから抽出
-  - [ ] **計画書 v3.6 と実態の差分**：あれば（site-plan.md / 各 PBI の記述で間違っていた点）
+  - [ ] **計画書 v3.7 と実態の差分**：あれば（site-plan.md / 各 PBI の記述で間違っていた点）
   - [ ] **Phase 1a 起票時の注意**：Phase 1a PBI のどこに修正が必要か / そのままで OK か
   - [ ] **Phase 1a で先に決めるべき事項**：Phase 0 中に発覚した未決事項（仮 HEX 候補、コードハイライト候補等を Phase 1a 冒頭で確定する旨）
 
@@ -36,9 +36,17 @@ Status: NotStarted
 - [ ] site-plan.md と Phase 0 実装結果に大きな差分があれば、本 PBI 内で記録
 
 ### マージ
-- [ ] feat/rebuild-astro ブランチを main にマージする（または運営者が手動でマージ）
+- [ ] feat/rebuild-astro ブランチを main にマージする（merge commit 維持で履歴を残す）：
+  ```bash
+  git checkout main
+  git pull origin main
+  git merge --no-ff feat/rebuild-astro -m "Merge Phase 0: project initialization"
+  git push origin main
+  ```
+- [ ] feat/rebuild-astro は remote に保持（PBI 単位の checkout 用、削除しない）
 - [ ] マージ後、Cloudflare Pages の本番ビルドが成功する
 - [ ] 本 PBI の Status を Done に更新、INDEX.md 同期
+- [ ] 詳細手順は docs/pbi/README.md §10.6 参照
 
 ### 次セッションへのトリガー
 - [ ] 本 PBI が Done になった時点で、次セッションは「Phase 1a PBI 起票」を最初のタスクとして実行可能
@@ -82,7 +90,7 @@ Status: NotStarted
 ### 発生した想定外と回避策
 （Phase 0 完了時に記入）
 
-### 計画書 v3.6 と実態の差分
+### 計画書 v3.7 と実態の差分
 （Phase 0 完了時に記入。差分なければ「なし」と明記）
 
 ### Phase 1a 起票時の注意

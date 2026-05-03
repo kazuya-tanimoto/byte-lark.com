@@ -27,7 +27,7 @@ Status: NotStarted
 ## 技術メモ
 - 既存 CLAUDE.md パス：`/Users/kazuya/src/react-blog/CLAUDE.md`
 - グローバル CLAUDE.md (`/Users/kazuya/.claude/CLAUDE.md`) は触らない
-- プロトコル本体は `docs/pbi/README.md` v2.2 に詳細記載済。CLAUDE.md にはエッセンスを書き、詳細は README に誘導することでコンパクト化
+- プロトコル本体は `docs/pbi/README.md` v2.3 に詳細記載済（§5 ライフサイクル / §6 コミット規約 / §10 ブランチ運用）。CLAUDE.md にはエッセンスを書き、詳細は README に誘導することでコンパクト化
 
 ## 備考
 
@@ -103,8 +103,8 @@ Status: NotStarted
 - wip(pbi): PHASE0-NNN <note>    # 中間コミット
 
 ## Related Docs
-- docs/site-plan.md           Site construction plan (current: v3.6)
-- docs/pbi/README.md          PBI format spec (v2.2)
+- docs/site-plan.md           Site construction plan (current: v3.7)
+- docs/pbi/README.md          PBI format spec (v2.3) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）
