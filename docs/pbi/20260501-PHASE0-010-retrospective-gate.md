@@ -9,6 +9,8 @@ Status: NotStarted
 - Phase 0 の全 PBI が Done になったことを確認できる
 - Phase 0 で得た技術的知見・想定外・つまずきを集約し、Phase 1a PBI 起票時の参考資料として明文化できる
 - Phase 1a 着手の前提条件（インフラ・ローカル動作・依存・規約）が整っていることを確認できる
+- feat/phase-0 を main にマージし、Cloudflare Pages の本番ビルド成功 / 本番 URL 表示 / Web Analytics 注入を確認できる
+- R-14（CF Pages フリープラン制限）のベースラインを把握できる
 - 別セッションが本 Gate PBI を読むだけで、Phase 1a PBI を学びを反映してドラフトできる状態にする
 
 ## なんのために
@@ -44,9 +46,19 @@ Status: NotStarted
   git push origin main
   ```
 - [ ] feat/phase-0 は remote に保持（PBI 単位の checkout 用、削除しない）
-- [ ] マージ後、Cloudflare Pages の本番ビルドが成功する
-- [ ] 本 PBI の Status を Done に更新、INDEX.md 同期
 - [ ] 詳細手順は docs/pbi/README.md §10.6 参照
+
+### 本番デプロイ確認（main マージ後）
+- [ ] main へのマージで PHASE0-008 で接続した **Cloudflare Pages の本番ビルド**が自動実行される
+- [ ] 本番 URL にアクセスして最小ページが表示される
+- [ ] Cloudflare Web Analytics のスクリプト埋込が本番 HTML に存在することを確認（観測方法：DevTools の Network タブで `cloudflareinsights.com/beacon.min.js` が読込まれていること、または View Source で `<script ... data-cf-beacon=...>` の存在を確認。実データの反映は数時間かかる場合があるため、計測開始の確認は本 PBI スコープ外）
+
+### R-14（フリープラン制限監視）の最初のチェック
+- [ ] Cloudflare Pages ダッシュボードで本月のビルド回数・帯域使用量を一度確認し、ベースライン把握
+- [ ] 月次レビューで使用量 80% 到達を監視する旨を運営者がメモ（site-plan.md §9 R-14）
+
+### 完了処理
+- [ ] 本 PBI の Status を Done に更新、INDEX.md 同期
 
 ### 次セッションへのトリガー
 - [ ] 本 PBI が Done になった時点で、次セッションは「Phase 1a PBI 起票」を最初のタスクとして実行可能
