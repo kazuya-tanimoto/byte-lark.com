@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v2.3)
+# PBI フォーマット規約 (v2.4)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-05-03
+最終更新: 2026-05-05
 
 ---
 
@@ -302,22 +302,29 @@ git push -u origin feat/phase-<phase>
 
 ### 10.4 PBI 着手時（**常時 sub-branch + worktree**）
 
-並行可能性を担保するため、PBI ごとに必ず sub-branch を切り、可能なら worktree で展開する：
+PBI 着手時は、並行 session の有無に関わらず **常に worktree で sub-branch を展開する**（既定動作）。Claude が独自判断で省略してはならない。
+
+理由：
+- 並行 session を後から追加する際の追加コストがゼロ
+- Phase ブランチの作業ディレクトリが PBI 実装で汚れない
+- セッション中に「worktree を切るか」を判断する必要がない（判断対象を増やさない）
 
 ```bash
-# Phase ブランチから sub-branch を切る
+# Phase ブランチを最新化
 cd <main repo>
 git checkout feat/phase-<phase>
 git pull origin feat/phase-<phase>
 
-# worktree で sibling ディレクトリに展開（並行 session 用）
+# worktree で sibling ディレクトリに展開
 git worktree add ../<repo>-pbi-<NNN> -b feat/phase-<phase>/pbi-<NNN>
 
 # 作業ディレクトリへ移動
 cd ../<repo>-pbi-<NNN>
 ```
 
-並行 session が不要な場合は worktree を省略し、`git checkout -b feat/phase-<phase>/pbi-<NNN>` で同一ディレクトリ内で済ませても可。
+**worktree 省略が許される唯一の条件**：運営者が明示的に「worktree 不要」と指示した時のみ。Claude 側で「並行不要そうだから省略」と判断するのは禁止。
+
+**PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md、operation-manual.md、pbi/README.md 等）は本節 10.4 の対象外。Phase ブランチに直 commit してよい（本ルールは PBI 実装作業に限定）。
 
 ### 10.5 PBI 完了時（sub-branch を Phase ブランチへマージ）
 
@@ -409,3 +416,4 @@ git push -u origin fix/<short-name>
 | 2026-05-02 | v2.1 | レビュー指摘反映：Gate PBI のロール例外を §4.3 に追加、Done PBI 事後追記方針を §5.5 に追加、改訂バージョニングを §5.6、コミット粒度を §5.7、実装ログ記入漏れ検出を §5.8 に追加 |
 | 2026-05-02 | v2.2 | 差分レビュー反映：§5.6 と §5.5 の事後追記重複を §5.5 に集約、§5.8 の検出スクリプトコメント・本文を「### YYYY-MM-DD entry の有無」で正確化 |
 | 2026-05-03 | v2.3 | §10 ブランチ運用 新設：Phase ブランチ + 常時 PBI sub-branch + worktree による並行作業、merge --no-ff、sub-branch マージ後保持、CF Pages Preview Branch Filter 必須設定、main 保護、Hotfix 手順 |
+| 2026-05-05 | v2.4 | §10.4 を厳格化：PBI 着手時の worktree を「可能なら」から「常時必須（既定）」に変更。Claude による独自判断での省略を禁止。PBI 実装ではない docs 単独修正は本節対象外と明記 |
