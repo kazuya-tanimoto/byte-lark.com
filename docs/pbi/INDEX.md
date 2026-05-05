@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-05-05
+最終更新: 2026-05-06
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -48,7 +48,7 @@ done
 
 | ID | タイトル | Status |
 |---|---|---|
-| PHASE0-001 | [vite-resources-cleanup](20260501-PHASE0-001-vite-resources-cleanup.md) | NotStarted |
+| PHASE0-001 | [vite-resources-cleanup](20260501-PHASE0-001-vite-resources-cleanup.md) | Done |
 | PHASE0-002 | [astro-scaffold](20260501-PHASE0-002-astro-scaffold.md) | NotStarted |
 | PHASE0-003 | [data-migration](20260501-PHASE0-003-data-migration.md) | NotStarted |
 | PHASE0-004 | [biome-v2-upgrade](20260501-PHASE0-004-biome-v2-upgrade.md) | NotStarted |
