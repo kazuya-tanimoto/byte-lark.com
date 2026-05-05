@@ -28,7 +28,7 @@ Status: NotStarted
   - [ ] Author（Kazuya Tanimoto / GitHub link）
   - [ ] License（MIT、`LICENSE` ファイル参照）
   - [ ] Related Docs（docs/site-plan.md, docs/pbi/README.md, docs/pbi/INDEX.md, CLAUDE.md）
-- [ ] `feat/phase-0/pbi-006` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+- [ ] `feat/phase-0-pbi-006` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
 - 既存 `README.md` パス：repo ルートの `README.md`（PHASE0-001 で残置済）

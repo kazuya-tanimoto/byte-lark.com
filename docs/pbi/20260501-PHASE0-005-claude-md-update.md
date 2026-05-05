@@ -23,7 +23,7 @@ Status: NotStarted
   - [ ] **How to start work in this session**：`docs/site-plan.md` → `docs/pbi/INDEX.md` → 該当 PBI の参照順、InProgress 優先 → 最古 NotStarted、Status 更新と INDEX.md 同期
   - [ ] **How to end this session**：InProgress な PBI は `## 実装ログ` 追記、WIP コミット、Status 同期確認
   - [ ] **How to draft next-Phase PBIs**：前 Phase Done + Gate 通過確認、Gate の「申し送り」読込、各 PBI の実装ログ読込、INDEX.md 追加
-- [ ] `feat/phase-0/pbi-005` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+- [ ] `feat/phase-0-pbi-005` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
 - 既存 CLAUDE.md パス：repo ルートの `CLAUDE.md`

@@ -20,7 +20,7 @@ Status: NotStarted
 - [ ] `yarn check`（`biome check src`）が成功する（エラーゼロ）
 - [ ] `yarn fix`（`biome check --write src`）が成功する
 - [ ] 旧設定（v1 でしか有効でなかったオプション）が残存していない
-- [ ] `feat/phase-0/pbi-004` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+- [ ] `feat/phase-0-pbi-004` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
 - Biome v2 移行ガイド：https://biomejs.dev/guides/upgrade-to-biome-v2/

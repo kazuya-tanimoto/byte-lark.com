@@ -39,7 +39,7 @@ Status: NotStarted
 - [ ] 個別 group 設定があれば、Astro 系の group を追加するか判断（不要なら維持）
 
 ### 確認
-- [ ] `feat/phase-0/pbi-007` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+- [ ] `feat/phase-0-pbi-007` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 - [ ] `git status` で `.github/workflows/*.yml.disabled` が反映されている
 
 ## 技術メモ

@@ -1,4 +1,4 @@
-# PBI フォーマット規約 (v2.4)
+# PBI フォーマット規約 (v2.5)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
@@ -274,8 +274,8 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 ```
 main                         保護対象、Phase 完了時のみマージで更新
 ├── feat/phase-0/            Phase 0 ブランチ（main から切る）
-│   ├── feat/phase-0/pbi-001 PBI ごと sub-branch（Phase ブランチから切る、常時）
-│   ├── feat/phase-0/pbi-002 並行 session が必要なら worktree で複数同時展開可
+│   ├── feat/phase-0-pbi-001 PBI ごと sub-branch（Phase ブランチから切る、常時）
+│   ├── feat/phase-0-pbi-002 並行 session が必要なら worktree で複数同時展開可
 │   └── ...
 ├── feat/phase-1a/           Phase 1a ブランチ
 │   └── ...
@@ -287,7 +287,7 @@ main                         保護対象、Phase 完了時のみマージで更
 | ブランチ | 命名 | 例 |
 |---|---|---|
 | Phase ブランチ | `feat/phase-<phase>` | `feat/phase-0`, `feat/phase-1a` |
-| PBI sub-branch | `feat/phase-<phase>/pbi-<NNN>` | `feat/phase-0/pbi-001` |
+| PBI sub-branch | `feat/phase-<phase>-pbi-<NNN>` | `feat/phase-0-pbi-001` |
 | Archive | `archive/<context>` | `archive/vite-react-chakra` |
 | Hotfix | `fix/<short>` | `fix/typo-readme` |
 
@@ -316,7 +316,7 @@ git checkout feat/phase-<phase>
 git pull origin feat/phase-<phase>
 
 # worktree で sibling ディレクトリに展開
-git worktree add ../<repo>-pbi-<NNN> -b feat/phase-<phase>/pbi-<NNN>
+git worktree add ../<repo>-pbi-<NNN> -b feat/phase-<phase>-pbi-<NNN>
 
 # 作業ディレクトリへ移動
 cd ../<repo>-pbi-<NNN>
@@ -331,7 +331,7 @@ cd ../<repo>-pbi-<NNN>
 ```bash
 # sub-branch ディレクトリで commit / push
 cd ../<repo>-pbi-<NNN>
-git push -u origin feat/phase-<phase>/pbi-<NNN>
+git push -u origin feat/phase-<phase>-pbi-<NNN>
 
 # 元の Phase ブランチに戻る
 cd <main repo>
@@ -339,7 +339,7 @@ git checkout feat/phase-<phase>
 git pull origin feat/phase-<phase>  # 他並行 PBI の進捗を取り込む
 
 # merge commit 強制（squash しない、PBI 名を log に残す）
-git merge --no-ff feat/phase-<phase>/pbi-<NNN>
+git merge --no-ff feat/phase-<phase>-pbi-<NNN>
 # INDEX.md などに conflict があれば手動 resolve
 
 git push origin feat/phase-<phase>
@@ -350,7 +350,7 @@ git worktree remove ../<repo>-pbi-<NNN>
 # remote の sub-branch は削除しない（log + 個別 PBI 状態の checkout 用に保持）
 ```
 
-**sub-branch は削除しない**：マージ後も remote に残し、`git checkout feat/phase-<phase>/pbi-<NNN>` で過去 PBI の独立状態に戻れるようにする。CF Pages の preview 大量生成は §10.8 の filter 設定で抑制。
+**sub-branch は削除しない**：マージ後も remote に残し、`git checkout feat/phase-<phase>-pbi-<NNN>` で過去 PBI の独立状態に戻れるようにする。CF Pages の preview 大量生成は §10.8 の filter 設定で抑制。
 
 ### 10.6 Phase 完了時（Phase ブランチを main へマージ）
 
@@ -382,7 +382,7 @@ git push origin feat/phase-<phase>
 sub-branch を保持する運用では、Cloudflare Pages のデフォルト設定（全非本番 branch に preview deployment 自動生成）が大量の不要 preview を生む。**運営者は CF Pages のダッシュボードで Custom branches 設定を必ず行う**：
 
 - **Include Preview branches**：`feat/phase-*`（Phase ブランチのみ preview）
-- **Exclude Preview branches**：`feat/phase-*/pbi-*`（PBI sub-branch は preview しない）
+- **Exclude Preview branches**：`feat/phase-*-pbi-*`（PBI sub-branch は preview しない）
 
 または **Disable all preview deployments** 一択。
 
@@ -417,3 +417,4 @@ git push -u origin fix/<short-name>
 | 2026-05-02 | v2.2 | 差分レビュー反映：§5.6 と §5.5 の事後追記重複を §5.5 に集約、§5.8 の検出スクリプトコメント・本文を「### YYYY-MM-DD entry の有無」で正確化 |
 | 2026-05-03 | v2.3 | §10 ブランチ運用 新設：Phase ブランチ + 常時 PBI sub-branch + worktree による並行作業、merge --no-ff、sub-branch マージ後保持、CF Pages Preview Branch Filter 必須設定、main 保護、Hotfix 手順 |
 | 2026-05-05 | v2.4 | §10.4 を厳格化：PBI 着手時の worktree を「可能なら」から「常時必須（既定）」に変更。Claude による独自判断での省略を禁止。PBI 実装ではない docs 単独修正は本節対象外と明記 |
+| 2026-05-05 | v2.5 | §10.2 命名規則修正：PBI sub-branch を `feat/phase-<phase>/pbi-<NNN>` から `feat/phase-<phase>-pbi-<NNN>` へ変更（Git files backend の D/F conflict 制約により Phase ブランチと sub-branch の同時存在が不可能だったため）。§10.1 図、§10.4-10.5 コマンド例、§10.8 CF Pages Exclude pattern、全 PBI ファイルの sub-branch 参照を連動更新 |

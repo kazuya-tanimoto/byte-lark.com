@@ -39,7 +39,7 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 - **セッション終了前に必ず一言**：「終了」「中断」「ここまで」のいずれかを言ってから閉じる
 - **GitHub UI 操作**：Cloudflare Pages 接続（PHASE0-008）、リポジトリ設定変更等、Claude が手元で完結できない操作は運営者がダッシュボード操作
 - **main 保護設定**（プロジェクト初期化時 1 回）：GitHub UI の Branch protection rules で main への直接 push を禁止、PR 経由必須に
-- **Cloudflare Pages の Preview Branch Filter 設定**（プロジェクト初期化時 1 回）：CF Pages ダッシュボードで Custom branches に Include `feat/phase-*`、Exclude `feat/phase-*/pbi-*` を設定（PBI sub-branch を保持する運用のため、preview 大量生成を抑制）
+- **Cloudflare Pages の Preview Branch Filter 設定**（プロジェクト初期化時 1 回）：CF Pages ダッシュボードで Custom branches に Include `feat/phase-*`、Exclude `feat/phase-*-pbi-*` を設定（PBI sub-branch を保持する運用のため、preview 大量生成を抑制）
 
 ### 推奨
 

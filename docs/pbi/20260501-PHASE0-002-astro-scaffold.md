@@ -60,7 +60,7 @@ Status: NotStarted
 - [ ] `yarn dev` 実行で Astro 開発サーバが起動し、`http://localhost:4321/`（Astro デフォルトポート）にアクセスできる
 - [ ] `yarn build` が成功する
 - [ ] `yarn check:ts`（または `astro check`）でエラーなし
-- [ ] `feat/phase-0/pbi-002` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+- [ ] `feat/phase-0-pbi-002` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
 - Astro + Tailwind v4 公式：https://docs.astro.build/en/guides/styling/

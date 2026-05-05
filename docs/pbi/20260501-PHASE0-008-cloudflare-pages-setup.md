@@ -38,14 +38,14 @@ Status: NotStarted
 ### Preview Branch Filter（必須、PBI sub-branch 運用に必要）
 - [ ] CF Pages プロジェクト設定 → Branch deployments → Custom branches を選択：
   - [ ] **Include Preview branches**: `feat/phase-*`（Phase ブランチのみ preview 生成）
-  - [ ] **Exclude Preview branches**: `feat/phase-*/pbi-*`（PBI sub-branch は preview しない、大量生成抑制）
+  - [ ] **Exclude Preview branches**: `feat/phase-*-pbi-*`（PBI sub-branch は preview しない、大量生成抑制）
 - [ ] 詳細は docs/pbi/README.md §10.8 参照
 
 ### .gitignore 整備
 - [ ] `.gitignore` に `.wrangler/`（Wrangler / CF Pages local emulation の作業ディレクトリ）を追加
 
 ### 確認
-- [ ] `feat/phase-0/pbi-008` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+- [ ] `feat/phase-0-pbi-008` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ### 本 PBI スコープ外（後続 PBI / 後続 Phase で対応）
 - [ ] 本番（main）ブランチへのマージとビルド成功確認 → **PHASE0-010**（Retrospective Gate に集約）

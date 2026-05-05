@@ -33,7 +33,7 @@ Status: NotStarted
 - [ ] **次セッションが PHASE0-010（Retrospective Gate）に着手できる状態**
 
 ### 確認
-- [ ] `feat/phase-0/pbi-009` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+- [ ] `feat/phase-0-pbi-009` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ### スコープ外（PHASE0-010 で対応）
 - main マージ、本番ビルド成功確認、本番 URL アクセス、Web Analytics 注入確認、R-14 ベースライン把握 → すべて **PHASE0-010 (Retrospective Gate)** で実施
