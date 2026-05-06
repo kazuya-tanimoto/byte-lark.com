@@ -112,4 +112,11 @@ Status: NotStarted
 ```
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：`registry.npmjs.org/astro` の dist-tag latest = 6.2.2（PHASE0-002 fe4b9e4 で primary-source verified）✓ / `docs/pbi/README.md` の現 version は v2.8（commit 6db093b で v2.7→v2.8 化）✓ / 現 `CLAUDE.md` の先頭は slim placeholder header（commit d4c5cd1 で `> **暫定（PHASE0-005 で完全置換予定）**` に置換済、旧 NOTE-header は既に存在しない）✓
+- 結果：**drift 補正 commit 5eed317** で 3 箇所を最新化：
+  - 受け入れ条件：旧 NOTE-header の削除確認 → 現 slim placeholder の完全置換確認に書き換え（前提が消失していたため）
+  - 技術メモ：プロトコル本体の README ref を v2.4 → v2.8
+  - 備考テンプレ：Stack `Astro 5` → `Astro 6`、Related Docs の `README.md (v2.4)` → `(v2.8)`

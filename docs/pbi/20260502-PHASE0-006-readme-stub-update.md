@@ -92,4 +92,10 @@ MIT — see [LICENSE](LICENSE)
 ```
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：`registry.npmjs.org/astro` の dist-tag latest = 6.2.2（PHASE0-002 fe4b9e4 で primary-source verified）✓ / `raw.githubusercontent.com/nodejs/Release/main/schedule.json`（2026-05-07 取得）：v24 = Active LTS（2025-10-28〜、EOL 2028-04-30）、v22 = Maintenance LTS（EOL 2027-04-30）✓
+- 結果：**drift 補正 2 commit** で 4 箇所を最新化：
+  - commit 88b99df：受け入れ条件 Stack 行と備考 README テンプレ（`## Tech Stack`）の `Astro 5` → `Astro 6`
+  - commit 5fd6cb5（Handoff 03 §4 D3-D4）：受け入れ条件 Prerequisites と備考 README テンプレの `Node 20+` / `Node.js 20+` → `Node 24+` / `Node.js 24+`（Node Active LTS への sync）

@@ -77,4 +77,10 @@ Status: NotStarted
 - 本 PBI は個人名義で開設、名義変更は別 PBI で対応
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：CF Pages 公式 `developers.cloudflare.com/pages/configuration/language-support-and-tools/` は Yarn バージョン指定 env var として `YARN_VERSION` のみを documented として明示、`CF_PAGES_USE_COREPACK` は公式 docs に該当記述なし ✓ / `raw.githubusercontent.com/nodejs/Release/main/schedule.json`（2026-05-07 取得）：v24 = Active LTS、v20 = EOL 済（2026-04-30）✓ / Astro 公式 deploy guide `docs.astro.build/en/guides/deploy/cloudflare/` が `Cloudflare recommends using Cloudflare Workers for new projects` と明記（Pages は依然 supported、Decision Log #17 維持の判断は PHASE0-010 retro gate で再評価）✓
+- 結果：**drift 補正 2 commit** で 3 箇所を最新化：
+  - commit 5ac39c8：Yarn 4 対応の env var を `YARN_VERSION=4.x` のみに統一（受け入れ条件・技術メモ・備考の 3 箇所）。`CF_PAGES_USE_COREPACK=1` は一次情報未確認のため削除
+  - commit 5fd6cb5（Handoff 03 §4 D2）：受け入れ条件 ビルド設定 Node version `20.x` → `24.x`（Node Active LTS への sync、Node 20 は 2026-04-30 EOL 済）
