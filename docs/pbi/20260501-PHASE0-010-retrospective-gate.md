@@ -78,6 +78,12 @@ Status: NotStarted
 
 すべての受け入れ条件を満たし、かつ運営者が「Phase 1a に進んで OK」と明示的に承認した時点で Done。
 
+### 申し送り種（Phase 0 完了時に Phase 1a 申し送りへ反映すること）
+
+事前に判明している論点を、Phase 0 完了時の retrospective で必ず再評価し、上の `## Phase 1a への申し送り` 各サブセクションに記入する。
+
+- **インフラ（CF Pages vs Workers）の再評価**：Astro 公式 deploy guide が `Cloudflare recommends using Cloudflare Workers for new projects` と明記（2026-05-07 audit 確認）。Cloudflare Pages は依然 supported で deprecated ではないが、new projects 推奨は Workers。Decision Log #17（site-plan.md）は Pages 維持で確定済、Phase 0 では PHASE0-008 で Pages を実装する方針。Phase 1a 起票時に「Pages 継続のまま Phase 1a 進行」か「Workers 切替を別 PBI 化」を運営者と再確認する。判断材料：（a）静的中心ブログでは技術差は拮抗、（b）切替は `@astrojs/cloudflare` adapter + wrangler.jsonc 構成への書換が必要、（c）Pages の機能更新ペースは Workers より遅い傾向。
+
 ### 次 Phase（1a）の PBI 起票プロトコル（CLAUDE.md からの参照先）
 
 別セッションが Phase 1a PBI 起票を行う際の手順：
@@ -118,3 +124,7 @@ Status: NotStarted
 - 確認：`docs/pbi/README.md` §10.6（Phase 完了時の main マージ手順）の参照位置が現 v2.8 でも有効 ✓ / `site-plan.md` §7 ロードマップ・Retrospective Gate 表記実在 ✓ / `## Phase 1a への申し送り` セクションテンプレ・grep コマンド例の妥当性 ✓
 - 結果：**drift なし**（着手時の二度手間を防ぐため記録）。
 - 補足：本 PBI は CLAUDE.md の「How to draft next-Phase PBIs」セクションが PHASE0-005 で書き込まれている前提で受け入れ条件を立てる。本 audit セッションでは CLAUDE.md は slim 暫定版のままだが、PHASE0-010 着手時には PHASE0-005（先行）が完了している前提のため、依存順序的に問題なし。
+
+### 2026-05-07 audit 続編（Handoff 03）
+- 「## 備考 / 申し送り種」セクションを新設、Astro 公式 docs（2026-05-07 取得）の `Cloudflare recommends using Cloudflare Workers for new projects` を根拠に、Phase 0 完了時の Pages vs Workers 再評価論点を明文化。
+- Decision Log #17 は Pages 維持で確定済、Phase 0 は Pages のまま完走、再評価は Phase 1a 起票時に運営者と実施。
