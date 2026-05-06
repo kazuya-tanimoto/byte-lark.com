@@ -315,11 +315,14 @@ cd <main repo>
 git checkout feat/phase-<phase>
 git pull origin feat/phase-<phase>
 
-# worktree で sibling ディレクトリに展開
-git worktree add ../<repo>-pbi-<NNN> -b feat/phase-<phase>-pbi-<NNN>
+# worktree をプロジェクト配下 .claude/worktrees/ に展開
+# （Claude Code sandbox がプロジェクト配下のみ書込許可するため、追加 sandbox 設定不要）
+git worktree add .claude/worktrees/phase-<phase>-pbi-<NNN> -b feat/phase-<phase>-pbi-<NNN>
 
 # 作業ディレクトリへ移動
-cd ../<repo>-pbi-<NNN>
+cd .claude/worktrees/phase-<phase>-pbi-<NNN>
+# Claude セッションは tool 経由が推奨：
+#   EnterWorktree({ path: ".claude/worktrees/phase-<phase>-pbi-<NNN>" })
 ```
 
 **worktree 省略が許される唯一の条件**：運営者が明示的に「worktree 不要」と指示した時のみ。Claude 側で「並行不要そうだから省略」と判断するのは禁止。
@@ -330,11 +333,12 @@ cd ../<repo>-pbi-<NNN>
 
 ```bash
 # sub-branch ディレクトリで commit / push
-cd ../<repo>-pbi-<NNN>
+cd .claude/worktrees/phase-<phase>-pbi-<NNN>
 git push -u origin feat/phase-<phase>-pbi-<NNN>
 
 # 元の Phase ブランチに戻る
 cd <main repo>
+# Claude セッションは tool 経由：ExitWorktree({ action: "keep" })
 git checkout feat/phase-<phase>
 git pull origin feat/phase-<phase>  # 他並行 PBI の進捗を取り込む
 
@@ -345,7 +349,7 @@ git merge --no-ff feat/phase-<phase>-pbi-<NNN>
 git push origin feat/phase-<phase>
 
 # worktree 削除（ローカルディレクトリ整理）
-git worktree remove ../<repo>-pbi-<NNN>
+git worktree remove .claude/worktrees/phase-<phase>-pbi-<NNN>
 
 # remote の sub-branch は削除しない（log + 個別 PBI 状態の checkout 用に保持）
 ```
@@ -418,3 +422,4 @@ git push -u origin fix/<short-name>
 | 2026-05-03 | v2.3 | §10 ブランチ運用 新設：Phase ブランチ + 常時 PBI sub-branch + worktree による並行作業、merge --no-ff、sub-branch マージ後保持、CF Pages Preview Branch Filter 必須設定、main 保護、Hotfix 手順 |
 | 2026-05-05 | v2.4 | §10.4 を厳格化：PBI 着手時の worktree を「可能なら」から「常時必須（既定）」に変更。Claude による独自判断での省略を禁止。PBI 実装ではない docs 単独修正は本節対象外と明記 |
 | 2026-05-05 | v2.5 | §10.2 命名規則修正：PBI sub-branch を `feat/phase-<phase>/pbi-<NNN>` から `feat/phase-<phase>-pbi-<NNN>` へ変更（Git files backend の D/F conflict 制約により Phase ブランチと sub-branch の同時存在が不可能だったため）。§10.1 図、§10.4-10.5 コマンド例、§10.8 CF Pages Exclude pattern、全 PBI ファイルの sub-branch 参照を連動更新 |
+| 2026-05-06 | v2.6 | §10.4-10.5 worktree 配置を sibling（`../<repo>-pbi-<NNN>`）からプロジェクト配下（`.claude/worktrees/phase-<phase>-pbi-<NNN>`）に変更。Claude Code sandbox がプロジェクト配下のみ書込許可するため、追加 sandbox 設定なしで運用可能に。Claude セッションは EnterWorktree / ExitWorktree tool で切替。 |
