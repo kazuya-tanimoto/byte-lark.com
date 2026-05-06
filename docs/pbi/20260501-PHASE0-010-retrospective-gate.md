@@ -128,3 +128,4 @@ Status: NotStarted
 ### 2026-05-07 audit 続編（Handoff 03）
 - 「## 備考 / 申し送り種」セクションを新設、Astro 公式 docs（2026-05-07 取得）の `Cloudflare recommends using Cloudflare Workers for new projects` を根拠に、Phase 0 完了時の Pages vs Workers 再評価論点を明文化。
 - Decision Log #17 は Pages 維持で確定済、Phase 0 は Pages のまま完走、再評価は Phase 1a 起票時に運営者と実施。
+- 包括 cross-check（7 軸 × 8 doc）実施：(a) library version / (b) PBI ID / (c) §N / (d) ファイルパス / (e) 最終更新日付 / (f) Phase ラベル / (g) URL。**drift 0 件**（PHASE0-002 title の `Astro 5` 残存・README.md の旧 repo URL・biome.jsonc schema 1.5.3 はそれぞれ worktree 改訂・PHASE0-006 全文置換・PHASE0-004 migrate で解消予定の既知箇所のため対象外、`docs/writing-workflow.md` 未実在は Phase 1a 冒頭で作成予定の意図的な未来 reference）。
