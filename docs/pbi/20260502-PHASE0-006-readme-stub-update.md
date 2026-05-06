@@ -20,7 +20,7 @@ Status: NotStarted
 - [ ] 旧記述ゼロ（`grep -E "Chakra|Storybook|yarn sb|atomic"` で 0 件）
 - [ ] 以下の章を含む（最低限）：
   - [ ] Project name + 1 行説明（個人ポートフォリオ + 技術 / ライフ系ブログ）
-  - [ ] Stack（Astro 5 + Tailwind CSS v4 + shadcn/ui + TypeScript + Yarn 4 + Biome v2 + Vitest + Playwright）
+  - [ ] Stack（Astro 6 + Tailwind CSS v4 + shadcn/ui + TypeScript + Yarn 4 + Biome v2 + Vitest + Playwright）
   - [ ] Prerequisites（Node 20+, Yarn 4）
   - [ ] Installation（`yarn install`）
   - [ ] Available Scripts（dev / build / preview / check / check:ts / test / test:run / test:e2e / fix）
@@ -45,7 +45,7 @@ Status: NotStarted
 個人ポートフォリオ + 技術 / ライフ系ブログサイト。エージェント案件の職能リファレンス + 技術発信を目的とする。
 
 ## Tech Stack
-- Astro 5 (SSG)
+- Astro 6 (SSG)
 - Tailwind CSS v4 (`@tailwindcss/vite`)
 - shadcn/ui (React Islands only)
 - TypeScript strict
