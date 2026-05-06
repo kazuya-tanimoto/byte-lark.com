@@ -1,4 +1,4 @@
-# 運営者は Astro 5 + Tailwind v4 + shadcn/ui の初期プロジェクトでローカル開発できる
+# 運営者は Astro 6 + Tailwind v4 + shadcn/ui の初期プロジェクトでローカル開発できる
 
 Status: InProgress
 Started: 2026-05-06
@@ -75,7 +75,7 @@ Started: 2026-05-06
 - Astro + Tailwind v4 公式：https://docs.astro.build/en/guides/styling/
 - shadcn/ui Astro 公式：https://ui.shadcn.com/docs/installation/astro
 - Tailwind v4 統合は **Vite plugin (`@tailwindcss/vite`)** が公式（`@astrojs/tailwind` は Tailwind 3 legacy 専用）
-- Astro バージョン：5.x 系の最新
+- Astro バージョン：6.x 系の最新（npm dist-tag `latest` = 6.2.2 on 2026-05-06、empirical 確認済）。PBI 起票時 (2026-05-01) は Astro 5 想定だったが、本日着手時点で Astro 6 が stable。
 - Yarn 4 (Berry)：本 PBI 内で `corepack enable && yarn set version stable` を実行して Classic 1.22 → 4.x に移行（PHASE0-001 残置の `.yarnrc.yml` は `nodeLinker: node-modules` のみで `yarnPath` は無し、本 PBI で追加）
 - create-astro CLI に `--typescript strict` flag は存在しない（CLI source 一次確認済）。scaffold 後 `tsconfig.json` の `extends` を `astro/tsconfigs/strict` に手動設定で代替
 - shadcn コンポーネントは `src/components/ui/` 配下（`components.json` で指定）
