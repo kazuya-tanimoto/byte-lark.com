@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v2.5)
+# PBI フォーマット規約 (v2.8)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-05-05
+最終更新: 2026-05-07
 
 ---
 
@@ -176,7 +176,7 @@ PBI を更新する時は、必ず以下を**同一コミット内**で同期：
 ### 5.3 着手時の手順
 
 1. PBI 全文を読む
-2. **PBI 本文の前提を一次情報で確認**（コマンド、依存 version、ツール挙動、外部リソースの存在等）。乖離があれば実装に入る前に PBI ファイルを update して commit する（メッセージ例：`docs(pbi): correct PHASE0-NNN spec for ...`）。Don't Guess の PBI 着手時版。`yarn --version` / `<cli> --help` / `git ls-tree archive/...` 等で empirical 確認
+2. **PBI 本文の前提を一次情報で確認**（コマンド、依存 version、ツール挙動、外部リソース、**および scaffold / migration / setup の "approach" 自体**）。乖離があれば実装に入る前に PBI ファイルを update して commit する（メッセージ例：`docs(pbi): correct PHASE0-NNN spec for ...`）。Don't Guess の PBI 着手時版。`yarn --version` / `<cli> --help` / `git ls-tree archive/...` 等で empirical 確認。**「approach 自体」も対象**とは：PBI が CLI A を使うと書いていても、CLI A の公式 docs に該当 use case が無い／別 path（例：Manual Setup 節）を案内している場合は、コマンドや version だけでなく approach そのものを書き換える（PHASE0-002 セッション 1 で `yarn create astro@latest .` が既存 repo 後付けに非対応で、Astro 公式 Manual Setup 節への切替が必要だった経験を規約化）
 3. PBI の Status を `InProgress` に変更、Started に今日の日付追記
 4. INDEX.md の該当エントリを `[InProgress]` に更新
 5. 実装する
@@ -425,3 +425,4 @@ git push -u origin fix/<short-name>
 | 2026-05-05 | v2.5 | §10.2 命名規則修正：PBI sub-branch を `feat/phase-<phase>/pbi-<NNN>` から `feat/phase-<phase>-pbi-<NNN>` へ変更（Git files backend の D/F conflict 制約により Phase ブランチと sub-branch の同時存在が不可能だったため）。§10.1 図、§10.4-10.5 コマンド例、§10.8 CF Pages Exclude pattern、全 PBI ファイルの sub-branch 参照を連動更新 |
 | 2026-05-06 | v2.6 | §10.4-10.5 worktree 配置を sibling（`../<repo>-pbi-<NNN>`）からプロジェクト配下（`.claude/worktrees/phase-<phase>-pbi-<NNN>`）に変更。Claude Code sandbox がプロジェクト配下のみ書込許可するため、追加 sandbox 設定なしで運用可能に。Claude セッションは EnterWorktree / ExitWorktree tool で切替。 |
 | 2026-05-06 | v2.7 | §5.3 着手時の手順に「PBI 本文の前提を一次情報で確認」step を追加（Step 2、後続 renumber）。Don't Guess の PBI 着手時版。PHASE0-002 で PBI 本文の `--typescript strict` flag / Yarn 4 維持前提が事実と乖離していた経験から、各 PBI 着手時に empirical 確認するルールを明文化。 |
+| 2026-05-07 | v2.8 | §5.3 step 2 の verify 範囲を「コマンド・version・flag・URL」から **scaffold / migration / setup の approach 自体**まで拡張。PHASE0-002 セッション 1 で `yarn create astro@latest .` が既存 repo 後付けに非対応で、approach そのものを Astro Manual Setup 節に切替える必要があった経験を規約化。Phase 0 PBI 全体 audit（PHASE0-005 / 006 / 008 の drift 補正）と同セッションで反映。 |
