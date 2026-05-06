@@ -128,4 +128,23 @@ Started: 2026-05-06
 5. `cat src/components/ui/button.tsx` → shadcn の Button が見える
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-06 セッション 1
+- やったこと：
+  - sub-branch `feat/phase-0-pbi-002` + worktree 作成、PBI Status InProgress + INDEX 同期 (`7428ff7`)
+  - 一次情報で Astro 5→6 ドリフト検出 → docs(pbi) 補正コミット (`fe4b9e4`)
+  - Yarn 1.22 → 4.14.1 化（corepack DL 済 binary を `.yarn/releases/yarn-4.14.1.cjs` 直配置 + `.yarnrc.yml` に `yarnPath` / `npmRegistryServer` 追記）
+  - sandbox network allowlist に `repo.yarnpkg.com` / `raw.githubusercontent.com` 追加（運営者承認、`.claude/settings.local.json`）
+- 残タスク（次セッション）：
+  - PBI の `### scaffold アプローチ` 節を **Astro Manual Setup** に書き換え（docs(pbi)）。理由：create-astro CLI は「既存 repo 後付け」非対応。
+  - Manual Setup 実行（`yarn init --yes` → `yarn add astro` → 手書き：`src/pages/index.astro` / `astro.config.mjs` / `tsconfig.json` / `public/`）
+  - integrations 段階追加（`yarn astro add react/tailwind/mdx/sitemap`、`yarn add @astrojs/rss`）
+  - shadcn init + Button、tsconfig strict 化 + path alias、`vitest.config.ts` 新規、`playwright.config.ts` 補正、`.nvmrc=22`、`.gitignore` に `.astro/`
+  - 動作確認 + Done 化 + sub-branch merge
+- 学び・つまずき：
+  - **PBI の scaffold アプローチ (create-astro CLI 経由) が現実と乖離**。Astro 公式の Manual Setup 節 (`https://docs.astro.build/en/install-and-setup/#manual-setup`) が「既存 repo 後付け」用の正規パス。
+  - **§5.3 step 2 の verify 範囲を「approach も対象」に拡張すべき**（今回 version drift は捕まえたが approach 検証を省略して走り出した）。次セッション冒頭で PHASE0-003 を 1 件 spot-check し、他 PBI の起票品質を測る予定。
+  - Yarn 4 を Claude sandbox 内で動かすための env：`COREPACK_HOME=$TMPDIR/corepack` / `YARN_HTTP_PROXY=http://localhost:56072` / `YARN_HTTPS_PROXY=http://localhost:56072` / `YARN_GLOBAL_FOLDER=$TMPDIR/yarn-berry`（運用環境では不要）。
+- 想定外：
+  - create-astro CLI は `HTTP_PROXY` 非対応の Node fetch で template を fetch → sandbox 内動作不能。
+  - Yarn 4 default registry は `registry.yarnpkg.com`（`.yarnrc.yml` の `npmRegistryServer` か env で `registry.npmjs.org` に明示が必要）。
