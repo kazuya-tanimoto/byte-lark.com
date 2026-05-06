@@ -25,7 +25,7 @@ Status: NotStarted
   - [ ] Build command: `yarn build`
   - [ ] Build output directory: `dist`
   - [ ] Node version: 20.x（PHASE0-002 の `.nvmrc` と一致）
-  - [ ] **Yarn 4 (Berry) 対応の環境変数**：`YARN_VERSION=4.x` を Pages の Environment variables に設定（または `CF_PAGES_USE_COREPACK=1` で corepack 有効化）
+  - [ ] **Yarn 4 (Berry) 対応の環境変数**：`YARN_VERSION=4.x` を Pages の Environment variables に設定（CF Pages 公式が Yarn version 指定用に文書化している env var、`developers.cloudflare.com/pages/configuration/language-support-and-tools/` 参照）
 
 ### preview デプロイ
 - [ ] feat/phase-0 ブランチへの push で **preview デプロイ URL** が発行される
@@ -56,7 +56,7 @@ Status: NotStarted
 - Astro デプロイガイド (Cloudflare)：https://docs.astro.build/en/guides/deploy/cloudflare/
 - 必要な GitHub 連携権限の付与を Cloudflare 側で求められる
 - 本 PBI は **運営者の Cloudflare ダッシュボード操作**が必要。Claude は手元で完結できない
-- Yarn 4 (Berry) 対応：Cloudflare Pages のデフォルトビルダは Yarn 4 を自動認識しないことがある。`packageManager` フィールド + 環境変数 + corepack 有効化のいずれかで対応
+- Yarn 4 (Berry) 対応：Cloudflare Pages 公式 docs（language-support-and-tools）は Yarn version を `YARN_VERSION` env var で指定する方式を documented として明示。`package.json` の `packageManager` フィールドは scaffold 後にあるが、CF Pages 側での自動検出は明示されていないため、`YARN_VERSION=4.x` を必ず設定する
 
 ## 備考
 
@@ -67,8 +67,7 @@ Status: NotStarted
 4. プロジェクト名：`byte-lark`
 5. ビルド設定入力（上記）
 6. **Environment variables** に以下を追加：
-   - `YARN_VERSION=4.x`（具体バージョンは package.json `packageManager` と一致）
-   - 必要なら `CF_PAGES_USE_COREPACK=1`
+   - `YARN_VERSION=4.x`（具体バージョンは package.json `packageManager` と一致。CF Pages 公式が documented としている env var）
 7. デプロイ実行
 8. preview URL を確認
 9. プロジェクト Settings → Web Analytics を有効化（無料、Cookieless）
