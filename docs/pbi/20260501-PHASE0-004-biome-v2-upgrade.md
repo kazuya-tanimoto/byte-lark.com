@@ -58,4 +58,8 @@ Phase 0 では **空 override セクションのみ** 用意：
 - セクション枠だけ用意しておく理由：ルール追加時に構造を考えなくていい
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：`registry.npmjs.org/@biomejs/biome` の dist-tag latest = 2.4.14（v2 系最新が存在）✓ / archive 派生 `package.json` の `@biomejs/biome` = `^1.9.4` ✓ / 現 `biome.jsonc` schema URL = 1.5.3、`src/dev/**/*` `src/stories/**/*` ignore が残存 ✓ / `biomejs.dev/guides/upgrade-to-biome-v2/` で `biome migrate --write` コマンドの存在を確認 ✓ / `biomejs.dev/internals/language-support/` で `.astro` = experimental（2.3.0〜、format / lint 可）を確認、PBI の「空 override で OK」方針と整合 ✓
+- 結果：**drift なし**（着手時の二度手間を防ぐため記録）。

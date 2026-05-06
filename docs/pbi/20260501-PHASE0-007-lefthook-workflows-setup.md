@@ -85,4 +85,9 @@ cat .github/dependabot.yml
 ```
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：現 `lefthook.yml` は EXAMPLE USAGE コメントのみで実コマンドゼロ ✓ / `.github/workflows/quality.yml`・`ui-tests.yml`・`codeql.yml` 存在 ✓ / `.github/dependabot.yml` 存在（npm ecosystem 設定済）✓ / lefthook docs `lefthook.dev/configuration/` URL アクセス可（`commands:` syntax は v1+ で valid）✓
+- 結果：**drift なし**。`commands:` vs `jobs:` syntax は両方 valid のため、本 PBI の `commands:` 例はそのまま採用可。
+- 補足：本 PBI は依存 PBI（PHASE0-002 / PHASE0-004）完了後の package.json scripts に依拠する文面（pre-commit で `npx biome check ...` を直叩き、`yarn check` 経由は path 固定で staged 限定が効かない理由）が含まれる。実装着手時は PHASE0-002 完了後の `package.json` を再 verify する（README §5.3 step 2 の規約に従う）。

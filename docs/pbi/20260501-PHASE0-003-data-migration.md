@@ -71,4 +71,8 @@ Status: NotStarted
 他 24 件の icon URL は jsdelivr の devicon を維持。Phase 1a で vendor in 方針を別途決定。
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：archive/vite-react-chakra ブランチに `src/features/career/data/Career.ts` / `src/features/career/types/Career.ts` / `src/features/skills/data/Skill.ts` / `src/features/skills/types/Skill.ts` / `src/assets/logo.png` の blob 存在 ✓ / Career id=3 ダミー (`ーーーー＋ーーーー１ーーーー＋ーーー９` 等) と id=4 長文文字列を実体確認 ✓ / Skills 26 件、id=11 VB.Net icon = `vscode/vscode-original.svg`、id=25 GAS icon = `google/google-original.svg` を実体確認 ✓
+- 結果：**drift なし**（着手時の二度手間を防ぐため記録）。

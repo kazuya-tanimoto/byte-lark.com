@@ -112,4 +112,9 @@ Status: NotStarted
 （Phase 0 完了時に記入）
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：`docs/pbi/README.md` §10.6（Phase 完了時の main マージ手順）の参照位置が現 v2.8 でも有効 ✓ / `site-plan.md` §7 ロードマップ・Retrospective Gate 表記実在 ✓ / `## Phase 1a への申し送り` セクションテンプレ・grep コマンド例の妥当性 ✓
+- 結果：**drift なし**（着手時の二度手間を防ぐため記録）。
+- 補足：本 PBI は CLAUDE.md の「How to draft next-Phase PBIs」セクションが PHASE0-005 で書き込まれている前提で受け入れ条件を立てる。本 audit セッションでは CLAUDE.md は slim 暫定版のままだが、PHASE0-010 着手時には PHASE0-005（先行）が完了している前提のため、依存順序的に問題なし。

@@ -59,4 +59,8 @@ Status: NotStarted
 - preview build 失敗 → Cloudflare Pages のビルドログで `YARN_VERSION` 環境変数 / corepack 設定 / Node version を確認（本番ビルド失敗の典型パターンと同じ）
 
 ## 実装ログ
-（未着手）
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：Astro default port = 4321（PHASE0-002 PBI でも明示、Astro 公式と一致）✓ / 想定 yarn scripts（dev / build / preview / check / check:ts / test:run）は PHASE0-002 完了後の `package.json` に依拠するため、本 PBI 着手時に再 verify する性質（README §5.3 step 2 の規約で担保）
+- 結果：**drift なし**（着手時の二度手間を防ぐため記録）。
