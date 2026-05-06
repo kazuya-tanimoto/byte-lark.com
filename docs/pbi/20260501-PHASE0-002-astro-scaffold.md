@@ -18,9 +18,16 @@ Status: NotStarted
 
 ## 受け入れ条件
 
+### Yarn 4 (Berry) 化（scaffold 前に実施）
+- [ ] `corepack enable` で corepack を有効化
+- [ ] `yarn set version stable` で Yarn 4.x を有効化（`.yarn/releases/yarn-4.x.x.cjs` が生成され、`.yarnrc.yml` に `yarnPath` が追記される）
+- [ ] `yarn --version` が 4.x 系を返す
+
+注：現リポジトリは Yarn 1.22 Classic（`yarn --version` で empirical 確認済）。`package.json` の `packageManager` 最終値は scaffold 後マージで決まるため、ずれていたら手動補正。
+
 ### Astro プロジェクト初期化
-- [ ] `yarn create astro@latest . --template minimal --typescript strict --install --no-git` 相当でプロジェクト初期化済み（既存 `.git` 維持のため `--no-git` 必須。create-astro CLI は boolean 否定を `--no-<flag>` 形式で受ける）
-- [ ] `package.json` の `packageManager` が `yarn@4.x` を維持している
+- [ ] `yarn create astro@latest . --template minimal --install --no-git` 相当でプロジェクト初期化済み（既存 `.git` 維持のため `--no-git` 必須。`--typescript strict` flag は create-astro CLI に存在しないため別項目「TypeScript strict 化」で対応）
+- [ ] `package.json` の `packageManager` が `yarn@4.x.x`（具体バージョン）に設定されている
 - [ ] `astro.config.mjs` に以下の integrations / plugin が登録されている：
   - [ ] `@astrojs/mdx`
   - [ ] `@astrojs/sitemap`
@@ -39,7 +46,8 @@ Status: NotStarted
 - [ ] `src/components/ui/button.tsx` が `npx shadcn@latest add button` で導入されている
 - [ ] `src/lib/utils.ts` に `cn()` ヘルパが存在する
 
-### Path alias
+### TypeScript strict 化 + Path alias
+- [ ] `tsconfig.json` の `extends` が `astro/tsconfigs/strict` に設定されている（`--typescript strict` flag が CLI 未対応のため scaffold 後に手動設定）
 - [ ] `tsconfig.json` の path alias が設定されている（`@/*` → `./src/*`）
 
 ### テスト基盤
@@ -67,12 +75,22 @@ Status: NotStarted
 - shadcn/ui Astro 公式：https://ui.shadcn.com/docs/installation/astro
 - Tailwind v4 統合は **Vite plugin (`@tailwindcss/vite`)** が公式（`@astrojs/tailwind` は Tailwind 3 legacy 専用）
 - Astro バージョン：5.x 系の最新
-- Yarn 4 (Berry) 維持：`packageManager` フィールド + `.yarnrc.yml` (PHASE0-001 で残置済)
+- Yarn 4 (Berry)：本 PBI 内で `corepack enable && yarn set version stable` を実行して Classic 1.22 → 4.x に移行（PHASE0-001 残置の `.yarnrc.yml` は `nodeLinker: node-modules` のみで `yarnPath` は無し、本 PBI で追加）
+- create-astro CLI に `--typescript strict` flag は存在しない（CLI source 一次確認済）。scaffold 後 `tsconfig.json` の `extends` を `astro/tsconfigs/strict` に手動設定で代替
 - shadcn コンポーネントは `src/components/ui/` 配下（`components.json` で指定）
 - React Island で shadcn を使うため `@astrojs/react` integration が必要
 
-### `yarn create astro` の衝突回避
-既存ファイル（biome.jsonc, .yarnrc.yml, playwright.config.ts 等）が残っているとプロンプトで衝突確認される場合がある。non-interactive 引数で進める or 都度 keep を選択。
+### scaffold アプローチ（ハイブリッド、運営者判断済）
+
+カレント既存ファイル（biome.jsonc, .yarnrc.yml, playwright.config.ts, docs/, lefthook.yml 等）が多数残置されているため、フル scaffold だとプロンプト衝突連発になる。最小 scaffold + 段階的 add のハイブリッドで進める：
+
+1. `yarn create astro@latest . --template minimal --install --no-git`（既存ファイルは keep を選択）
+2. `yarn astro add react`（`@astrojs/react`）
+3. `yarn astro add tailwind`（公式 v4 統合：`@tailwindcss/vite` を `astro.config.mjs` に注入、`src/styles/global.css` に `@import "tailwindcss";` を生成）
+4. `yarn astro add mdx`
+5. `yarn astro add sitemap`
+6. `yarn add @astrojs/rss`（astro add 不要、import で使う runtime ライブラリ）
+7. `npx shadcn@latest init` → `npx shadcn@latest add button`
 
 ### shadcn init 時のプロンプト想定回答
 - TypeScript: yes
