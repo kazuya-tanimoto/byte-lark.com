@@ -16,7 +16,7 @@ Status: NotStarted
 ## 受け入れ条件
 
 - [ ] `CLAUDE.md` を備考セクションのテンプレで丸ごと差し替えた
-- [ ] 旧 NOTE ヘッダー（先頭の `> **NOTE (2026-05-02)**：本ファイルは旧 Vite/React/Chakra 前提...` ブロック一式）が削除されている
+- [ ] 既存の暫定 slim ヘッダー（先頭の `> **暫定（PHASE0-005 で完全置換予定）**：以下のリンクを参照してください。` ブロック一式、commit `d4c5cd1` で導入）が新テンプレで完全置換されている
 - [ ] 検証 1：旧記述が完全にゼロ（`grep -E "Chakra|Storybook|yarn sb|atoms.*molecules.*organisms"` で 0 件）
 - [ ] 検証 2：多セッション運用の 3 セクションが存在（`grep -E "How to (start|end) (work|this session)|How to draft next-Phase"` で 3 件以上ヒット）
 - [ ] 検証 3：内容ベースで、以下 3 セクションすべてに必要な指示が含まれる：
@@ -28,7 +28,7 @@ Status: NotStarted
 ## 技術メモ
 - 既存 CLAUDE.md パス：repo ルートの `CLAUDE.md`
 - グローバル CLAUDE.md（`~/.claude/CLAUDE.md`）は触らない
-- プロトコル本体は `docs/pbi/README.md` v2.4 に詳細記載済（§5 ライフサイクル / §6 コミット規約 / §10 ブランチ運用）。CLAUDE.md にはエッセンスを書き、詳細は README に誘導することでコンパクト化
+- プロトコル本体は `docs/pbi/README.md` v2.8 に詳細記載済（§5 ライフサイクル / §6 コミット規約 / §10 ブランチ運用）。CLAUDE.md にはエッセンスを書き、詳細は README に誘導することでコンパクト化
 
 ## 備考
 
@@ -40,7 +40,7 @@ Status: NotStarted
 # byte-lark.com Project Cheatsheet
 
 ## Stack
-- Astro 5 + Tailwind CSS v4 (`@tailwindcss/vite`) + shadcn/ui
+- Astro 6 + Tailwind CSS v4 (`@tailwindcss/vite`) + shadcn/ui
 - TypeScript strict
 - Yarn 4 (Berry)
 - Biome v2 (lint/format)
@@ -105,7 +105,7 @@ Status: NotStarted
 
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.7)
-- docs/pbi/README.md          PBI format spec (v2.4) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v2.8) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）
