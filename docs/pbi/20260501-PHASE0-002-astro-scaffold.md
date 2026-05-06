@@ -1,6 +1,7 @@
 # 運営者は Astro 5 + Tailwind v4 + shadcn/ui の初期プロジェクトでローカル開発できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-05-06
 
 ## 誰が
 - 運営者
