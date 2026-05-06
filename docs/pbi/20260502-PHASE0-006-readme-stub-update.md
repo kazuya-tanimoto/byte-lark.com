@@ -21,7 +21,7 @@ Status: NotStarted
 - [ ] 以下の章を含む（最低限）：
   - [ ] Project name + 1 行説明（個人ポートフォリオ + 技術 / ライフ系ブログ）
   - [ ] Stack（Astro 6 + Tailwind CSS v4 + shadcn/ui + TypeScript + Yarn 4 + Biome v2 + Vitest + Playwright）
-  - [ ] Prerequisites（Node 20+, Yarn 4）
+  - [ ] Prerequisites（Node 24+, Yarn 4）
   - [ ] Installation（`yarn install`）
   - [ ] Available Scripts（dev / build / preview / check / check:ts / test / test:run / test:e2e / fix）
   - [ ] Project Structure（簡略）
@@ -55,7 +55,7 @@ Status: NotStarted
 - Cloudflare Pages (hosting) + Cloudflare Web Analytics
 
 ## Prerequisites
-- Node.js 20+
+- Node.js 24+
 - Yarn 4 (`packageManager` field を参照)
 
 ## Installation

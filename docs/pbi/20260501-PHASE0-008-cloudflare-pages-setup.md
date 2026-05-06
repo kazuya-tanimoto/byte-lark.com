@@ -24,7 +24,7 @@ Status: NotStarted
 - [ ] ビルド設定：
   - [ ] Build command: `yarn build`
   - [ ] Build output directory: `dist`
-  - [ ] Node version: 20.x（PHASE0-002 の `.nvmrc` と一致）
+  - [ ] Node version: 24.x（PHASE0-002 の `.nvmrc` と一致、Node 24 = Active LTS）
   - [ ] **Yarn 4 (Berry) 対応の環境変数**：`YARN_VERSION=4.x` を Pages の Environment variables に設定（CF Pages 公式が Yarn version 指定用に文書化している env var、`developers.cloudflare.com/pages/configuration/language-support-and-tools/` 参照）
 
 ### preview デプロイ
