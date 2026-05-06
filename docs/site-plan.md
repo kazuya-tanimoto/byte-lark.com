@@ -365,7 +365,7 @@ Astro の標準機能で完全対応：
 
 | Phase | 内容 | 完了条件 | 想定期間 |
 |---|---|---|---|
-| **0** | プロジェクト初期化：Vite/React/Chakra 削除、Astro 5 + Tailwind v4 (`@tailwindcss/vite`) + shadcn/ui スキャフォールド、既存資産（Career/Skills データ）移植、CLAUDE.md 更新、Biome v2 化 | `yarn dev` で空ページ起動 / Lint / Typecheck / 既存テストフレーム動作 | **2-3 日** |
+| **0** | プロジェクト初期化：Vite/React/Chakra 削除、Astro 6 + Tailwind v4 (`@tailwindcss/vite`) + shadcn/ui スキャフォールド、既存資産（Career/Skills データ）移植、CLAUDE.md 更新、Biome v2 化 | `yarn dev` で空ページ起動 / Lint / Typecheck / 既存テストフレーム動作 | **2-3 日** |
 | **Gate 0→1a** | **Retrospective Gate**：Phase 0 完了確認 + 学びの集約（Gate PBI 内に申し送り記入） | Gate PBI 全受け入れ条件 check、運営者承認 | 0.25 日 |
 | **1a 起票** | 別セッションで Phase 1a PBI 起票（Gate の申し送りを反映） | INDEX.md に Phase 1a PBI が追加され、レビュー完了 | 0.5-1 日 |
 | **1a** | サイト構成・各ページの機能実装。冒頭タスク：CI 整備 / 仮 HEX 確定 / コードハイライト選定 / 画像最適化方針確定。続いて全ページ実装 + Markdown ブログ + RSS / sitemap / OGP / JSON-LD / プライバシーポリシー / E2E | 全ページ動作、SSG ビルド成功、Lighthouse 全 90+、Core Web Vitals 目標達成、Playwright E2E グリーン | 5-7 日 |
@@ -430,7 +430,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 |---|---|---|---|---|---|
 | R-01 | 書く習慣がつかず Phase 2 に進まない | 投資回収できない | (a) 執筆ワークフロー整備（`docs/writing-workflow.md`）、(b) **月 1 でネタ出しを Claude にさせる /schedule routine**、(c) frontmatter `status: idea \| drafting \| review \| published` で記事パイプラインを可視化、(d) 連続 4 週間未投稿で運営者にメール通知 | Phase 1a 完了後、3 ヶ月で記事 5 本未達 | 運営者 |
 | R-02 | Markdown スキーマが運用後に変わる | 既存記事の修正が必要 | Zod schema を optional 寛容に / breaking change 時は **`scripts/migrate-frontmatter.ts` 雛形を Phase 1a で先に用意** / 各記事に `schema_version` フィールドを持たせる選択肢を残す | 記事 5 本以上書いた後にスキーマ変更必要時 | Claude（実装）+ 運営者（判断） |
-| R-03 | Astro 5 / Tailwind v4 / shadcn の major up で破壊的変更 | ビルドエラー / 表示崩れ | dependabot で月次監視、major up は専用ブランチで PR、E2E でリグレッション検出。**Tailwind v5 / shadcn Astro 統合方式変更**を特に警戒 | dependabot PR 通知 / 各ライブラリのリリースノート | Claude |
+| R-03 | Astro 6 / Tailwind v4 / shadcn の major up で破壊的変更 | ビルドエラー / 表示崩れ | dependabot で月次監視、major up は専用ブランチで PR、E2E でリグレッション検出。**Tailwind v5 / shadcn Astro 統合方式変更**を特に警戒 | dependabot PR 通知 / 各ライブラリのリリースノート | Claude |
 | R-04 | 法人化前のため byte-lark の正式法人名・所在地・連絡先が未確定 | Footer / Contact / About の確定情報が出せない | 法人化前は「byte-lark」表記 + 個人事業主としての責任明示。法人化後（2026/06）に置換。**§13 で 3 段階マイルストーン管理** | 法人登記完了 | 運営者 |
 | R-05 | Hero の文言が決まらず実装が止まる | スケジュール遅延 | プレースホルダーで先に実装 → 後から差替可能な構造に。Q1 ドラフト 3 案を Claude が出す | Phase 1a 着手時 | Claude（ドラフト）+ 運営者（選定） |
 | R-06 | ロゴ刷新が決まらず Phase 1b が長期化 | サイト公開が後ろ倒し | 現行ロゴで一旦公開、ClaudeDesign で並行検討、決定次第差替。**反復上限 5 ラウンド** | Phase 1b 開始から 5 ラウンド未確定 | 運営者 |
@@ -442,7 +442,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | R-12 | 時間捻出リスク（本業繁忙期に Phase 1a が止まる） | 全体スケジュール延伸 | 月別の現実投下時間見積を持つ / Phase ごと +50% バッファ。停滞時は Phase 縮小（FR-19 を 1c → Phase 2 に等）で対応 | Phase 1a で 1 週間以上の進捗ゼロ | 運営者 |
 | R-13 | バックアップ（GitHub アカウント停止リスク） | 全資産喪失 | Git は GitHub + ローカル + 別オフサイト（外付け SSD or 別 git ホスティングへの mirror）。`docs/backup-policy.md` に記載 | アカウント停止通知 | 運営者 |
 | R-14 | デプロイ先のフリープラン制限（CF Pages のビルド回数制限等） | 公開停止 | 月初に CF Pages ダッシュボードで使用量確認。法人化後は有料プラン契約を検討 | 月使用量 80% 到達 | 運営者 |
-| R-15 | 依存スタック（Astro 5 / Tailwind v4 / shadcn）の若さ | 破壊的変更頻度高 | major up は専用ブランチで検証、本サイトを pin で運用。リリースノートを月次で確認 | 月次レビュー | Claude |
+| R-15 | 依存スタック（Astro 6 / Tailwind v4 / shadcn）の若さ | 破壊的変更頻度高 | major up は専用ブランチで検証、本サイトを pin で運用。リリースノートを月次で確認 | 月次レビュー | Claude |
 
 ## 10. 未決事項（Claude 主導でドラフト → 運営者選定）
 
