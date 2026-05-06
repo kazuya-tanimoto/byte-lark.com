@@ -176,11 +176,12 @@ PBI を更新する時は、必ず以下を**同一コミット内**で同期：
 ### 5.3 着手時の手順
 
 1. PBI 全文を読む
-2. PBI の Status を `InProgress` に変更、Started に今日の日付追記
-3. INDEX.md の該当エントリを `[InProgress]` に更新
-4. 実装する
-5. 完了：受け入れ条件全 check → Status: Done + Completed 追記 → INDEX.md 同期
-6. コミット（後述のメッセージ規約に従う）
+2. **PBI 本文の前提を一次情報で確認**（コマンド、依存 version、ツール挙動、外部リソースの存在等）。乖離があれば実装に入る前に PBI ファイルを update して commit する（メッセージ例：`docs(pbi): correct PHASE0-NNN spec for ...`）。Don't Guess の PBI 着手時版。`yarn --version` / `<cli> --help` / `git ls-tree archive/...` 等で empirical 確認
+3. PBI の Status を `InProgress` に変更、Started に今日の日付追記
+4. INDEX.md の該当エントリを `[InProgress]` に更新
+5. 実装する
+6. 完了：受け入れ条件全 check → Status: Done + Completed 追記 → INDEX.md 同期
+7. コミット（後述のメッセージ規約に従う）
 
 ### 5.4 中断時の手順
 
@@ -423,3 +424,4 @@ git push -u origin fix/<short-name>
 | 2026-05-05 | v2.4 | §10.4 を厳格化：PBI 着手時の worktree を「可能なら」から「常時必須（既定）」に変更。Claude による独自判断での省略を禁止。PBI 実装ではない docs 単独修正は本節対象外と明記 |
 | 2026-05-05 | v2.5 | §10.2 命名規則修正：PBI sub-branch を `feat/phase-<phase>/pbi-<NNN>` から `feat/phase-<phase>-pbi-<NNN>` へ変更（Git files backend の D/F conflict 制約により Phase ブランチと sub-branch の同時存在が不可能だったため）。§10.1 図、§10.4-10.5 コマンド例、§10.8 CF Pages Exclude pattern、全 PBI ファイルの sub-branch 参照を連動更新 |
 | 2026-05-06 | v2.6 | §10.4-10.5 worktree 配置を sibling（`../<repo>-pbi-<NNN>`）からプロジェクト配下（`.claude/worktrees/phase-<phase>-pbi-<NNN>`）に変更。Claude Code sandbox がプロジェクト配下のみ書込許可するため、追加 sandbox 設定なしで運用可能に。Claude セッションは EnterWorktree / ExitWorktree tool で切替。 |
+| 2026-05-06 | v2.7 | §5.3 着手時の手順に「PBI 本文の前提を一次情報で確認」step を追加（Step 2、後続 renumber）。Don't Guess の PBI 着手時版。PHASE0-002 で PBI 本文の `--typescript strict` flag / Yarn 4 維持前提が事実と乖離していた経験から、各 PBI 着手時に empirical 確認するルールを明文化。 |
