@@ -26,15 +26,23 @@ Started: 2026-05-06
 
 注：現リポジトリは Yarn 1.22 Classic（`yarn --version` で empirical 確認済）。`package.json` の `packageManager` 最終値は scaffold 後マージで決まるため、ずれていたら手動補正。
 
-### Astro プロジェクト初期化
-- [ ] `yarn create astro@latest . --template minimal --install --no-git` 相当でプロジェクト初期化済み（既存 `.git` 維持のため `--no-git` 必須。`--typescript strict` flag は create-astro CLI に存在しないため別項目「TypeScript strict 化」で対応）
-- [ ] `package.json` の `packageManager` が `yarn@4.x.x`（具体バージョン）に設定されている
-- [ ] `astro.config.mjs` に以下の integrations / plugin が登録されている：
+### Astro プロジェクト初期化（Manual Setup）
+
+Astro 公式 Manual Setup（`https://docs.astro.build/en/install-and-setup/#manual-setup`）に従う。create-astro CLI は既存 repo 後付け非対応 + Claude sandbox 内で `HTTP_PROXY` 非対応の Node fetch を行うため使わない（2026-05-06 セッション 1 で実証）。
+
+- [ ] `yarn init --yes` で `package.json` を生成し、`packageManager` を `yarn@4.14.1`（worktree 同梱の Yarn binary と一致）に手動補正
+- [ ] `yarn add astro` で astro の最新版 6.x を install（npm dist-tag latest = 6.2.2、2026-05-07 確認）
+- [ ] `package.json` の `scripts` を本 PBI 備考の「想定 package.json scripts」に置換
+- [ ] `src/pages/index.astro` を Astro 公式 Manual Setup のテンプレで新規作成
+- [ ] `astro.config.mjs` を `import { defineConfig } from "astro/config"; export default defineConfig({});` で新規作成
+- [ ] `tsconfig.json` を `{ "extends": "astro/tsconfigs/base" }` で新規作成（後段「TypeScript strict 化」で `strict` に上げる）
+- [ ] `public/robots.txt` を Astro 公式テンプレで作成（`public/` を空 dir にしない）
+- [ ] `astro.config.mjs` に integrations 段階追加後、以下が登録されていること：
   - [ ] `@astrojs/mdx`
   - [ ] `@astrojs/sitemap`
   - [ ] `@astrojs/react`
-  - [ ] `@astrojs/rss`（pages 側で使用、依存追加）
   - [ ] Vite plugin: **`@tailwindcss/vite`**（`@astrojs/tailwind` は使わない）
+- [ ] `@astrojs/rss` は dependency に追加（pages 側で import 利用、astro.config.mjs への integration 登録不要）
 
 ### Tailwind v4 統合
 - [ ] `tailwind.config.ts` 相当の設定ファイルが存在する（v4 では CSS-first 設定だが、theme extension 用に config 持つ）
@@ -59,7 +67,7 @@ Started: 2026-05-06
   - [ ] 旧 React Router 前提の URL 直書きが残っていれば削除
 
 ### Node version pin
-- [ ] `.nvmrc` または `.tool-versions` に Node 20.x（または LTS）を pin
+- [ ] `.nvmrc` に Node 24（Active LTS、2026-05-07 audit で確定。Node 22 は 2025-10-21 に Maintenance LTS 入り、24 が現行 Active LTS）を pin。PHASE0-006 / 008 と整合（commit `5fd6cb5`）。Astro 6 の最低要件は `v22.12.0`+（公式 docs 確認済）
 
 ### .gitignore 整備
 - [ ] `.gitignore` に `.astro/`（Astro の generated types ディレクトリ）を追加
@@ -81,17 +89,28 @@ Started: 2026-05-06
 - shadcn コンポーネントは `src/components/ui/` 配下（`components.json` で指定）
 - React Island で shadcn を使うため `@astrojs/react` integration が必要
 
-### scaffold アプローチ（ハイブリッド、運営者判断済）
+### scaffold アプローチ（Astro 公式 Manual Setup を採用）
 
-カレント既存ファイル（biome.jsonc, .yarnrc.yml, playwright.config.ts, docs/, lefthook.yml 等）が多数残置されているため、フル scaffold だとプロンプト衝突連発になる。最小 scaffold + 段階的 add のハイブリッドで進める：
+create-astro CLI（`yarn create astro@latest .`）は **既存 repo 後付け非対応**かつ Claude sandbox 内で `HTTP_PROXY` 非対応の Node fetch を行うため使わない（2026-05-06 セッション 1 で実証）。Astro 公式が用意する正規パスである **Manual Setup**（`https://docs.astro.build/en/install-and-setup/#manual-setup`）に切替える。pbi/README v2.8 §5.3 step 2 の「approach 自体も verify 対象」を反映した結果。
 
-1. `yarn create astro@latest . --template minimal --install --no-git`（既存ファイルは keep を選択）
-2. `yarn astro add react`（`@astrojs/react`）
-3. `yarn astro add tailwind`（公式 v4 統合：`@tailwindcss/vite` を `astro.config.mjs` に注入、`src/styles/global.css` に `@import "tailwindcss";` を生成）
-4. `yarn astro add mdx`
-5. `yarn astro add sitemap`
-6. `yarn add @astrojs/rss`（astro add 不要、import で使う runtime ライブラリ）
-7. `npx shadcn@latest init` → `npx shadcn@latest add button`
+手順：
+
+1. `yarn init --yes` → `package.json` 生成、`packageManager: yarn@4.14.1` に補正
+2. `yarn add astro` → astro 6.x install
+3. Manual Setup の手書きファイル群を作成：
+   - `package.json` の `scripts` を `astro dev/build/preview` 等に整備（備考の想定 scripts 参照）
+   - `src/pages/index.astro`（公式テンプレ）
+   - `astro.config.mjs`（`defineConfig({})`）
+   - `tsconfig.json`（`extends: "astro/tsconfigs/base"`、後の strict 化ステップで上げる）
+   - `public/robots.txt`（公式テンプレ）
+4. `yarn astro add react --yes`（`@astrojs/react`）
+5. `yarn astro add tailwind --yes`（公式 v4 統合：`@tailwindcss/vite` を `astro.config.mjs` に注入、`src/styles/global.css` に `@import "tailwindcss";` を生成）
+6. `yarn astro add mdx --yes`
+7. `yarn astro add sitemap --yes`
+8. `yarn add @astrojs/rss`（runtime ライブラリのみ、astro add 不要）
+9. `yarn dlx shadcn@latest init` → `yarn dlx shadcn@latest add button`（`npx` 回避：npm cache の root-owned files 問題回避）
+
+`yarn astro add` は対話 prompt を出すため `--yes` 必須。Yarn 4 / yarn dlx を Claude sandbox で動かすには `COREPACK_HOME` / `YARN_HTTP_PROXY` / `YARN_HTTPS_PROXY` / `YARN_GLOBAL_FOLDER` の export が必要（運用環境では不要、実装ログ参照）。
 
 ### shadcn init 時のプロンプト想定回答
 - TypeScript: yes
