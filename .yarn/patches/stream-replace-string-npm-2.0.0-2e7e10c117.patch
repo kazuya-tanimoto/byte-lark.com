@@ -1,0 +1,15 @@
+diff --git a/.vscode/settings.json b/.vscode/settings.json
+deleted file mode 100644
+index cc0e6e892d24c1eeb3484d223c3a05c78bbf01d3..0000000000000000000000000000000000000000
+--- a/.vscode/settings.json
++++ /dev/null
+@@ -1,8 +0,0 @@
+-{
+-    "cSpell.words": [
+-        "papaper"
+-    ],
+-    "javascript.format.semicolons": "remove",
+-    "javascript.format.insertSpaceAfterConstructor": true,
+-    "javascript.format.insertSpaceBeforeFunctionParenthesis": true
+-}
+\ No newline at end of file
