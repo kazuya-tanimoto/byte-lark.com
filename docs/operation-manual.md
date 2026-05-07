@@ -1,6 +1,6 @@
 # 運用マニュアル（運営者向け）
 
-最終更新: 2026-05-03
+最終更新: 2026-05-07
 
 本ファイルは byte-lark.com プロジェクトの**運営者（人間ユーザー）向け運用マニュアル**です。Claude Code との多セッション運用において、運営者が「何を / いつ / どう言えばいいか」をまとめます。
 
@@ -75,7 +75,17 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 
 - **対処**：「計画書（site-plan）の §X や PBI の受け入れ条件と乖離している」と指摘、Claude に方針確認させる
 
-### Q6: 並行作業中の `git push` が non-fast-forward で fail する
+### Q6: Claude が `git worktree remove` に失敗する
+
+- **原因**：`@astrojs/sitemap` の依存パッケージ（`stream-replace-string`）が `node_modules` 内に `.vscode/` ディレクトリを含んでおり、Claude Code の sandbox が `.vscode/` パスへの書き込み・削除を一律ブロックするため
+- **対処**：運営者ターミナルで実行
+  ```bash
+  cd /Users/kazuya/src/react-blog
+  git worktree remove .claude/worktrees/<worktree名>
+  ```
+  git の管理情報だけ先に消えてディレクトリが残った場合は `rm -rf .claude/worktrees/<worktree名>` で削除
+
+### Q7: 並行作業中の `git push` が non-fast-forward で fail する
 
 - **原因**：並行する別 sub-branch から先に Phase ブランチへマージされ、自分の Phase ブランチが古くなっている
 - **対処**：`git pull --rebase origin feat/phase-<phase>` → conflict あれば手動 resolve（INDEX.md は隣接 PBI 行が同 hunk として競合しやすい）→ `git push origin feat/phase-<phase>`
@@ -99,3 +109,4 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 |---|---|
 | 2026-05-03 | 初版作成（site-plan v3.6 連動）。シーン別操作表、中断リカバリー、運営者必須・推奨アクション、トラブルシューティング Q1-Q5、関連ドキュメント表 |
 | 2026-05-03 | site-plan v3.7 連動：シーン別操作表に「並行 PBI 開始」「Phase 完了 main マージ承認」追加、必須に main 保護 + CF Pages Branch Filter 追加、Q6（push 競合）追加 |
+| 2026-05-07 | Q6 に worktree 削除の sandbox 制約と運営者対処を追加（旧 Q6 → Q7 に繰り下げ） |
