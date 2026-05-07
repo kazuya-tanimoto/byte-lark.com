@@ -1,6 +1,8 @@
 # Claude は新スタック前提と多セッション運用プロトコルを CLAUDE.md で参照できる
 
-Status: NotStarted
+Status: Done
+Started: 2026-05-07
+Completed: 2026-05-07
 
 ## 誰が
 - Claude
