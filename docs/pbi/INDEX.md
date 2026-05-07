@@ -51,7 +51,7 @@ done
 | PHASE0-001 | [vite-resources-cleanup](20260501-PHASE0-001-vite-resources-cleanup.md) | Done |
 | PHASE0-002 | [astro-scaffold](20260501-PHASE0-002-astro-scaffold.md) | Done |
 | PHASE0-003 | [data-migration](20260501-PHASE0-003-data-migration.md) | NotStarted |
-| PHASE0-004 | [biome-v2-upgrade](20260501-PHASE0-004-biome-v2-upgrade.md) | NotStarted |
+| PHASE0-004 | [biome-v2-upgrade](20260501-PHASE0-004-biome-v2-upgrade.md) | Done |
 | PHASE0-005 | [claude-md-update](20260501-PHASE0-005-claude-md-update.md) | NotStarted |
 | PHASE0-006 | [readme-stub-update](20260502-PHASE0-006-readme-stub-update.md) | NotStarted |
 | PHASE0-007 | [lefthook-workflows-setup](20260501-PHASE0-007-lefthook-workflows-setup.md) | NotStarted |
