@@ -27,6 +27,9 @@ node_modules/
 /dist-ssr
 /storybook-static
 
+# Astro generated types
+.astro/
+
 # Environment
 .env
 .env.*
