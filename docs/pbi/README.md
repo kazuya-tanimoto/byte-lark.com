@@ -326,6 +326,12 @@ cd .claude/worktrees/phase-<phase>-pbi-<NNN>
 #   EnterWorktree({ path: ".claude/worktrees/phase-<phase>-pbi-<NNN>" })
 ```
 
+**sandbox 制約：EnterWorktree 後の git 書き込み**
+
+`EnterWorktree` でセッションの作業ディレクトリを worktree に移すと、sandbox の `allowWrite: [".git"]` が worktree 側の `.git`（ポインタファイル）に解決される。git が実際に書き込む先は本体リポジトリの `.git/worktrees/` 配下なので、`git add` / `git commit` が sandbox にブロックされる。
+
+対処：**ファイル編集は worktree 内で行い、git 操作（add / commit / push）は ExitWorktree で本体に戻ってから `-C` オプションで実行する**。§10.5 の手順を参照。
+
 **worktree 省略が許される唯一の条件**：運営者が明示的に「worktree 不要」と指示した時のみ。Claude 側で「並行不要そうだから省略」と判断するのは禁止。
 
 **PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md、operation-manual.md、pbi/README.md 等）は本節 10.4 の対象外。Phase ブランチに直 commit してよい（本ルールは PBI 実装作業に限定）。
@@ -333,13 +339,16 @@ cd .claude/worktrees/phase-<phase>-pbi-<NNN>
 ### 10.5 PBI 完了時（sub-branch を Phase ブランチへマージ）
 
 ```bash
-# sub-branch ディレクトリで commit / push
-cd .claude/worktrees/phase-<phase>-pbi-<NNN>
-git push -u origin feat/phase-<phase>-pbi-<NNN>
-
-# 元の Phase ブランチに戻る
-cd <main repo>
+# ExitWorktree で本体リポジトリに戻る（sandbox 制約のため、git 操作は本体側で行う）
 # Claude セッションは tool 経由：ExitWorktree({ action: "keep" })
+cd <main repo>
+
+# worktree 内の変更を -C オプションで commit / push
+git -C .claude/worktrees/phase-<phase>-pbi-<NNN> add <files>
+git -C .claude/worktrees/phase-<phase>-pbi-<NNN> commit -m "feat(pbi): ..."
+git -C .claude/worktrees/phase-<phase>-pbi-<NNN> push -u origin feat/phase-<phase>-pbi-<NNN>
+
+# Phase ブランチを最新化してマージ
 git checkout feat/phase-<phase>
 git pull origin feat/phase-<phase>  # 他並行 PBI の進捗を取り込む
 
@@ -350,6 +359,7 @@ git merge --no-ff feat/phase-<phase>-pbi-<NNN>
 git push origin feat/phase-<phase>
 
 # worktree 削除（ローカルディレクトリ整理）
+# sandbox が .vscode/ 等の削除をブロックする場合は運営者ターミナルで実行（Q6 参照）
 git worktree remove .claude/worktrees/phase-<phase>-pbi-<NNN>
 
 # remote の sub-branch は削除しない（log + 個別 PBI 状態の checkout 用に保持）

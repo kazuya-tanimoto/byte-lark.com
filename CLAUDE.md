@@ -58,6 +58,10 @@
 - Draft next-Phase PBIs reflecting the learnings
 - Append to INDEX.md as Status: NotStarted
 
+## Worktree での git 操作
+- EnterWorktree 後は sandbox が `.git` 書き込みをブロックするため、git add / commit / push は ExitWorktree で本体に戻ってから `-C` オプションで実行する
+- 詳細: docs/pbi/README.md §10.4-10.5
+
 ## Commit Convention
 - feat(pbi): PHASE0-NNN <desc>   # PBI completion
 - chore(pbi): ...                # PBI 起票・更新
