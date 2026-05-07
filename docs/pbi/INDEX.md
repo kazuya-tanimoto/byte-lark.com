@@ -49,7 +49,7 @@ done
 | ID | タイトル | Status |
 |---|---|---|
 | PHASE0-001 | [vite-resources-cleanup](20260501-PHASE0-001-vite-resources-cleanup.md) | Done |
-| PHASE0-002 | [astro-scaffold](20260501-PHASE0-002-astro-scaffold.md) | InProgress |
+| PHASE0-002 | [astro-scaffold](20260501-PHASE0-002-astro-scaffold.md) | Done |
 | PHASE0-003 | [data-migration](20260501-PHASE0-003-data-migration.md) | NotStarted |
 | PHASE0-004 | [biome-v2-upgrade](20260501-PHASE0-004-biome-v2-upgrade.md) | NotStarted |
 | PHASE0-005 | [claude-md-update](20260501-PHASE0-005-claude-md-update.md) | NotStarted |
