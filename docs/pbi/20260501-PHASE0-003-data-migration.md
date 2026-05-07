@@ -1,6 +1,8 @@
 # Claude は archive ブランチから Career / Skills データを Astro プロジェクトに移植できる
 
-Status: NotStarted
+Status: Done
+Started: 2026-05-07
+Completed: 2026-05-07
 
 ## 誰が
 - Claude
@@ -16,26 +18,26 @@ Status: NotStarted
 - 関連: FR-03 / FR-04 / FR-05 / Phase 0
 
 ## 受け入れ条件
-- [ ] `src/data/career.ts` が存在し、archive ブランチの `src/features/career/data/Career.ts` 内容を移植している
-- [ ] Career データから id=3（`ーーーー＋ーーーー１ーーーー＋ーーー９` 等のダミー文字列）を削除
-- [ ] Career データから id=4（`長いタイトルの文字列。３０文字程度...`）を削除
-- [ ] Career の型定義（CareerItem 等）も `src/types/career.ts` に移植
-- [ ] `src/data/skills.ts` が存在し、archive ブランチの `src/features/skills/data/Skill.ts` 内容を移植している
-- [ ] Skills の型定義の `icon` フィールドを **optional** にする（`icon?: string`）
-- [ ] Skills 全 26 件のうち、明らかに代替不適切な以下 2 件は **icon フィールドを未設定**にする（テキストのみ表示）：
-  - [ ] id=11 VB.Net（旧設定: `vscode-original.svg`）
-  - [ ] id=25 GAS（旧設定: `google-original.svg`）
-- [ ] 他のアイコン URL の jsdelivr 外部依存は **Phase 0 では維持**（vendor in 方針は Phase 1a 以降で別 PBI 起票）
+- [x] `src/data/career.ts` が存在し、archive ブランチの `src/features/career/data/Career.ts` 内容を移植している
+- [x] Career データから id=3（`ーーーー＋ーーーー１ーーーー＋ーーー９` 等のダミー文字列）を削除
+- [x] Career データから id=4（`長いタイトルの文字列。３０文字程度...`）を削除
+- [x] Career の型定義（CareerItem 等）も `src/types/career.ts` に移植
+- [x] `src/data/skills.ts` が存在し、archive ブランチの `src/features/skills/data/Skill.ts` 内容を移植している
+- [x] Skills の型定義の `icon` フィールドを **optional** にする（`icon?: string`）
+- [x] Skills 全 26 件のうち、明らかに代替不適切な以下 2 件は **icon フィールドを未設定**にする（テキストのみ表示）：
+  - [x] id=11 VB.Net（旧設定: `vscode-original.svg`）
+  - [x] id=25 GAS（旧設定: `google-original.svg`）
+- [x] 他のアイコン URL の jsdelivr 外部依存は **Phase 0 では維持**（vendor in 方針は Phase 1a 以降で別 PBI 起票）
 
 ### ロゴ画像の取り込み
-- [ ] archive ブランチから `src/assets/logo.png` を取り込み（暫定流用、Phase 1b で SVG に置換）
+- [x] archive ブランチから `src/assets/logo.png` を取り込み（暫定流用、Phase 1b で SVG に置換）
   ```bash
   git checkout archive/vite-react-chakra -- src/assets/logo.png
   ```
   ※ バイナリは `git show > file` だと改行変換で壊れる可能性があるため `git checkout -- <path>` を使用
 
 ### 確認
-- [ ] `yarn check:ts` でエラーなし
+- [x] `yarn check:ts` でエラーなし
 - [ ] `feat/phase-0-pbi-003` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ## 技術メモ
@@ -76,3 +78,15 @@ Status: NotStarted
 - Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
 - 確認：archive/vite-react-chakra ブランチに `src/features/career/data/Career.ts` / `src/features/career/types/Career.ts` / `src/features/skills/data/Skill.ts` / `src/features/skills/types/Skill.ts` / `src/assets/logo.png` の blob 存在 ✓ / Career id=3 ダミー (`ーーーー＋ーーーー１ーーーー＋ーーー９` 等) と id=4 長文文字列を実体確認 ✓ / Skills 26 件、id=11 VB.Net icon = `vscode/vscode-original.svg`、id=25 GAS icon = `google/google-original.svg` を実体確認 ✓
 - 結果：**drift なし**（着手時の二度手間を防ぐため記録）。
+
+### 2026-05-07 セッション 1
+- やったこと：
+  - `src/types/career.ts` — `NestedListItem`, `CareerItem`, `CareerItems`, `CareerDetail` 型を移植。旧 `@/types/NestedList` は Career 型専用だったため同一ファイルに統合
+  - `src/types/skills.ts` — `Skill`, `SkillSet` 型を移植。`icon` を optional 化（`icon?: string`）
+  - `src/data/career.ts` — Career データを移植、import パスを `@/types/career` に変更、id=3（罫線ダミー）/ id=4（長文ダミー）を削除
+  - `src/data/skills.ts` — Skills 全 26 件を移植、import パスを `@/types/skills` に変更、id=11 VB.Net / id=25 GAS の icon フィールドを削除
+  - `src/assets/logo.png` — `git cat-file blob` で archive から取り込み（PNG 1245x324、正常）
+  - `yarn check:ts`（astro check）エラーなし
+- 想定外だった点：
+  - `git checkout archive/... -- <path>` が sandbox の index.lock 制約で使えず、`git cat-file blob` で代替
+  - worktree の node_modules が未インストール状態で、sandbox 制約により `yarn install` がセッション外での実行が必要だった
