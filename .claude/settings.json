@@ -13,5 +13,33 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(yarn *)",
+      "Skill(update-config)",
+      "WebFetch(domain:docs.astro.build)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:registry.npmjs.org)",
+      "WebFetch(domain:registry.yarnpkg.com)",
+      "WebFetch(domain:repo.yarnpkg.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:developers.cloudflare.com)",
+      "WebFetch(domain:www.cloudflare.com)",
+      "WebFetch(domain:plausible.io)"
+    ]
+  },
+  "sandbox": {
+    "filesystem": {
+      "allowWrite": [".git"]
+    },
+    "network": {
+      "allowedDomains": [
+        "registry.npmjs.org",
+        "registry.yarnpkg.com",
+        "repo.yarnpkg.com",
+        "raw.githubusercontent.com"
+      ]
+    }
   }
 }
