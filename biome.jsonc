@@ -9,14 +9,10 @@
   },
   "linter": {
     "enabled": true,
-    "includes": ["**", "!**/src/dev/**/*", "!**/src/stories/**/*"],
     "rules": {
-      // 基本ルールセット
       "recommended": true,
       "complexity": {
-        // 複雑度が高いコードはエラー
         "noExcessiveCognitiveComplexity": "error",
-        // 冗長な論理式はエラー
         "useSimplifiedLogicExpression": "error"
       },
       "performance": {
@@ -26,10 +22,17 @@
   },
   "formatter": {
     "enabled": true,
-    "includes": ["**", "!**/src/dev/**/*", "!**/src/stories/**/*"],
     "indentStyle": "space",
     "indentWidth": 2,
     "lineWidth": 80,
     "formatWithErrors": true
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {}
+      }
+    }
+  ]
 }

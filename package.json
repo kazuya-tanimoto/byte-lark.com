@@ -41,5 +41,8 @@
     "@playwright/test": "^1.59.1",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5"
+  },
+  "resolutions": {
+    "stream-replace-string@npm:^2.0.0": "patch:stream-replace-string@npm%3A2.0.0#~/.yarn/patches/stream-replace-string-npm-2.0.0-2e7e10c117.patch"
   }
 }

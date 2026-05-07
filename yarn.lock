@@ -9119,10 +9119,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream-replace-string@npm:^2.0.0":
+"stream-replace-string@npm:2.0.0":
   version: 2.0.0
   resolution: "stream-replace-string@npm:2.0.0"
   checksum: 10c0/6cdf6108c57a869c1282dece0728bd7a8e314855bee71992436460192cdf46b3c976451e1e114716af209b2bfefa0e7e4581ca0eebc330d9dfcde341a72d50af
+  languageName: node
+  linkType: hard
+
+"stream-replace-string@patch:stream-replace-string@npm%3A2.0.0#~/.yarn/patches/stream-replace-string-npm-2.0.0-2e7e10c117.patch":
+  version: 2.0.0
+  resolution: "stream-replace-string@patch:stream-replace-string@npm%3A2.0.0#~/.yarn/patches/stream-replace-string-npm-2.0.0-2e7e10c117.patch::version=2.0.0&hash=eb2723"
+  checksum: 10c0/fd3bf2bd32722f1aea4e00969021eb053c7521062286b8c700511d559879c11d1cf2ba02247c01a5ff00b744c165e34505ed331c05f84c9f08463dbed214ac7a
   languageName: node
   linkType: hard
 
