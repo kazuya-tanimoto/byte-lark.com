@@ -1,25 +1,18 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
-  "organizeImports": {
-    "enabled": true,
-    "ignore": [
-      "src/dev/**/*",
-      "src/stories/**/*"
-    ]
+  "$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "tailwindDirectives": true
+    }
   },
   "linter": {
     "enabled": true,
-    "ignore": [
-      "src/dev/**/*",
-      "src/stories/**/*"
-    ],
     "rules": {
-      // 基本ルールセット
       "recommended": true,
       "complexity": {
-        // 複雑度が高いコードはエラー
         "noExcessiveCognitiveComplexity": "error",
-        // 冗長な論理式はエラー
         "useSimplifiedLogicExpression": "error"
       },
       "performance": {
@@ -29,13 +22,17 @@
   },
   "formatter": {
     "enabled": true,
-    "ignore": [
-      "src/dev/**/*",
-      "src/stories/**/*"
-    ],
     "indentStyle": "space",
     "indentWidth": 2,
     "lineWidth": 80,
     "formatWithErrors": true
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {}
+      }
+    }
+  ]
 }

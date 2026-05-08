@@ -6,12 +6,40 @@
         "hooks": [
           {
             "type": "command",
-            "command": "INPUT=$(cat); CMD=$(echo \"$INPUT\" | jq -r '.tool_input.command'); if echo \"$CMD\" | grep -qE '(^|[;&|][[:space:]]*)git[[:space:]]+commit([[:space:]]|$)'; then yarn check >&2 && yarn check:ts >&2 && yarn test:run >&2 || { echo 'Pre-commit checks failed.' >&2; exit 2; }; fi",
+            "command": "INPUT=$(cat); CMD=$(echo \"$INPUT\" | jq -r '.tool_input.command'); if echo \"$CMD\" | grep -qE '(^|[;&|][[:space:]]*)git[[:space:]]+commit([[:space:]]|$)'; then if [ -f package.json ] && [ -d node_modules ]; then yarn check >&2 && yarn check:ts >&2 && yarn test:run >&2 || { echo 'Pre-commit checks failed.' >&2; exit 2; }; fi; fi",
             "timeout": 120,
             "statusMessage": "Running pre-commit checks (lint/typecheck/test)..."
           }
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(yarn *)",
+      "Skill(update-config)",
+      "WebFetch(domain:docs.astro.build)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:registry.npmjs.org)",
+      "WebFetch(domain:registry.yarnpkg.com)",
+      "WebFetch(domain:repo.yarnpkg.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:developers.cloudflare.com)",
+      "WebFetch(domain:www.cloudflare.com)",
+      "WebFetch(domain:plausible.io)"
+    ]
+  },
+  "sandbox": {
+    "filesystem": {
+      "allowWrite": [".git"]
+    },
+    "network": {
+      "allowedDomains": [
+        "registry.npmjs.org",
+        "registry.yarnpkg.com",
+        "repo.yarnpkg.com",
+        "raw.githubusercontent.com"
+      ]
+    }
   }
 }

@@ -6,12 +6,14 @@
 
 # Dependencies
 node_modules/
-.yarn/
+.yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.yarn/install-state.gz
+.yarn/build-state.yml
 
 # Testing
 /coverage
@@ -25,10 +27,16 @@ node_modules/
 /dist-ssr
 /storybook-static
 
+# Astro generated types
+.astro/
+
 # Environment
 .env
 .env.*
 !.env.example
+
+# Cloudflare
+.wrangler/
 
 # Misc
 *.local

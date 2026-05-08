@@ -1,0 +1,77 @@
+# Claude は Biome v2 で Astro プロジェクトの lint を実行できる
+
+Status: Done
+Started: 2026-05-07
+Completed: 2026-05-07
+
+## 誰が
+- Claude
+
+## 何をできる
+- Biome を v1.9.4 から v2 系最新に更新し、`.astro` ファイルにも対応した設定で lint / format を実行できる
+
+## なんのために
+- 既存の Biome 採用方針を維持しつつ、Astro 構文に対応するため
+- 関連: NFR-04 / Decision Log #8 / Phase 0
+
+## 受け入れ条件
+- [x] `package.json` の `@biomejs/biome` が v2 系最新に更新されている
+- [x] `biome.jsonc` が v2 のスキーマに準拠している（`$schema` URL を v2 に更新）
+- [x] `biome.jsonc` の旧 ignore（`src/dev/**/*`、`src/stories/**/*`）が削除されている（PHASE0-001 で `src/` 配下が一掃され `src/dev/` `src/stories/` は存在しないため、ignore も不要）
+- [x] `.astro` ファイル向けの override **セクション枠**だけ用意されている（中身のルール追加は誤検知発生時に対応する方針、Phase 0 では空 override で OK）
+- [x] `yarn check`（`biome check src`）が成功する（エラーゼロ）
+- [x] `yarn fix`（`biome check --write src`）が成功する
+- [x] 旧設定（v1 でしか有効でなかったオプション）が残存していない
+- [x] `feat/phase-0-pbi-004` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+
+## 技術メモ
+- Biome v2 移行ガイド：https://biomejs.dev/guides/upgrade-to-biome-v2/
+- `.astro` 言語サポート状況：https://biomejs.dev/internals/language-support/
+- 移行コマンド例：
+  ```bash
+  yarn add -D @biomejs/biome@latest
+  npx @biomejs/biome migrate --write
+  ```
+- `migrate` コマンドが `biome.jsonc` を自動更新する。手動修正が必要な箇所はコマンドが指示
+
+## 備考
+### .astro override 設定（先回り設定の禁止と必須化の整合）
+
+Phase 0 では **空 override セクションのみ** 用意：
+
+```jsonc
+{
+  "overrides": [
+    {
+      "include": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          // 誤検知発生時にここへ追加する（Phase 0 では空のまま）
+        }
+      }
+    }
+  ]
+}
+```
+
+**運用方針**：
+- 先回りでルール off 設定はしない
+- 実際に `yarn check` 実行時の誤検知を観察 → 個別に off 追加（Phase 1a 以降の実装中に対応）
+- セクション枠だけ用意しておく理由：ルール追加時に構造を考えなくていい
+
+## 実装ログ
+
+### 2026-05-07 着手前 audit（実装セッション外）
+- Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
+- 確認：`registry.npmjs.org/@biomejs/biome` の dist-tag latest = 2.4.14（v2 系最新が存在）✓ / archive 派生 `package.json` の `@biomejs/biome` = `^1.9.4` ✓ / 現 `biome.jsonc` schema URL = 1.5.3、`src/dev/**/*` `src/stories/**/*` ignore が残存 ✓ / `biomejs.dev/guides/upgrade-to-biome-v2/` で `biome migrate --write` コマンドの存在を確認 ✓ / `biomejs.dev/internals/language-support/` で `.astro` = experimental（2.3.0〜、format / lint 可）を確認、PBI の「空 override で OK」方針と整合 ✓
+- 結果：**drift なし**（着手時の二度手間を防ぐため記録）。
+
+### 2026-05-07 セッション 1（前セッションで着手、中断）
+- `@biomejs/biome` 2.4.14 インストール、`biome.jsonc` v2 スキーマ移行、旧 ignore 削除、`.astro` override 枠追加まで完了
+- `yarn install` が `stream-replace-string` パッケージ同梱の `.vscode/settings.json` で sandbox ブロックされ中断
+
+### 2026-05-07 セッション 2
+- `yarn patch` で `stream-replace-string@2.0.0` から `.vscode/` を除去するパッチを作成・適用（`.yarn/patches/` + `package.json` resolutions）
+- パッチ適用後 `yarn install` が sandbox 内で成功することを確認
+- `yarn check`（4 files, no errors）、`yarn fix`（4 files, no fixes needed）ともに成功
+- v1 残存オプション：なし（`organizeImports` → `assist.actions.source.organizeImports` は PHASE0-002 で移行済、`includes` による旧 ignore は本 PBI で削除済）
