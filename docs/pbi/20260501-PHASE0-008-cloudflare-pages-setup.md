@@ -1,6 +1,6 @@
 # 運営者は Cloudflare Pages にプロジェクトを接続して preview デプロイができる
 
-Status: NotStarted
+Status: InProgress
 
 ## 誰が
 - 運営者

@@ -35,6 +35,9 @@ node_modules/
 .env.*
 !.env.example
 
+# Cloudflare
+.wrangler/
+
 # Misc
 *.local
 .DS_Store
