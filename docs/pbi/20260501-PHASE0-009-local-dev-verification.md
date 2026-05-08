@@ -93,8 +93,8 @@ Status: Done
 - [x] `yarn build` 成功確認
 - [x] `yarn check && yarn check:ts` エラーゼロ確認
 - [x] `yarn dev` で画面表示確認（運営者目視）
-- [ ] package.json + yarn.lock + CLAUDE.md（Sandbox 制約セクション追記）+ 本 PBI をコミット
-- [ ] Status: Done に戻す + INDEX.md 同期
+- [x] package.json + yarn.lock + CLAUDE.md（Sandbox 制約セクション追記）+ 本 PBI をコミット（c398d26）
+- [x] Status: Done に戻す + INDEX.md 同期
 
 ### 2026-05-07 着手前 audit（実装セッション外）
 - Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
