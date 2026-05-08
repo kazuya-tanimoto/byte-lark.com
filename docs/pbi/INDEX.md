@@ -54,7 +54,7 @@ done
 | PHASE0-004 | [biome-v2-upgrade](20260501-PHASE0-004-biome-v2-upgrade.md) | Done |
 | PHASE0-005 | [claude-md-update](20260501-PHASE0-005-claude-md-update.md) | Done |
 | PHASE0-006 | [readme-stub-update](20260502-PHASE0-006-readme-stub-update.md) | Done |
-| PHASE0-007 | [lefthook-workflows-setup](20260501-PHASE0-007-lefthook-workflows-setup.md) | NotStarted |
+| PHASE0-007 | [lefthook-workflows-setup](20260501-PHASE0-007-lefthook-workflows-setup.md) | Done |
 | PHASE0-008 | [cloudflare-pages-setup](20260501-PHASE0-008-cloudflare-pages-setup.md) | NotStarted |
 | PHASE0-009 | [local-dev-verification](20260501-PHASE0-009-local-dev-verification.md) | NotStarted |
 | **PHASE0-010** | [**retrospective-gate**](20260501-PHASE0-010-retrospective-gate.md) **(Gate)** | **NotStarted** |

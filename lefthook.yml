@@ -1,42 +1,16 @@
-# EXAMPLE USAGE:
-#
-#   Refer for explanation to the following link:
-#   https://lefthook.dev/configuration/
-#
-# pre-push:
-#   jobs:
-#     - name: packages audit
-#       tags:
-#         - frontend
-#         - security
-#       run: yarn npm judit
-#
-#     - name: gems audit
-#       tags:
-#         - backend
-#         - security
-#       run: bundle audit
-#
-# pre-commit:
-#   parallel: true
-#   jobs:
-#     - name: lint
-#       run: yarn check {staged_files}
-#
-#     - name: rubocop
-#       glob: "*.rb"
-#       exclude:
-#         - config/application.rb
-#         - config/routes.rb
-#       run: bundle exec rubocop --force-exclusion {all_files}
-#
-#     - name: govet
-#       files: git ls-files -m
-#       glob: "*.go"
-#       run: go vet {files}
-#
-#     - script: "hello.js"
-#       runner: node
-#
-#     - script: "hello.go"
-#       runner: go run
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      glob:
+        - "*.{ts,tsx,astro,js,jsx,json,md}"
+        - "**/*.{ts,tsx,astro,js,jsx,json,md}"
+      run: npx biome check --no-errors-on-unmatched {staged_files}
+
+pre-push:
+  parallel: false
+  commands:
+    typecheck:
+      run: yarn check:ts
+    vitest:
+      run: yarn test:run

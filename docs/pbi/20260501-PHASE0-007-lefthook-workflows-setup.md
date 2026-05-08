@@ -1,6 +1,6 @@
 # Claude は Astro 用 lefthook と Phase 0 中の CI 一時無効化を整備できる
 
-Status: NotStarted
+Status: Done
 
 依存：PHASE0-002（Astro scaffold で `package.json` scripts と `.astro` 拡張子の存在が前提）/ PHASE0-004（Biome v2 へのアップグレード後、その CLI を hook で叩く）両方の完了後に着手する。
 
@@ -91,3 +91,12 @@ cat .github/dependabot.yml
 - 確認：現 `lefthook.yml` は EXAMPLE USAGE コメントのみで実コマンドゼロ ✓ / `.github/workflows/quality.yml`・`ui-tests.yml`・`codeql.yml` 存在 ✓ / `.github/dependabot.yml` 存在（npm ecosystem 設定済）✓ / lefthook docs `lefthook.dev/configuration/` URL アクセス可（`commands:` syntax は v1+ で valid）✓
 - 結果：**drift なし**。`commands:` vs `jobs:` syntax は両方 valid のため、本 PBI の `commands:` 例はそのまま採用可。
 - 補足：本 PBI は依存 PBI（PHASE0-002 / PHASE0-004）完了後の package.json scripts に依拠する文面（pre-commit で `npx biome check ...` を直叩き、`yarn check` 経由は path 固定で staged 限定が効かない理由）が含まれる。実装着手時は PHASE0-002 完了後の `package.json` を再 verify する（README §5.3 step 2 の規約に従う）。
+
+### 2026-05-08 実装完了
+
+- lefthook.yml をゼロから書き起こし（pre-commit: biome check、pre-push: astro check + vitest）
+- glob を `**/*.{...}` 単一パターンから複数パターンに変更。lefthook のデフォルト glob matcher では `**` が「1 階層以上」にマッチし、ルート直下ファイルに効かないため `*.{...}` と `**/*.{...}` を併記
+- `quality.yml` / `ui-tests.yml` を `.disabled` リネームで無効化、`codeql.yml` は維持
+- lefthook を devDependencies に追加（`yarn add -D lefthook`）、Yarn 4 が postinstall を無効化するため `yarn lefthook install --force` を手動実行
+- dependabot.yml は npm ecosystem 設定済みで Astro 系も自動監視対象、追加設定不要
+- dummy commit テストで pre-commit hook の動作確認済み（Biome エラーでブロック成功）
