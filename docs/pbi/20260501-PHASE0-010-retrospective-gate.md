@@ -1,6 +1,7 @@
 # 運営者と Claude は Phase 0 完了状態を確認し、Phase 1a への学びを次セッションへ申し送ることができる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-05-08
 
 ## 誰が
 - 運営者 + Claude
@@ -21,21 +22,23 @@ Status: NotStarted
 ## 受け入れ条件
 
 ### Phase 0 完了確認
-- [ ] PHASE0-001 〜 PHASE0-009 のすべてが Status: Done になっている
-- [ ] `docs/pbi/INDEX.md` の Phase 0 セクションがすべて `[Done]` 表示
-- [ ] feat/phase-0 ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` がすべて成功する状態
+- [x] PHASE0-001 〜 PHASE0-009 のすべてが Status: Done になっている
+- [x] `docs/pbi/INDEX.md` の Phase 0 セクションがすべて `[Done]` 表示
+- [x] feat/phase-0 ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` がすべて成功する状態
 
 ### 学びの集約（本 PBI 内に書き出す）
-- [ ] 本 PBI の `## Phase 1a への申し送り` セクションに以下を記入：
-  - [ ] **確定した技術前提**：実際に動いた構成（Astro バージョン、Tailwind 統合方法、shadcn セットアップ手順、Yarn linker 設定 等）
-  - [ ] **発生した想定外と回避策**：Phase 0 の各 PBI 実装ログから抽出
-  - [ ] **計画書（現行バージョン） と実態の差分**：あれば（site-plan.md / 各 PBI の記述で間違っていた点）
-  - [ ] **Phase 1a 起票時の注意**：Phase 1a PBI のどこに修正が必要か / そのままで OK か
-  - [ ] **Phase 1a で先に決めるべき事項**：Phase 0 中に発覚した未決事項（仮 HEX 候補、コードハイライト候補等を Phase 1a 冒頭で確定する旨）
+- [x] 本 PBI の `## Phase 1a への申し送り` セクションに以下を記入：
+  - [x] **確定した技術前提**：実際に動いた構成（Astro バージョン、Tailwind 統合方法、shadcn セットアップ手順、Yarn linker 設定 等）
+  - [x] **発生した想定外と回避策**：Phase 0 の各 PBI 実装ログから抽出
+  - [x] **計画書（現行バージョン） と実態の差分**：あれば（site-plan.md / 各 PBI の記述で間違っていた点）
+  - [x] **Phase 1a 起票時の注意**：Phase 1a PBI のどこに修正が必要か / そのままで OK か
+  - [x] **Phase 1a で先に決めるべき事項**：Phase 0 中に発覚した未決事項（仮 HEX 候補、コードハイライト候補等を Phase 1a 冒頭で確定する旨）
 
 ### CLAUDE.md / site-plan.md の整合確認
-- [ ] CLAUDE.md（PHASE0-005 で書き換え済）の記述と Phase 0 の実態に齟齬がないか確認、齟齬あれば本 PBI 内で記録（修正は別 PBI で対応可）
-- [ ] site-plan.md と Phase 0 実装結果に大きな差分があれば、本 PBI 内で記録
+- [x] CLAUDE.md（PHASE0-005 で書き換え済）の記述と Phase 0 の実態に齟齬がないか確認、齟齬あれば本 PBI 内で記録（修正は別 PBI で対応可）
+  - 齟齬：`yarn new-post` が未実装なのに Build & Test Commands に載っていた → 本 Gate で削除済み
+- [x] site-plan.md と Phase 0 実装結果に大きな差分があれば、本 PBI 内で記録
+  - 差分 2 件を本 Gate で修正（v3.7 → v3.8）：§6.4 `tailwind.config.ts` 削除、Decision #21 更新
 
 ### マージ
 - [ ] feat/phase-0 ブランチを main にマージする（merge commit 維持で履歴を残す）：
@@ -61,8 +64,9 @@ Status: NotStarted
 - [ ] 本 PBI の Status を Done に更新、INDEX.md 同期
 
 ### 次セッションへのトリガー
-- [ ] 本 PBI が Done になった時点で、次セッションは「Phase 1a PBI 起票」を最初のタスクとして実行可能
-- [ ] CLAUDE.md の「How to draft next-Phase PBIs」プロトコルが本 Gate を読むよう誘導していることを確認
+- [x] 本 PBI が Done になった時点で、次セッションは「Phase 1a PBI 起票」を最初のタスクとして実行可能
+- [x] CLAUDE.md の「How to draft next-Phase PBIs」プロトコルが本 Gate を読むよう誘導していることを確認
+  - CLAUDE.md L56: `Read the Gate PBI's "次 Phase への申し送り" section` ✓
 
 ## 技術メモ
 - 本 PBI は **コード変更を伴わない**（学びの集約と確認のみ）
@@ -102,22 +106,63 @@ Status: NotStarted
 
 ## Phase 1a への申し送り
 
-（**Phase 0 完了時に記入する。テンプレート段階では空欄**）
-
 ### 確定した技術前提
-（Phase 0 完了時に記入）
+
+Phase 0 で実際に動いた構成：
+
+- Astro 6.3.1（`astro.config.mjs`、output: static）
+- Tailwind CSS v4（`@tailwindcss/vite` プラグイン経由、`tailwind.config.ts` 不使用、CSS ベース設定）
+- shadcn/ui 4.x（Radix ライブラリ + Nova preset、旧 style/baseColor 概念は廃止）
+- TypeScript strict（`tsconfig.json` extends `astro/tsconfigs/strict`、`@/*` パスエイリアス設定済み）
+- Yarn 4.14.1（Berry、`.yarn/releases/yarn-4.14.1.cjs` 直配置 + `.yarnrc.yml` に `yarnPath`）
+- Biome v2.4.14（`biome.jsonc`、v2 スキーマ移行済み、`.astro` は experimental サポート）
+- Node.js 24（`.nvmrc`、Active LTS）
+- Vitest 4.1.5 + Playwright 1.59.1（設定済み、テストファイルは Phase 1a で作成）
+- Lefthook（pre-commit: biome check、pre-push: astro check + vitest）
+- Cloudflare Pages（プロジェクト `byte-lark`、GitHub 連携済み、main = production branch）
+- `wrangler.jsonc`（`assets.directory: "./dist"` で静的アセット指定）
+- `stream-replace-string` パッケージに yarn patch 適用済み（`.vscode/` 同梱による sandbox ブロック回避）
 
 ### 発生した想定外と回避策
-（Phase 0 完了時に記入）
+
+- **create-astro CLI が既存 repo 後付けに非対応**（PHASE0-002）→ Astro Manual Setup で対応。Phase 1a の PBI で CLI 依存の手順を書かないこと
+- **shadcn 4.x で style/baseColor 概念が廃止**（PHASE0-002）→ Radix + Nova preset で初期化。Phase 1b のデザイン調整時は preset の再設定ではなく CSS 変数で調整する形になる
+- **Tailwind v4 は `tailwind.config.ts` 不使用**（PHASE0-002）→ テーマトークンは `src/styles/global.css` 内の CSS で定義する。Phase 1a の仮 HEX 確定もここに書く
+- **CF Pages UI が Workers & Pages 統合で変更**（PHASE0-008）→ 旧「Build output directory」欄は廃止、`wrangler.jsonc` で指定する方式に変更
+- **CF Pages Preview Branch Filter の UI 不一致**（PHASE0-008）→ 実装時に Custom branches UI が見つからず「Builds for non-production branches: Enabled」のまま運用。ただし CF 公式ドキュメント（2026-05-08 確認）では Custom branches + ワイルドカードは依然サポート記載あり。Phase 1a でブランチが増える前に運営者が CF ダッシュボードで再確認すること
+- **Web Analytics が `pages.dev` ドメインでは自動注入不可**（PHASE0-008）→ カスタムドメイン（`byte-lark.com`）を Cloudflare に追加した後に設定すれば自動注入が有効になる。Phase 1a のカスタムドメイン PBI に含めること
+- **Claude Code sandbox でのポート listen 制限**（PHASE0-009）→ `yarn dev` / `yarn preview` は運営者の手動確認で代替。Phase 1a の E2E テスト PBI では、Playwright を sandbox 外で実行する前提を明記すること
+- **`yarn up` / `yarn add` が sandbox の DNS 制約で失敗**（複数 PBI）→ レジストリアクセスが必要なコマンドは運営者の別ターミナルで実行。CLAUDE.md の Sandbox 制約セクションに記載済み
+- **sandbox の `.git` 書き込みブロック**（PHASE0-001 等）→ worktree 内での git 操作は ExitWorktree 後に `-C` オプションで実行。CLAUDE.md に記載済み
+- **`stream-replace-string` パッケージの `.vscode/` 同梱**（PHASE0-004）→ yarn patch で除去。`package.json` の `resolutions` に patch 設定あり
 
 ### 計画書（現行バージョン） と実態の差分
-（Phase 0 完了時に記入。差分なければ「なし」と明記）
+
+本 Gate PBI 内で修正済みの差分（v3.7 → v3.8）：
+
+- §6.4 ディレクトリ構成の `tailwind.config.ts` 行を削除（Tailwind v4 では不使用）
+- Decision #21 を shadcn 4.x の preset 体系に更新
+
+残存する軽微な差分（修正不要 or Phase 1a で自然解消）：
+
+- §6.4 の `src/content/config.ts` — Phase 1a の Content Collections 実装時に作成されるため現時点で未存在は正常
+- §6.4 の各ページファイル（`about.astro` 等）— Phase 1a で作成予定、現時点は `index.astro` のみ
+- CLAUDE.md の `yarn new-post` — 本 Gate で削除済み（Phase 1a の FR-25 で作成後に再追記する）
 
 ### Phase 1a 起票時の注意
-（Phase 0 完了時に記入）
+
+- **Pages vs Workers の再評価**：Astro 公式 deploy guide が「Cloudflare recommends using Cloudflare Workers for new projects」と明記（2026-05-07 確認）。Decision #17 は Pages 維持で確定済みだが、Phase 1a 起票時に運営者と「Pages 継続」か「Workers 切替を別 PBI 化」か再確認する。判断材料：(a) 静的中心ブログでは技術差は拮抗、(b) 切替は `@astrojs/cloudflare` adapter + wrangler.jsonc 構成書換が必要、(c) Pages の機能更新ペースは Workers より遅い傾向
+- **CI workflow は Phase 1a 冒頭で整備**：`.github/workflows/quality.yml` / `ui-tests.yml` は `.disabled` リネームで無効化中。Phase 1a の最初の PBI で Astro 用に書き換えて有効化する
+- **カスタムドメイン PBI に Web Analytics 有効化を含める**：`byte-lark.com` をドメインとして Cloudflare に追加した後に Web Analytics 自動注入が有効になる
+- **CF Pages の Preview Branch Filter を再確認**：PHASE0-008 で UI 上の設定が見つからなかったが、公式 docs では Custom branches + ワイルドカードがサポートされている。ブランチが増える Phase 1a 序盤で運営者が確認し、README §10.8 の設定を適用すること
+- **Lefthook の postinstall**：Yarn 4 は postinstall を無効化するため、`yarn install` 後に `yarn lefthook install --force` が必要。Phase 1a で新しい開発者がセットアップする手順に含めること（README に記載推奨）
 
 ### Phase 1a で先に決めるべき事項
-（Phase 0 完了時に記入）
+
+- **仮 HEX カラーの確定**：site-plan §6.5.2 で定義した Hibari brand の各色ロールに対して、Phase 1a 冒頭で仮 HEX を決めて `src/styles/global.css` の CSS 変数として定義する（Phase 1b で確定 HEX に置換）
+- **コードハイライトライブラリの選定**（Q13）：Shiki / Prism / Expressive Code から選定。Astro は Shiki をビルトインサポートしているため Shiki が有力
+- **画像最適化方針の確定**（FR-27）：Astro `<Image>` / `<Picture>` の WebP 変換 + サイズ生成の具体方針
+- **Content Collections の Zod スキーマ設計**：site-plan §6.3 のフロントマターモデルを `src/content/config.ts` に落とし込む
 
 ## 実装ログ
 

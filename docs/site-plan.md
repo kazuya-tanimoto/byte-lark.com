@@ -1,6 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.7)
+# byte-lark.com サイト構築計画書 (v3.8)
 
-最終更新: 2026-05-03
+最終更新: 2026-05-08
+
+> v3.7 → v3.8 主な変更：Phase 0 Retrospective Gate（PHASE0-010）での事実修正。§6.4 ディレクトリ構成から `tailwind.config.ts` を削除（Tailwind v4 は CSS ベース設定のため不使用）。Decision #21 を shadcn 4.x の preset 体系（Radix + Nova）に更新。
 
 > v3.6 → v3.7 主な変更：ブランチ運用方針確定。README.md §10 ブランチ運用 新設（Phase ブランチ + 常時 PBI sub-branch + worktree 並行 / merge --no-ff / sub-branch マージ後保持 / CF Pages Preview Branch Filter 必須 / main 保護 / Hotfix 手順）。operation-manual.md に並行 PBI 開始シーン・Phase 完了マージ承認・main 保護・CF Pages filter・Q6（push 競合対処）追加。PHASE0-007 に CF Pages Custom branches 設定追加、PHASE0-009 main マージ手順を `git merge --no-ff` で具体化。§14 row 1 拡張、運用ルール表に「ブランチ運用」「CF Pages branch filter」行追加。
 
@@ -183,7 +185,6 @@ slug: vite-react-spa-ogp-pitfall      # frontmatter で明示推奨（ファイ�
 ```
 .
 ├── astro.config.mjs                  Astro 設定（integrations: mdx, sitemap, react / Vite plugin: @tailwindcss/vite）
-├── tailwind.config.ts                Tailwind 設定（テーマトークン: byte-lark カラー）
 ├── tsconfig.json
 ├── biome.jsonc                       Biome 2 設定（.astro override 含む）
 ├── package.json
@@ -353,7 +354,7 @@ Astro の標準機能で完全対応：
 | `src/dev/`、`@react-buddy/*` 依存 | 削除 | — |
 | `src/stories/` Storybook 公式テンプレ | 削除 | — |
 | `CLAUDE.md`（プロジェクト規約） | **書き換え**（PHASE0-005、Astro/Tailwind/shadcn + 多セッション運用プロトコル） | 同パス |
-| `docs/site-plan.md` | 上書き（v2 → v3.7） | 本ファイル |
+| `docs/site-plan.md` | 上書き（v2 → v3.8） | 本ファイル |
 | `docs/operation-manual.md` | **新規作成済**（v3.6 連動、運営者向けプロトコル） | 同パス |
 | `.github/workflows/codeql.yml` | 流用（言語自動検出で Astro 対応） | 同パス |
 | `.github/dependabot.yml` | 内容確認の上、依存先パッケージ名を更新（PHASE0-007） | 同パス |
@@ -422,7 +423,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | 18 | アクセス解析は **Cloudflare Web Analytics**（Q9 確定） | Cookieless で同意 UI 不要、CF Pages と統合楽、無料 | GA4 → Cookie バナー必要で UX 悪化、過剰機能 / Plausible → 月額発生 |
 | 19 | Phase 2 で広告と並列して **ニュースレター / Substack / note 転載**も検討 | AdSense は記事 30+ で RPM 安定までかかる / 別線で同記事資産を活用すると ROI 早い | 広告一本 → 収益化までの時間が長い |
 | 20 | 旧 Hugo `byte-lark.com` の URL は **301 計画なし**（dead で OK） | 旧 repo 削除済 / 新ドメインの再開で別アイデンティティ / 旧 URL retain の実利薄 | 301 設定 → 旧コンテンツ無いので意味薄い |
-| 21 | shadcn `components.json` の style / baseColor は **default + slate** で初期化 | デフォルト値で進めて Phase 1b の ClaudeDesign アウトプットに合わせて再調整、Phase 0 を判断で止めない | 初期からブランドカラーで設定 → カラーパレット未確定の段階で決められない |
+| 21 | shadcn 4.x で **Radix ライブラリ + Nova preset** で初期化（旧 style/baseColor 概念は 4.x で廃止、preset 体系に移行） | デフォルト構成で進めて Phase 1b の ClaudeDesign アウトプットに合わせて再調整、Phase 0 を判断で止めない | 初期からブランドカラーで設定 → カラーパレット未確定の段階で決められない |
 
 ## 9. リスク / 留意事項
 
@@ -495,7 +496,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 
 ## 12. 次アクション
 
-1. 本計画書 v3.7 のレビュー・確定（別セッション）
+1. 本計画書 v3.8 のレビュー・確定（別セッション）
 2. Phase 0 PBI 10 件のレビュー（別セッション、`docs/pbi/INDEX.md` 経由）
 3. Phase 0 実装着手：feat/phase-0 ブランチで Vite 削除 + Astro 初期化（別セッション、複数セッションに分かれる可能性あり）
 4. Phase 0 完了 → Retrospective Gate (PHASE0-010) 通過
@@ -578,3 +579,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-05-03 | v3.6：運営者向け運用マニュアル `docs/operation-manual.md` 新規作成。INDEX.md 着手ルールに「セッション開始時の必須チェック」（§5.8 検出スクリプト実行）を必須化、CLAUDE.md ヘッダにも同等の必須化と operation-manual.md 誘導追加。§14 row 1 拡張、運用ルール表に「運営者向けプロトコル変更」行追加 |
 | 2026-05-03 | v3.7：ブランチ運用方針確定。README.md §10 新設（Phase ブランチ + 常時 PBI sub-branch + worktree 並行 / merge --no-ff / sub-branch マージ後保持 / CF Pages Preview Branch Filter 必須 / main 保護 / Hotfix）。operation-manual.md / PHASE0-007 / PHASE0-009 / CLAUDE.md ヘッダに連動反映、§14 row 1 拡張・運用ルール表に「ブランチ運用」「CF Pages branch filter」行追加 |
 | 2026-05-03 | PHASE0 PBI 番号を着手順序に整列（旧 010→新 006、旧 006→新 007、旧 007→新 008、旧 008→新 009、旧 009→新 010）。本日以前の改訂履歴行に出てくる PBI 番号は当時の番号付けを参照 |
+| 2026-05-08 | v3.8：PHASE0-010 Retrospective Gate 事実修正。§6.4 `tailwind.config.ts` 削除（Tailwind v4 は CSS ベース設定）、Decision #21 を shadcn 4.x preset 体系に更新 |

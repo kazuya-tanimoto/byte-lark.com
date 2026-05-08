@@ -11,7 +11,6 @@
 - yarn dev / build / preview
 - yarn test:run / test:e2e
 - yarn check / check:ts / fix
-- yarn new-post
 
 ## Directory Conventions
 - src/pages/         Astro routes (file-based)
@@ -69,7 +68,7 @@
 - wip(pbi): PHASE0-NNN <note>    # 中間コミット
 
 ## Related Docs
-- docs/site-plan.md           Site construction plan (current: v3.7)
+- docs/site-plan.md           Site construction plan (current: v3.8)
 - docs/pbi/README.md          PBI format spec (v2.8) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
