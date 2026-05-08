@@ -1,6 +1,6 @@
 # 運営者は Cloudflare Pages にプロジェクトを接続して preview デプロイができる
 
-Status: InProgress
+Status: Done
 
 ## 誰が
 - 運営者
@@ -19,33 +19,31 @@ Status: InProgress
 ## 受け入れ条件
 
 ### Cloudflare Pages 接続
-- [ ] Cloudflare Pages に新規プロジェクト作成済み（プロジェクト名：`byte-lark`）
-- [ ] GitHub repo `kazuya-tanimoto/byte-lark.com` が接続されている
-- [ ] ビルド設定：
-  - [ ] Build command: `yarn build`
-  - [ ] Build output directory: `dist`
-  - [ ] Node version: 24.x（PHASE0-002 の `.nvmrc` と一致、Node 24 = Active LTS）
-  - [ ] **Yarn 4 (Berry) 対応の環境変数**：`YARN_VERSION=4.x` を Pages の Environment variables に設定（CF Pages 公式が Yarn version 指定用に文書化している env var、`developers.cloudflare.com/pages/configuration/language-support-and-tools/` 参照）
+- [x] Cloudflare Pages に新規プロジェクト作成済み（プロジェクト名：`byte-lark`）
+- [x] GitHub repo `kazuya-tanimoto/byte-lark.com` が接続されている
+- [x] ビルド設定：
+  - [x] Build command: `yarn build`
+  - [x] Build output directory: `dist`（`wrangler.jsonc` の `assets.directory` で指定、旧 UI の入力欄は廃止）
+  - [x] Node version: 24.x（PHASE0-002 の `.nvmrc` と一致、Node 24 = Active LTS）
+  - [x] **Yarn 4 (Berry) 対応の環境変数**：`YARN_VERSION=4.14.1` を設定済み
 
 ### preview デプロイ
-- [ ] feat/phase-0 ブランチへの push で **preview デプロイ URL** が発行される
-- [ ] preview URL にアクセスして PHASE0-002 の最小ページが表示される
+- [x] feat/phase-0 ブランチへの push で **preview デプロイ URL** が発行される
+- [x] preview URL にアクセスして PHASE0-002 の最小ページが表示される
 
 ### Cloudflare Web Analytics
-- [ ] Cloudflare Pages プロジェクト設定 → Web Analytics を有効化（無料、Cookieless）
-- [ ] Astro 側の HTML に analytics スクリプトが自動注入されることを確認（Pages 統合の場合は不要、別途必要なら本 PBI スコープ外）
+- [ ] ~~Cloudflare Pages プロジェクト設定 → Web Analytics を有効化~~ → static-only Worker では Pages Metrics 利用不可、`pages.dev` ドメインではアカウントレベル Web Analytics の自動注入も不可。PBI 定義の「別途必要なら本 PBI スコープ外」に該当。Phase 1a カスタムドメイン PBI へ申し送り済み（PHASE0-010 申し送り種セクション）
+- [x] Astro 側の HTML に analytics スクリプトが自動注入されることを確認（Pages 統合の場合は不要、別途必要なら本 PBI スコープ外）→ 別途必要と判明、スコープ外として処理
 
 ### Preview Branch Filter（必須、PBI sub-branch 運用に必要）
-- [ ] CF Pages プロジェクト設定 → Branch deployments → Custom branches を選択：
-  - [ ] **Include Preview branches**: `feat/phase-*`（Phase ブランチのみ preview 生成）
-  - [ ] **Exclude Preview branches**: `feat/phase-*-pbi-*`（PBI sub-branch は preview しない、大量生成抑制）
+- [ ] ~~CF Pages プロジェクト設定 → Branch deployments → Custom branches を選択~~ → 現 UI（Workers & Pages 統合後）にはワイルドカード指定の Include/Exclude 機能が存在しない。「Builds for non-production branches: Enabled」のまま運用（実害なし、実装ログに記録）
 - [ ] 詳細は docs/pbi/README.md §10.8 参照
 
 ### .gitignore 整備
-- [ ] `.gitignore` に `.wrangler/`（Wrangler / CF Pages local emulation の作業ディレクトリ）を追加
+- [x] `.gitignore` に `.wrangler/`（Wrangler / CF Pages local emulation の作業ディレクトリ）を追加
 
 ### 確認
-- [ ] `feat/phase-0-pbi-008` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
+- [x] `feat/phase-0-pbi-008` sub-branch 上で実装し、完了時に `feat/phase-0` へ `git merge --no-ff` でマージされている（詳細：docs/pbi/README.md §10.4-10.5）
 
 ### 本 PBI スコープ外（後続 PBI / 後続 Phase で対応）
 - [ ] 本番（main）ブランチへのマージとビルド成功確認 → **PHASE0-010**（Retrospective Gate に集約）
@@ -104,5 +102,4 @@ Status: InProgress
 - Web Analytics ホスト名を `byte-lark.com` に設定
 
 #### 残タスク
-- `feat/phase-0-pbi-008` を `feat/phase-0` へマージ
-- preview デプロイ URL の動作確認
+- なし（完了）
