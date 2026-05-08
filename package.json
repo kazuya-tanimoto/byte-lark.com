@@ -39,6 +39,7 @@
     "@astrojs/check": "^0.9.9",
     "@biomejs/biome": "^2.4.14",
     "@playwright/test": "^1.59.1",
+    "lefthook": "^2.1.6",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5"
   },
