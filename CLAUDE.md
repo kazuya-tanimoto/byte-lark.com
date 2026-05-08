@@ -58,9 +58,9 @@
 - Draft next-Phase PBIs reflecting the learnings
 - Append to INDEX.md as Status: NotStarted
 
-## Worktree での git 操作
-- EnterWorktree 後は sandbox が `.git` 書き込みをブロックするため、git add / commit / push は ExitWorktree で本体に戻ってから `-C` オプションで実行する
-- 詳細: docs/pbi/README.md §10.4-10.5
+## Sandbox 制約
+- EnterWorktree 後は sandbox が `.git` 書き込みをブロックするため、git add / commit / push は ExitWorktree で本体に戻ってから `-C` オプションで実行する（詳細: docs/pbi/README.md §10.4-10.5）
+- `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
 
 ## Commit Convention
 - feat(pbi): PHASE0-NNN <desc>   # PBI completion

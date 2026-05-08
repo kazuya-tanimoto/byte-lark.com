@@ -1,6 +1,6 @@
 # 運営者はローカル動作の正常性を確認し、Retrospective Gate 着手可能な状態を確定できる
 
-Status: InProgress
+Status: Done
 
 ## 誰が
 - 運営者
@@ -89,11 +89,11 @@ Status: InProgress
 - 6.3.1: ローカル画像 404 バグ修正のみ
 
 #### 残タスク
-- [ ] `yarn up astro` で 6.3.1 に更新（運営者実行）
-- [ ] `yarn build` 成功確認
-- [ ] `yarn check && yarn check:ts` エラーゼロ確認
-- [ ] `yarn dev` で画面表示確認（運営者目視）
-- [ ] package.json + yarn.lock + 本 PBI をコミット
+- [x] `yarn up astro` で 6.3.1 に更新（サンドボックスの DNS 制約により Claude Code 外の別ターミナルで運営者が実行。未コミット）
+- [x] `yarn build` 成功確認
+- [x] `yarn check && yarn check:ts` エラーゼロ確認
+- [x] `yarn dev` で画面表示確認（運営者目視）
+- [ ] package.json + yarn.lock + CLAUDE.md（Sandbox 制約セクション追記）+ 本 PBI をコミット
 - [ ] Status: Done に戻す + INDEX.md 同期
 
 ### 2026-05-07 着手前 audit（実装セッション外）
