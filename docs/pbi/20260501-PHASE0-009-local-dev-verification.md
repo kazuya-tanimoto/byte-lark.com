@@ -78,9 +78,6 @@ Status: Done
 #### 想定外
 - サンドボックスのポート制限で `yarn dev` / `yarn preview` が CLI 内から起動不可。運営者の手動確認で代替
 
-#### 学び
-- Astro 6.3.1 がリリース済み（`yarn dev` 起動時に update 通知）。Phase 1a 以降で検討
-
 ### 2026-05-07 着手前 audit（実装セッション外）
 - Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
 - 確認：Astro default port = 4321（PHASE0-002 PBI でも明示、Astro 公式と一致）✓ / 想定 yarn scripts（dev / build / preview / check / check:ts / test:run）は PHASE0-002 完了後の `package.json` に依拠するため、本 PBI 着手時に再 verify する性質（README §5.3 step 2 の規約で担保）
