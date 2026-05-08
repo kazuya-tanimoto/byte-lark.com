@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
+    "preview": "yarn run build && wrangler dev",
     "check": "biome check {src,tests}/**/*.{js,jsx,ts,tsx,html,css,less,sass,scss}",
     "check:ts": "tsc --noEmit",
     "check:all": "yarn check:ts && yarn check",
@@ -25,7 +25,8 @@
     "chromatic": "chromatic",
     "prepare": "npx simple-git-hooks || :",
     "preinstall": "npx typesync || :",
-    "postinstall": "lefthook install"
+    "postinstall": "lefthook install",
+    "deploy": "yarn run build && wrangler deploy"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@chakra-ui/storybook-addon": "^5.1.0",
+    "@cloudflare/vite-plugin": "^1.36.3",
     "@playwright/test": "^1.41.1",
     "@storybook/addon-a11y": "^7.6.10",
     "@storybook/addon-essentials": "^7.6.10",
@@ -82,7 +84,8 @@
     "typescript": "*",
     "vite": "^6.1.1",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.6"
+    "vitest": "^3.0.6",
+    "wrangler": "^4.90.0"
   },
   "packageManager": "yarn@4.0.2",
   "msw": {
