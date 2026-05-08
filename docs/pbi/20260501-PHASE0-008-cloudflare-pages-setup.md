@@ -84,3 +84,25 @@ Status: InProgress
 - 結果：**drift 補正 2 commit** で 3 箇所を最新化：
   - commit 5ac39c8：Yarn 4 対応の env var を `YARN_VERSION=4.x` のみに統一（受け入れ条件・技術メモ・備考の 3 箇所）。`CF_PAGES_USE_COREPACK=1` は一次情報未確認のため削除
   - commit 5fd6cb5（Handoff 03 §4 D2）：受け入れ条件 ビルド設定 Node version `20.x` → `24.x`（Node Active LTS への sync、Node 20 は 2026-04-30 EOL 済）
+
+### 2026-05-08 実装セッション
+
+#### やったこと
+- `.gitignore` に `.wrangler/` を追加
+- `wrangler.jsonc` を作成（Astro SSG の静的アセットディレクトリ `./dist` を指定）
+- CF Pages プロジェクト `byte-lark` を作成、GitHub repo を接続、main ブランチで初回デプロイ成功（2 分 12 秒）
+- 環境変数 `YARN_VERSION=4.14.1` / `NODE_VERSION=24` を設定済み
+
+#### 想定外・UI の乖離
+- CF Pages の UI が PBI 策定時と大幅に変わっていた（Workers & Pages 統合）
+  - 旧「Build output directory」欄は廃止 → `wrangler.jsonc` の `assets.directory` で指定する方式に変更
+  - 旧「Preview Branch Filter（Custom branches / Include / Exclude）」は廃止 → 現 UI はブランチ個別選択のみ、ワイルドカード不可。「Builds for non-production branches: Enabled」のまま運用（現時点で実害なし）
+- Web Analytics：Pages プロジェクトの Metrics タブは「static assets のみの Worker では利用不可」、アカウントレベルの Web Analytics は `byte-lark.pages.dev` を Cloudflare サイトとして認識せず自動注入不可。PBI 受け入れ条件で「別途必要なら本 PBI スコープ外」と定義済みのためスキップ
+
+#### Phase 1a カスタムドメイン PBI への申し送り
+- Web Analytics の有効化（`byte-lark.com` をドメインとして Cloudflare に追加した後に設定すれば自動注入が使える）
+- Web Analytics ホスト名を `byte-lark.com` に設定
+
+#### 残タスク
+- `feat/phase-0-pbi-008` を `feat/phase-0` へマージ
+- preview デプロイ URL の動作確認
