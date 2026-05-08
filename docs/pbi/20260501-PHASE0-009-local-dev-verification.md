@@ -1,6 +1,6 @@
 # 運営者はローカル動作の正常性を確認し、Retrospective Gate 着手可能な状態を確定できる
 
-Status: NotStarted
+Status: Done
 
 ## 誰が
 - 運営者
@@ -59,6 +59,27 @@ Status: NotStarted
 - preview build 失敗 → Cloudflare Pages のビルドログで `YARN_VERSION` 環境変数 / corepack 設定 / Node version を確認（本番ビルド失敗の典型パターンと同じ）
 
 ## 実装ログ
+
+### 2026-05-08 ローカル検証 + Phase 0 完了確認
+
+#### やったこと
+- ローカル動作確認 7 項目すべてパス
+  - `yarn install`: 完了（peer dep 警告のみ）
+  - `yarn dev`: Astro v6.2.2 起動、localhost:4321 でページ表示確認（運営者手動確認）
+  - `yarn build`: 成功、`dist/index.html` 生成
+  - `yarn preview`: Astro preview サーバ起動、dist/ 内容表示確認（運営者手動確認）
+  - `yarn check` (Biome): エラーゼロ
+  - `yarn check:ts` (astro check): 0 errors / 0 warnings / 0 hints
+  - `yarn test:run`: exit 0（テストファイルなし）
+- Cloudflare Pages preview URL: 最新コミット反映、ビルド成功（運営者手動確認）
+- PHASE0-001〜008 全 Done、INDEX.md 反映済み
+- PHASE0-010 (Retrospective Gate) 着手可能状態を確定
+
+#### 想定外
+- サンドボックスのポート制限で `yarn dev` / `yarn preview` が CLI 内から起動不可。運営者の手動確認で代替
+
+#### 学び
+- Astro 6.3.1 がリリース済み（`yarn dev` 起動時に update 通知）。Phase 1a 以降で検討
 
 ### 2026-05-07 着手前 audit（実装セッション外）
 - Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。

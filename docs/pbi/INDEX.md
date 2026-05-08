@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-05-06
+最終更新: 2026-05-08
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -56,7 +56,7 @@ done
 | PHASE0-006 | [readme-stub-update](20260502-PHASE0-006-readme-stub-update.md) | Done |
 | PHASE0-007 | [lefthook-workflows-setup](20260501-PHASE0-007-lefthook-workflows-setup.md) | Done |
 | PHASE0-008 | [cloudflare-pages-setup](20260501-PHASE0-008-cloudflare-pages-setup.md) | Done |
-| PHASE0-009 | [local-dev-verification](20260501-PHASE0-009-local-dev-verification.md) | NotStarted |
+| PHASE0-009 | [local-dev-verification](20260501-PHASE0-009-local-dev-verification.md) | Done |
 | **PHASE0-010** | [**retrospective-gate**](20260501-PHASE0-010-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
 ### Phase 0 推奨着手順序
