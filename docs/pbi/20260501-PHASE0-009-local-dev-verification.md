@@ -1,6 +1,6 @@
 # 運営者はローカル動作の正常性を確認し、Retrospective Gate 着手可能な状態を確定できる
 
-Status: Done
+Status: InProgress
 
 ## 誰が
 - 運営者
@@ -77,6 +77,24 @@ Status: Done
 
 #### 想定外
 - サンドボックスのポート制限で `yarn dev` / `yarn preview` が CLI 内から起動不可。運営者の手動確認で代替
+
+### 2026-05-08 Astro 6.2.2 → 6.3.1 アップグレード
+
+検証中に `yarn dev` で Astro 6.3.1 の更新通知を確認。毎回表示されるため対処する。
+
+#### 影響調査
+- 6.3.0 の挙動変更: SVG ラスタライズのデフォルト無効化 → プロジェクトに SVG ファイル・image 設定なし、影響なし
+- 6.3.0 で変更された API（AstroCookies.consume / pushDirective / preferredLocale / advancedRouting）→ 使用箇所なし
+- astro.config.mjs の変更不要
+- 6.3.1: ローカル画像 404 バグ修正のみ
+
+#### 残タスク
+- [ ] `yarn up astro` で 6.3.1 に更新（運営者実行）
+- [ ] `yarn build` 成功確認
+- [ ] `yarn check && yarn check:ts` エラーゼロ確認
+- [ ] `yarn dev` で画面表示確認（運営者目視）
+- [ ] package.json + yarn.lock + 本 PBI をコミット
+- [ ] Status: Done に戻す + INDEX.md 同期
 
 ### 2026-05-07 着手前 audit（実装セッション外）
 - Handoff `docs/handoff/2026-05-06-01-phase0-pbi-audit.md` に従い、PBI 本文の empirical claim を一次情報で照合。
