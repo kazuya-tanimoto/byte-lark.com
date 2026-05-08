@@ -84,6 +84,8 @@ Status: NotStarted
 
 - **インフラ（CF Pages vs Workers）の再評価**：Astro 公式 deploy guide が `Cloudflare recommends using Cloudflare Workers for new projects` と明記（2026-05-07 audit 確認）。Cloudflare Pages は依然 supported で deprecated ではないが、new projects 推奨は Workers。Decision Log #17（site-plan.md）は Pages 維持で確定済、Phase 0 では PHASE0-008 で Pages を実装する方針。Phase 1a 起票時に「Pages 継続のまま Phase 1a 進行」か「Workers 切替を別 PBI 化」を運営者と再確認する。判断材料：（a）静的中心ブログでは技術差は拮抗、（b）切替は `@astrojs/cloudflare` adapter + wrangler.jsonc 構成への書換が必要、（c）Pages の機能更新ペースは Workers より遅い傾向。
 
+- **Web Analytics の有効化**：PHASE0-008 実装時（2026-05-08）に判明。Pages プロジェクトの Metrics タブは static-only Worker では利用不可、アカウントレベルの Web Analytics は `pages.dev` ドメインでは自動注入不可。`byte-lark.com` カスタムドメインを Cloudflare に追加した後であれば自動注入が有効になる。Phase 1a のカスタムドメイン PBI に Web Analytics 有効化を含めること。
+
 ### 次 Phase（1a）の PBI 起票プロトコル（CLAUDE.md からの参照先）
 
 別セッションが Phase 1a PBI 起票を行う際の手順：
