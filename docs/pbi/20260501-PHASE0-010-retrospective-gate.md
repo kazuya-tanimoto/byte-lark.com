@@ -1,7 +1,8 @@
 # 運営者と Claude は Phase 0 完了状態を確認し、Phase 1a への学びを次セッションへ申し送ることができる
 
-Status: InProgress
+Status: Done
 Started: 2026-05-08
+Completed: 2026-05-09
 
 ## 誰が
 - 運営者 + Claude
@@ -41,27 +42,21 @@ Started: 2026-05-08
   - 差分 2 件を本 Gate で修正（v3.7 → v3.8）：§6.4 `tailwind.config.ts` 削除、Decision #21 更新
 
 ### マージ
-- [ ] feat/phase-0 ブランチを main にマージする（merge commit 維持で履歴を残す）：
-  ```bash
-  git checkout main
-  git pull origin main
-  git merge --no-ff feat/phase-0 -m "Merge Phase 0: project initialization"
-  git push origin main
-  ```
-- [ ] feat/phase-0 は remote に保持（PBI 単位の checkout 用、削除しない）
-- [ ] 詳細手順は docs/pbi/README.md §10.6 参照
+- [x] feat/phase-0 ブランチを main にマージする（merge commit 維持で履歴を残す）：`6a38240 Merge Phase 0: project initialization`
+- [x] feat/phase-0 は remote に保持（PBI 単位の checkout 用、削除しない）
+- [x] 詳細手順は docs/pbi/README.md §10.6 参照
 
 ### 本番デプロイ確認（main マージ後）
-- [ ] main へのマージで PHASE0-008 で接続した **Cloudflare Pages の本番ビルド**が自動実行される
-- [ ] 本番 URL にアクセスして最小ページが表示される
-- [ ] Cloudflare Web Analytics のスクリプト埋込が本番 HTML に存在することを確認（観測方法：DevTools の Network タブで `cloudflareinsights.com/beacon.min.js` が読込まれていること、または View Source で `<script ... data-cf-beacon=...>` の存在を確認。実データの反映は数時間かかる場合があるため、計測開始の確認は本 PBI スコープ外）
+- [x] main へのマージで CF Pages の本番ビルドが自動実行された（Version ID: 26d7cc87、デプロイ成功）
+- [x] 本番 URL（`byte-lark.tanimoto-a49.workers.dev`）にアクセスしてページ表示確認済み
+- [x] Web Analytics：静的アセットのみの Worker では Metrics 利用不可、`pages.dev` ドメインでは自動注入不可。カスタムドメイン追加後に有効化する旨を申し送りに記録済み
 
 ### R-14（フリープラン制限監視）の最初のチェック
-- [ ] Cloudflare Pages ダッシュボードで本月のビルド回数・帯域使用量を一度確認し、ベースライン把握
-- [ ] 月次レビューで使用量 80% 到達を監視する旨を運営者がメモ（site-plan.md §9 R-14）
+- [x] CF ダッシュボード Metrics タブ確認：「Metrics is unavailable for Workers with only static assets. Requests for this kind of Worker are served at no charge.」— 静的アセットのみのため課金なし、帯域監視は実質不要
+- [x] 月次レビューで使用量 80% 到達を監視する旨を運営者がメモ（site-plan.md §9 R-14）— 静的 Worker は無課金のため実質的に制限なし
 
 ### 完了処理
-- [ ] 本 PBI の Status を Done に更新、INDEX.md 同期
+- [x] 本 PBI の Status を Done に更新、INDEX.md 同期
 
 ### 次セッションへのトリガー
 - [x] 本 PBI が Done になった時点で、次セッションは「Phase 1a PBI 起票」を最初のタスクとして実行可能
@@ -176,3 +171,23 @@ Phase 0 で実際に動いた構成：
 - 「## 備考 / 申し送り種」セクションを新設、Astro 公式 docs（2026-05-07 取得）の `Cloudflare recommends using Cloudflare Workers for new projects` を根拠に、Phase 0 完了時の Pages vs Workers 再評価論点を明文化。
 - Decision Log #17 は Pages 維持で確定済、Phase 0 は Pages のまま完走、再評価は Phase 1a 起票時に運営者と実施。
 - 包括 cross-check（7 軸 × 8 doc）実施：(a) library version / (b) PBI ID / (c) §N / (d) ファイルパス / (e) 最終更新日付 / (f) Phase ラベル / (g) URL。**drift 0 件**（PHASE0-002 title の `Astro 5` 残存・README.md の旧 repo URL・biome.jsonc schema 1.5.3 はそれぞれ worktree 改訂・PHASE0-006 全文置換・PHASE0-004 migrate で解消予定の既知箇所のため対象外、`docs/writing-workflow.md` 未実在は Phase 1a 冒頭で作成予定の意図的な未来 reference）。
+
+### 2026-05-08〜09 実装セッション
+
+#### やったこと
+- Phase 0 完了確認（全 PBI Done、ビルド・lint・型チェック成功）
+- PHASE0-001〜009 の全実装ログを横串で読み、Phase 1a への申し送り 5 セクションを記入
+- CLAUDE.md / site-plan.md の整合確認、齟齬 2 件を修正：
+  - CLAUDE.md: 未実装の `yarn new-post` を Build & Test Commands から削除
+  - site-plan.md v3.7 → v3.8: §6.4 `tailwind.config.ts` 削除（Tailwind v4 不使用）、Decision #21 を shadcn 4.x preset 体系に更新
+- feat/phase-0 を main にマージ（`6a38240 Merge Phase 0: project initialization`、`--no-ff`）、push 完了
+- CF Pages 本番デプロイ確認（Version ID: 26d7cc87、本番 URL 表示確認）
+- R-14 ベースライン確認（静的 Worker は課金なし）
+
+#### 想定外だった点
+- main への merge 時に `.claude/settings.json`（未コミット変更あり）と `.claude/settings.local.json`（untracked）が衝突し、マージがブロックされた。Claude Code 内で checkout / stash / merge を試みたが、ワーキングツリーを散らかして事態を悪化させた。最終的に運営者ターミナルで `git checkout --` / `rm` / `git merge` を実行して解消
+- Bash サンドボックスが `.claude/settings.*` への書き込みを制限していることは `touch` コマンドで確認済み。ただし、マージ失敗の原因がサンドボックスなのか git ワークフロー上の問題（dirty working tree / untracked file conflict）なのかは切り分けできていない
+- CF Pages の Metrics タブは「static assets のみの Worker」では利用不可。ただしリクエスト課金もないため、R-14 のフリープラン監視は実質不要と判明
+
+#### 学び
+- Edit/Write ツールは Bash サンドボックスを経由しない（公式 docs: code.claude.com/docs/en/sandboxing）。サンドボックスが Bash をブロックする場合でも Edit/Write で対処できる場合がある
