@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-05-08
+最終更新: 2026-05-10
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -89,8 +89,69 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 
 ## Phase 1a：サイト構成・各ページ実装
 
-PBI は **Phase 0 完了 + PHASE0-010 (Retrospective Gate) 通過後**に別セッションで起票する。  
-（v3.7 ロードマップ §7 の方針に従う）
+表は推奨着手順序に従って並べる：
+
+| ID | タイトル | Status |
+|---|---|---|
+| PHASE1A-001 | [workers-migration-ci](20260510-PHASE1A-001-workers-migration-ci.md) | NotStarted |
+| PHASE1A-002 | [design-tokens-code-highlight](20260510-PHASE1A-002-design-tokens-code-highlight.md) | NotStarted |
+| PHASE1A-003 | [content-collections-image](20260510-PHASE1A-003-content-collections-image.md) | NotStarted |
+| PHASE1A-004 | [writing-workflow](20260510-PHASE1A-004-writing-workflow.md) | NotStarted |
+| PHASE1A-005 | [base-layout-ogp](20260510-PHASE1A-005-base-layout-ogp.md) | NotStarted |
+| PHASE1A-006 | [header-footer](20260510-PHASE1A-006-header-footer.md) | NotStarted |
+| PHASE1A-007 | [post-layout-jsonld](20260510-PHASE1A-007-post-layout-jsonld.md) | NotStarted |
+| PHASE1A-008 | [home-page](20260510-PHASE1A-008-home-page.md) | NotStarted |
+| PHASE1A-009 | [about-page](20260510-PHASE1A-009-about-page.md) | NotStarted |
+| PHASE1A-010 | [career-page](20260510-PHASE1A-010-career-page.md) | NotStarted |
+| PHASE1A-011 | [skills-page](20260510-PHASE1A-011-skills-page.md) | NotStarted |
+| PHASE1A-012 | [blog-list](20260510-PHASE1A-012-blog-list.md) | NotStarted |
+| PHASE1A-013 | [blog-post-detail](20260510-PHASE1A-013-blog-post-detail.md) | NotStarted |
+| PHASE1A-014 | [contact-page](20260510-PHASE1A-014-contact-page.md) | NotStarted |
+| PHASE1A-015 | [privacy-page](20260510-PHASE1A-015-privacy-page.md) | NotStarted |
+| PHASE1A-016 | [notfound-page](20260510-PHASE1A-016-notfound-page.md) | NotStarted |
+| PHASE1A-017 | [rss-sitemap-robots](20260510-PHASE1A-017-rss-sitemap-robots.md) | NotStarted |
+| PHASE1A-018 | [custom-domain-analytics](20260510-PHASE1A-018-custom-domain-analytics.md) | NotStarted |
+| PHASE1A-019 | [e2e-tests-a11y](20260510-PHASE1A-019-e2e-tests-a11y.md) | NotStarted |
+| PHASE1A-020 | [lighthouse-cwv-production](20260510-PHASE1A-020-lighthouse-cwv-production.md) | NotStarted |
+| **PHASE1A-021** | [**retrospective-gate**](20260510-PHASE1A-021-retrospective-gate.md) **(Gate)** | **NotStarted** |
+
+### Phase 1a 推奨着手順序
+
+依存関係を考慮した推奨順（上の表の順序と一致）：
+
+```
+PHASE1A-001 (Workers + CI) ← 最初に実施、インフラ基盤
+  ↓
+┌─ PHASE1A-002 (design tokens + code highlight)   ← 決定事項グループ
+├─ PHASE1A-003 (Content Collections + image)       ← 決定事項グループ
+└─ PHASE1A-004 (writing workflow + new-post)        ← 決定事項グループ
+   並列可だが、同セッション内では逐次推奨
+  ↓
+PHASE1A-005 (BaseLayout + OGP) ← 全ページの基盤
+  ↓
+┌─ PHASE1A-006 (Header + Footer)
+└─ PHASE1A-007 (PostLayout + JSON-LD)
+  ↓
+┌─ PHASE1A-008 (Home)
+├─ PHASE1A-009 (About)
+├─ PHASE1A-010 (Career)         ← ページ実装グループ
+├─ PHASE1A-011 (Skills)           並列可
+├─ PHASE1A-012 (Blog 一覧) ← 003 依存
+├─ PHASE1A-013 (Blog 記事詳細) ← 003, 007 依存
+├─ PHASE1A-014 (Contact)
+├─ PHASE1A-015 (Privacy)
+└─ PHASE1A-016 (NotFound)
+  ↓
+PHASE1A-017 (RSS + Sitemap + robots.txt) ← 003 依存
+  ↓
+PHASE1A-018 (カスタムドメイン + Web Analytics) ← 運営者の CF 操作
+  ↓
+PHASE1A-019 (E2E + a11y) ← 全ページ実装後
+  ↓
+PHASE1A-020 (Lighthouse + CWV + 本番確認) ← 最終品質ゲート
+  ↓
+PHASE1A-021 (retrospective gate) ← Phase 1b 移行前の必須ゲート
+```
 
 ---
 
@@ -126,3 +187,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-05-03 | site-plan v3.7 連動：line 93 のロードマップ参照を v3.7 に更新（README §10 ブランチ運用追加に伴う） |
 | 2026-05-03 | PHASE0 PBI 番号を着手順序に整列（旧 010→新 006、旧 006→新 007、旧 007→新 008、旧 008→新 009、旧 009→新 010）。本日以前の改訂履歴に出てくる PBI 番号は当時の番号付けを参照 |
 | 2026-05-05 | README v2.5 連動：PBI sub-branch 命名規則を `feat/phase-<phase>/pbi-<NNN>` から `feat/phase-<phase>-pbi-<NNN>` へ変更（Git files backend の D/F conflict 制約回避）。全 PBI ファイル (PHASE0-001〜009) 内の sub-branch 参照を連動更新 |
+| 2026-05-10 | Phase 1a PBI 21 件を起票（PHASE1A-001〜021）。PHASE0-010 Gate 申し送り + Phase 0 実装ログ + site-plan v3.8 を反映。Workers 移行（Decision #17 変更）を含む |

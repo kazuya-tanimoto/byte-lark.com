@@ -52,10 +52,12 @@
 
 ### How to draft next-Phase PBIs
 - Only after current Phase Done + Retrospective Gate passed
+- Create the Phase branch first: `git checkout -b feat/phase-<phase>` from main (README §10.3)
 - Read the Gate PBI's "次 Phase への申し送り" section
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
 - Draft next-Phase PBIs reflecting the learnings
 - Append to INDEX.md as Status: NotStarted
+- Commit on the Phase branch (docs-only, worktree 不要)
 
 ## Sandbox 制約
 - EnterWorktree 後は sandbox が `.git` 書き込みをブロックするため、git add / commit / push は ExitWorktree で本体に戻ってから `-C` オプションで実行する（詳細: docs/pbi/README.md §10.4-10.5）
