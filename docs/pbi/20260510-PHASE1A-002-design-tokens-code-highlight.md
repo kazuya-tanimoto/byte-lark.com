@@ -21,6 +21,7 @@ Status: NotStarted
 - [ ] 選定ライブラリの設定を `astro.config.mjs` に追加
 - [ ] サンプルコードブロック（TypeScript / JSX）でハイライト動作確認
 - [ ] Q5（記事 cover 画像の運用方針）を決定し、PHASE1A-003 Content Collections の cover フィールド設計に反映
+- [ ] Noto Sans JP を導入し、和文テキストに適用（`@fontsource` or Google Fonts、方式により CSP 設定要否を判断）
 - [ ] `yarn build` 成功
 - [ ] `yarn check:ts` エラーなし
 

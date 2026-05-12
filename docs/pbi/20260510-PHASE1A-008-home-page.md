@@ -28,6 +28,7 @@ Status: NotStarted
 - [ ] `src/components/BlogCard.astro` を作成（Blog 一覧 PBI でも使用）
 - [ ] レスポンシブ対応（モバイル / タブレット / デスクトップ）
 - [ ] `yarn build` 成功
+- [ ] `yarn check:ts` エラーなし
 
 ## 技術メモ
 - Hero / BlogCard / CareerTimeline 抜粋 / SkillSet 抜粋は全て Astro コンポーネント（静的、JS 不要）

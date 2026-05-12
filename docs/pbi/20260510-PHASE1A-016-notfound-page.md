@@ -22,6 +22,7 @@ Status: NotStarted
 - [ ] サイトのデザイントーンと統一
 - [ ] レスポンシブ対応
 - [ ] `yarn build` 成功
+- [ ] `yarn check:ts` エラーなし
 
 ## 技術メモ
 - Astro の `src/pages/404.astro` は SSG 時に `404.html` として出力される

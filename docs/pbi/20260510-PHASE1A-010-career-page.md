@@ -22,6 +22,7 @@ Status: NotStarted
 - [ ] OGP メタ（title / description）が正しく出力
 - [ ] レスポンシブ対応
 - [ ] `yarn build` 成功
+- [ ] `yarn check:ts` エラーなし
 
 ## 技術メモ
 - CareerTimeline は静的コンポーネント（Astro 自前、JS 不要）

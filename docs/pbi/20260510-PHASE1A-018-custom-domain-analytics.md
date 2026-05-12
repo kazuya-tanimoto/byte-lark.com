@@ -12,7 +12,7 @@ Status: NotStarted
 ## なんのために
 - 法人サイトとして独自ドメインでの公開が必須のため
 - アクセス解析データを取得し、コンテンツ改善・Phase 2 広告判断の基礎データとするため
-- 関連: site-plan.md Decision #17, #18 / PHASE0-010 申し送り「Web Analytics が pages.dev では自動注入不可」
+- 関連: site-plan.md Decision #17, #18 / R-14 / PHASE0-010 申し送り「Web Analytics が pages.dev では自動注入不可」
 
 ## 受け入れ条件
 - [ ] `byte-lark.com` ドメインを Cloudflare に追加（DNS 設定）
@@ -25,6 +25,7 @@ Status: NotStarted
 - [ ] `astro.config.mjs` の `site` を `https://byte-lark.com` に更新
 - [ ] Sitemap / RSS / canonical URL がカスタムドメインを使用していることを確認
 - [ ] `yarn build` 成功
+- [ ] `yarn check:ts` エラーなし
 
 ## 技術メモ
 - PHASE0-008 で判明: `pages.dev` ドメインでは Web Analytics 自動注入が不可。カスタムドメイン追加で解消

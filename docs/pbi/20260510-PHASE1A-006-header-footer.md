@@ -27,6 +27,7 @@ Status: NotStarted
 - [ ] BaseLayout（PHASE1A-005）に Header / Footer を組み込み
 - [ ] レスポンシブ対応（モバイル / タブレット / デスクトップ）
 - [ ] `yarn build` 成功
+- [ ] `yarn check:ts` エラーなし
 
 ## 技術メモ
 - Header / Footer は静的部品のため Astro コンポーネントで実装（shadcn/ui 不使用、Decision #16）

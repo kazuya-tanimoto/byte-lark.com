@@ -23,6 +23,7 @@ Status: NotStarted
 - [ ] ビルド出力に `sitemap-index.xml` が生成される
 - [ ] `public/robots.txt` を作成（sitemap-index.xml への参照を含む）
 - [ ] `yarn build` 成功
+- [ ] `yarn check:ts` エラーなし
 - [ ] ビルド出力で RSS / Sitemap の中身を目視確認
 
 ## 技術メモ

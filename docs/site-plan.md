@@ -211,6 +211,7 @@ slug: vite-react-spa-ogp-pitfall      # frontmatter で明示推奨（ファイ�
 │   │       └── *.md / *.mdx
 │   ├── data/                         構造化データ（旧 features/*/data から移植）
 │   │   ├── career.ts
+│   │   ├── qualifications.ts          保有資格データ（FR-15、Phase 1a で新規作成）
 │   │   └── skills.ts
 │   ├── layouts/
 │   │   ├── BaseLayout.astro          共通レイアウト（meta / OGP / canonical / JSON-LD / Header / Footer）

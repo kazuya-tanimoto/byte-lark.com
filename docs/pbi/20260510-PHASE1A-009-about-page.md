@@ -23,6 +23,7 @@ Status: NotStarted
 - [ ] OGP メタ（title / description）が正しく出力
 - [ ] レスポンシブ対応
 - [ ] `yarn build` 成功
+- [ ] `yarn check:ts` エラーなし
 
 ## 技術メモ
 - About ページは静的テキスト中心、Astro コンポーネントで実装

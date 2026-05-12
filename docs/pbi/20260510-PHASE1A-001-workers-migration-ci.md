@@ -12,7 +12,7 @@ Status: NotStarted
 ## なんのために
 - Cloudflare 公式・Astro 公式ともに新規プロジェクトには Workers を推奨しており、将来の機能追加・サポートで有利なため
 - Phase 1a で多数のページを実装する前に、品質ゲート（lint / 型チェック / テスト）を CI で自動化するため
-- 関連: site-plan.md Phase 1a 冒頭タスク / PHASE0-010 申し送り「CI workflow は Phase 1a 冒頭で整備」
+- 関連: site-plan.md NFR-04 / Phase 1a 冒頭タスク / PHASE0-010 申し送り「CI workflow は Phase 1a 冒頭で整備」
 
 ## 受け入れ条件
 - [ ] CF Pages プロジェクト `byte-lark` を Workers に移行（CF ダッシュボードでの操作 + wrangler.jsonc 更新）
