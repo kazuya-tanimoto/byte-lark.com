@@ -26,7 +26,7 @@ Status: NotStarted
 - [ ] ビルド出力で RSS / Sitemap の中身を目視確認
 
 ## 技術メモ
-- `@astrojs/rss` と `@astrojs/sitemap` は yarn add が必要（運営者の別ターミナルで実行）
+- `@astrojs/rss` と `@astrojs/sitemap` は Phase 0 でインストール済み（追加の yarn add は不要）
 - sitemap の site 設定は `astro.config.mjs` の `site` プロパティに依存
 - site URL は Workers 移行後の本番 URL（カスタムドメイン設定前は `byte-lark.tanimoto-a49.workers.dev` 等）
 - カスタムドメイン設定後に `site` を `https://byte-lark.com` に更新する必要あり（PHASE1A-018 と連動）

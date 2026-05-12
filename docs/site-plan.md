@@ -205,8 +205,8 @@ slug: vite-react-spa-ogp-pitfall      # frontmatter で明示推奨（ファイ�
 │   │   ├── CategoryFilter.tsx        React Island（インタラクティブ、shadcn 利用可）
 │   │   ├── CareerTimeline.astro      静的、自前 Astro
 │   │   └── SkillSet.astro            静的、自前 Astro
+│   ├── content.config.ts              Content Collections 定義（Zod schema）
 │   ├── content/
-│   │   ├── config.ts                 Content Collections 定義（Zod schema）
 │   │   └── posts/
 │   │       └── *.md / *.mdx
 │   ├── data/                         構造化データ（旧 features/*/data から移植）

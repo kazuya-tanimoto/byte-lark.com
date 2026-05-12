@@ -27,5 +27,5 @@ Status: NotStarted
 ## 技術メモ
 - SkillSet は静的コンポーネント（Astro 自前、JS 不要）
 - `src/data/skills.ts` は PHASE0-003 で移植済み
-- アイコンは既存データの URL を使用（VB.Net / GAS の代替アイコンは Q13 並列で判断、site-plan §6.7）
+- アイコンは既存データの URL を使用（VB.Net / GAS の代替アイコンは site-plan §6.7 の既存資産取扱い方針に従い判断）
 - グリッドレイアウト（Tailwind `grid`）でカテゴリ別表示が自然

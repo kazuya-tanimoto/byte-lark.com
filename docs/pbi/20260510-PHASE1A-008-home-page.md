@@ -21,6 +21,7 @@ Status: NotStarted
 - [ ] Hero セクション: 名前・肩書・要約・主要リンク（Q1 で文言決定）
 - [ ] Career 抜粋: `src/data/career.ts` から直近 N 件を表示、`/career` へのリンク
 - [ ] Skills 抜粋: `src/data/skills.ts` から上位 M 件を表示、`/skills` へのリンク
+- [ ] `src/data/qualifications.ts` を作成（Qualifications セクションのデータソース）
 - [ ] Qualifications セクション: 保有資格を表示（独立ページなし、FR-15）
 - [ ] 最新記事セクション: Content Collections から最新 N 件を BlogCard で表示、`/blog` へのリンク
 - [ ] `src/components/Hero.astro` を作成

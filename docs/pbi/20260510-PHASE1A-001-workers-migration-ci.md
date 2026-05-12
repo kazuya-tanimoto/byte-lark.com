@@ -25,6 +25,10 @@ Status: NotStarted
 - [ ] CF Pages Preview Branch Filter を確認・設定（README §10.8: Phase ブランチのみ preview、PBI sub-branch は除外）
 - [ ] `yarn build` が CI で成功
 - [ ] `yarn check` / `yarn check:ts` が CI で成功
+- [ ] site-plan.md Decision #17 を「Cloudflare Workers」に更新
+- [ ] CLAUDE.md のデプロイ先記述を Workers 移行に合わせて更新
+- [ ] Lefthook `pre-push` フックの Workers 移行後の互換性を確認・必要なら更新
+- [ ] `scripts/migrate-frontmatter.ts` の雛形を作成（R-02 対応: frontmatter スキーマ変更時のマイグレーションスクリプト）
 
 ## 技術メモ
 - 静的サイト（output: static）では `@astrojs/cloudflare` adapter は不要（Astro 公式 docs 2026-05-10 確認）
@@ -33,5 +37,4 @@ Status: NotStarted
 - Lefthook は `yarn install` 後に `yarn lefthook install --force` が必要（Yarn 4 は postinstall を無効化するため）
 
 ## 備考
-- Decision #17 を「Cloudflare Pages」から「Cloudflare Workers」に更新する（site-plan.md）
 - PHASE0-008 で Preview Branch Filter の UI が見つからなかった経緯あり。Workers 移行後に改めて確認

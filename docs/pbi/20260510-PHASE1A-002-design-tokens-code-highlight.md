@@ -20,6 +20,7 @@ Status: NotStarted
 - [ ] Q13 コードハイライトライブラリ選定完了（Shiki / Prism / Expressive Code を比較、運営者と決定）
 - [ ] 選定ライブラリの設定を `astro.config.mjs` に追加
 - [ ] サンプルコードブロック（TypeScript / JSX）でハイライト動作確認
+- [ ] Q5（記事 cover 画像の運用方針）を決定し、PHASE1A-003 Content Collections の cover フィールド設計に反映
 - [ ] `yarn build` 成功
 - [ ] `yarn check:ts` エラーなし
 
@@ -28,7 +29,7 @@ Status: NotStarted
 - Astro は Shiki をビルトインサポート（有力候補）
 - カラーの仮 HEX は site-plan §6.5.2 の Tailwind tone 目安を参考に決定。Phase 1b で確定 HEX に置換
 - Expressive Code は Astro 専用統合 `astro-expressive-code` がある
+- Google Fonts 使用時は Workers で CSP ヘッダーの `style-src` / `font-src` 設定が必要（Workers 移行で CSP 設定場所が `_headers` ファイルから Worker スクリプトに変わる）
 
 ## 備考
 - Dark モード対応は Phase 1b 以降で検討（Phase 1a は light モードのみ）
-- Q5（記事 cover 画像の運用方針）もこの PBI で合わせて決定可能（Content Collections PBI に影響）

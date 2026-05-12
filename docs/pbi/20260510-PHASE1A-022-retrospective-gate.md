@@ -17,7 +17,7 @@ Status: NotStarted
 ## 受け入れ条件
 
 ### Phase 1a 完了確認
-- [ ] PHASE1A-001 〜 PHASE1A-020 のすべてが Status: Done
+- [ ] PHASE1A-001 〜 PHASE1A-021 のすべてが Status: Done
 - [ ] `docs/pbi/INDEX.md` の Phase 1a セクションがすべて `[Done]` 表示
 - [ ] feat/phase-1a ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がすべて成功
 

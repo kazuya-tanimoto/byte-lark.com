@@ -113,7 +113,8 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 | PHASE1A-018 | [custom-domain-analytics](20260510-PHASE1A-018-custom-domain-analytics.md) | NotStarted |
 | PHASE1A-019 | [e2e-tests-a11y](20260510-PHASE1A-019-e2e-tests-a11y.md) | NotStarted |
 | PHASE1A-020 | [lighthouse-cwv-production](20260510-PHASE1A-020-lighthouse-cwv-production.md) | NotStarted |
-| **PHASE1A-021** | [**retrospective-gate**](20260510-PHASE1A-021-retrospective-gate.md) **(Gate)** | **NotStarted** |
+| PHASE1A-021 | [incident-response](20260510-PHASE1A-021-incident-response.md) | NotStarted |
+| **PHASE1A-022** | [**retrospective-gate**](20260510-PHASE1A-022-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
 ### Phase 1a 推奨着手順序
 
@@ -149,8 +150,9 @@ PHASE1A-018 (カスタムドメイン + Web Analytics) ← 運営者の CF 操�
 PHASE1A-019 (E2E + a11y) ← 全ページ実装後
   ↓
 PHASE1A-020 (Lighthouse + CWV + 本番確認) ← 最終品質ゲート
+PHASE1A-021 (incident-response) ← R-11 対応、依存なし（任意のタイミングで実施可）
   ↓
-PHASE1A-021 (retrospective gate) ← Phase 1b 移行前の必須ゲート
+PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 ```
 
 ---
@@ -188,3 +190,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-05-03 | PHASE0 PBI 番号を着手順序に整列（旧 010→新 006、旧 006→新 007、旧 007→新 008、旧 008→新 009、旧 009→新 010）。本日以前の改訂履歴に出てくる PBI 番号は当時の番号付けを参照 |
 | 2026-05-05 | README v2.5 連動：PBI sub-branch 命名規則を `feat/phase-<phase>/pbi-<NNN>` から `feat/phase-<phase>-pbi-<NNN>` へ変更（Git files backend の D/F conflict 制約回避）。全 PBI ファイル (PHASE0-001〜009) 内の sub-branch 参照を連動更新 |
 | 2026-05-10 | Phase 1a PBI 21 件を起票（PHASE1A-001〜021）。PHASE0-010 Gate 申し送り + Phase 0 実装ログ + site-plan v3.8 を反映。Workers 移行（Decision #17 変更）を含む |
+| 2026-05-12 | Phase 1a PBI レビュー反映：PHASE1A-021 incident-response 追加（R-11 対応）、Gate を PHASE1A-022 にリナンバー。修正 9 件（001: site-plan/CLAUDE.md 更新 + Lefthook + R-02 雛形追加、002: Q5 受け入れ条件化 + CSP メモ追加、008: qualifications.ts 追加、011: Q13 誤参照修正、012: BlogCard 共有明示、017: yarn add 誤記修正、019: 削除済みデモテスト参照修正）+ site-plan §6.4 content config パス修正 |

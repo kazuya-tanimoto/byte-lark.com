@@ -33,4 +33,4 @@ Status: NotStarted
 ## 技術メモ
 - CategoryFilter は React Island（`client:load` or `client:visible`）で shadcn/ui の Button 等を使用可（Decision #16）
 - 記事データは SSG 時に全件ビルドし、フィルタはクライアント JS で表示/非表示を切り替える
-- BlogCard は PHASE1A-008（Home ページ）で作成する想定だが、依存関係上どちらが先でも可
+- `src/components/BlogCard.astro` は PHASE1A-008（Home ページ）で共有コンポーネントとして作成する想定。本 PBI ではそれを再利用する
