@@ -28,6 +28,7 @@ Status: NotStarted
 - [ ] site-plan.md Decision #17 を「Cloudflare Workers」に更新
 - [ ] CLAUDE.md のデプロイ先記述を Workers 移行に合わせて更新
 - [ ] Lefthook `pre-push` フックの Workers 移行後の互換性を確認・必要なら更新
+- [ ] README.md の Installation セクションに `yarn lefthook install --force` の手順を追記（Yarn 4 は postinstall を無効化するため、PHASE0-010 申し送り反映）
 - [ ] `scripts/migrate-frontmatter.ts` の雛形を作成（R-02 対応: frontmatter スキーマ変更時のマイグレーションスクリプト）
 
 ## 技術メモ

@@ -16,10 +16,10 @@ Status: NotStarted
 - 関連: site-plan.md §6.6 / FR-20 / FR-21
 
 ## 受け入れ条件
-- [ ] `@astrojs/rss` を導入し、`src/pages/rss.xml.ts` を実装
+- [ ] `@astrojs/rss`（Phase 0 でインストール済み）を使用して `src/pages/rss.xml.ts` を実装
 - [ ] RSS フィードに全公開記事（draft: false）が含まれる
 - [ ] RSS の各エントリに title / description / pubDate / link が含まれる
-- [ ] `@astrojs/sitemap` を導入し、`astro.config.mjs` に設定
+- [ ] `@astrojs/sitemap`（Phase 0 で integration 登録済み）の `site` プロパティを `astro.config.mjs` に設定
 - [ ] ビルド出力に `sitemap-index.xml` が生成される
 - [ ] `public/robots.txt` を作成（sitemap-index.xml への参照を含む）
 - [ ] `yarn build` 成功
