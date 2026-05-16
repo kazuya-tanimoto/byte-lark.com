@@ -21,7 +21,7 @@ Status: NotStarted
 - [ ] RSS の各エントリに title / description / pubDate / link が含まれる
 - [ ] `@astrojs/sitemap`（Phase 0 で integration 登録済み）の `site` プロパティを `astro.config.mjs` に設定
 - [ ] ビルド出力に `sitemap-index.xml` が生成される
-- [ ] `public/robots.txt` を作成（sitemap-index.xml への参照を含む）
+- [ ] `public/robots.txt` に sitemap-index.xml への参照を追記（ファイル自体は PHASE0-002 で作成済み）
 - [ ] `yarn build` 成功
 - [ ] `yarn check:ts` エラーなし
 - [ ] ビルド出力で RSS / Sitemap の中身を目視確認
