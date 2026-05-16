@@ -26,6 +26,7 @@ Status: NotStarted
 - [ ] 記事個別の OGP メタが正しく出力（title / description / cover → og:image）
 - [ ] レスポンシブ対応
 - [ ] `yarn build` 成功
+- [ ] `yarn new-post` で生成した記事ファイルに本文を書き、ブラウザで正しく表示されることを確認（生成→執筆→ビルド→表示の一気通貫検証）
 - [ ] `yarn check:ts` エラーなし
 
 ## 技術メモ
