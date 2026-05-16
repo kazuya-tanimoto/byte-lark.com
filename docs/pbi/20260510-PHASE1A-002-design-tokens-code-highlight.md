@@ -1,6 +1,8 @@
 # 訪問者は Hibari brand カラーで統一されたサイトを閲覧し、コードブロックにシンタックスハイライトが適用された記事を読める
 
-Status: NotStarted
+Status: Done
+Started: 2026-05-16
+Completed: 2026-05-16
 
 ## 誰が
 - 訪問者
@@ -15,15 +17,15 @@ Status: NotStarted
 - 関連: site-plan.md §6.5.2 / Q13 / FR-26 / Phase 1a 冒頭タスク
 
 ## 受け入れ条件
-- [ ] `src/styles/global.css` に Hibari brand の CSS カスタムプロパティを定義（primary / accent / secondary / earth / neutral の各ロール、light モード）
-- [ ] CSS 変数が Tailwind v4 の `@theme` ディレクティブで参照可能
-- [ ] Q13 コードハイライトライブラリ選定完了（Shiki / Prism / Expressive Code を比較、運営者と決定）
-- [ ] 選定ライブラリの設定を `astro.config.mjs` に追加
-- [ ] サンプルコードブロック（TypeScript / JSX）でハイライト動作確認
-- [ ] Q5（記事 cover 画像の運用方針）を決定し、PHASE1A-003 Content Collections の cover フィールド設計に反映
-- [ ] Noto Sans JP を導入し、和文テキストに適用（`@fontsource` or Google Fonts、方式により CSP 設定要否を判断）
-- [ ] `yarn build` 成功
-- [ ] `yarn check:ts` エラーなし
+- [x] `src/styles/global.css` に Hibari brand の CSS カスタムプロパティを定義（primary / accent / secondary / earth / neutral の各ロール、light モード）
+- [x] CSS 変数が Tailwind v4 の `@theme` ディレクティブで参照可能
+- [x] Q13 コードハイライトライブラリ選定完了（Shiki / Prism / Expressive Code を比較、運営者と決定）
+- [x] 選定ライブラリの設定を `astro.config.mjs` に追加
+- [x] サンプルコードブロック（TypeScript / JSX）でハイライト動作確認
+- [x] Q5（記事 cover 画像の運用方針）を決定し、PHASE1A-003 Content Collections の cover フィールド設計に反映
+- [x] Noto Sans JP を導入し、和文テキストに適用（`@fontsource` or Google Fonts、方式により CSP 設定要否を判断）
+- [x] `yarn build` 成功
+- [x] `yarn check:ts` エラーなし
 
 ## 技術メモ
 - Tailwind v4 は `tailwind.config.ts` 不使用。テーマトークンは CSS で定義する（PHASE0-010 申し送り確認済み）

@@ -425,6 +425,9 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | 19 | Phase 2 で広告と並列して **ニュースレター / Substack / note 転載**も検討 | AdSense は記事 30+ で RPM 安定までかかる / 別線で同記事資産を活用すると ROI 早い | 広告一本 → 収益化までの時間が長い |
 | 20 | 旧 Hugo `byte-lark.com` の URL は **301 計画なし**（dead で OK） | 旧 repo 削除済 / 新ドメインの再開で別アイデンティティ / 旧 URL retain の実利薄 | 301 設定 → 旧コンテンツ無いので意味薄い |
 | 21 | shadcn 4.x で **Radix ライブラリ + Nova preset** で初期化（旧 style/baseColor 概念は 4.x で廃止、preset 体系に移行） | デフォルト構成で進めて Phase 1b の ClaudeDesign アウトプットに合わせて再調整、Phase 0 を判断で止めない | 初期からブランドカラーで設定 → カラーパレット未確定の段階で決められない |
+| 22 | コードハイライトは **Shiki**（Astro 組込み、テーマ `github-light`）（Q13 確定） | 追加依存ゼロ / ビルド時レンダリングでクライアント JS なし / テーマ豊富 / 後から Expressive Code に差し替え可 | Expressive Code → ファイル名タブ等リッチだが追加依存あり / Prism → Shiki より機能・テーマが少ない |
+| 23 | 記事 cover 画像は **装飾不要**（optional フィールドのみ定義）（Q5 確定） | Phase 1a はページ実装が主目的、cover に工数を割らない / optional にしておけば Phase 1b 以降で OGP ジェネレータ等を後付け可 | OGP ジェネレータ → 実装工数追加 / Unsplash → 選定の手間 + ライセンス表記必要 |
+| 24 | 和文フォントは **@fontsource-variable/noto-sans-jp**（セルフホスト） | 既存 Geist と同パターンで統一 / CSP 設定不要 / パフォーマンス制御しやすい | Google Fonts CDN → 外部リクエスト + Workers CSP 設定が別途必要 |
 
 ## 9. リスク / 留意事項
 
@@ -456,7 +459,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | Q2 | About の本文（経歴サマリ・興味領域・OSS 活動） | AboutPage | 文体 2 案（ですます / 体言止め）× 構成 2 案 |
 | Q3 | Contact の問合せメール（法人化前後で分けるか） | ContactPage / Footer | 運用パターン 3 案 |
 | Q4 | Footer 法人メタ情報（法人化前の表記） | Footer | 表記方針 3 案 |
-| Q5 | 記事 cover 画像の運用方針 | Blog 全般 | 4 案（自前撮影 / OGP ジェネレータ / Unsplash / 装飾不要） |
+| Q5 | 記事 cover 画像の運用方針 | Blog 全般 | **確定: 装飾不要**（optional フィールドのみ定義、Decision #23 参照） |
 | Q6 | SNS リンクの配置（GitHub / X / その他） | HomePage / Footer | 配置場所 × 載せる種類のマトリクス + 推奨組合せ 2 案 |
 | Q7 | byte-lark 法人ドメインメール / 個人メール の使い分け | Contact 全般 | 役割別運用案 |
 | Q8 | デプロイ先 | インフラ | **確定: Cloudflare Workers**（Decision #17 参照） |
@@ -464,7 +467,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | Q10 | プライバシーポリシー本文 | `/privacy` | テンプレ 2 案（簡易 / 詳細）+ アクセス解析・問合せ・Cookie 言及 |
 | Q11 | ロゴ製作の合格条件 / 反復上限 | Phase 1b ロゴ | 合格条件チェックリスト + 反復上限 5 ラウンド推奨（Decision #15 参照） |
 | Q12 | 記事のライセンス | 全記事 / Footer | 3 案（CC BY 4.0 / CC BY-NC 4.0 / All rights reserved） |
-| Q13 | コードハイライトライブラリとテーマ | tech 記事 | Shiki / Prism / Expressive Code 比較 + 推奨 |
+| Q13 | コードハイライトライブラリとテーマ | tech 記事 | **確定: Shiki + github-light**（Decision #22 参照） |
 
 ## 11. 執筆ワークフロー（別ドキュメント `docs/writing-workflow.md` で詳述）
 

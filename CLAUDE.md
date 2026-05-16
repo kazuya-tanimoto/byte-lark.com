@@ -43,7 +43,15 @@
 4. Update PBI Status: NotStarted → InProgress + Started date
 5. Sync INDEX.md
 6. Implement
-7. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit
+7. Verify: UI/フロントエンド変更がある場合、PBI を Done にする前に以下を出力する（必須）:
+   ```
+   ## 検証報告
+   - 検証手段: （dev server + ブラウザ / Playwright / etc）
+   - 確認した URL:
+   - 確認結果: （スクリーンショットまたは具体的な観察事実）
+   - 未検証項目: （あれば正直に書く。サーバー起動不可等の場合はここに明記し、運営者に確認を依頼する）
+   ```
+8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit
 
 ### How to end this session
 - If a PBI is InProgress: append to `## 実装ログ` (やったこと/残タスク/学び/想定外)

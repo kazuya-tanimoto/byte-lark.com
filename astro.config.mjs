@@ -12,6 +12,12 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   integrations: [react(), mdx(), sitemap()],
 
+  markdown: {
+    shikiConfig: {
+      theme: "github-light",
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()]
   }
