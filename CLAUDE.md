@@ -11,6 +11,7 @@
 - yarn dev / build / preview
 - yarn test:run / test:e2e
 - yarn check / check:ts / fix
+- yarn new-post --slug <slug> [--title "Title"] [--category tech|life]
 
 ## Directory Conventions
 - src/pages/         Astro routes (file-based)

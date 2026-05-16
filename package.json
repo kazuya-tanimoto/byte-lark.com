@@ -12,7 +12,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:e2e": "playwright test",
-    "fix": "biome check --write src"
+    "fix": "biome check --write src",
+    "new-post": "node --experimental-strip-types scripts/new-post.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.4",

@@ -1,6 +1,8 @@
 # 運営者は執筆ワークフローに従って効率的に記事を書き、雛形スクリプトで新規記事を作成できる
 
-Status: NotStarted
+Status: Done
+Started: 2026-05-17
+Completed: 2026-05-17
 
 ## 誰が
 - 運営者
