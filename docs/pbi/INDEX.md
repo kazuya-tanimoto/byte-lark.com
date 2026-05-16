@@ -93,7 +93,7 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 
 | ID | タイトル | Status |
 |---|---|---|
-| PHASE1A-001 | [workers-migration-ci](20260510-PHASE1A-001-workers-migration-ci.md) | NotStarted |
+| PHASE1A-001 | [workers-migration-ci](20260510-PHASE1A-001-workers-migration-ci.md) | InProgress |
 | PHASE1A-002 | [design-tokens-code-highlight](20260510-PHASE1A-002-design-tokens-code-highlight.md) | NotStarted |
 | PHASE1A-003 | [content-collections-image](20260510-PHASE1A-003-content-collections-image.md) | NotStarted |
 | PHASE1A-004 | [writing-workflow](20260510-PHASE1A-004-writing-workflow.md) | NotStarted |

@@ -420,7 +420,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | 14 | カラーパレットは Plan B（周辺色 + ヒバリ羽色アクセント） | 「飛翔・春」コンセプトと「ヒバリ実物」両立 / 色彩論的に安定（Wikipedia / ADW で実物色裏取り済み） | 実物色のみ（地味） / 周辺色のみ（実物との接点薄い） |
 | 15 | ロゴは Phase 1b で ClaudeDesign を使って新規作成、反復上限 5 ラウンド | 既存テキストロゴはヒバリ意匠なし / 旧 ChatGPT 案はモノトーン / 上限なしだと Phase 1b 暴走 | 既存流用 / 旧案採用 / 反復上限なし |
 | 16 | shadcn/ui は **React Island 必要箇所のみ**で利用、静的部品は Astro 自前 | shadcn 部品は React ランタイムを乗せる Island 化が必要、Header/Footer 等で過剰 / Astro の Zero-JS philosophy と整合 | 全コンポーネント shadcn → 不要 JS が乗る |
-| 17 | デプロイ先は **Cloudflare Pages**（Q8 確定） | 商用利用可 / 無料枠厚い / Cloudflare Web Analytics 統合（Cookieless）/ Astro 相性良 | Vercel → 商用利用条項の解釈余地、Pro 必須リスク / Netlify → 帯域・ビルド分制限がやや厳しい |
+| 17 | デプロイ先は **Cloudflare Workers**（Q8 確定、Phase 1a で Pages → Workers 移行） | 商用利用可 / 無料枠厚い / CF 公式・Astro 公式ともに新規は Workers 推奨 / Web Analytics 統合（Cookieless） | Vercel → 商用利用条項の解釈余地、Pro 必須リスク / Netlify → 帯域・ビルド分制限がやや厳しい / Pages 維持 → 公式推奨から外れつつある |
 | 18 | アクセス解析は **Cloudflare Web Analytics**（Q9 確定） | Cookieless で同意 UI 不要、CF Pages と統合楽、無料 | GA4 → Cookie バナー必要で UX 悪化、過剰機能 / Plausible → 月額発生 |
 | 19 | Phase 2 で広告と並列して **ニュースレター / Substack / note 転載**も検討 | AdSense は記事 30+ で RPM 安定までかかる / 別線で同記事資産を活用すると ROI 早い | 広告一本 → 収益化までの時間が長い |
 | 20 | 旧 Hugo `byte-lark.com` の URL は **301 計画なし**（dead で OK） | 旧 repo 削除済 / 新ドメインの再開で別アイデンティティ / 旧 URL retain の実利薄 | 301 設定 → 旧コンテンツ無いので意味薄い |
@@ -459,7 +459,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | Q5 | 記事 cover 画像の運用方針 | Blog 全般 | 4 案（自前撮影 / OGP ジェネレータ / Unsplash / 装飾不要） |
 | Q6 | SNS リンクの配置（GitHub / X / その他） | HomePage / Footer | 配置場所 × 載せる種類のマトリクス + 推奨組合せ 2 案 |
 | Q7 | byte-lark 法人ドメインメール / 個人メール の使い分け | Contact 全般 | 役割別運用案 |
-| Q8 | デプロイ先 | インフラ | **確定: Cloudflare Pages**（Decision #17 参照） |
+| Q8 | デプロイ先 | インフラ | **確定: Cloudflare Workers**（Decision #17 参照） |
 | Q9 | アクセス解析ツール | 全ページ + Footer | **確定: Cloudflare Web Analytics**（Decision #18 参照） |
 | Q10 | プライバシーポリシー本文 | `/privacy` | テンプレ 2 案（簡易 / 詳細）+ アクセス解析・問合せ・Cookie 言及 |
 | Q11 | ロゴ製作の合格条件 / 反復上限 | Phase 1b ロゴ | 合格条件チェックリスト + 反復上限 5 ラウンド推奨（Decision #15 参照） |

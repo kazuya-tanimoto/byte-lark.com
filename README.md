@@ -11,7 +11,7 @@
 - Yarn 4 (Berry)
 - Biome v2 (lint / format)
 - Vitest (unit) + Playwright (e2e)
-- Cloudflare Pages (hosting) + Cloudflare Web Analytics
+- Cloudflare Workers (hosting) + Cloudflare Web Analytics
 
 ## Prerequisites
 
@@ -24,7 +24,10 @@
 git clone https://github.com/kazuya-tanimoto/byte-lark.com.git
 cd byte-lark.com
 yarn install
+yarn lefthook install --force
 ```
+
+> **Note**: Yarn 4 は postinstall を無効化するため、`lefthook install` は手動実行が必要です。
 
 ## Scripts
 

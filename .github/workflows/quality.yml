@@ -1,28 +1,28 @@
 name: Quality Checks
 on:
   push:
-    branches: [main, master]
+    branches: [main, "feat/*"]
   pull_request:
-    branches: [main, master]
+    branches: [main, "feat/*"]
 jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Commit
+      - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - name: Enable corepack(yarn v4)
+          node-version: 24
+      - name: Enable corepack
         run: corepack enable
       - name: Install dependencies
-        run: yarn
-      - name: Lint (biome)
+        run: yarn install --immutable
+      - name: Lint (Biome)
         run: yarn check
-      - name: Typecheck
+      - name: Typecheck (Astro)
         run: yarn check:ts
-      - name: Unit tests
+      - name: Unit tests (Vitest)
         run: yarn test:run
       - name: Build
         run: yarn build
