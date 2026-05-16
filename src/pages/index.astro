@@ -1,13 +1,22 @@
 ---
-console.log("This runs in your terminal, not the browser!");
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+const publishedPosts = await getCollection("posts", ({ data }) => {
+  return data.draft !== true;
+});
 ---
 <html>
   <body>
-    <h1>Hello, World!</h1>
+    <h1>byte-lark.com</h1>
+    <p>Published: {publishedPosts.length}</p>
+    {publishedPosts.map((post) => (
+      <article>
+        <h2>{post.data.title}</h2>
+        <p>{post.data.description}</p>
+        <p>Category: {post.data.category} | Tags: {post.data.tags.join(", ")}</p>
+        {post.data.cover && <Image src={post.data.cover} alt={post.data.title} width={400} />}
+      </article>
+    ))}
   </body>
 </html>
-<style>
-  h1 {
-    color: orange;
-  }
-</style>
