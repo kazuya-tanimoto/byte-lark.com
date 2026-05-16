@@ -6,7 +6,10 @@ const publishedPosts = await getCollection("posts", ({ data }) => {
   return data.draft !== true;
 });
 ---
-<html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+  </head>
   <body>
     <h1>byte-lark.com</h1>
     <p>Published: {publishedPosts.length}</p>
