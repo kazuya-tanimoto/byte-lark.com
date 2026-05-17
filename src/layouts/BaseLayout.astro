@@ -1,0 +1,48 @@
+---
+import "../styles/global.css";
+import { buildOgMeta, type OgMeta } from "../lib/og";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonical?: string;
+  type?: OgMeta["type"];
+}
+
+const { title, description, ogImage, canonical, type } = Astro.props;
+
+const siteUrl = Astro.site?.origin ?? "https://byte-lark.com";
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage
+  ? new URL(ogImage, siteUrl).href
+  : new URL("/og-default.png", siteUrl).href;
+
+const ogMeta = buildOgMeta({
+  title,
+  description,
+  url: canonicalUrl,
+  image: ogImageUrl,
+  type,
+});
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {Object.entries(ogMeta).map(([property, content]) => (
+      property.startsWith("twitter:")
+        ? <meta name={property} content={content} />
+        : <meta property={property} content={content} />
+    ))}
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
