@@ -49,3 +49,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 .idea
+
+# Claude Code local settings（権限など機密が混入しうるため tracked にしない）
+.claude/settings.local.json
+
+# Playwright MCP artifacts
+.playwright-mcp/
