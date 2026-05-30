@@ -1,0 +1,185 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { buildArticleJsonLd } from "../lib/jsonld";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  publishedAt: Date;
+  updatedAt?: Date;
+  category: "tech" | "life";
+  tags: string[];
+  /** cover 画像の解決済み src。未指定時は BaseLayout がデフォルト OGP 画像へフォールバック */
+  ogImage?: string;
+  canonical?: string;
+  /** render() が返す headings。指定時のみ目次を表示（depth 2-3 を対象） */
+  headings?: Heading[];
+}
+
+const {
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  category,
+  tags,
+  ogImage,
+  canonical,
+  headings,
+} = Astro.props;
+
+const siteUrl = Astro.site?.origin ?? "https://byte-lark.com";
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage
+  ? new URL(ogImage, siteUrl).href
+  : new URL("/og-default.png", siteUrl).href;
+
+const jsonLd = buildArticleJsonLd({
+  title,
+  description,
+  url: canonicalUrl,
+  image: ogImageUrl,
+  datePublished: publishedAt,
+  dateModified: updatedAt,
+});
+
+const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+const categoryLabel = category === "tech" ? "Tech" : "Life";
+
+const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
+const isoDate = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  canonical={canonical}
+  type="article"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+  <main class="mx-auto max-w-3xl px-4 py-8">
+    <article>
+      <header class="mb-8 border-b border-border pb-6">
+        <div class="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span
+            class="rounded-full bg-muted px-2.5 py-0.5 font-medium text-foreground"
+          >{categoryLabel}</span>
+          <time datetime={isoDate(publishedAt)}>{dateFormatter.format(publishedAt)} 公開</time>
+          {
+            updatedAt && (
+              <time datetime={isoDate(updatedAt)}>
+                （{dateFormatter.format(updatedAt)} 更新）
+              </time>
+            )
+          }
+        </div>
+        <h1 class="text-3xl font-bold tracking-tight text-foreground">{title}</h1>
+        {
+          tags.length > 0 && (
+            <ul class="mt-4 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <li class="text-sm text-muted-foreground">#{tag}</li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+
+      {
+        toc.length > 0 && (
+          <nav aria-label="目次" class="mb-8 rounded-lg border border-border bg-muted/30 p-4">
+            <h2 class="mb-2 text-sm font-semibold text-foreground">目次</h2>
+            <ul class="space-y-1 text-sm">
+              {toc.map((h) => (
+                <li class={h.depth === 3 ? "ml-4" : ""}>
+                  <a
+                    href={`#${h.slug}`}
+                    class="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+
+      <div class="post-body">
+        <slot />
+      </div>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  /* Phase 1a の機能要件としての最小限の本文タイポグラフィ。本格的なデザインは Phase 1b。 */
+  .post-body :global(h2) {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    scroll-margin-top: 5rem;
+  }
+  .post-body :global(h3) {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    scroll-margin-top: 5rem;
+  }
+  .post-body :global(p),
+  .post-body :global(ul),
+  .post-body :global(ol),
+  .post-body :global(blockquote) {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+  .post-body :global(ul),
+  .post-body :global(ol) {
+    padding-left: 1.5rem;
+  }
+  .post-body :global(ul) {
+    list-style: disc;
+  }
+  .post-body :global(ol) {
+    list-style: decimal;
+  }
+  .post-body :global(a) {
+    color: var(--color-hibari-sky);
+    text-decoration: underline;
+  }
+  .post-body :global(blockquote) {
+    border-left: 4px solid var(--color-border);
+    padding-left: 1rem;
+    color: var(--color-muted-foreground);
+  }
+  .post-body :global(pre) {
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: 0.875rem;
+  }
+  .post-body :global(:not(pre) > code) {
+    border-radius: 0.25rem;
+    background: var(--color-muted);
+    padding: 0.125rem 0.375rem;
+    font-size: 0.875em;
+  }
+  .post-body :global(img) {
+    margin-block: 1.5rem;
+    border-radius: 0.5rem;
+  }
+</style>
