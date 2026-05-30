@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import { buildOgMeta, type OgMeta } from "../lib/og";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   title: string;
@@ -42,7 +44,11 @@ const ogMeta = buildOgMeta({
     ))}
     <slot name="head" />
   </head>
-  <body>
-    <slot />
+  <body class="flex min-h-dvh flex-col">
+    <Header />
+    <div class="flex-1">
+      <slot />
+    </div>
+    <Footer />
   </body>
 </html>
