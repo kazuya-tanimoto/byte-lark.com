@@ -29,9 +29,24 @@
   },
   "overrides": [
     {
+      // Biome は .astro の frontmatter を TS として解析するが、テンプレート部での
+      // 変数使用を追跡できないため、使用追跡系ルールが false positive になる。
+      // 該当ルールと import 並べ替えを .astro でのみ無効化する。
       "includes": ["**/*.astro"],
       "linter": {
-        "rules": {}
+        "rules": {
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off"
+          }
+        }
+      },
+      "assist": {
+        "actions": {
+          "source": {
+            "organizeImports": "off"
+          }
+        }
       }
     }
   ]
