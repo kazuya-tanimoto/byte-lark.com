@@ -44,13 +44,16 @@
 4. Update PBI Status: NotStarted → InProgress + Started date
 5. Sync INDEX.md
 6. Implement
-7. Verify: UI/フロントエンド変更がある場合、PBI を Done にする前に以下を出力する（必須）:
+7. Verify: UI/フロントエンド変更がある場合、PBI を Done にする前に以下を**すべて**実施して出力する（必須）:
+   - **ローカル検証**: `yarn dev` を起動し Playwright でスクリーンショット確認（デスクトップ + モバイル幅）
+   - **CF preview 検証**: push 後に Playwright で CF branch alias URL を開いてスクリーンショット確認
+     - Branch alias URL（feat/phase-1a 固定）: `https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev`
+     - ※ version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行に記載される
    ```
    ## 検証報告
-   - 検証手段: （dev server + ブラウザ / Playwright / etc）
-   - 確認した URL:
-   - 確認結果: （スクリーンショットまたは具体的な観察事実）
-   - 未検証項目: （あれば正直に書く。サーバー起動不可等の場合はここに明記し、運営者に確認を依頼する）
+   - ローカル確認: （dev server で確認した内容）
+   - CF preview 確認: https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev （スクリーンショットまたは観察事実）
+   - 未検証項目: （あれば正直に書く）
    ```
 8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit
 
