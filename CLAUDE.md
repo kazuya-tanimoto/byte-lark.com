@@ -69,7 +69,7 @@
 - Commit on the Phase branch (docs-only, worktree 不要)
 
 ## Sandbox 制約
-- EnterWorktree 後は sandbox が `.git` 書き込みをブロックするため、git add / commit / push は ExitWorktree で本体に戻ってから `-C` オプションで実行する（詳細: docs/pbi/README.md §10.4-10.5）
+- Phase 1a 以降の git 操作は `.claude/worktrees/phase-1a` 常設 worktree で行う（sub-branch 不使用）。EnterWorktree(path: ".claude/worktrees/phase-1a") で入り、feat/phase-1a に直 commit / 直 push する（詳細: docs/pbi/README.md §10.4-10.5）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
 
 ## Commit Convention

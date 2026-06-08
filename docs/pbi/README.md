@@ -273,14 +273,10 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 ### 10.1 ブランチ階層
 
 ```
-main                         保護対象、Phase 完了時のみマージで更新
-├── feat/phase-0/            Phase 0 ブランチ（main から切る）
-│   ├── feat/phase-0-pbi-001 PBI ごと sub-branch（Phase ブランチから切る、常時）
-│   ├── feat/phase-0-pbi-002 並行 session が必要なら worktree で複数同時展開可
-│   └── ...
-├── feat/phase-1a/           Phase 1a ブランチ
-│   └── ...
-└── archive/vite-react-chakra  旧版退避（Phase 0 開始時に切った）
+main                          保護対象、Phase 完了時のみマージで更新
+├── feat/phase-0              Phase 0 ブランチ（完了・main マージ済み）
+├── feat/phase-1a             Phase 1a ブランチ（常設 worktree で直 commit/push）
+└── archive/vite-react-chakra 旧版退避（Phase 0 開始時に切った）
 ```
 
 ### 10.2 命名規則
@@ -288,7 +284,6 @@ main                         保護対象、Phase 完了時のみマージで更
 | ブランチ | 命名 | 例 |
 |---|---|---|
 | Phase ブランチ | `feat/phase-<phase>` | `feat/phase-0`, `feat/phase-1a` |
-| PBI sub-branch | `feat/phase-<phase>-pbi-<NNN>` | `feat/phase-0-pbi-001` |
 | Archive | `archive/<context>` | `archive/vite-react-chakra` |
 | Hotfix | `fix/<short>` | `fix/typo-readme` |
 
@@ -301,71 +296,34 @@ git checkout -b feat/phase-<phase>
 git push -u origin feat/phase-<phase>
 ```
 
-### 10.4 PBI 着手時（**常時 sub-branch + worktree**）
+### 10.4 PBI 着手時（常設 worktree 直 commit/push）
 
-PBI 着手時は、並行 session の有無に関わらず **常に worktree で sub-branch を展開する**（既定動作）。Claude が独自判断で省略してはならない。
-
-理由：
-- 並行 session を後から追加する際の追加コストがゼロ
-- Phase ブランチの作業ディレクトリが PBI 実装で汚れない
-- セッション中に「worktree を切るか」を判断する必要がない（判断対象を増やさない）
+Phase 1a 以降は sub-branch を使わず、常設 worktree `.claude/worktrees/phase-1a` で作業し feat/phase-1a に直接 commit / push する。
 
 ```bash
-# Phase ブランチを最新化
-cd <main repo>
-git checkout feat/phase-<phase>
-git pull origin feat/phase-<phase>
+# セッション開始: リポジトリルートで Claude Code を起動後、常設 worktree に入る
+# Claude セッション: EnterWorktree({ path: ".claude/worktrees/phase-1a" })
 
-# worktree をプロジェクト配下 .claude/worktrees/ に展開
-# （Claude Code sandbox がプロジェクト配下のみ書込許可するため、追加 sandbox 設定不要）
-git worktree add .claude/worktrees/phase-<phase>-pbi-<NNN> -b feat/phase-<phase>-pbi-<NNN>
-
-# 作業ディレクトリへ移動
-cd .claude/worktrees/phase-<phase>-pbi-<NNN>
-# Claude セッションは tool 経由が推奨：
-#   EnterWorktree({ path: ".claude/worktrees/phase-<phase>-pbi-<NNN>" })
+# worktree 内で git 操作を直接実行（ExitWorktree 不要）
+git add <files>
+git commit -m "feat(pbi): PHASE1A-NNN <desc>"
+git push origin feat/phase-1a
 ```
 
-**sandbox 制約：EnterWorktree 後の git 書き込み**
+sandbox の allowWrite に `.`（プロジェクト配下）と `/.../.git` が含まれるため、worktree 内から git add / commit / push はそのまま実行できる。旧 §10.5 の「ExitWorktree + `-C` オプション」手順は不要。
 
-`EnterWorktree` でセッションの作業ディレクトリを worktree に移すと、sandbox の `allowWrite: [".git"]` が worktree 側の `.git`（ポインタファイル）に解決される。git が実際に書き込む先は本体リポジトリの `.git/worktrees/` 配下なので、`git add` / `git commit` が sandbox にブロックされる。
+**PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md 等）は本節対象外。Phase ブランチに直 commit してよい。
 
-対処：**ファイル編集は worktree 内で行い、git 操作（add / commit / push）は ExitWorktree で本体に戻ってから `-C` オプションで実行する**。§10.5 の手順を参照。
+### 10.5 PBI 完了時
 
-**worktree 省略が許される唯一の条件**：運営者が明示的に「worktree 不要」と指示した時のみ。Claude 側で「並行不要そうだから省略」と判断するのは禁止。
-
-**PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md、operation-manual.md、pbi/README.md 等）は本節 10.4 の対象外。Phase ブランチに直 commit してよい（本ルールは PBI 実装作業に限定）。
-
-### 10.5 PBI 完了時（sub-branch を Phase ブランチへマージ）
+§10.4 と同じ worktree 内で commit / push する。マージ工程は不要（feat/phase-1a が Phase ブランチ兼作業ブランチ）。
 
 ```bash
-# ExitWorktree で本体リポジトリに戻る（sandbox 制約のため、git 操作は本体側で行う）
-# Claude セッションは tool 経由：ExitWorktree({ action: "keep" })
-cd <main repo>
-
-# worktree 内の変更を -C オプションで commit / push
-git -C .claude/worktrees/phase-<phase>-pbi-<NNN> add <files>
-git -C .claude/worktrees/phase-<phase>-pbi-<NNN> commit -m "feat(pbi): ..."
-git -C .claude/worktrees/phase-<phase>-pbi-<NNN> push -u origin feat/phase-<phase>-pbi-<NNN>
-
-# Phase ブランチを最新化してマージ
-git checkout feat/phase-<phase>
-git pull origin feat/phase-<phase>  # 他並行 PBI の進捗を取り込む
-
-# merge commit 強制（squash しない、PBI 名を log に残す）
-git merge --no-ff feat/phase-<phase>-pbi-<NNN>
-# INDEX.md などに conflict があれば手動 resolve
-
-git push origin feat/phase-<phase>
-
-# worktree 削除（ローカルディレクトリ整理）
-# sandbox が .vscode/ 等の削除をブロックする場合は運営者ターミナルで実行（Q6 参照）
-git worktree remove .claude/worktrees/phase-<phase>-pbi-<NNN>
-
-# remote の sub-branch は削除しない（log + 個別 PBI 状態の checkout 用に保持）
+# PBI 完了: 受け入れ条件確認 → STATUS: Done → INDEX.md 同期 → commit → push
+git add docs/pbi/PHASE1A-NNN-xxx.md docs/pbi/INDEX.md <実装ファイル群>
+git commit -m "feat(pbi): PHASE1A-NNN <desc>"
+git push origin feat/phase-1a
 ```
-
-**sub-branch は削除しない**：マージ後も remote に残し、`git checkout feat/phase-<phase>-pbi-<NNN>` で過去 PBI の独立状態に戻れるようにする。CF Pages の preview 大量生成は §10.8 の filter 設定で抑制。
 
 ### 10.6 Phase 完了時（Phase ブランチを main へマージ）
 
@@ -382,22 +340,19 @@ git push origin main
 
 ### 10.7 並行作業の競合対処
 
-**INDEX.md は表構造で PBI 行が隣接しているため、並行直接編集は git auto-merge できず必ず conflict する**（実証済）。sub-branch 戦略により conflict をマージタイミング 1 回に集約する。
-
-push 競合（後発の `git push` が non-fast-forward で fail）：
+複数セッションが同時に feat/phase-1a に push すると non-fast-forward で後発が fail する：
 
 ```bash
-git pull --rebase origin feat/phase-<phase>
-# conflict あれば手動 resolve、git rebase --continue
-git push origin feat/phase-<phase>
+git pull --rebase origin feat/phase-1a
+# conflict（INDEX.md 等）あれば手動 resolve → git rebase --continue
+git push origin feat/phase-1a
 ```
 
 ### 10.8 Cloudflare Pages の Preview Branch Filter（必須設定）
 
-sub-branch を保持する運用では、Cloudflare Pages のデフォルト設定（全非本番 branch に preview deployment 自動生成）が大量の不要 preview を生む。**運営者は CF Pages のダッシュボードで Custom branches 設定を必ず行う**：
+Phase ブランチのみ preview deployment が生成される（sub-branch なし）。**運営者は CF Pages のダッシュボードで Custom branches 設定を行う**：
 
 - **Include Preview branches**：`feat/phase-*`（Phase ブランチのみ preview）
-- **Exclude Preview branches**：`feat/phase-*-pbi-*`（PBI sub-branch は preview しない）
 
 または **Disable all preview deployments** 一択。
 
@@ -436,3 +391,4 @@ git push -u origin fix/<short-name>
 | 2026-05-06 | v2.6 | §10.4-10.5 worktree 配置を sibling（`../<repo>-pbi-<NNN>`）からプロジェクト配下（`.claude/worktrees/phase-<phase>-pbi-<NNN>`）に変更。Claude Code sandbox がプロジェクト配下のみ書込許可するため、追加 sandbox 設定なしで運用可能に。Claude セッションは EnterWorktree / ExitWorktree tool で切替。 |
 | 2026-05-06 | v2.7 | §5.3 着手時の手順に「PBI 本文の前提を一次情報で確認」step を追加（Step 2、後続 renumber）。Don't Guess の PBI 着手時版。PHASE0-002 で PBI 本文の `--typescript strict` flag / Yarn 4 維持前提が事実と乖離していた経験から、各 PBI 着手時に empirical 確認するルールを明文化。 |
 | 2026-05-07 | v2.8 | §5.3 step 2 の verify 範囲を「コマンド・version・flag・URL」から **scaffold / migration / setup の approach 自体**まで拡張。PHASE0-002 セッション 1 で `yarn create astro@latest .` が既存 repo 後付けに非対応で、approach そのものを Astro Manual Setup 節に切替える必要があった経験を規約化。Phase 0 PBI 全体 audit（PHASE0-005 / 006 / 008 の drift 補正）と同セッションで反映。 |
+| 2026-06-07 | v2.9 | §10 ブランチ運用を Phase 1a 実績フローに刷新：sub-branch 廃止・常設 worktree `.claude/worktrees/phase-1a` への直 commit/push に変更（PHASE1A-008 完了時に同梱）。§10.1 階層図、§10.2 命名表（sub-branch 行削除）、§10.4 着手手順、§10.5 完了手順、§10.7 競合対処、§10.8 CF Pages filter を更新。CLAUDE.md Sandbox 制約行も同期。 |

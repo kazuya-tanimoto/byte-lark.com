@@ -34,6 +34,7 @@
       "allowWrite": [".git"]
     },
     "network": {
+      "allowLocalBinding": true,
       "allowedDomains": [
         "registry.npmjs.org",
         "registry.yarnpkg.com",

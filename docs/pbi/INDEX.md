@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-05-10
+最終更新: 2026-06-08
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -100,7 +100,7 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 | PHASE1A-005 | [base-layout-ogp](20260510-PHASE1A-005-base-layout-ogp.md) | Done |
 | PHASE1A-006 | [header-footer](20260510-PHASE1A-006-header-footer.md) | Done |
 | PHASE1A-007 | [post-layout-jsonld](20260510-PHASE1A-007-post-layout-jsonld.md) | Done |
-| PHASE1A-008 | [home-page](20260510-PHASE1A-008-home-page.md) | NotStarted |
+| PHASE1A-008 | [home-page](20260510-PHASE1A-008-home-page.md) | Done |
 | PHASE1A-009 | [about-page](20260510-PHASE1A-009-about-page.md) | NotStarted |
 | PHASE1A-010 | [career-page](20260510-PHASE1A-010-career-page.md) | NotStarted |
 | PHASE1A-011 | [skills-page](20260510-PHASE1A-011-skills-page.md) | NotStarted |

@@ -1,0 +1,47 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"posts">;
+}
+
+const { post } = Astro.props;
+const { title, description, category, publishedAt, cover, slug } = post.data;
+const href = `/blog/${slug ?? post.id}/`;
+
+const categoryLabel = category === "tech" ? "Tech" : "Life";
+const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<article class="overflow-hidden rounded-lg border border-border bg-background transition-shadow hover:shadow-md">
+  <a href={href} class="flex h-full flex-col">
+    {
+      cover && (
+        <Image
+          src={cover}
+          alt=""
+          width={640}
+          height={336}
+          class="aspect-[40/21] w-full object-cover"
+        />
+      )
+    }
+    <div class="flex flex-1 flex-col gap-2 p-4">
+      <div class="flex items-center gap-2 text-xs text-muted-foreground">
+        <span class="rounded-full bg-muted px-2 py-0.5 font-medium text-foreground">
+          {categoryLabel}
+        </span>
+        <time datetime={publishedAt.toISOString().slice(0, 10)}>
+          {dateFormatter.format(publishedAt)}
+        </time>
+      </div>
+      <h3 class="font-semibold leading-snug text-foreground">{title}</h3>
+      <p class="line-clamp-2 text-sm text-muted-foreground">{description}</p>
+    </div>
+  </a>
+</article>

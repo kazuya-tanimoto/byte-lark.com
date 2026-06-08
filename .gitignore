@@ -53,5 +53,8 @@ lerna-debug.log*
 # Claude Code local settings（権限など機密が混入しうるため tracked にしない）
 .claude/settings.local.json
 
+# Claude Code worktrees（セッション作業用、誤コミット防止）
+.claude/worktrees/
+
 # Playwright MCP artifacts
 .playwright-mcp/
