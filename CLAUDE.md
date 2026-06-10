@@ -69,10 +69,10 @@
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
 - Draft next-Phase PBIs reflecting the learnings
 - Append to INDEX.md as Status: NotStarted
-- Commit on the Phase branch (docs-only, worktree 不要)
+- Commit on the Phase branch (docs-only)
 
 ## Sandbox 制約
-- Phase 1a 以降の git 操作は `.claude/worktrees/phase-1a` 常設 worktree で行う（sub-branch 不使用）。EnterWorktree(path: ".claude/worktrees/phase-1a") で入り、feat/phase-1a に直 commit / 直 push する（詳細: docs/pbi/README.md §10.4-10.5）
+- Phase 1a 以降の git 操作は feat/phase-1a を直接チェックアウトして行う（sub-branch 不使用、worktree 不使用）。feat/phase-1a に直 commit / 直 push する（詳細: docs/pbi/README.md §10.4-10.5）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
 
 ## Commit Convention
@@ -83,7 +83,7 @@
 
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.8)
-- docs/pbi/README.md          PBI format spec (v2.8) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v2.9) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）

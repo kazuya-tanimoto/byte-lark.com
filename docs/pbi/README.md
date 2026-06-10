@@ -275,7 +275,7 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 ```
 main                          保護対象、Phase 完了時のみマージで更新
 ├── feat/phase-0              Phase 0 ブランチ（完了・main マージ済み）
-├── feat/phase-1a             Phase 1a ブランチ（常設 worktree で直 commit/push）
+├── feat/phase-1a             Phase 1a ブランチ（直 commit/push）
 └── archive/vite-react-chakra 旧版退避（Phase 0 開始時に切った）
 ```
 
@@ -296,27 +296,22 @@ git checkout -b feat/phase-<phase>
 git push -u origin feat/phase-<phase>
 ```
 
-### 10.4 PBI 着手時（常設 worktree 直 commit/push）
+### 10.4 PBI 着手時（直 commit/push）
 
-Phase 1a 以降は sub-branch を使わず、常設 worktree `.claude/worktrees/phase-1a` で作業し feat/phase-1a に直接 commit / push する。
+Phase 1a 以降は sub-branch・worktree を使わず、feat/phase-1a を直接チェックアウトして作業し commit / push する。
 
 ```bash
-# セッション開始: リポジトリルートで Claude Code を起動後、常設 worktree に入る
-# Claude セッション: EnterWorktree({ path: ".claude/worktrees/phase-1a" })
-
-# worktree 内で git 操作を直接実行（ExitWorktree 不要）
+# セッション開始: feat/phase-1a がチェックアウトされた状態で Claude Code を起動
 git add <files>
 git commit -m "feat(pbi): PHASE1A-NNN <desc>"
 git push origin feat/phase-1a
 ```
 
-sandbox の allowWrite に `.`（プロジェクト配下）と `/.../.git` が含まれるため、worktree 内から git add / commit / push はそのまま実行できる。旧 §10.5 の「ExitWorktree + `-C` オプション」手順は不要。
-
 **PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md 等）は本節対象外。Phase ブランチに直 commit してよい。
 
 ### 10.5 PBI 完了時
 
-§10.4 と同じ worktree 内で commit / push する。マージ工程は不要（feat/phase-1a が Phase ブランチ兼作業ブランチ）。
+§10.4 と同じブランチで commit / push する。マージ工程は不要（feat/phase-1a が Phase ブランチ兼作業ブランチ）。
 
 ```bash
 # PBI 完了: 受け入れ条件確認 → STATUS: Done → INDEX.md 同期 → commit → push
@@ -392,3 +387,4 @@ git push -u origin fix/<short-name>
 | 2026-05-06 | v2.7 | §5.3 着手時の手順に「PBI 本文の前提を一次情報で確認」step を追加（Step 2、後続 renumber）。Don't Guess の PBI 着手時版。PHASE0-002 で PBI 本文の `--typescript strict` flag / Yarn 4 維持前提が事実と乖離していた経験から、各 PBI 着手時に empirical 確認するルールを明文化。 |
 | 2026-05-07 | v2.8 | §5.3 step 2 の verify 範囲を「コマンド・version・flag・URL」から **scaffold / migration / setup の approach 自体**まで拡張。PHASE0-002 セッション 1 で `yarn create astro@latest .` が既存 repo 後付けに非対応で、approach そのものを Astro Manual Setup 節に切替える必要があった経験を規約化。Phase 0 PBI 全体 audit（PHASE0-005 / 006 / 008 の drift 補正）と同セッションで反映。 |
 | 2026-06-07 | v2.9 | §10 ブランチ運用を Phase 1a 実績フローに刷新：sub-branch 廃止・常設 worktree `.claude/worktrees/phase-1a` への直 commit/push に変更（PHASE1A-008 完了時に同梱）。§10.1 階層図、§10.2 命名表（sub-branch 行削除）、§10.4 着手手順、§10.5 完了手順、§10.7 競合対処、§10.8 CF Pages filter を更新。CLAUDE.md Sandbox 制約行も同期。 |
+| 2026-06-10 | v3.0 | §10 worktree 廃止：feat/phase-1a を直接チェックアウトして作業するフローに変更。§10.1 階層図・§10.4 着手手順・§10.5 完了手順から worktree / EnterWorktree 参照を削除。CLAUDE.md Sandbox 制約行も同期。 |
