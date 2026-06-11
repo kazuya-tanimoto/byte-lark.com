@@ -1,6 +1,7 @@
 # 訪問者は Skills ページで全スキルをカテゴリ別に閲覧できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-06-12
 
 ## 誰が
 - 訪問者

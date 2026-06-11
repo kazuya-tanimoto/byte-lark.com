@@ -127,7 +127,7 @@ export const skills: SkillSet[] = [
       {
         id: 19,
         name: "Struts",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/struts/struts-original.svg",
+        // devicon に struts アイコンは存在しない（URL は 404）。VB.Net / GAS 同様アイコンなし
         years: 8,
       },
     ],

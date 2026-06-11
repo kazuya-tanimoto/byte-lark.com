@@ -1,0 +1,27 @@
+---
+import type { SkillSet } from "../types/skills";
+
+interface Props {
+  set: SkillSet;
+}
+
+const { set } = Astro.props;
+const headingId = `skills-category-${set.category_id}`;
+---
+
+<section aria-labelledby={headingId}>
+  <h2 id={headingId} class="text-2xl font-bold text-foreground">{set.category_name}</h2>
+  <ul class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+    {
+      set.items.map((skill) => (
+        <li class="flex items-center gap-3 rounded-lg border border-border p-3">
+          {skill.icon && <img src={skill.icon} alt="" width="28" height="28" loading="lazy" />}
+          <div>
+            <p class="text-sm font-medium text-foreground">{skill.name}</p>
+            <p class="text-xs text-muted-foreground">{skill.years} 年</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
