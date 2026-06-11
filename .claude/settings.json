@@ -29,6 +29,9 @@
       "WebFetch(domain:plausible.io)"
     ]
   },
+  "worktree": {
+    "bgIsolation": "none"
+  },
   "sandbox": {
     "filesystem": {
       "allowWrite": [".git"]
