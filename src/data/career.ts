@@ -6,6 +6,7 @@ export const Career: CareerItem[] = [
     title: "社内ポータルシステム開発",
     summary: "障害者支援業務にて利用するポータルサイト構築案件に参画中",
     keywords: "React, Laravel, Tailwind, Docker, AWS, PM, 要件定義〜保守",
+    role: "SE兼EM",
     from: "2022/09",
   },
   {

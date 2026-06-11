@@ -1,6 +1,7 @@
 # 訪問者は Career ページで全経歴をタイムライン形式で閲覧できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-06-12
 
 ## 誰が
 - 訪問者

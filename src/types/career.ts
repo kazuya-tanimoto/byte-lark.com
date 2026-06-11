@@ -8,6 +8,7 @@ export interface CareerItem {
   title: string;
   summary: string;
   keywords: string;
+  role?: string;
   from: string;
   to?: string;
 }
