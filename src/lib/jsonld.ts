@@ -29,6 +29,19 @@ const PUBLISHER = {
 } as const;
 
 /**
+ * About ページ用の Person schema の JSON-LD オブジェクトを生成する。
+ * 戻り値を `JSON.stringify` して `<script type="application/ld+json">` に埋め込む。
+ */
+export function buildPersonJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    ...AUTHOR,
+    jobTitle: "PM / PO・フルスタックエンジニア",
+    worksFor: PUBLISHER,
+  };
+}
+
+/**
  * Article schema の JSON-LD オブジェクトを生成する。
  * 戻り値を `JSON.stringify` して `<script type="application/ld+json">` に埋め込む。
  */
