@@ -1,0 +1,94 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+
+// Q3/Q7: 問合せメールは tanimoto@byte-lark.com に統一（PHASE1A-006 で決定）
+const contactEmail = "tanimoto@byte-lark.com";
+---
+
+<PageLayout
+  title="Privacy Policy | byte-lark.com"
+  description="byte-lark.com のプライバシーポリシー。個人情報の取扱い、アクセス解析（Cloudflare Web Analytics / Cookieless）、お問い合わせ先について説明します"
+>
+  <h1 class="text-3xl font-bold tracking-tight text-foreground">プライバシーポリシー</h1>
+
+  <p class="mt-6 leading-relaxed text-muted-foreground">
+    本ページでは、byte-lark.com（以下「本サイト」）における個人情報の取扱いについて説明します。
+  </p>
+
+  <!-- 基本方針 -->
+  <section class="mt-10" aria-labelledby="privacy-policy-basic">
+    <h2
+      id="privacy-policy-basic"
+      class="border-b border-border pb-2 text-2xl font-bold text-foreground"
+    >
+      基本方針
+    </h2>
+    <p class="mt-4 leading-relaxed text-muted-foreground">
+      本サイトは byte-lark（個人事業主、2026 年 6 月法人化予定）が運営しています。本サイトは、個人情報の保護に関する法律（個人情報保護法）を遵守し、訪問者の個人情報を適切に取り扱います。
+    </p>
+  </section>
+
+  <!-- 個人情報の取得と利用目的 -->
+  <section class="mt-12" aria-labelledby="privacy-policy-collection">
+    <h2
+      id="privacy-policy-collection"
+      class="border-b border-border pb-2 text-2xl font-bold text-foreground"
+    >
+      個人情報の取得と利用目的
+    </h2>
+    <p class="mt-4 leading-relaxed text-muted-foreground">
+      本サイトが個人情報を取得するのは、メールでのお問い合わせをいただいた場合のみです。その際に取得する情報（メールアドレス、氏名、お問い合わせ内容）は、お問い合わせへの返信のためにのみ利用します。
+    </p>
+    <p class="mt-3 leading-relaxed text-muted-foreground">
+      取得した個人情報は、ご本人の同意がある場合または法令に基づく場合を除き、第三者に提供しません。
+    </p>
+  </section>
+
+  <!-- アクセス解析について -->
+  <section class="mt-12" aria-labelledby="privacy-policy-analytics">
+    <h2
+      id="privacy-policy-analytics"
+      class="border-b border-border pb-2 text-2xl font-bold text-foreground"
+    >
+      アクセス解析について
+    </h2>
+    <p class="mt-4 leading-relaxed text-muted-foreground">
+      本サイトは、アクセス状況の把握のために Cloudflare Web Analytics を使用しています。Cloudflare Web Analytics は Cookie を使用せず（Cookieless）、訪問者個人を特定する情報を収集しません。このため、本サイトでは Cookie の利用に関する同意の取得は行っていません。
+    </p>
+  </section>
+
+  <!-- お問い合わせ -->
+  <section class="mt-12" aria-labelledby="privacy-policy-contact">
+    <h2
+      id="privacy-policy-contact"
+      class="border-b border-border pb-2 text-2xl font-bold text-foreground"
+    >
+      お問い合わせ
+    </h2>
+    <p class="mt-4 leading-relaxed text-muted-foreground">
+      本ポリシーおよび個人情報の取扱いに関するお問い合わせは、<a
+        href="/contact"
+        class="text-hibari-sky hover:underline">Contact</a
+      > ページに記載の窓口、または下記のメールアドレスまでお寄せください。
+    </p>
+    <p class="mt-3 leading-relaxed text-muted-foreground">
+      <a href={`mailto:${contactEmail}`} class="text-hibari-sky hover:underline">
+        {contactEmail}
+      </a>
+    </p>
+  </section>
+
+  <!-- 改定について -->
+  <section class="mt-12" aria-labelledby="privacy-policy-revision">
+    <h2
+      id="privacy-policy-revision"
+      class="border-b border-border pb-2 text-2xl font-bold text-foreground"
+    >
+      改定について
+    </h2>
+    <p class="mt-4 leading-relaxed text-muted-foreground">
+      本ポリシーの内容は、法令の変更や運営体制の変更（法人化等）に応じて改定することがあります。改定した場合は、本ページにて告知します。
+    </p>
+    <p class="mt-3 leading-relaxed text-muted-foreground">制定日: 2026 年 6 月 12 日</p>
+  </section>
+</PageLayout>
