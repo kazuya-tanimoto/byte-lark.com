@@ -1,6 +1,7 @@
 # 訪問者は Blog 一覧ページで全記事を閲覧し、カテゴリでフィルタできる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-06-12
 
 ## 誰が
 - 訪問者
