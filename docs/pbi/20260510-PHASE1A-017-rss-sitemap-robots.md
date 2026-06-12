@@ -1,6 +1,7 @@
 # クローラーは RSS / Sitemap / robots.txt を通じてサイトコンテンツを効率的にインデックスできる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-06-12
 
 ## 誰が
 - クローラー
