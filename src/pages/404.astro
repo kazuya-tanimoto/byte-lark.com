@@ -1,0 +1,27 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+---
+
+<PageLayout
+  title="ページが見つかりません | byte-lark.com"
+  description="お探しのページは見つかりませんでした。URL が変更されたか、削除された可能性があります"
+>
+  <div class="flex flex-col items-center py-16 text-center sm:py-24">
+    <p class="text-7xl font-bold tracking-tight text-hibari-sky sm:text-8xl">404</p>
+    <h1 class="mt-6 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+      ページが見つかりません
+    </h1>
+    <p class="mt-4 leading-relaxed text-muted-foreground">
+      お探しのページは、URL が変更されたか、削除された可能性があります。
+    </p>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+      <a
+        href="/"
+        class="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+      >
+        Home へ戻る
+      </a>
+      <a href="/blog" class="text-sm text-hibari-sky hover:underline">記事一覧を見る →</a>
+    </div>
+  </div>
+</PageLayout>

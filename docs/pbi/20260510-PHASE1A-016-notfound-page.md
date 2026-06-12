@@ -1,6 +1,7 @@
 # 訪問者は存在しない URL にアクセスした際に NotFound ページを表示され、サイトへ復帰できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-06-12
 
 ## 誰が
 - 訪問者

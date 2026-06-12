@@ -2,6 +2,8 @@
   "name": "byte-lark",
   "compatibility_date": "2026-05-08",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    // SSG の 404.html を 404 Not Found レスポンスとして配信する（未設定だと null body の 404 になる）
+    "not_found_handling": "404-page"
   }
 }
