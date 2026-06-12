@@ -105,7 +105,7 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 | PHASE1A-010 | [career-page](20260510-PHASE1A-010-career-page.md) | Done |
 | PHASE1A-011 | [skills-page](20260510-PHASE1A-011-skills-page.md) | Done |
 | PHASE1A-012 | [blog-list](20260510-PHASE1A-012-blog-list.md) | Done |
-| PHASE1A-013 | [blog-post-detail](20260510-PHASE1A-013-blog-post-detail.md) | InProgress |
+| PHASE1A-013 | [blog-post-detail](20260510-PHASE1A-013-blog-post-detail.md) | Done |
 | PHASE1A-014 | [contact-page](20260510-PHASE1A-014-contact-page.md) | NotStarted |
 | PHASE1A-015 | [privacy-page](20260510-PHASE1A-015-privacy-page.md) | NotStarted |
 | PHASE1A-016 | [notfound-page](20260510-PHASE1A-016-notfound-page.md) | NotStarted |
