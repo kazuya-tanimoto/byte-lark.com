@@ -1,6 +1,7 @@
 # 訪問者は Contact ページで法人への問合せ方法と対応領域を確認できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-06-12
 
 ## 誰が
 - 訪問者
