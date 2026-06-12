@@ -70,6 +70,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
   <main class="mx-auto max-w-3xl px-4 py-8">
     <article>
+      <slot name="cover" />
       <header class="mb-8 border-b border-border pb-6">
         <div class="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span

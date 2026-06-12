@@ -8,8 +8,6 @@ cover: ../../assets/posts/sample-cover.png
 slug: hello-astro-content-collections
 ---
 
-# Astro Content Collections で型安全なブログ基盤を構築する
-
 Content Collections を使うと、Markdown/MDX の frontmatter を Zod スキーマでバリデーションでき、型の不整合をビルド時に検出できる。
 
 ## 主なメリット

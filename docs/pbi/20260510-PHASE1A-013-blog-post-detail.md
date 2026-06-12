@@ -1,6 +1,7 @@
 # 訪問者は Blog 記事詳細ページで本文を読み、コードブロックのシンタックスハイライトを確認できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-06-12
 
 ## 誰が
 - 訪問者
