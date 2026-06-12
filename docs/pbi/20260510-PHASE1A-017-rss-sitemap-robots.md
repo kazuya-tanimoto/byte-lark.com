@@ -40,4 +40,4 @@ Completed: 2026-06-12
 - やったこと：`src/pages/rss.xml.ts` 新規実装（`getCollection` で draft 除外、`publishedAt` 降順、リンクは blog 詳細と同じ `slug ?? post.id` + 末尾スラッシュ）。`public/robots.txt` に `Sitemap:` 行を追記。`astro.config.mjs` は `site: "https://byte-lark.com"` が PHASE1A-005 時点で設定済みのため変更不要（技術メモの workers.dev 暫定案は採らず、OGP と同じ本番ドメインで統一）。ローカル build 出力 + CF preview の `/rss.xml` `/sitemap-index.xml` `/sitemap-0.xml` `/robots.txt` を curl で目視確認
 - 残タスク：なし
 - 学び・つまずき：sandbox 内で `gh` が TLS 証明書エラーで使えない（CI 状態確認は preview URL の直接ポーリングで代替できた）
-- 想定外だった点：sitemap に `/sample-highlight/`（デモページ）が含まれる。本 PBI スコープ外だが、本番公開前に削除判断が必要（Phase 1b or PHASE1A-020 で要検討）
+- 想定外だった点：sitemap に `/sample-highlight/`（デモページ）が含まれていた。→ 同セッションで対応済み：sitemap の `filter` で除外（どのページからもリンクされていない孤立ページのため検索エンジンに案内する理由がない）。ページ自体を削除するか Phase 1b のデザイン参照用に残すかの判断は PHASE1A-020 の受け入れ条件に追加してタスク化

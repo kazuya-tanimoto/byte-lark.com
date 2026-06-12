@@ -25,6 +25,7 @@ Status: NotStarted
 - [ ] 本番 URL（`byte-lark.com`）で全ページ表示確認
 - [ ] OGP メタが SNS 共有時に正しく表示されることを確認（OGP デバッガー等で検証）
 - [ ] 各ページの `<title>` / `<meta description>` / `<link rel="canonical">` が正しいことを確認
+- [ ] `/sample-highlight/`（PHASE1A-002 の検証用デモページ、sitemap からは PHASE1A-017 で除外済み）を削除するか Phase 1b のデザイン参照用に残すか判断し、結果を記録
 - [ ] 本 PBI の結果を Phase 1a Gate の判断材料として記録
 
 ## 技術メモ

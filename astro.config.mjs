@@ -11,7 +11,14 @@ import sitemap from "@astrojs/sitemap";
 // https://astro.build/config
 export default defineConfig({
   site: "https://byte-lark.com",
-  integrations: [react(), mdx(), sitemap()],
+  integrations: [
+    react(),
+    mdx(),
+    sitemap({
+      // 検証用デモページは検索エンジンに案内しない（削除判断は PHASE1A-020）
+      filter: (page) => !page.includes("/sample-highlight/"),
+    }),
+  ],
 
   markdown: {
     shikiConfig: {
