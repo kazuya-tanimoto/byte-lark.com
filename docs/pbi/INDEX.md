@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-06-13
+最終更新: 2026-06-14
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -123,7 +123,7 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 | PHASE1A-017 | [rss-sitemap-robots](20260510-PHASE1A-017-rss-sitemap-robots.md) | Done |
 | PHASE1A-018 | [custom-domain-analytics](20260510-PHASE1A-018-custom-domain-analytics.md) | Moved |
 | PHASE1A-019 | [e2e-tests-a11y](20260510-PHASE1A-019-e2e-tests-a11y.md) | Done |
-| PHASE1A-020 | [lighthouse-cwv-production](20260510-PHASE1A-020-lighthouse-cwv-production.md) | NotStarted |
+| PHASE1A-020 | [lighthouse-cwv-production](20260510-PHASE1A-020-lighthouse-cwv-production.md) | InProgress |
 | PHASE1A-021 | [incident-response](20260510-PHASE1A-021-incident-response.md) | NotStarted |
 | **PHASE1A-022** | [**retrospective-gate**](20260510-PHASE1A-022-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
