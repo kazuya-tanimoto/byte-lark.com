@@ -68,6 +68,7 @@
 - Read the Gate PBI's "次 Phase への申し送り" section
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
 - Draft next-Phase PBIs reflecting the learnings
+- **All drafted PBIs MUST carry the §7 verification gate in 受け入れ条件** (ローカル / CF preview スクショ確認, テンプレ常設・非該当は `[x] …：N/A（理由）`). README §4.6 ルール 7。INDEX.md セッション開始チェックが起票漏れを機械検出する
 - Append to INDEX.md as Status: NotStarted
 - Commit on the Phase branch (docs-only)
 

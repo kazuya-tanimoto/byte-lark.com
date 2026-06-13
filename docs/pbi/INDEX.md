@@ -31,15 +31,25 @@ PHASE0-005 完了後は `CLAUDE.md` の "How to start/end/draft" セクション
 PBI を着手する前に、以下を**必ず実行**：
 
 ```bash
-# README §5.8 の検出スクリプト：InProgress なのに実装ログ entry が無い PBI を検出
+# (1) README §5.8：InProgress なのに実装ログ entry が無い PBI を検出
 for f in $(grep -l "^Status: InProgress" docs/pbi/*.md); do
   if ! grep -q "^### 20" "$f"; then
     echo "WARNING: 実装ログ entry 無し → $f"
   fi
 done
+
+# (2) §7 検証ゲート（README §4.6 ルール 7）：着手対象 PBI に検証 2 行が無い＝起票漏れ
+for f in $(grep -lE "^Status: (NotStarted|InProgress)" docs/pbi/*PHASE*.md); do
+  grep -q "スクショ確認" "$f" || echo "WARNING: §7 検証項目が受け入れ条件に無い（テンプレ常設漏れ）→ $f"
+done
+
+# (3) §7 検証ゲート：Done なのに検証行が未 check [ ] のまま＝検証せず Done 化
+for f in $(grep -l "^Status: Done" docs/pbi/*PHASE*.md); do
+  grep -qE '^- \[ \].*スクショ確認' "$f" && echo "WARNING: §7 検証が未 check のまま Done → $f"
+done
 ```
 
-該当があれば、運営者に「<該当 PBI> が InProgress ですが実装ログが空です。前回の状況を覚えていますか？」と確認してから再開する（運営者操作の詳細は [docs/operation-manual.md](../operation-manual.md) §2 参照）。
+(1) に該当があれば、運営者に「<該当 PBI> が InProgress ですが実装ログが空です。前回の状況を覚えていますか？」と確認してから再開する（運営者操作の詳細は [docs/operation-manual.md](../operation-manual.md) §2 参照）。(2)(3) に該当があれば、受け入れ条件に §7 検証 2 項目を追加（非該当なら `[x] …：N/A（理由）`）してから着手・完了する。
 
 ---
 
@@ -112,7 +122,7 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 | PHASE1A-016 | [notfound-page](20260510-PHASE1A-016-notfound-page.md) | Done |
 | PHASE1A-017 | [rss-sitemap-robots](20260510-PHASE1A-017-rss-sitemap-robots.md) | Done |
 | PHASE1A-018 | [custom-domain-analytics](20260510-PHASE1A-018-custom-domain-analytics.md) | Moved |
-| PHASE1A-019 | [e2e-tests-a11y](20260510-PHASE1A-019-e2e-tests-a11y.md) | NotStarted |
+| PHASE1A-019 | [e2e-tests-a11y](20260510-PHASE1A-019-e2e-tests-a11y.md) | InProgress |
 | PHASE1A-020 | [lighthouse-cwv-production](20260510-PHASE1A-020-lighthouse-cwv-production.md) | NotStarted |
 | PHASE1A-021 | [incident-response](20260510-PHASE1A-021-incident-response.md) | NotStarted |
 | **PHASE1A-022** | [**retrospective-gate**](20260510-PHASE1A-022-retrospective-gate.md) **(Gate)** | **NotStarted** |

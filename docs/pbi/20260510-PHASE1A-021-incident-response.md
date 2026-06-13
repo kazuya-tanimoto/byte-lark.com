@@ -19,6 +19,8 @@ Status: NotStarted
 - [ ] 漏えい・改ざん検知時の対応手順（初動 → 調査 → 復旧 → 報告）
 - [ ] 対応者・連絡先の明記（法人化前は運営者本人）
 - [ ] Cloudflare ダッシュボードでのセキュリティイベント確認手順の概要
+- [x] ローカル スクショ確認（desktop + mobile）：N/A（理由：本 PBI は docs 作成のみで UI を変更しない）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）：N/A（理由：UI 変更なし）（CLAUDE.md §7）
 
 ## 技術メモ
 - 法人化前は対応者 = 運営者本人のみ。法人化後（§13）に組織体制へ更新

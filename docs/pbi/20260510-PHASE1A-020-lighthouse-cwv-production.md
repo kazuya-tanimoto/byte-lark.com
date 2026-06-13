@@ -27,6 +27,8 @@ Status: NotStarted
 - [ ] 各ページの `<title>` / `<meta description>` / `<link rel="canonical">` が正しいことを確認（canonical は仕様どおり `https://byte-lark.com/...` を指すこと）
 - [ ] `/sample-highlight/`（PHASE1A-002 の検証用デモページ、sitemap からは PHASE1A-017 で除外済み）を削除するか Phase 1b のデザイン参照用に残すか判断し、結果を記録
 - [ ] 本 PBI の結果を Phase 1a Gate の判断材料として記録
+- [x] ローカル スクショ確認（desktop + mobile）：N/A（理由：本 PBI は計測・確認のみで UI を変更しない）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）：N/A（理由：UI 変更なし。branch alias での全ページ表示確認は上記の計測条件に既存）（CLAUDE.md §7）
 
 ## 技術メモ
 - Lighthouse は Chrome DevTools or `lighthouse` CLI で実行

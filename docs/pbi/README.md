@@ -57,6 +57,8 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 - [ ] 観測可能な条件 2
 - [ ] エラー / エッジケース条件
 - [ ] テスト・Lint・型チェック等の自動検証条件
+- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 
 ## 技術メモ（任意）
 - 関連ファイル / 配置先パス
@@ -117,6 +119,7 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 4. **自動検証可能な条件**は明示する（`yarn check:ts` がエラーなし、Lighthouse Accessibility 90+ 等）
 5. ユーザー操作可能な機能は Playwright で検証可能な粒度に書く
 6. 1 PBI で 5-15 項目が目安。20+ になる場合は **PBI 分割を検討**
+7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 のローカル スクショ確認（desktop + mobile）と CF preview スクショ確認（branch alias URL）の 2 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。UI 変更を伴う PBI は CF preview 確認まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 2 行の有無と未 check 残りを機械検出する
 
 ### 4.7 技術メモ
 

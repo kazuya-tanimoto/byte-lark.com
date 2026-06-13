@@ -41,6 +41,8 @@ Status: NotStarted
 
 ### 完了処理
 - [ ] 本 PBI の Status を Done に更新、INDEX.md 同期
+- [x] ローカル スクショ確認（desktop + mobile）：N/A（理由：本 PBI は Gate（確認・マージ・申し送り）で UI を変更しない）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）：N/A（理由：UI 変更なし）（CLAUDE.md §7）
 
 ### 次セッションへのトリガー
 - [ ] 本 PBI が Done になった時点で、次セッションは「Phase 1b PBI 起票」を最初のタスクとして実行可能
