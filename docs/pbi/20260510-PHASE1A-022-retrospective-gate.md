@@ -17,7 +17,7 @@ Status: NotStarted
 ## 受け入れ条件
 
 ### Phase 1a 完了確認
-- [ ] PHASE1A-001 〜 PHASE1A-021 のすべてが Status: Done
+- [ ] PHASE1A-001 〜 PHASE1A-021 のすべてが Status: Done（**例外**: PHASE1A-018 は Status: Moved。site-plan v3.9 Decision #25 で Phase 1d 公開 PBI へ移管済み）
 - [ ] `docs/pbi/INDEX.md` の Phase 1a セクションがすべて `[Done]` 表示
 - [ ] feat/phase-1a ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がすべて成功
 
@@ -26,8 +26,9 @@ Status: NotStarted
   - [ ] 確定した技術前提（実際に動いた構成・選定結果）
   - [ ] 発生した想定外と回避策
   - [ ] 計画書と実態の差分（あれば）
-  - [ ] Phase 1b 起票時の注意（デザインブラッシュアップに影響する事項）
+  - [ ] Phase 1b 起票時の注意（コンテンツ整備に影響する事項。※ v3.9 Phase 再編により 1b = コンテンツ整備、デザインは 1c）
   - [ ] Phase 1b で先に決めるべき事項
+  - [ ] **ドラフト 2 本の正式化指示**：1b 起票時に `draft-phase1b-content-launch-prep.md` を、1d 起票時に `draft-phase1d-domain-launch.md` を、それぞれ番号付き PBI として正式化すること
 
 ### CLAUDE.md / site-plan.md の整合確認
 - [ ] CLAUDE.md の記述と Phase 1a の実態に齟齬がないか確認
@@ -46,8 +47,8 @@ Status: NotStarted
 
 ## 技術メモ
 - PHASE0-010 と同じ Gate 構造
-- Phase 1b はデザインブラッシュアップ（ClaudeDesign でロゴ・カラー・タイポ確定）がメイン
-- Phase 1a の仮 HEX → Phase 1b で確定 HEX に置換するため、どのファイルに仮 HEX が使われているかの一覧が申し送りで重要
+- Phase 1b はコンテンツ整備（Skills / Career 実データ化、About / Privacy 文面確定、Contact フォーム化、初期記事セット）。デザインブラッシュアップは Phase 1c（v3.9 Phase 再編、Decision #25）
+- Phase 1a の仮 HEX → Phase 1c で確定 HEX に置換するため、どのファイルに仮 HEX が使われているかの一覧が申し送りで重要
 
 ## Phase 1b への申し送り
 

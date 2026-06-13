@@ -27,7 +27,7 @@
 - shadcn/ui は React Island 必要箇所のみ（Header/Footer 等の静的部品は Astro 自前）
 - OGP / SEO は SSG 時に静的生成（クライアント JS 非依存）
 - Blog category は frontmatter、URL は flat /blog/:slug
-- Color palette: Hibari brand (sky / amber / green / earth / neutral)、確定 HEX は Phase 1b 後
+- Color palette: Hibari brand (sky / amber / green / earth / neutral)、確定 HEX は Phase 1c（デザイン）後
 
 ## Code Style
 - TypeScript strict, 2-space indent, 100 char line, named exports preferred
@@ -82,7 +82,7 @@
 - wip(pbi): PHASE0-NNN <note>    # 中間コミット
 
 ## Related Docs
-- docs/site-plan.md           Site construction plan (current: v3.8)
+- docs/site-plan.md           Site construction plan (current: v3.9)
 - docs/pbi/README.md          PBI format spec (v2.9) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）

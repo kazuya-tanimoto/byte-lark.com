@@ -1,6 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.8)
+# byte-lark.com サイト構築計画書 (v3.9)
 
-最終更新: 2026-05-08
+最終更新: 2026-06-13
+
+> v3.8 → v3.9 主な変更：**Phase 再編（公開の独立フェーズ化）**。新 1b = コンテンツ整備（Skills / Career 実データ化、About / Privacy 文面確定、Contact フォーム化、初期記事セット）、新 1c = デザインブラッシュアップ（旧 1b）、新 1d = 公開（NS 移管 / カスタムドメイン / Web Analytics / Search Console。旧 PHASE1A-018 を移管）、新 1e = カテゴリ別一覧（旧 1c）。Decision #25（公開フェーズ分離）・#26（Contact 自前フォーム = Worker + Turnstile + Resend）追加、FR-29 追加、FR-19 / FR-28 / Decision #4 #15 #21 #23 / R-06 #07 #08 #12 / Q11 / §6.7 の Phase 名を連動更新。**読み替え注意**：Done 済み PBI 内の旧 Phase 名は当時の表記のまま（旧 1b → 新 1c、旧 1c → 新 1e と読む）。
 
 > v3.7 → v3.8 主な変更：Phase 0 Retrospective Gate（PHASE0-010）での事実修正。§6.4 ディレクトリ構成から `tailwind.config.ts` を削除（Tailwind v4 は CSS ベース設定のため不使用）。Decision #21 を shadcn 4.x の preset 体系（Radix + Nova）に更新。
 
@@ -79,7 +81,7 @@
 | FR-16 | NotFound ページ (`*`) を用意する | 必須 | 1a |
 | FR-17 | 全ページで OGP メタ（title / description / og:image / canonical）を SSG 時に静的生成する | 必須 | 1a |
 | FR-18 | 各記事ページで個別の OGP メタを SSG 時に静的生成する | 必須 | 1a |
-| FR-19 | 記事数到達時（合計 10 件以上 + 偏在許容）に `/blog/tech`, `/blog/life` カテゴリ別一覧を追加する | 1c | 1c |
+| FR-19 | 記事数到達時（合計 10 件以上 + 偏在許容）に `/blog/tech`, `/blog/life` カテゴリ別一覧を追加する | 1e | 1e |
 | FR-20 | RSS フィードを `/rss.xml` で配信する | 必須 | 1a |
 | FR-21 | sitemap.xml を自動生成する | 必須 | 1a |
 | FR-22 | `/privacy` プライバシーポリシーページを設置する | 必須 | 1a |
@@ -88,7 +90,8 @@
 | FR-25 | `yarn new-post` 雛形生成スクリプトを提供する | 必須 | 1a |
 | FR-26 | コードブロックに採用ライブラリ（Q13 で確定）でシンタックスハイライトを適用する | 必須 | 1a |
 | FR-27 | 画像最適化パイプラインを設定する（Astro `<Image>` / `<Picture>` で WebP 変換 + サイズ生成） | 必須 | 1a |
-| FR-28 | `/legal/tokutei` 特定商取引法表記ページ（直案件で対価を受ける場合） | 法人化後 | 1c+ |
+| FR-28 | `/legal/tokutei` 特定商取引法表記ページ（直案件で対価を受ける場合） | 法人化後 | 1e+ |
+| FR-29 | `/contact` を問い合わせフォームに置換する（Worker `/api/contact` + Turnstile + Resend 送信、mailto 廃止、Decision #26） | 必須 | 1b |
 
 ### 5.2 非機能要件
 
@@ -130,7 +133,7 @@
 - `tech`: 技術、ガジェット、AI
 - `life`: アウトドア、バイク、猫
 
-**Phase 1c で追加予定の URL**（記事数到達時）：
+**Phase 1e で追加予定の URL**（記事数到達時）：
 - `/blog/tech`、`/blog/life`：カテゴリ別一覧
 - 既存 `/blog/:slug` は維持。`<link rel="canonical">` は記事自身に向ける（カテゴリ一覧の重複コンテンツ判定回避）
 
@@ -191,7 +194,7 @@ slug: vite-react-spa-ogp-pitfall      # frontmatter で明示推奨（ファイ�
 ├── public/                           静的アセット（favicon, robots.txt, og-default.png）
 ├── src/
 │   ├── assets/                       ビルド時最適化対象（logo, ヒーロー画像）
-│   │   ├── logo.svg                  Phase 1b で更新予定
+│   │   ├── logo.svg                  Phase 1c で更新予定
 │   │   └── posts/                    記事 cover 画像
 │   ├── components/                   汎用コンポーネント
 │   │   ├── ui/                       shadcn/ui からコピペした Radix ベース React コンポーネント（**インタラクティブ系のみ**）
@@ -262,7 +265,7 @@ slug: vite-react-spa-ogp-pitfall      # frontmatter で明示推奨（ファイ�
 
 #### 6.5.2 カラーパレット（Plan B：周辺色 + ヒバリ羽色アクセント）
 
-Tailwind の theme extension で以下を定義。**Phase 1a 冒頭で仮 HEX を確定**（実装が theme トークン参照前提のため）、**Phase 1b で確定 HEX に置換**。
+Tailwind の theme extension で以下を定義。**Phase 1a 冒頭で仮 HEX を確定**（実装が theme トークン参照前提のため）、**Phase 1c で確定 HEX に置換**。
 
 | 役割 | 色相 | 由来 | Tailwind tone 目安 |
 |---|---|---|---|
@@ -279,15 +282,15 @@ Tailwind の theme extension で以下を定義。**Phase 1a 冒頭で仮 HEX �
 - 英文：Inter / Geist 等のサンセリフ（Tailwind デフォルト or Google Fonts）
 - 和文：Noto Sans JP（Google Fonts）
 - 見出しはやや軽めのウェイト（500-600）で「軽快さ・抜け感」を演出
-- フォントサイズ階層・行間・和欧混植調整は Phase 1b で確定（TODO: タイポスケール定義）
+- フォントサイズ階層・行間・和欧混植調整は Phase 1c で確定（TODO: タイポスケール定義）
 
 #### 6.5.4 ロゴ
 
 - 現存：byte-lark テキストロゴ（ヒバリ意匠なし、ピンと来ない感あり）
 - 旧 ChatGPT 案 2 種：ヒバリ + 二進数のモチーフは良いが**モノトーン**でブランド色が乗らない
-- **Phase 1b で ClaudeDesign を使い、ヒバリ意匠 + ブランドカラーを反映した新ロゴを作成**
+- **Phase 1c で ClaudeDesign を使い、ヒバリ意匠 + ブランドカラーを反映した新ロゴを作成**
 - インプット：ブランドコンセプト / カラーパレット / 既存 2 案 / サイト全体のデザイントーン
-- **反復上限**：Phase 1b 開始から **5 ラウンド以内に確定**（Q11 で運営者が合格条件確定）
+- **反復上限**：Phase 1c 開始から **5 ラウンド以内に確定**（Q11 で運営者が合格条件確定）
 
 #### 6.5.5 ページ間の視覚的一貫性
 
@@ -339,7 +342,7 @@ Astro の標準機能で完全対応：
 |---|---|---|
 | `src/features/career/data/Career.ts` | **資産化**（id=3,4 削除） | `src/data/career.ts` |
 | `src/features/skills/data/Skill.ts` | **資産化**（icon URL 整理：VB.Net / GAS の代替アイコン是非を Q13 並列で判断） | `src/data/skills.ts` |
-| `src/assets/logo.png` | 暫定流用、Phase 1b で SVG に置換 | `src/assets/logo.svg`（後で） |
+| `src/assets/logo.png` | 暫定流用、Phase 1c で SVG に置換 | `src/assets/logo.svg`（後で） |
 | `tests/demo-todo-app.spec.ts` | **削除**（Playwright 公式デモ） | — |
 | `tests/example.spec.ts` | **削除**（同上） | — |
 | `playwright.config.ts` | **設定流用**（PHASE0-002 で Astro 用に最低限調整）、テストは新規作成 | プロジェクトルート |
@@ -372,9 +375,11 @@ Astro の標準機能で完全対応：
 | **1a 起票** | 別セッションで Phase 1a PBI 起票（Gate の申し送りを反映） | INDEX.md に Phase 1a PBI が追加され、レビュー完了 | 0.5-1 日 |
 | **1a** | サイト構成・各ページの機能実装。冒頭タスク：CI 整備 / 仮 HEX 確定 / コードハイライト選定 / 画像最適化方針確定。続いて全ページ実装 + Markdown ブログ + RSS / sitemap / OGP / JSON-LD / プライバシーポリシー / E2E | 全ページ動作、SSG ビルド成功、Lighthouse 全 90+、Core Web Vitals 目標達成、Playwright E2E グリーン | 5-7 日 |
 | **Gate 1a→1b** | Retrospective Gate（同上） | Gate PBI 完了 | 0.25 日 |
-| **1b 起票** | 別セッションで Phase 1b PBI 起票 | INDEX.md 追加・レビュー完了 | 0.25-0.5 日 |
-| **1b** | デザインブラッシュアップ：ClaudeDesign で草案 → カラー / タイポ / ロゴ確定（**ロゴ反復上限 5 ラウンド**） → 実装反映 | デザイン確定 + ロゴ刷新 + 視覚的一貫性 + 仮 HEX → 確定 HEX 置換 | 4-6 日 |
-| **1c** | カテゴリ別一覧追加（記事数到達時のみ）。PBI は Phase 1b 完了後に起票 | `/blog/tech`, `/blog/life` 公開、Lighthouse 維持 | 0.5 日 |
+| **1b 起票** | 別セッションで Phase 1b PBI 起票（`docs/pbi/draft-phase1b-content-launch-prep.md` を正式化） | INDEX.md 追加・レビュー完了 | 0.25-0.5 日 |
+| **1b** | コンテンツ整備：Skills / Career を現行実データに更新 + 代表案件追記（運営者インプット）、About / Privacy 文面の事実確認・承認、サンプル記事の処置、Contact フォーム化（FR-29）、記事ネタ出し → 初期記事セット実装（1 記事 1 PBI、本数はネタ出し PBI で確定） | 全ページの文面・データが運営者承認済み、初期記事セットがリポジトリ上で公開状態、フォーム E2E グリーン | 3-5 日 + 記事執筆 |
+| **1c** | デザインブラッシュアップ：ClaudeDesign で草案 → カラー / タイポ / ロゴ確定（**ロゴ反復上限 5 ラウンド**） → 実装反映。**1b の実コンテンツで検証**（旧 1b） | デザイン確定 + ロゴ刷新 + 視覚的一貫性 + 仮 HEX → 確定 HEX 置換 | 4-6 日 |
+| **1d** | 公開：再 QA（E2E / Lighthouse）→ NS 移管（Xserver → CF、MX / SPF 引き継ぎ設計込み）→ main マージ → Workers カスタムドメイン接続 → www 旧 Netlify サイト畳み → Web Analytics 有効化 → Search Console 登録 + sitemap 送信（`docs/pbi/draft-phase1d-domain-launch.md` を正式化） | `https://byte-lark.com` で全ページ表示 + メール送受信継続 + Analytics データ取得 | 1-2 日 + DNS 伝播 |
+| **1e** | カテゴリ別一覧追加（記事数到達時のみ）。PBI は到達時点で起票（旧 1c） | `/blog/tech`, `/blog/life` 公開、Lighthouse 維持 | 0.5 日 |
 | **2** | 広告収益化（AdSense / Amazon アソシエイト）。並行検討：ニュースレター / Substack / note 連携 | 記事 30 本以上、AdSense 審査通過、配置最適化、CWV 維持 | 後日（記事数次第） |
 
 各 Phase に **+50% のバッファ** を覚悟。前提（Astro init / Tailwind v4 統合 / shadcn セットアップ / Biome v2 化）が崩れると 1.5〜2 倍に膨らむ可能性あり。
@@ -407,7 +412,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | 1 | Phase 1 から Astro で SSG 構築（Vite + React + Chakra スタックは廃止） | Phase 2 で SSG 必須化が確定 / Chakra 学習動機が消滅 / 段階移行で Phase 1 の労力が捨てられる手戻りコスト大 | Vite 維持して Phase 2 で移行（v1 案）→ 既存資産保護の動機消滅により段階移行のメリット消失 |
 | 2 | UI フレームワークは Tailwind CSS v4 + shadcn/ui、統合は **`@tailwindcss/vite`**（`@astrojs/tailwind` は Tailwind 3 legacy 専用） | AI 訓練データ豊富 / コピペ型でコンポーネントが repo 内に存在 / Astro 公式統合 / 2026 年デファクト | Chakra v3 → API 大幅刷新で書き直し量同等 + AI フレンドリー度劣る / Mantine → 採用層小・shadcn ほどコピペ型でなく自前ビルドが残る |
 | 3 | アイコンは Lucide | shadcn/ui デフォルト / 軽量 / 単一セット | react-icons → 多様だが shadcn と統一感失う |
-| 4 | Markdown / MDX を `src/content/posts/` フラット配置、category は frontmatter | Phase 1c の URL 拡張は frontmatter 駆動で柔軟 / 記事少ないうちのみすぼらしさ回避 | category ディレクトリ分割（v1 案）→ 記事少ない時のスカスカ感悪化 |
+| 4 | Markdown / MDX を `src/content/posts/` フラット配置、category は frontmatter | Phase 1e の URL 拡張は frontmatter 駆動で柔軟 / 記事少ないうちのみすぼらしさ回避 | category ディレクトリ分割（v1 案）→ 記事少ない時のスカスカ感悪化 |
 | 5 | Career / Skills は専用ページ + Home に抜粋 | 件数多いとトップが縦長になり Blog プレビューを圧迫 | 全件 Home 配置（v1 案）→ Blog プレビューが目立たない |
 | 6 | Qualifications は Home 内セクション維持（独立ページなし） | 件数少（5 件）で独立ページにする実利薄い | 独立ページ化 → コンテンツ薄すぎ |
 | 7 | Phase 2 で Next.js 移行は **撤回** | Phase 1 から SSG なので Phase 2 の移行作業自体が不要 | （v1 案で誤って採用、撤回） |
@@ -418,16 +423,18 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | 12 | サイト構成は個人主軸ハイブリッド | エージェント案件主体のため純コーポレートは ROI 低い、将来直案件にも開く | 純コーポレート / 純パーソナル |
 | 13 | カテゴリは tech / life の 2 区画 | ジャンル分散リスクを IA で吸収、URL 拡張時の設計が明確 | フラット運用 → 読者層分散で AdSense RPM 下がる懸念 |
 | 14 | カラーパレットは Plan B（周辺色 + ヒバリ羽色アクセント） | 「飛翔・春」コンセプトと「ヒバリ実物」両立 / 色彩論的に安定（Wikipedia / ADW で実物色裏取り済み） | 実物色のみ（地味） / 周辺色のみ（実物との接点薄い） |
-| 15 | ロゴは Phase 1b で ClaudeDesign を使って新規作成、反復上限 5 ラウンド | 既存テキストロゴはヒバリ意匠なし / 旧 ChatGPT 案はモノトーン / 上限なしだと Phase 1b 暴走 | 既存流用 / 旧案採用 / 反復上限なし |
+| 15 | ロゴは Phase 1c で ClaudeDesign を使って新規作成、反復上限 5 ラウンド | 既存テキストロゴはヒバリ意匠なし / 旧 ChatGPT 案はモノトーン / 上限なしだと Phase 1c 暴走 | 既存流用 / 旧案採用 / 反復上限なし |
 | 16 | shadcn/ui は **React Island 必要箇所のみ**で利用、静的部品は Astro 自前 | shadcn 部品は React ランタイムを乗せる Island 化が必要、Header/Footer 等で過剰 / Astro の Zero-JS philosophy と整合 | 全コンポーネント shadcn → 不要 JS が乗る |
 | 17 | デプロイ先は **Cloudflare Workers**（Q8 確定、Phase 1a で Pages → Workers 移行） | 商用利用可 / 無料枠厚い / CF 公式・Astro 公式ともに新規は Workers 推奨 / Web Analytics 統合（Cookieless） | Vercel → 商用利用条項の解釈余地、Pro 必須リスク / Netlify → 帯域・ビルド分制限がやや厳しい / Pages 維持 → 公式推奨から外れつつある |
 | 18 | アクセス解析は **Cloudflare Web Analytics**（Q9 確定） | Cookieless で同意 UI 不要、CF Pages と統合楽、無料 | GA4 → Cookie バナー必要で UX 悪化、過剰機能 / Plausible → 月額発生 |
 | 19 | Phase 2 で広告と並列して **ニュースレター / Substack / note 転載**も検討 | AdSense は記事 30+ で RPM 安定までかかる / 別線で同記事資産を活用すると ROI 早い | 広告一本 → 収益化までの時間が長い |
 | 20 | 旧 Hugo `byte-lark.com` の URL は **301 計画なし**（dead で OK） | 旧 repo 削除済 / 新ドメインの再開で別アイデンティティ / 旧 URL retain の実利薄 | 301 設定 → 旧コンテンツ無いので意味薄い |
-| 21 | shadcn 4.x で **Radix ライブラリ + Nova preset** で初期化（旧 style/baseColor 概念は 4.x で廃止、preset 体系に移行） | デフォルト構成で進めて Phase 1b の ClaudeDesign アウトプットに合わせて再調整、Phase 0 を判断で止めない | 初期からブランドカラーで設定 → カラーパレット未確定の段階で決められない |
+| 21 | shadcn 4.x で **Radix ライブラリ + Nova preset** で初期化（旧 style/baseColor 概念は 4.x で廃止、preset 体系に移行） | デフォルト構成で進めて Phase 1c の ClaudeDesign アウトプットに合わせて再調整、Phase 0 を判断で止めない | 初期からブランドカラーで設定 → カラーパレット未確定の段階で決められない |
 | 22 | コードハイライトは **Shiki**（Astro 組込み、テーマ `github-light`）（Q13 確定） | 追加依存ゼロ / ビルド時レンダリングでクライアント JS なし / テーマ豊富 / 後から Expressive Code に差し替え可 | Expressive Code → ファイル名タブ等リッチだが追加依存あり / Prism → Shiki より機能・テーマが少ない |
-| 23 | 記事 cover 画像は **装飾不要**（optional フィールドのみ定義）（Q5 確定） | Phase 1a はページ実装が主目的、cover に工数を割らない / optional にしておけば Phase 1b 以降で OGP ジェネレータ等を後付け可 | OGP ジェネレータ → 実装工数追加 / Unsplash → 選定の手間 + ライセンス表記必要 |
+| 23 | 記事 cover 画像は **装飾不要**（optional フィールドのみ定義）（Q5 確定） | Phase 1a はページ実装が主目的、cover に工数を割らない / optional にしておけば Phase 1c 以降で OGP ジェネレータ等を後付け可 | OGP ジェネレータ → 実装工数追加 / Unsplash → 選定の手間 + ライセンス表記必要 |
 | 24 | 和文フォントは **@fontsource-variable/noto-sans-jp**（セルフホスト） | 既存 Geist と同パターンで統一 / CSP 設定不要 / パフォーマンス制御しやすい | Google Fonts CDN → 外部リクエスト + Workers CSP 設定が別途必要 |
+| 25 | **Phase 再編（v3.9）**：公開を独立フェーズ 1d に分離、1b をコンテンツ整備として新設（旧 1b デザイン → 1c、旧 1c カテゴリ → 1e）。公開は 1c 完了 + 初期記事セット + 再 QA を前提条件とする | 未完成サイト（仮デザイン・サンプル記事・未承認文面・旧コード由来の Career / Skills）を法人ドメインで公開・クロールさせないため / 公開は DNS・メール継続（MX が apex 名指し）・旧 www Netlify サイトの畳みを含む一度きりの重要イベントで独立管理が必要 / コンテンツ先・デザイン後にすると実記事でタイポ・カード設計を検証でき手戻りがない | 1a 内で公開（旧計画）→ main は Hello, World! のままで公開すると placeholder がクロールされる / production branch 一時切替 → 未完成サイトの全世界公開で棄却 |
+| 26 | **Contact は自前フォームに置換**（Worker `/api/contact` + Cloudflare Turnstile + Resend、送信元は `send.byte-lark.com` サブドメイン認証、API キーは Workers secret、mailto 廃止）（FR-29） | アドレス平文公開は収集ボットに拾われ、CF のメール難読化は Workers 配信に不適用（公式 docs 明記）/ メーラー未設定環境では mailto が無反応で商談機会を取りこぼす / Turnstile・Resend とも無料枠で月数十件は余裕 / CSRF はセッション認証なしのため主論点でなく、対策の本命は Turnstile サーバー側検証 + レートリミット | mailto 維持 → スパム露出 + UX 劣化 / Google Form → 法人サイトの体裁劣化・Google 依存 / SES → サンドボックス解除等の手間が小規模用途に見合わない |
 
 ## 9. リスク / 留意事項
 
@@ -438,13 +445,13 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | R-03 | Astro 6 / Tailwind v4 / shadcn の major up で破壊的変更 | ビルドエラー / 表示崩れ | dependabot で月次監視、major up は専用ブランチで PR、E2E でリグレッション検出。**Tailwind v5 / shadcn Astro 統合方式変更**を特に警戒 | dependabot PR 通知 / 各ライブラリのリリースノート | Claude |
 | R-04 | 法人化前のため byte-lark の正式法人名・所在地・連絡先が未確定 | Footer / Contact / About の確定情報が出せない | 法人化前は「byte-lark」表記 + 個人事業主としての責任明示。法人化後（2026/06）に置換。**§13 で 3 段階マイルストーン管理** | 法人登記完了 | 運営者 |
 | R-05 | Hero の文言が決まらず実装が止まる | スケジュール遅延 | プレースホルダーで先に実装 → 後から差替可能な構造に。Q1 ドラフト 3 案を Claude が出す | Phase 1a 着手時 | Claude（ドラフト）+ 運営者（選定） |
-| R-06 | ロゴ刷新が決まらず Phase 1b が長期化 | サイト公開が後ろ倒し | 現行ロゴで一旦公開、ClaudeDesign で並行検討、決定次第差替。**反復上限 5 ラウンド** | Phase 1b 開始から 5 ラウンド未確定 | 運営者 |
-| R-07 | ジャンル分散（tech + life）で読者層が定まらず AdSense RPM 低下 | 収益化フェーズで効果薄い | Phase 1c でカテゴリ URL 分離 + 内回遊で擬似テーマ分割。**Phase 2 観察結果次第でサブブランドサイト分離**も検討 | Phase 2 で AdSense RPM が想定以下 | 運営者 |
-| R-08 | Career のダミーデータ削除で実データが少なくなり Career セクションが寂しい | UX 低下 | 実案件サマリを 1-2 件追加 / Career セクションを濃く見える構成に / Phase 1b で視覚調整 | Phase 1a で Career 表示確認時 | 運営者 + Claude |
+| R-06 | ロゴ刷新が決まらず Phase 1c が長期化 | サイト公開（1d）が後ろ倒し | 5 ラウンド未確定なら現行ロゴで 1d 公開を先行、ClaudeDesign で並行検討、決定次第差替。**反復上限 5 ラウンド** | Phase 1c 開始から 5 ラウンド未確定 | 運営者 |
+| R-07 | ジャンル分散（tech + life）で読者層が定まらず AdSense RPM 低下 | 収益化フェーズで効果薄い | Phase 1e でカテゴリ URL 分離 + 内回遊で擬似テーマ分割。**Phase 2 観察結果次第でサブブランドサイト分離**も検討 | Phase 2 で AdSense RPM が想定以下 | 運営者 |
+| R-08 | Career のダミーデータ削除で実データが少なくなり Career セクションが寂しい | UX 低下 | 実案件サマリを 1-2 件追加（**Phase 1b コンテンツ整備で対応**）/ Career セクションを濃く見える構成に / Phase 1c で視覚調整 | Phase 1a で Career 表示確認時 | 運営者 + Claude |
 | R-09 | コンテンツ著作権・AI 生成物の表記漏れ | 法的リスク / SEO 評価マイナス | 記事画像は Unsplash 等のフリー素材か自前撮影、引用は出典明記、AI 生成物は明示。**Q12 で記事ライセンス確定**、Footer に記載 | 第 1 記事公開時 | 運営者 |
 | R-10 | プライバシー・解析法務（GA4 + EU 訪問者等） | コンプラ違反 | Q9 で **Cloudflare Web Analytics 採用** = Cookieless = 同意 UI 不要。プライバシーポリシー（FR-22）に明記 | アクセス開始時点 | 運営者 |
 | R-11 | インシデント対応（改ざん・連絡先漏えい） | 信用毀損 | (a) Cloudflare のセキュリティイベント or UptimeRobot で監視、(b) 漏えい時の対応者 = 運営者本人、(c) 最低限の連絡先 + 手順を `docs/incident-response.md` に記載（Phase 1a 末） | インシデント発生時 | 運営者 |
-| R-12 | 時間捻出リスク（本業繁忙期に Phase 1a が止まる） | 全体スケジュール延伸 | 月別の現実投下時間見積を持つ / Phase ごと +50% バッファ。停滞時は Phase 縮小（FR-19 を 1c → Phase 2 に等）で対応 | Phase 1a で 1 週間以上の進捗ゼロ | 運営者 |
+| R-12 | 時間捻出リスク（本業繁忙期に Phase 1a が止まる） | 全体スケジュール延伸 | 月別の現実投下時間見積を持つ / Phase ごと +50% バッファ。停滞時は Phase 縮小（FR-19 を 1e → Phase 2 に等）で対応 | Phase 1a で 1 週間以上の進捗ゼロ | 運営者 |
 | R-13 | バックアップ（GitHub アカウント停止リスク） | 全資産喪失 | Git は GitHub + ローカル + 別オフサイト（外付け SSD or 別 git ホスティングへの mirror）。`docs/backup-policy.md` に記載 | アカウント停止通知 | 運営者 |
 | R-14 | デプロイ先のフリープラン制限（CF Pages のビルド回数制限等） | 公開停止 | 月初に CF Pages ダッシュボードで使用量確認。法人化後は有料プラン契約を検討 | 月使用量 80% 到達 | 運営者 |
 | R-15 | 依存スタック（Astro 6 / Tailwind v4 / shadcn）の若さ | 破壊的変更頻度高 | major up は専用ブランチで検証、本サイトを pin で運用。リリースノートを月次で確認 | 月次レビュー | Claude |
@@ -465,7 +472,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | Q8 | デプロイ先 | インフラ | **確定: Cloudflare Workers**（Decision #17 参照） |
 | Q9 | アクセス解析ツール | 全ページ + Footer | **確定: Cloudflare Web Analytics**（Decision #18 参照） |
 | Q10 | プライバシーポリシー本文 | `/privacy` | テンプレ 2 案（簡易 / 詳細）+ アクセス解析・問合せ・Cookie 言及 |
-| Q11 | ロゴ製作の合格条件 / 反復上限 | Phase 1b ロゴ | 合格条件チェックリスト + 反復上限 5 ラウンド推奨（Decision #15 参照） |
+| Q11 | ロゴ製作の合格条件 / 反復上限 | Phase 1c ロゴ | 合格条件チェックリスト + 反復上限 5 ラウンド推奨（Decision #15 参照） |
 | Q12 | 記事のライセンス | 全記事 / Footer | 3 案（CC BY 4.0 / CC BY-NC 4.0 / All rights reserved） |
 | Q13 | コードハイライトライブラリとテーマ | tech 記事 | **確定: Shiki + github-light**（Decision #22 参照） |
 
@@ -500,13 +507,13 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 
 ## 12. 次アクション
 
-1. 本計画書 v3.8 のレビュー・確定（別セッション）
+1. 本計画書 v3.9 のレビュー・確定（別セッション）
 2. Phase 0 PBI 10 件のレビュー（別セッション、`docs/pbi/INDEX.md` 経由）
 3. Phase 0 実装着手：feat/phase-0 ブランチで Vite 削除 + Astro 初期化（別セッション、複数セッションに分かれる可能性あり）
 4. Phase 0 完了 → Retrospective Gate (PHASE0-010) 通過
 5. 別セッションで Phase 1a PBI を起票（Gate の申し送りを反映）
 6. Phase 1a レビュー → Phase 1a 実装
-7. 以降、Phase 1b / 1c / 2 を同様のサイクルで進行
+7. 以降、Phase 1b（コンテンツ整備）/ 1c（デザイン）/ 1d（公開）/ 1e（カテゴリ別一覧）/ 2 を同様のサイクルで進行
 
 PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v2.8 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
@@ -553,7 +560,8 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 新規 PBI 追加時のリンク | INDEX.md 表 + 推奨着手順序図 / 関連 PBI の依存表記 | INDEX.md および関連 PBI を Read |
 | ファイルリネーム時 | INDEX.md / 各 PBI の参照 / site-plan §6.7 | `grep -rn "<旧ファイル名>" docs/` |
 | writing-workflow.md 作成タイミング | site-plan §6.4 ディレクトリ構成 + §11 + R-01 リスク対応 | `grep -rn "writing-workflow" docs/` |
-| 法人化関連の表記 / Phase 名 | site-plan §13 + 関連 PBI（Phase 1c 以降） | `grep -rn "法人化\|byte-lark 株式会社" docs/` |
+| 法人化関連の表記 / Phase 名 | site-plan §13 + 関連 PBI（Phase 1e 以降） | `grep -rn "法人化\|byte-lark 株式会社" docs/` |
+| Phase 再編（v3.9）の読み替え | 現参照（§7 / FR / Decision / R / Q / CLAUDE.md / INDEX.md / ドラフト PBI）は新 Phase 名。**Done 済み PBI 内の旧表記は書き換えず**「旧 1b → 新 1c、旧 1c → 新 1e」と読む | `grep -rn "Phase 1[b-e]" docs/ CLAUDE.md` |
 | 運営者向けプロトコル変更（フレーズ / リカバリー / トラブルシューティング） | operation-manual.md + CLAUDE.md ヘッダー + INDEX.md 着手ルール | `grep -rn "operation-manual\|中断 signal\|セッション開始時の必須チェック" docs/ CLAUDE.md` |
 | ブランチ運用 / worktree / Phase ブランチ命名 | README.md §10 + operation-manual.md §1 §3 §4 + PHASE0-008（CF Pages filter）+ PHASE0-010（main マージ手順）+ CLAUDE.md ヘッダー | `grep -rn "feat/phase-\|worktree\|sub-branch\|merge --no-ff" docs/ CLAUDE.md` |
 | Cloudflare Pages branch filter 設定 | PHASE0-008 + operation-manual.md §3 + README §10.8 | `grep -rn "Branch Filter\|Custom branches\|Preview branch" docs/` |
@@ -584,3 +592,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-05-03 | v3.7：ブランチ運用方針確定。README.md §10 新設（Phase ブランチ + 常時 PBI sub-branch + worktree 並行 / merge --no-ff / sub-branch マージ後保持 / CF Pages Preview Branch Filter 必須 / main 保護 / Hotfix）。operation-manual.md / PHASE0-007 / PHASE0-009 / CLAUDE.md ヘッダに連動反映、§14 row 1 拡張・運用ルール表に「ブランチ運用」「CF Pages branch filter」行追加 |
 | 2026-05-03 | PHASE0 PBI 番号を着手順序に整列（旧 010→新 006、旧 006→新 007、旧 007→新 008、旧 008→新 009、旧 009→新 010）。本日以前の改訂履歴行に出てくる PBI 番号は当時の番号付けを参照 |
 | 2026-05-08 | v3.8：PHASE0-010 Retrospective Gate 事実修正。§6.4 `tailwind.config.ts` 削除（Tailwind v4 は CSS ベース設定）、Decision #21 を shadcn 4.x preset 体系に更新 |
+| 2026-06-13 | v3.9：Phase 再編（公開の独立フェーズ化）。1b = コンテンツ整備（新設）、1c = デザイン（旧 1b）、1d = 公開（新設、旧 PHASE1A-018 を移管）、1e = カテゴリ別一覧（旧 1c）。背景：本番 Worker が Phase 0 placeholder のまま・MX が apex 名指し・www に旧 Netlify サイト稼働という現状調査結果を受け、未完成サイトの公開を防ぐ構成に変更。Decision #25 #26 追加（公開フェーズ分離 / Contact 自前フォーム = Worker + Turnstile + Resend）、FR-29 追加、PHASE1A-020 の検証 URL を branch alias に変更、ドラフト 2 本作成（draft-phase1b-content-launch-prep.md / draft-phase1d-domain-launch.md）。Done 済み PBI 内の旧 Phase 名は当時表記のまま（読み替え：旧 1b → 新 1c、旧 1c → 新 1e） |
