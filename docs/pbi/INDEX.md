@@ -122,7 +122,7 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 | PHASE1A-016 | [notfound-page](20260510-PHASE1A-016-notfound-page.md) | Done |
 | PHASE1A-017 | [rss-sitemap-robots](20260510-PHASE1A-017-rss-sitemap-robots.md) | Done |
 | PHASE1A-018 | [custom-domain-analytics](20260510-PHASE1A-018-custom-domain-analytics.md) | Moved |
-| PHASE1A-019 | [e2e-tests-a11y](20260510-PHASE1A-019-e2e-tests-a11y.md) | InProgress |
+| PHASE1A-019 | [e2e-tests-a11y](20260510-PHASE1A-019-e2e-tests-a11y.md) | Done |
 | PHASE1A-020 | [lighthouse-cwv-production](20260510-PHASE1A-020-lighthouse-cwv-production.md) | NotStarted |
 | PHASE1A-021 | [incident-response](20260510-PHASE1A-021-incident-response.md) | NotStarted |
 | **PHASE1A-022** | [**retrospective-gate**](20260510-PHASE1A-022-retrospective-gate.md) **(Gate)** | **NotStarted** |
