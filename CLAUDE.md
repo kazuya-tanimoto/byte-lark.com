@@ -9,7 +9,7 @@
 
 ## Build & Test Commands
 - yarn dev / build / preview
-- yarn test:run / test:e2e
+- yarn test:run / test:e2e（test:e2e は Bash サンドボックスで Chromium 起動不可 → push 後に CI で実行。§7 / Sandbox 制約参照）
 - yarn check / check:ts / fix
 - yarn new-post --slug <slug> [--title "Title"] [--category tech|life]
 
@@ -49,10 +49,12 @@
    - **CF preview 検証**: push 後に Playwright で CF branch alias URL を開いてスクリーンショット確認
      - Branch alias URL（feat/phase-1a 固定）: `https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev`
      - ※ version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行に記載される
+   - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**push 後に CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。`bash scripts/ci-status.sh` で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）
    ```
    ## 検証報告
    - ローカル確認: （dev server で確認した内容）
    - CF preview 確認: https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev （スクリーンショットまたは観察事実）
+   - E2E/CI 確認: `scripts/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
    - 未検証項目: （あれば正直に書く）
    ```
 8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit
@@ -68,13 +70,14 @@
 - Read the Gate PBI's "次 Phase への申し送り" section
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
 - Draft next-Phase PBIs reflecting the learnings
-- **All drafted PBIs MUST carry the §7 verification gate in 受け入れ条件** (ローカル / CF preview スクショ確認, テンプレ常設・非該当は `[x] …：N/A（理由）`). README §4.6 ルール 7。INDEX.md セッション開始チェックが起票漏れを機械検出する
+- **All drafted PBIs MUST carry the §7 verification gate in 受け入れ条件** (ローカル / CF preview スクショ確認 + E2E/CI green 確認, テンプレ常設・非該当は `[x] …：N/A（理由）`). README §4.6 ルール 7。INDEX.md セッション開始チェックが起票漏れを機械検出する
 - Append to INDEX.md as Status: NotStarted
 - Commit on the Phase branch (docs-only)
 
 ## Sandbox 制約
 - Phase 1a 以降の git 操作は feat/phase-1a を直接チェックアウトして行う（sub-branch 不使用、worktree 不使用）。feat/phase-1a に直 commit / 直 push する（詳細: docs/pbi/README.md §10.4-10.5）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
+- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `scripts/ci-status.sh` で合否を読む（gh CLI は sandbox 内で TLS/keychain により不可、curl は可）。UI スクショ確認は MCP Playwright で行う
 
 ## Commit Convention
 - feat(pbi): PHASE0-NNN <desc>   # PBI completion

@@ -21,6 +21,7 @@ Status: NotStarted
 - [ ] Cloudflare ダッシュボードでのセキュリティイベント確認手順の概要
 - [x] ローカル スクショ確認（desktop + mobile）：N/A（理由：本 PBI は docs 作成のみで UI を変更しない）（CLAUDE.md §7）
 - [x] CF preview スクショ確認（branch alias URL）：N/A（理由：UI 変更なし）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）：N/A（理由：本 PBI は docs 作成のみでコード非変更）（CLAUDE.md §7）
 
 ## 技術メモ
 - 法人化前は対応者 = 運営者本人のみ。法人化後（§13）に組織体制へ更新

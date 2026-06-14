@@ -102,7 +102,7 @@
 | NFR-03 | TypeScript strict、ビルド時型チェック通過 | |
 | NFR-04 | Lint 通過（Biome 2 を採用） | `.astro` 対応のため override 設定で対象範囲調整 |
 | NFR-05 | 単体テスト：React Island 部分 (.tsx) と lib/ ロジックを Vitest でカバー | `.astro` は SSR 専用テンプレで Vitest 直接対象外、Playwright で担保 |
-| NFR-06 | E2E テスト：主要画面遷移と挙動を Playwright で検証 | 既存 tests/ は Playwright 公式デモのテンプレ 2 本のみ。**自プロジェクト用は新規作成**。設定（playwright.config.ts）は流用 |
+| NFR-06 | E2E テスト：主要画面遷移と挙動を Playwright で検証 | 既存 tests/ は Playwright 公式デモのテンプレ 2 本のみ。**自プロジェクト用は新規作成**。設定（playwright.config.ts）は流用。**実行・検証は CI（`.github/workflows/ui-tests.yml`、Playwright 公式コンテナ）で自動化**——Bash サンドボックスは Chromium 起動不可のため `yarn test:e2e` のローカル実行不可、`scripts/ci-status.sh` で合否確認（Decision #27） |
 | NFR-07 | Lighthouse スコア：Performance / Accessibility / SEO すべて 90+ | SSG なので達成容易 |
 | NFR-08 | 依存追加は最小限 | |
 | NFR-09 | OGP / SEO メタは SSG 時に静的生成（クライアント JS 非依存） | Astro の標準機能で担保 |
@@ -439,6 +439,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | 24 | 和文フォントは **@fontsource-variable/noto-sans-jp**（セルフホスト） | 既存 Geist と同パターンで統一 / CSP 設定不要 / パフォーマンス制御しやすい | Google Fonts CDN → 外部リクエスト + Workers CSP 設定が別途必要 |
 | 25 | **Phase 再編（v3.9）**：公開を独立フェーズ 1d に分離、1b をコンテンツ整備として新設（旧 1b デザイン → 1c、旧 1c カテゴリ → 1e）。公開は 1c 完了 + 初期記事セット + 再 QA を前提条件とする | 未完成サイト（仮デザイン・サンプル記事・未承認文面・旧コード由来の Career / Skills）を法人ドメインで公開・クロールさせないため / 公開は DNS・メール継続（MX が apex 名指し）・旧 www Netlify サイトの畳みを含む一度きりの重要イベントで独立管理が必要 / コンテンツ先・デザイン後にすると実記事でタイポ・カード設計を検証でき手戻りがない | 1a 内で公開（旧計画）→ main は Hello, World! のままで公開すると placeholder がクロールされる / production branch 一時切替 → 未完成サイトの全世界公開で棄却 |
 | 26 | **Contact は自前フォームに置換**（Worker `/api/contact` + Cloudflare Turnstile + Resend、送信元は `send.byte-lark.com` サブドメイン認証、API キーは Workers secret、mailto 廃止）（FR-29） | アドレス平文公開は収集ボットに拾われ、CF のメール難読化は Workers 配信に不適用（公式 docs 明記）/ メーラー未設定環境では mailto が無反応で商談機会を取りこぼす / Turnstile・Resend とも無料枠で月数十件は余裕 / CSRF はセッション認証なしのため主論点でなく、対策の本命は Turnstile サーバー側検証 + レートリミット | mailto 維持 → スパム露出 + UX 劣化 / Google Form → 法人サイトの体裁劣化・Google 依存 / SES → サンドボックス解除等の手間が小規模用途に見合わない |
+| 27 | **E2E は CI（GitHub Actions）で検証**：`yarn test:e2e` は Bash サンドボックスで Chromium が起動できない（macOS Seatbelt が Mach port 登録を拒否、FATAL）。CI（`.github/workflows/ui-tests.yml`）を Playwright 公式コンテナ `mcr.microsoft.com/playwright:v<ver>-noble` 化し push で自動実行、Claude は `scripts/ci-status.sh`（無認証 REST API、public repo）で合否確認。スクショ確認は MCP Playwright で実施 | 旧 `--with-deps` は noble runner の apt で 60 分ハング→timeout でテスト未実行だった / 運営者手動実行は自走を妨げる / gh CLI は sandbox 内で TLS・keychain により不可、curl は可 | 運営者ターミナル手動実行（旧 PBI 019 前提）→ 毎回手作業で自走せず / sandbox で直接実行 → Chromium 起動不可 |
 
 ## 9. リスク / 留意事項
 
@@ -597,3 +598,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-05-03 | PHASE0 PBI 番号を着手順序に整列（旧 010→新 006、旧 006→新 007、旧 007→新 008、旧 008→新 009、旧 009→新 010）。本日以前の改訂履歴行に出てくる PBI 番号は当時の番号付けを参照 |
 | 2026-05-08 | v3.8：PHASE0-010 Retrospective Gate 事実修正。§6.4 `tailwind.config.ts` 削除（Tailwind v4 は CSS ベース設定）、Decision #21 を shadcn 4.x preset 体系に更新 |
 | 2026-06-13 | v3.9：Phase 再編（公開の独立フェーズ化）。1b = コンテンツ整備（新設）、1c = デザイン（旧 1b）、1d = 公開（新設、旧 PHASE1A-018 を移管）、1e = カテゴリ別一覧（旧 1c）。背景：本番 Worker が Phase 0 placeholder のまま・MX が apex 名指し・www に旧 Netlify サイト稼働という現状調査結果を受け、未完成サイトの公開を防ぐ構成に変更。Decision #25 #26 追加（公開フェーズ分離 / Contact 自前フォーム = Worker + Turnstile + Resend）、FR-29 追加、PHASE1A-020 の検証 URL を branch alias に変更、ドラフト 2 本作成（draft-phase1b-content-launch-prep.md / draft-phase1d-domain-launch.md）。Done 済み PBI 内の旧 Phase 名は当時表記のまま（読み替え：旧 1b → 新 1c、旧 1c → 新 1e） |
+| 2026-06-14 | E2E 検証を CI ルートに正式化（クラリフィケーション、v 番号据え置き）。`ui-tests.yml` を Playwright 公式コンテナ化して install ハング/timeout を解消、`scripts/ci-status.sh` 追加。Decision #27 追加・NFR-06 に CI 検証注記。§7 検証ゲートを 2→3 項目化（E2E/CI green 確認を常設、README §4.6 ルール 7 / 受け入れ条件テンプレ / INDEX セッション開始チェック / CLAUDE.md §7 連動、PBI 021・022 に N/A 行追加）。PBI 019 に事後追記で前方参照。旧「E2E は運営者ターミナル手動」前提は本日以降 CI 検証に置換 |
