@@ -191,7 +191,7 @@ slug: vite-react-spa-ogp-pitfall      # frontmatter で明示推奨（ファイ�
 ├── tsconfig.json
 ├── biome.jsonc                       Biome 2 設定（.astro override 含む）
 ├── package.json
-├── public/                           静的アセット（favicon, robots.txt, og-default.png）
+├── public/                           静的アセット（favicon.svg〔暫定・意匠は Phase 1c〕, robots.txt, og-default.png）
 ├── src/
 │   ├── assets/                       ビルド時最適化対象（logo, ヒーロー画像）
 │   │   ├── logo.svg                  Phase 1c で更新予定
@@ -216,6 +216,7 @@ slug: vite-react-spa-ogp-pitfall      # frontmatter で明示推奨（ファイ�
 │   │   ├── career.ts
 │   │   ├── qualifications.ts          保有資格データ（FR-15、Phase 1a で新規作成）
 │   │   └── skills.ts
+│   ├── types/                        型定義（Phase 1a で追加：career.ts / qualifications.ts / skills.ts）
 │   ├── layouts/
 │   │   ├── BaseLayout.astro          共通レイアウト（meta / OGP / canonical / JSON-LD / Header / Footer）
 │   │   ├── PageLayout.astro          一般ページ用
@@ -467,18 +468,18 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 
 | # | 項目 | 影響範囲 | Claude のアプローチ |
 |---|---|---|---|
-| Q1 | Hero の肩書 / キャッチ / 自己紹介 1-2 行 | HomePage Hero | 肩書 3 案 + キャッチ 3 案 + 自己紹介 3 案 |
-| Q2 | About の本文（経歴サマリ・興味領域・OSS 活動） | AboutPage | 文体 2 案（ですます / 体言止め）× 構成 2 案 |
-| Q3 | Contact の問合せメール（法人化前後で分けるか） | ContactPage / Footer | 運用パターン 3 案 |
-| Q4 | Footer 法人メタ情報（法人化前の表記） | Footer | 表記方針 3 案 |
+| Q1 | Hero の肩書 / キャッチ / 自己紹介 1-2 行 | HomePage Hero | **確定: 肩書「現場を前に進める PM / PO」**（PHASE1A-008 で 3 案から運営者選定） |
+| Q2 | About の本文（経歴サマリ・興味領域・OSS 活動） | AboutPage | **確定: ですます調 × 見出し整理型**（PHASE1A-009 で運営者選定。最終文面承認は Phase 1b） |
+| Q3 | Contact の問合せメール（法人化前後で分けるか） | ContactPage / Footer | **確定: tanimoto@byte-lark.com**（PHASE1A-006 / 014、Footer・Contact 共通） |
+| Q4 | Footer 法人メタ情報（法人化前の表記） | Footer | **確定: 「byte-lark（個人事業主）」+「2026年6月 法人化予定」**（PHASE1A-006、§13.1 準拠） |
 | Q5 | 記事 cover 画像の運用方針 | Blog 全般 | **確定: 装飾不要**（optional フィールドのみ定義、Decision #23 参照） |
-| Q6 | SNS リンクの配置（GitHub / X / その他） | HomePage / Footer | 配置場所 × 載せる種類のマトリクス + 推奨組合せ 2 案 |
-| Q7 | byte-lark 法人ドメインメール / 個人メール の使い分け | Contact 全般 | 役割別運用案 |
+| Q6 | SNS リンクの配置（GitHub / X / その他） | HomePage / Footer | **確定: GitHub リンクのみ（Footer）**（PHASE1A-006） |
+| Q7 | byte-lark 法人ドメインメール / 個人メール の使い分け | Contact 全般 | **確定: tanimoto@byte-lark.com に統一**（PHASE1A-006 / 014。法人化後の切替は §13.2） |
 | Q8 | デプロイ先 | インフラ | **確定: Cloudflare Workers**（Decision #17 参照） |
 | Q9 | アクセス解析ツール | 全ページ + Footer | **確定: Cloudflare Web Analytics**（Decision #18 参照） |
-| Q10 | プライバシーポリシー本文 | `/privacy` | テンプレ 2 案（簡易 / 詳細）+ アクセス解析・問合せ・Cookie 言及 |
+| Q10 | プライバシーポリシー本文 | `/privacy` | **確定: 簡易案（5 章構成）**（PHASE1A-015。フォームなし・Cookieless ＋ 法人化改定が目前が根拠。最終文面承認は Phase 1b、法人化改定は §13.2） |
 | Q11 | ロゴ製作の合格条件 / 反復上限 | Phase 1c ロゴ | 合格条件チェックリスト + 反復上限 5 ラウンド推奨（Decision #15 参照） |
-| Q12 | 記事のライセンス | 全記事 / Footer | 3 案（CC BY 4.0 / CC BY-NC 4.0 / All rights reserved） |
+| Q12 | 記事のライセンス | 全記事 / Footer | **確定: CC BY 4.0**（PHASE1A-006、Footer に記載済み） |
 | Q13 | コードハイライトライブラリとテーマ | tech 記事 | **確定: Shiki + github-light**（Decision #22 参照） |
 
 ## 11. 執筆ワークフロー（別ドキュメント `docs/writing-workflow.md` で詳述）
@@ -520,7 +521,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 6. Phase 1a レビュー → Phase 1a 実装
 7. 以降、Phase 1b（コンテンツ整備）/ 1c（デザイン）/ 1d（公開）/ 1e（カテゴリ別一覧）/ 2 を同様のサイクルで進行
 
-PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v2.8 を参照。
+PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v2.9 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
 **運営者向け運用マニュアル**（シーン別フレーズ / リカバリー / トラブルシューティング）は `docs/operation-manual.md` を参照。
 
@@ -599,3 +600,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-05-08 | v3.8：PHASE0-010 Retrospective Gate 事実修正。§6.4 `tailwind.config.ts` 削除（Tailwind v4 は CSS ベース設定）、Decision #21 を shadcn 4.x preset 体系に更新 |
 | 2026-06-13 | v3.9：Phase 再編（公開の独立フェーズ化）。1b = コンテンツ整備（新設）、1c = デザイン（旧 1b）、1d = 公開（新設、旧 PHASE1A-018 を移管）、1e = カテゴリ別一覧（旧 1c）。背景：本番 Worker が Phase 0 placeholder のまま・MX が apex 名指し・www に旧 Netlify サイト稼働という現状調査結果を受け、未完成サイトの公開を防ぐ構成に変更。Decision #25 #26 追加（公開フェーズ分離 / Contact 自前フォーム = Worker + Turnstile + Resend）、FR-29 追加、PHASE1A-020 の検証 URL を branch alias に変更、ドラフト 2 本作成（draft-phase1b-content-launch-prep.md / draft-phase1d-domain-launch.md）。Done 済み PBI 内の旧 Phase 名は当時表記のまま（読み替え：旧 1b → 新 1c、旧 1c → 新 1e） |
 | 2026-06-14 | E2E 検証を CI ルートに正式化（クラリフィケーション、v 番号据え置き）。`ui-tests.yml` を Playwright 公式コンテナ化して install ハング/timeout を解消、`scripts/ci-status.sh` 追加。Decision #27 追加・NFR-06 に CI 検証注記。§7 検証ゲートを 2→3 項目化（E2E/CI green 確認を常設、README §4.6 ルール 7 / 受け入れ条件テンプレ / INDEX セッション開始チェック / CLAUDE.md §7 連動、PBI 021・022 に N/A 行追加）。PBI 019 に事後追記で前方参照。旧「E2E は運営者ターミナル手動」前提は本日以降 CI 検証に置換 |
+| 2026-06-14 | Phase 1a Retrospective Gate（PHASE1A-022）での事実修正（クラリフィケーション、v 番号据え置き）。§10 未決事項 Q1/Q2/Q3/Q4/Q6/Q7/Q10/Q12 を Phase 1a 実装での確定値に反映（各 PHASE1A-006/008/009/014/015 参照）、§12 の README 参照を v2.8 → v2.9、§6.4 構成図に `src/types/` と `public/favicon.svg`〔暫定〕を追記。なお main マージ＋本番デプロイは v3.9 Decision #25 で Phase 1d 移管済みのため Gate では実施せず（PHASE1A-022 マージ節を N/A 化、運営者承認） |
