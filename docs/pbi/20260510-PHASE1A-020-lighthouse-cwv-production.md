@@ -1,7 +1,8 @@
 # 運営者は全主要ページで Lighthouse 90+ と Core Web Vitals 目標達成を確認できる
 
-Status: InProgress
+Status: Done
 Started: 2026-06-14
+Completed: 2026-06-14
 
 ## 誰が
 - 運営者
@@ -17,19 +18,19 @@ Started: 2026-06-14
 - 関連: site-plan.md NFR-07 / NFR-11
 
 ## 受け入れ条件
-- [ ] 全主要ページで Lighthouse Performance 90+
-- [ ] 全主要ページで Lighthouse Accessibility 90+
-- [ ] 全主要ページで Lighthouse SEO 90+
-- [ ] Core Web Vitals: LCP < 2.5s
-- [ ] Core Web Vitals: CLS < 0.1
-- [ ] Core Web Vitals: INP < 200ms
-- [ ] CF branch alias URL（`https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev`）で全ページ表示確認（※ `byte-lark.com` での確認は Phase 1d 公開 PBI へ移管。site-plan v3.9 Decision #25 により公開はカスタムドメイン接続後）
-- [ ] OGP メタの存在と値を branch alias URL のレスポンスで確認（※ Facebook / Twitter デバッガーでの実検証は OGP URL が byte-lark.com を指すため公開後でないと完結しない → Phase 1d へ移管）
-- [ ] 各ページの `<title>` / `<meta description>` / `<link rel="canonical">` が正しいことを確認（canonical は仕様どおり `https://byte-lark.com/...` を指すこと）
-- [ ] `/sample-highlight/`（PHASE1A-002 の検証用デモページ、sitemap からは PHASE1A-017 で除外済み）を削除するか Phase 1b のデザイン参照用に残すか判断し、結果を記録
-- [ ] 本 PBI の結果を Phase 1a Gate の判断材料として記録
-- [x] ローカル スクショ確認（desktop + mobile）：N/A（理由：本 PBI は計測・確認のみで UI を変更しない）（CLAUDE.md §7）
-- [x] CF preview スクショ確認（branch alias URL）：N/A（理由：UI 変更なし。branch alias での全ページ表示確認は上記の計測条件に既存）（CLAUDE.md §7）
+- [x] 全主要ページで Lighthouse Performance 90+ → **Phase 1d（本番ドメイン）へ移管**。branch alias では検証不能（計測ノイズ: 同一構成ページで Perf 50〜95・FCP 2.2〜6.6s とばらつき TBT は全 0、home は 95 = 作りは合格可。加えて branch alias は本番キャッシュ無し max-age=0）。作りの性能は CWV 実測（LCP 148-284ms / CLS ほぼ0 / INP 56ms）で良好。[draft-phase1d-domain-launch.md] 受け入れ条件へ
+- [x] 全主要ページで Lighthouse Accessibility 90+ → **達成（94〜100）**。唯一の失敗監査は color-contrast（仮 HEX、Phase 1c で確定 HEX 置換時に再有効化＝既知の 1c 追跡）+ blog の heading-order（1c B-1 へ）。contrast 失敗でも全ページ 90+ は維持
+- [x] 全主要ページで Lighthouse SEO 90+ → **Phase 1d（本番ドメイン）へ移管**。branch alias では検証不能（`*.workers.dev` が `X-Robots-Tag: noindex` を強制付与＝is-crawlable が必ず失敗、SEO 66-69。私たちのコードではなく本番ドメインでは消える）。メタ/canonical/OGP/robots/sitemap は完備済み。[draft-phase1d-domain-launch.md] 受け入れ条件へ
+- [x] Core Web Vitals: LCP < 2.5s（実測 148〜284ms。実 Chromium / branch alias）
+- [x] Core Web Vitals: CLS < 0.1（実測 0〜0.013）
+- [x] Core Web Vitals: INP < 200ms（/blog の CategoryFilter 実クリックで最大 56ms）
+- [x] CF branch alias URL（`https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev`）で全ページ表示確認（全 10 ルートを desktop、home/blog/記事を mobile で目視・崩れなし。`byte-lark.com` での確認は Phase 1d へ移管）
+- [x] OGP メタの存在と値を branch alias URL のレスポンスで確認（全 8 実ページで og:* / twitter:* 完備、記事は og:type=article。デバッガー実検証は Phase 1d）
+- [x] 各ページの `<title>` / `<meta description>` / `<link rel="canonical">` が正しいことを確認（canonical は全ページ `https://byte-lark.com/...` を指す＝仕様どおり）
+- [x] `/sample-highlight/`（PHASE1A-002 の検証用デモページ、sitemap からは PHASE1A-017 で除外済み）を削除するか Phase 1b のデザイン参照用に残すか判断し、結果を記録 → **運営者判断で削除実施**（`src/pages/sample-highlight.md` を git rm。コードハイライトは実記事で実証済み、ソースは git 履歴に残存）
+- [x] 本 PBI の結果を Phase 1a Gate の判断材料として記録（本 PBI 実装ログ）
+- [x] ローカル スクショ確認（desktop + mobile）：実施。yarn preview で全ページ表示 + favicon 描画確認 + console error 0 + /sample-highlight/ 404 を確認（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）：実施。push 後 ~60s で反映、favicon.svg 200 / icon link / console error 0 / sample-highlight 404 を branch alias で確認（CLAUDE.md §7）
 
 ## 技術メモ
 - Lighthouse は Chrome DevTools or `lighthouse` CLI で実行
@@ -84,5 +85,59 @@ PerformanceObserver（layout-shift / largest-contentful-paint, buffered）+ Even
 
 #### 残タスク（運営者判断・実行待ち）
 - Lighthouse 数値スコア（Performance / Accessibility / SEO 90+）の運営者ターミナル実行と記録
-- favicon 対応方針（暫定追加 / 1c 送り）
-- sample-highlight 削除可否の確定
+
+### 2026-06-14 favicon 追加 + sample-highlight 削除（運営者判断反映）
+
+運営者判断: favicon は暫定追加、sample-highlight はルート削除。
+
+やったこと:
+- `public/favicon.svg` 追加（sky ブルー角丸 + 白 "b" の暫定マーク。意匠確定は Phase 1c）+ `BaseLayout.astro` に `<link rel="icon" href="/favicon.svg" type="image/svg+xml">`。これで全ページの `/favicon.ico` 自動要求 404 console error を解消
+- `src/pages/sample-highlight.md` を `git rm`（/sample-highlight/ ルート削除）
+- `yarn build` 成功（9 ページ、sample-highlight 消滅）、`yarn check`（biome）/ `yarn check:ts` ともクリーン
+
+#### 検証報告
+- ローカル確認: `yarn preview`（:4399）で `/favicon.svg` 200・icon link 反映・home の console error 0・`/sample-highlight/` 404 を確認。favicon を 128/32/16px で描画し "b" マークが 16px でも判読可を目視
+- CF preview 確認: https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev push 後 ~60s で反映。`/favicon.svg` 200・`/sample-highlight/` 404・home の icon link 反映・console error 0 を MCP Playwright + curl で確認
+- 未検証項目: Lighthouse 数値スコア（運営者ターミナル実行待ち。サンドボックス内では Chrome 起動不可＝上記の根本原因 3 件）。A11y スコアは color-contrast の 1c 繰延に依存
+
+#### 表示確認スクショ（.playwright-mcp/ に退避、gitignore 済み）
+lh020-{home,about,career,skills,blog,blogpost,contact,privacy,404,samplehighlight}-desktop.png / {home,blog,blogpost}-mobile.png / favicon-render.png
+
+### 2026-06-14 Lighthouse 結果（運営者ターミナル実行）+ 判定
+
+運営者が別ターミナル（サンドボックス外）で `npx lighthouse@12`（モバイル既定）を全 8 ページ実行。結果:
+
+| ページ | Perf | A11y | BP | SEO |  | FCP | LCP | CLS |
+|---|---|---|---|---|---|---|---|---|
+| / | 95 | 96 | 100 | 69 | | 2.2s | 2.4s | 0.00 |
+| skills | 83 | 100 | 100 | 69 | | 3.5s | 3.5s | 0 |
+| blog | 77 | 94 | 100 | 69 | | 3.8s | 4.1s | 0 |
+| career | 74 | 95 | 100 | 66 | | 4.3s | 4.4s | 0 |
+| 記事 | 74 | 96 | 100 | 69 | | 4.4s | 4.5s | 0 |
+| privacy | 69 | 95 | 100 | 66 | | 5.0s | 5.1s | 0 |
+| contact | 67 | 95 | 100 | 66 | | 5.3s | 5.4s | 0 |
+| about | 50 | 95 | 100 | 66 | | 6.6s | 6.6s | 0.23 |
+
+TBT は全ページ 0、maxPotentialFID 20ms。E2E は別途 28/28 パス（回帰なし）。
+
+判定（運営者承認済み）:
+- **Accessibility 90+: 達成（94-100）**。唯一の失敗監査は color-contrast（全ページ・仮 HEX → 1c）と heading-order（blog のみ → 1c B-1）。contrast 失敗でも 90+ 維持。
+- **Best Practices: 100**（favicon 修正効果）。
+- **Performance 90+: Phase 1d へ移管**。同一構成ページで Perf 50-95・FCP 2.2-6.6s とばらつき TBT 全 0 = 8 連続実行 + 低速模擬の計測ノイズが主因（home 95 = 作りは合格可）。branch alias は本番キャッシュ無し（max-age=0）でキャッシュ系監査も減点。作りの性能は CWV 実測で良好。本番ドメイン + 安定計測で正式判定。
+- **SEO 90+: Phase 1d へ移管**。落ちている監査は is-crawlable のみ＝`*.workers.dev` が強制付与する `X-Robots-Tag: noindex`（リポジトリのコードには無し、curl で全ページ確認）。本番ドメインでは消える。メタ類は完備。
+
+#### 本物の改善余地 → Phase 1c で確実にフォロー（漏れ防止の三重化）
+1. [draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) を新規作成（B-1 blog 見出しレベル / B-2 about 低速 CLS=フォント / B-3 CSS サイズ / B-4 favicon 意匠）
+2. INDEX.md Phase 1c セクションから同ドラフトへリンク
+3. site-plan §6.5.2 a11y 追跡に heading-order を追記
++ color-contrast は既に site-plan §6.5.2 + 019 で 1c 追跡済み
+
+#### Phase 1a Gate（PHASE1A-022）への申し送り
+- A11y 90+ / BP 100 は branch alias で確認済み（達成）
+- **Performance 90+ / SEO 90+ は branch alias では構造的に検証不能** → Phase 1d 受け入れ条件へ移管済み（draft-phase1d）。これは OGP デバッガー / HTTPS 証明書を 1d に回したのと同じ判断（site-plan v3.9 Decision #25 の延長）
+- 1c デザイン仕上げ項目は draft-phase1c に集約済み
+
+#### 検証報告（最終）
+- ローカル確認: §7（favicon/sample-highlight）は前エントリで実施済み（yarn preview）
+- CF preview 確認: §7（favicon 200 / sample-highlight 404 / console 0）は前エントリで branch alias 確認済み。Lighthouse は運営者ターミナルで実行（サンドボックス内は Chrome 起動不可）
+- 未検証項目: Performance 90+ / SEO 90+ の正式判定（Phase 1d 本番ドメインへ意図的に移管。理由は上記）

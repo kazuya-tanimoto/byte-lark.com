@@ -123,7 +123,7 @@ PHASE0-010 (retrospective gate) ← Phase 1a 移行前の必須ゲート
 | PHASE1A-017 | [rss-sitemap-robots](20260510-PHASE1A-017-rss-sitemap-robots.md) | Done |
 | PHASE1A-018 | [custom-domain-analytics](20260510-PHASE1A-018-custom-domain-analytics.md) | Moved |
 | PHASE1A-019 | [e2e-tests-a11y](20260510-PHASE1A-019-e2e-tests-a11y.md) | Done |
-| PHASE1A-020 | [lighthouse-cwv-production](20260510-PHASE1A-020-lighthouse-cwv-production.md) | InProgress |
+| PHASE1A-020 | [lighthouse-cwv-production](20260510-PHASE1A-020-lighthouse-cwv-production.md) | Done |
 | PHASE1A-021 | [incident-response](20260510-PHASE1A-021-incident-response.md) | NotStarted |
 | **PHASE1A-022** | [**retrospective-gate**](20260510-PHASE1A-022-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
@@ -176,7 +176,7 @@ PBI は **Phase 1a 完了 + Gate 通過後**に別セッションで起票する
 
 ## Phase 1c：デザインブラッシュアップ（旧 1b）
 
-PBI は **Phase 1b 完了後**に別セッションで起票する。
+PBI は **Phase 1b 完了後**に別セッションで起票する。**[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) を正式化する**（確定 HEX + color-contrast 再有効化、タイポ確定、ロゴ刷新、加えて PHASE1A-020 で判明した品質仕上げ: blog 見出しレベル / about 低速 CLS（フォント）/ CSS サイズ / favicon 意匠）。
 
 ---
 
@@ -217,3 +217,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-05-12 | Phase 1a PBI 2 回目レビュー反映：着手順序図の 012 依存に 008 追加、site-plan §6.4 に qualifications.ts 追加、002 に Noto Sans JP 導入追加、001/018 の「なんのために」に NFR-04/R-14 紐付け追加、11 件の PBI に yarn check:ts 受け入れ条件を統一追加（006/008-011/013-018） |
 | 2026-05-14 | Phase 1a PBI 3 回目レビュー反映：001 に README Lefthook 手順追記の受け入れ条件追加（PHASE0-010 申し送り反映）、017 の「導入」表現を「Phase 0 でインストール済み」に修正 |
 | 2026-06-13 | site-plan v3.9 Phase 再編を反映：PHASE1A-018 を Status: Moved（公開を Phase 1d へ移管）、凡例に Moved 追加、着手順序図から 018 を除外、Phase セクションを 1b コンテンツ整備 / 1c デザイン / 1d 公開 / 1e カテゴリ別一覧に再編、ドラフト 2 本（draft-phase1b-content-launch-prep.md / draft-phase1d-domain-launch.md）へのリンク追加。PHASE1A-020 の検証 URL を branch alias に変更、PHASE1A-022 に 018 例外と申し送り項目を追記 |
+| 2026-06-14 | PHASE1A-020 完了（Done）：A11y 90+ / BP 100 を branch alias 確認、Performance 90+ / SEO 90+ は branch alias 検証不能（noindex 強制 / 本番キャッシュ無し / 計測ノイズ）のため Phase 1d へ移管。favicon 追加 + sample-highlight 削除。1c デザイン仕上げ項目を draft-phase1c-design-polish.md に集約し Phase 1c セクションからリンク（漏れ防止） |

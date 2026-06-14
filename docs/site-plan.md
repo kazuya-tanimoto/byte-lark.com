@@ -279,6 +279,8 @@ Tailwind の theme extension で以下を定義。**Phase 1a 冒頭で仮 HEX �
 
 **a11y 追跡（PHASE1A-019 起点）**：仮 HEX の primary / hibari-sky（`oklch(0.685 ...)`）は白背景でコントラスト比約 2.8:1 と WCAG AA（4.5:1）未満のため、E2E の axe チェック（`tests/e2e/a11y.spec.ts`）で `color-contrast` ルールを**一時除外**している。**Phase 1c で確定 HEX に置換する際、コントラスト AA を満たす値を選定したうえでこの除外を解除し、color-contrast を再有効化すること**（NFR-02 の完全充足は確定 HEX 確定後）。
 
+**a11y 追跡 追加（PHASE1A-020 起点）**：Lighthouse で `/blog/` の見出しレベル飛び（h1→h3、`heading-order` 失敗。A11y スコアは 94 で 90+ は維持、axe の critical/serious では未検出）を確認。`BlogCard` の見出しを文脈で h2/h3 出し分けできるよう Phase 1c で対応する（[draft-phase1c-design-polish.md](../pbi/draft-phase1c-design-polish.md) B-1）。
+
 #### 6.5.3 タイポグラフィ
 
 - 英文：Inter / Geist 等のサンセリフ（Tailwind デフォルト or Google Fonts）

@@ -29,7 +29,8 @@ Status: Draft（番号なし。Phase 1c（デザイン）完了後の 1d 起票�
 ## 受け入れ条件（正式化時に精査）
 
 ### 公開前 QA
-- [ ] E2E（Playwright）グリーン + Lighthouse 90+ を branch alias で再確認（1c のデザイン変更後の状態で）
+- [ ] E2E（Playwright）グリーン（1c のデザイン変更後の状態で）
+- [ ] Lighthouse は branch alias では **A11y / Best Practices のみ**信頼できる。**Performance / SEO は branch alias では検証不能**（`*.workers.dev` の noindex 強制 + 本番キャッシュ無し + 計測ノイズ。PHASE1A-020 で確認）→ 下記「ドメイン接続後」で本番計測する
 
 ### NS 移管（メール無停止が最優先）
 - [ ] CF にゾーン追加 → インポートされたレコードを現 Xserver DNS と全件突合（MX / SPF / DKIM / send.byte-lark.com を重点確認）
@@ -42,6 +43,7 @@ Status: Draft（番号なし。Phase 1c（デザイン）完了後の 1d 起票�
 - [ ] Workers カスタムドメインとして byte-lark.com を接続（Workers & Pages > byte-lark > Settings > Domains & Routes）
 - [ ] HTTPS 有効確認（CF 自動証明書。現状の証明書切れエラーが解消されること）
 - [ ] https://byte-lark.com で全ページ表示確認
+- [ ] **Lighthouse Performance / SEO 90+ を byte-lark.com（本番ドメイン）で全主要ページ確認**（PHASE1A-020 から移管。branch alias では noindex で SEO が、計測ノイズ + 本番キャッシュ無しで Performance が検証できなかった。本番ドメイン + 本番キャッシュ + 安定計測で判定。A11y 90+ / BP 100 は 020 で branch alias 確認済み）
 
 ### www / 旧サイトの畳み
 - [ ] www の旧 Netlify サイトの扱いを運営者が決定（Netlify 側のサイト削除 or 放置）し、DNS の www CNAME → Netlify を撤去
