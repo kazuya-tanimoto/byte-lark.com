@@ -521,7 +521,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 6. Phase 1a レビュー → Phase 1a 実装
 7. 以降、Phase 1b（コンテンツ整備）/ 1c（デザイン）/ 1d（公開）/ 1e（カテゴリ別一覧）/ 2 を同様のサイクルで進行
 
-PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.1 を参照。
+PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.2 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
 **運営者向け運用マニュアル**（シーン別フレーズ / リカバリー / トラブルシューティング）は `docs/operation-manual.md` を参照。
 
@@ -602,3 +602,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-06-14 | E2E 検証を CI ルートに正式化（クラリフィケーション、v 番号据え置き）。`ui-tests.yml` を Playwright 公式コンテナ化して install ハング/timeout を解消、`scripts/ci-status.sh` 追加。Decision #27 追加・NFR-06 に CI 検証注記。§7 検証ゲートを 2→3 項目化（E2E/CI green 確認を常設、README §4.6 ルール 7 / 受け入れ条件テンプレ / INDEX セッション開始チェック / CLAUDE.md §7 連動、PBI 021・022 に N/A 行追加）。PBI 019 に事後追記で前方参照。旧「E2E は運営者ターミナル手動」前提は本日以降 CI 検証に置換 |
 | 2026-06-14 | Phase 1a Retrospective Gate（PHASE1A-022）での事実修正（クラリフィケーション、v 番号据え置き）。§10 未決事項 Q1/Q2/Q3/Q4/Q6/Q7/Q10/Q12 を Phase 1a 実装での確定値に反映（各 PHASE1A-006/008/009/014/015 参照）、§12 の README 参照を v2.8 → v2.9、§6.4 構成図に `src/types/` と `public/favicon.svg`〔暫定〕を追記。なお main マージ＋本番デプロイは v3.9 Decision #25 で Phase 1d 移管済みのため Gate では実施せず（PHASE1A-022 マージ節を N/A 化、運営者承認） |
 | 2026-06-14 | ガバナンス文書ドリフト一括是正（クラリフィケーション、v 番号据え置き）。README §10 ブランチ運用を deferred-merge に是正し README を v3.0 → v3.1 化（公開前 1a〜1c は feat/phase-1a 集約、main マージは 1d。site-plan §7 1d 行は元から整合）。連動して §12 の README 参照を v2.9 → v3.1 に訂正（前 Gate の v2.9 修正が誤り。README 現行は v3.0 だった）、§14 メンテ表の v2.x / v3.x 行を README の v3.x 名前空間移行に合わせて更新。CLAUDE.md line 69/90・operation-manual.md（毎 Phase マージ + 旧 worktree 記述）・INDEX.md も同コミットで是正。過去事実の改訂履歴行（直前の line 含む）と Done PBI 本体は不変のまま。 |
+| 2026-06-14 | 統合ブランチ改名（クラリフィケーション、v 番号据え置き。README v3.2 連動）。公開前 1a〜1c を集約する統合ブランチを `feat/phase-1a` → `feat/phase-1` にリネーム（sub-phase 名で統合ブランチを呼ぶ名前と中身のズレを解消。deferred-merge 構造は不変）。§12 の README 参照を v3.2 に更新。CLAUDE.md / README §10 / operation-manual.md / draft-phase1d の現行・前方参照と CF プレビュー URL（`feat-phase-1-...`）も連動更新。`feat/phase-*` パターン内なので CF filter / main 保護は無変更。Done PBI 本体の当時のブランチ名は不変。 |

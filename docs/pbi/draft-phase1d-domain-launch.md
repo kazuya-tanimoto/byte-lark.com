@@ -39,7 +39,7 @@ Status: Draft（番号なし。Phase 1c（デザイン）完了後の 1d 起票�
 - [ ] **メール送受信テスト**（tanimoto@byte-lark.com で送信・受信とも）
 
 ### マージ・ドメイン接続
-- [ ] feat/phase-1a 系列の最終状態を main へマージ（merge --no-ff、README §10.6）→ 本番 Worker デプロイ確認
+- [ ] feat/phase-1 系列の最終状態を main へマージ（merge --no-ff、README §10.6）→ 本番 Worker デプロイ確認
 - [ ] Workers カスタムドメインとして byte-lark.com を接続（Workers & Pages > byte-lark > Settings > Domains & Routes）
 - [ ] HTTPS 有効確認（CF 自動証明書。現状の証明書切れエラーが解消されること）
 - [ ] https://byte-lark.com で全ページ表示確認
@@ -74,6 +74,6 @@ PHASE1A-021 で監視の**設計**（push 型・自動検知ファースト）�
 
 ## 技術メモ
 
-- production branch の一時切替案（feat/phase-1a を本番化）は **棄却済み**（Decision #25 反対案欄）。マージ → 接続の順を守る
+- production branch の一時切替案（feat/phase-1 を本番化）は **棄却済み**（Decision #25 反対案欄）。マージ → 接続の順を守る
 - NS 切替の伝播は数分〜数時間。切替直後は新旧 NS が混在回答するため、メールテストは伝播確認後に行う
 - 公開直後に robots.txt / sitemap が正しく見えること（クロール開始時点の品質がインデックスの初期評価になる）

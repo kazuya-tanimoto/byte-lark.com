@@ -16,8 +16,8 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | **中断（コンテキスト消費 / 時間切れ）** | `ここまでで終了` / `中断します` / `今日はここまで` | InProgress な PBI の `## 実装ログ` に「やったこと / 残タスク / 学び / 想定外」追記 → WIP コミット → 報告 |
 | **再開（同一 PBI を続行）** | `続き進めて` / `再開して` | 該当 PBI の実装ログを読んで状況把握 → 続行 |
 | **Phase 0 全完了後の Phase 1a PBI 起票** | `Retrospective Gate (PHASE0-010) の申し送りに従って Phase 1a の PBI を起票して` | Gate PBI の「Phase 1a への申し送り」セクション + 各 Phase 0 PBI の実装ログを読み、Phase 1a PBI をドラフト |
-| **並行 PBI 開始指示** | `PHASE1A-001 と PHASE1A-002 を並行で進めたい。手順教えて` | 別ターミナルで 2 つ目の Claude Code セッションを `feat/phase-1a` 上で起動（worktree / sub-branch は v3.0 で廃止、単一ブランチに直 commit/push）。push 競合は `git pull --rebase` で解消（下記 Q6 / README §10.7） |
-| **公開フェーズ（1d）の main マージ承認** | `Phase 1d で公開、feat/phase-1a を main にマージしていい？` | Phase 1d PBI の受け入れ条件を再確認 → OK なら `git merge --no-ff feat/phase-1a` で main へマージ + push。**公開前の 1a / 1b / 1c Gate ではマージしない**（README §10.6 / site-plan §8 Decision #25） |
+| **並行 PBI 開始指示** | `PHASE1A-001 と PHASE1A-002 を並行で進めたい。手順教えて` | 別ターミナルで 2 つ目の Claude Code セッションを `feat/phase-1` 上で起動（worktree / sub-branch は v3.0 で廃止、単一ブランチに直 commit/push）。push 競合は `git pull --rebase` で解消（下記 Q6 / README §10.7） |
+| **公開フェーズ（1d）の main マージ承認** | `Phase 1d で公開、feat/phase-1 を main にマージしていい？` | Phase 1d PBI の受け入れ条件を再確認 → OK なら `git merge --no-ff feat/phase-1` で main へマージ + push。**公開前の 1a / 1b / 1c Gate ではマージしない**（README §10.6 / site-plan §8 Decision #25） |
 | **計画書のレビュー依頼** | （別セッションでレビュープロンプトを使用） | レビュー結果を別セッションから持ち込み、本セッションで反映 |
 | **その他全部** | （特に何もしない、Claude 任せ） | プロトコル通りに自動進行 |
 
@@ -77,8 +77,8 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 
 ### Q6: 並行作業中の `git push` が non-fast-forward で fail する
 
-- **原因**：別セッションが先に `feat/phase-1a` へ push しており、手元のブランチが古くなっている（worktree / sub-branch は v3.0 で廃止。並行作業は同一ブランチ上の複数セッション）
-- **対処**：`git pull --rebase origin feat/phase-1a` → conflict あれば手動 resolve（INDEX.md は隣接 PBI 行が同 hunk として競合しやすい）→ `git push origin feat/phase-1a`
+- **原因**：別セッションが先に `feat/phase-1` へ push しており、手元のブランチが古くなっている（worktree / sub-branch は v3.0 で廃止。並行作業は同一ブランチ上の複数セッション）
+- **対処**：`git pull --rebase origin feat/phase-1` → conflict あれば手動 resolve（INDEX.md は隣接 PBI 行が同 hunk として競合しやすい）→ `git push origin feat/phase-1`
 - **詳細**：[docs/pbi/README.md](pbi/README.md) §10.7 参照
 
 ## 5. 関連ドキュメント
@@ -101,3 +101,4 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | 2026-05-03 | site-plan v3.7 連動：シーン別操作表に「並行 PBI 開始」「Phase 完了 main マージ承認」追加、必須に main 保護 + CF Pages Branch Filter 追加、Q6（push 競合）追加 |
 | 2026-05-07 | Q6 に worktree 削除の sandbox 制約と運営者対処を追加（旧 Q6 → Q7 に繰り下げ） |
 | 2026-06-14 | ガバナンス文書ドリフト是正（README v3.1 連動）：シーン別表の「並行 PBI 開始」を worktree 廃止後の単一ブランチ運用に、「Phase 完了 main マージ承認」を公開フェーズ（1d）限定に修正。必須チェックリストの CF Pages Branch Filter から sub-branch Exclude を削除。トラブルシューティングから worktree 削除 Q6 を撤去（worktrees 廃止で発生し得ないため）、push 競合 Q7 を Q6 に繰り上げ + 原因記述を単一ブランチ並行に修正 |
+| 2026-06-14 | 統合ブランチ改名（README v3.2 連動）：シーン別表・Q6 の `feat/phase-1a` 参照を `feat/phase-1` に更新（1a〜1c を集約する統合ブランチ。deferred-merge 構造は不変） |

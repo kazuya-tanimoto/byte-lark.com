@@ -47,13 +47,13 @@
 7. Verify: UI/フロントエンド変更がある場合、PBI を Done にする前に以下を**すべて**実施して出力する（必須）:
    - **ローカル検証**: `yarn dev` を起動し Playwright でスクリーンショット確認（デスクトップ + モバイル幅）
    - **CF preview 検証**: push 後に Playwright で CF branch alias URL を開いてスクリーンショット確認
-     - Branch alias URL（feat/phase-1a 固定）: `https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev`
+     - Branch alias URL（feat/phase-1 固定）: `https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev`
      - ※ version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行に記載される
    - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**push 後に CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。`bash scripts/ci-status.sh` で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）
    ```
    ## 検証報告
    - ローカル確認: （dev server で確認した内容）
-   - CF preview 確認: https://feat-phase-1a-byte-lark.tanimoto-a49.workers.dev （スクリーンショットまたは観察事実）
+   - CF preview 確認: https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev （スクリーンショットまたは観察事実）
    - E2E/CI 確認: `scripts/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
    - 未検証項目: （あれば正直に書く）
    ```
@@ -66,7 +66,7 @@
 
 ### How to draft next-Phase PBIs
 - Only after current Phase Done + Retrospective Gate passed
-- Through Phase 1c, keep working on `feat/phase-1a` — do NOT branch from main (公開前は main 未マージで集約。README §10.3）。`git checkout -b feat/phase-<phase>` from main applies only to new phase lineages: Phase 0 (done) and post-publish 1e+ after Phase 1d merges feat/phase-1a into main (README §10.6, site-plan §8 Decision #25)
+- Through Phase 1c, keep working on the integration branch `feat/phase-1` — do NOT branch from main (公開前は main 未マージで集約。README §10.3）。`git checkout -b feat/phase-<phase>` from main applies only to new phase lineages: Phase 0 (done) and post-publish 1e+ after Phase 1d merges feat/phase-1 into main (README §10.6, site-plan §8 Decision #25)
 - Read the Gate PBI's "次 Phase への申し送り" section
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
 - Draft next-Phase PBIs reflecting the learnings
@@ -75,7 +75,7 @@
 - Commit on the Phase branch (docs-only)
 
 ## Sandbox 制約
-- Phase 1a 以降の git 操作は feat/phase-1a を直接チェックアウトして行う（sub-branch 不使用、worktree 不使用）。feat/phase-1a に直 commit / 直 push する（詳細: docs/pbi/README.md §10.4-10.5）
+- Phase 1a 以降の git 操作は統合ブランチ feat/phase-1 を直接チェックアウトして行う（sub-branch 不使用、worktree 不使用）。feat/phase-1 に直 commit / 直 push する（1a〜1c を集約、main マージは 1d。詳細: docs/pbi/README.md §10.4-10.6）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
 - E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `scripts/ci-status.sh` で合否を読む（gh CLI は sandbox 内で TLS/keychain により不可、curl は可）。UI スクショ確認は MCP Playwright で行う
 
@@ -87,7 +87,7 @@
 
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.9)
-- docs/pbi/README.md          PBI format spec (v3.1) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.2) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）

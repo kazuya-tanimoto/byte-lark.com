@@ -1,4 +1,4 @@
-# PBI フォーマット規約 (v3.1)
+# PBI フォーマット規約 (v3.2)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
@@ -279,9 +279,9 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 ### 10.1 ブランチ階層
 
 ```
-main                          保護対象。公開フェーズ（1d）で feat/phase-1a を一度だけマージ（Decision #25）
+main                          保護対象。公開フェーズ（1d）で feat/phase-1 を一度だけマージ（Decision #25）
 ├── feat/phase-0              Phase 0 ブランチ（完了・main マージ済み）
-├── feat/phase-1a             Phase 1a〜1c の作業を集約（直 commit/push、1d まで未マージ）
+├── feat/phase-1              Phase 1a〜1c の作業を集約（直 commit/push、1d まで未マージ）
 └── archive/vite-react-chakra 旧版退避（Phase 0 開始時に切った）
 ```
 
@@ -289,7 +289,7 @@ main                          保護対象。公開フェーズ（1d）で feat/
 
 | ブランチ | 命名 | 例 |
 |---|---|---|
-| Phase ブランチ | `feat/phase-<phase>` | `feat/phase-0`, `feat/phase-1a` |
+| Phase ブランチ | `feat/phase-<phase>` | `feat/phase-0`, `feat/phase-1`（1a〜1c を集約） |
 | Archive | `archive/<context>` | `archive/vite-react-chakra` |
 | Hotfix | `fix/<short>` | `fix/typo-readme` |
 
@@ -304,44 +304,44 @@ git checkout -b feat/phase-<phase>
 git push -u origin feat/phase-<phase>
 ```
 
-**公開前の Phase 1a〜1c は分岐しない**：未完成サイト（仮デザイン・サンプル記事・未承認文面）を main に載せない方針（site-plan §8 Decision #25）のため、1a〜1c は `feat/phase-1a` に集約して直 commit/push し、main へのマージは公開フェーズ（1d）まで遅延する（§10.6）。1b / 1c 開始時に新ブランチを切らず、`feat/phase-1a` をそのまま継続する。
+**公開前の Phase 1a〜1c は分岐しない**：未完成サイト（仮デザイン・サンプル記事・未承認文面）を main に載せない方針（site-plan §8 Decision #25）のため、1a〜1c は統合ブランチ `feat/phase-1` に集約して直 commit/push し、main へのマージは公開フェーズ（1d）まで遅延する（§10.6）。1b / 1c 開始時に新ブランチを切らず、`feat/phase-1` をそのまま継続する（ブランチ名は sub-phase でなく Phase 1 全体を表す。PBI ID は PHASE1B-NNN 等 sub-phase 単位で振る）。
 
 ### 10.4 PBI 着手時（直 commit/push）
 
-Phase 1a 以降は sub-branch・worktree を使わず、feat/phase-1a を直接チェックアウトして作業し commit / push する。
+Phase 1a 以降は sub-branch・worktree を使わず、統合ブランチ feat/phase-1 を直接チェックアウトして作業し commit / push する。
 
 ```bash
-# セッション開始: feat/phase-1a がチェックアウトされた状態で Claude Code を起動
+# セッション開始: feat/phase-1 がチェックアウトされた状態で Claude Code を起動
 git add <files>
 git commit -m "feat(pbi): PHASE1A-NNN <desc>"
-git push origin feat/phase-1a
+git push origin feat/phase-1
 ```
 
 **PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md 等）は本節対象外。Phase ブランチに直 commit してよい。
 
 ### 10.5 PBI 完了時
 
-§10.4 と同じブランチで commit / push する。マージ工程は不要（feat/phase-1a が Phase ブランチ兼作業ブランチ）。
+§10.4 と同じブランチで commit / push する。マージ工程は不要（feat/phase-1 が統合ブランチ兼作業ブランチ）。
 
 ```bash
 # PBI 完了: 受け入れ条件確認 → STATUS: Done → INDEX.md 同期 → commit → push
 git add docs/pbi/PHASE1A-NNN-xxx.md docs/pbi/INDEX.md <実装ファイル群>
 git commit -m "feat(pbi): PHASE1A-NNN <desc>"
-git push origin feat/phase-1a
+git push origin feat/phase-1
 ```
 
 ### 10.6 main へのマージ（公開フェーズに集約）
 
-main へのマージは**公開フェーズ（Phase 1d）で一度だけ**実施する（site-plan §8 Decision #25）。公開前の Gate（1a / 1b / 1c）ではマージせず、`feat/phase-1a` に作業を積み上げる。未完成サイトを main 経由で本番公開・クロールさせないため。マージ手順は Phase 1d PBI（`draft-phase1d-domain-launch.md`）の受け入れ条件として実施：
+main へのマージは**公開フェーズ（Phase 1d）で一度だけ**実施する（site-plan §8 Decision #25）。公開前の Gate（1a / 1b / 1c）ではマージせず、`feat/phase-1` に作業を積み上げる。未完成サイトを main 経由で本番公開・クロールさせないため。マージ手順は Phase 1d PBI（`draft-phase1d-domain-launch.md`）の受け入れ条件として実施：
 
 ```bash
 # Phase 1d（公開）でのみ実行：
 git checkout main
 git pull origin main
-git merge --no-ff feat/phase-1a
+git merge --no-ff feat/phase-1
 git push origin main
 
-# feat/phase-1a も remote に保持（後で全体構造を見られる）
+# feat/phase-1 も remote に保持（後で全体構造を見られる）
 ```
 
 - **Phase 0 は本モデル制定前**に完了したため `feat/phase-0` を main へマージ済み（PHASE0-010、`6a38240`）。これは歴史的経緯で、現行の遅延マージ方針とは別。
@@ -349,12 +349,12 @@ git push origin main
 
 ### 10.7 並行作業の競合対処
 
-複数セッションが同時に feat/phase-1a に push すると non-fast-forward で後発が fail する：
+複数セッションが同時に feat/phase-1 に push すると non-fast-forward で後発が fail する：
 
 ```bash
-git pull --rebase origin feat/phase-1a
+git pull --rebase origin feat/phase-1
 # conflict（INDEX.md 等）あれば手動 resolve → git rebase --continue
-git push origin feat/phase-1a
+git push origin feat/phase-1
 ```
 
 ### 10.8 Cloudflare Pages の Preview Branch Filter（必須設定）
@@ -403,3 +403,4 @@ git push -u origin fix/<short-name>
 | 2026-06-07 | v2.9 | §10 ブランチ運用を Phase 1a 実績フローに刷新：sub-branch 廃止・常設 worktree `.claude/worktrees/phase-1a` への直 commit/push に変更（PHASE1A-008 完了時に同梱）。§10.1 階層図、§10.2 命名表（sub-branch 行削除）、§10.4 着手手順、§10.5 完了手順、§10.7 競合対処、§10.8 CF Pages filter を更新。CLAUDE.md Sandbox 制約行も同期。 |
 | 2026-06-10 | v3.0 | §10 worktree 廃止：feat/phase-1a を直接チェックアウトして作業するフローに変更。§10.1 階層図・§10.4 着手手順・§10.5 完了手順から worktree / EnterWorktree 参照を削除。CLAUDE.md Sandbox 制約行も同期。 |
 | 2026-06-14 | v3.1 | §10 ブランチ運用を deferred-merge に是正：公開前の 1a〜1c は feat/phase-1a に集約し、main マージは公開フェーズ 1d に集約（site-plan §8 Decision #25 整合）。§10.1 図 / §10.3（main 分岐は新規 Phase 系列のみ）/ §10.6（マージは 1d 集約、Phase 0 は制定前の歴史的マージと明記）を更新。CLAUDE.md line 69（次 Phase を main から分岐）と operation-manual.md（毎 Phase マージ承認 + v3.0 で廃止済みの worktree / sub-branch 記述）も連動是正。あわせて §4.6 ルール6 の項目数基準を網羅性の目安に降格し、§7 にサイズ判定の主基準（想定セッション数を技術メモに明記・2 セッション以上は必ず分割）を新設。タイトル version（旧 v2.8）と外部参照（CLAUDE.md / site-plan §12 の旧 v2.9）の版数ドリフトを v3.1 に統一（前 Gate が v2.9 と誤修正していたのを訂正、過去事実の改訂履歴行は不変のまま）。 |
+| 2026-06-14 | v3.2 | 統合ブランチを `feat/phase-1a` → `feat/phase-1` にリネーム（名前と中身のズレ解消：1a〜1c を集約する統合ブランチを sub-phase 名で呼んでいた問題。deferred-merge 構造は不変）。§10.1 図 / §10.2 命名例 / §10.3〜§10.7 のコマンド例の現行参照を feat/phase-1 に更新。CLAUDE.md（プレビュー URL + フロー）/ operation-manual.md / draft-phase1d（前方マージ参照）/ メモリも連動更新。ブランチは `feat/phase-*` パターン内なので CF preview filter / main 保護は無変更（プレビュー URL は `feat-phase-1-...` に変わる）。Done PBI 本体・v3.0/v3.1 改訂履歴行など過去事実は不変。 |
