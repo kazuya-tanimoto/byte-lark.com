@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v2.8)
+# PBI フォーマット規約 (v3.1)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-05-07
+最終更新: 2026-06-14
 
 ---
 
@@ -119,7 +119,7 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 3. **失敗ケース・エッジケース**も含める
 4. **自動検証可能な条件**は明示する（`yarn check:ts` がエラーなし、Lighthouse Accessibility 90+ 等）
 5. ユーザー操作可能な機能は Playwright で検証可能な粒度に書く
-6. 1 PBI で 5-15 項目が目安。20+ になる場合は **PBI 分割を検討**
+6. 受け入れ条件の項目数は**網羅性の目安**（観測条件・エッジケース・自動検証を漏らさないための確認用）であって、PBI のサイズ基準ではない。サイズ判定は §7 のスコープ基準（触るファイル群 × 外部依存・概ね 1 セッション）で行う。項目が 20+ に膨らむ場合は分割を検討する合図
 7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する
 
 ### 4.7 技術メモ
@@ -247,12 +247,14 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 
 ## 7. PBI 分割の判断
 
-以下に該当する場合は分割：
+**サイズ判定の主基準は実装スコープ**：触るファイル群 × 外部依存（API / 第三者アカウント準備 / DNS 等）から想定セッション数を見積もり、**各 PBI の技術メモに想定セッション数を明記する。2 セッション以上に見積もられるものは必ず分割**する。受け入れ条件の項目数は実装規模の代理にならない（例: PHASE1A-020 は受け入れ条件 13 項目だが実体は最重量級 143 行、Contact フォーム化は項目数小でも複数日）。
 
-- 受け入れ条件が 20 項目以上
+加えて以下に該当する場合も分割：
+
+- 受け入れ条件が 20 項目以上（網羅性の観点で肥大）
 - 複数のロール（訪問者 + 運営者等）が混在
 - 異なる Phase にまたがる
-- 概ね 1 営業日（人間換算）を超える
+- 概ね 1 営業日（人間換算 / 1 セッション）を超える
 
 ## 8. PBI を書かない場合
 
@@ -277,9 +279,9 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 ### 10.1 ブランチ階層
 
 ```
-main                          保護対象、Phase 完了時のみマージで更新
+main                          保護対象。公開フェーズ（1d）で feat/phase-1a を一度だけマージ（Decision #25）
 ├── feat/phase-0              Phase 0 ブランチ（完了・main マージ済み）
-├── feat/phase-1a             Phase 1a ブランチ（直 commit/push）
+├── feat/phase-1a             Phase 1a〜1c の作業を集約（直 commit/push、1d まで未マージ）
 └── archive/vite-react-chakra 旧版退避（Phase 0 開始時に切った）
 ```
 
@@ -291,7 +293,9 @@ main                          保護対象、Phase 完了時のみマージで�
 | Archive | `archive/<context>` | `archive/vite-react-chakra` |
 | Hotfix | `fix/<short>` | `fix/typo-readme` |
 
-### 10.3 Phase 開始時
+### 10.3 Phase 開始時（main から分岐する場合）
+
+main から新しい Phase ブランチを分岐するのは、**新規 Phase 系列の開始時のみ**（Phase 0、および公開後の 1e 以降）。
 
 ```bash
 git checkout main
@@ -299,6 +303,8 @@ git pull origin main
 git checkout -b feat/phase-<phase>
 git push -u origin feat/phase-<phase>
 ```
+
+**公開前の Phase 1a〜1c は分岐しない**：未完成サイト（仮デザイン・サンプル記事・未承認文面）を main に載せない方針（site-plan §8 Decision #25）のため、1a〜1c は `feat/phase-1a` に集約して直 commit/push し、main へのマージは公開フェーズ（1d）まで遅延する（§10.6）。1b / 1c 開始時に新ブランチを切らず、`feat/phase-1a` をそのまま継続する。
 
 ### 10.4 PBI 着手時（直 commit/push）
 
@@ -324,18 +330,22 @@ git commit -m "feat(pbi): PHASE1A-NNN <desc>"
 git push origin feat/phase-1a
 ```
 
-### 10.6 Phase 完了時（Phase ブランチを main へマージ）
+### 10.6 main へのマージ（公開フェーズに集約）
 
-Retrospective Gate PBI（PHASE0-010 等）の受け入れ条件として実施：
+main へのマージは**公開フェーズ（Phase 1d）で一度だけ**実施する（site-plan §8 Decision #25）。公開前の Gate（1a / 1b / 1c）ではマージせず、`feat/phase-1a` に作業を積み上げる。未完成サイトを main 経由で本番公開・クロールさせないため。マージ手順は Phase 1d PBI（`draft-phase1d-domain-launch.md`）の受け入れ条件として実施：
 
 ```bash
+# Phase 1d（公開）でのみ実行：
 git checkout main
 git pull origin main
-git merge --no-ff feat/phase-<phase>
+git merge --no-ff feat/phase-1a
 git push origin main
 
-# Phase ブランチも remote に保持（後で全体構造を見られる）
+# feat/phase-1a も remote に保持（後で全体構造を見られる）
 ```
+
+- **Phase 0 は本モデル制定前**に完了したため `feat/phase-0` を main へマージ済み（PHASE0-010、`6a38240`）。これは歴史的経緯で、現行の遅延マージ方針とは別。
+- 公開後の 1e 以降は §10.3 の通常フロー（main から分岐 → 完了時マージ）に復帰する。
 
 ### 10.7 並行作業の競合対処
 
@@ -362,7 +372,7 @@ Phase ブランチのみ preview deployment が生成される（sub-branch な�
 GitHub UI の Branch protection rules で main を保護：
 
 - 直接 push 禁止（PR 経由のみ、または管理者のみ許可）
-- Phase ブランチ（`feat/phase-*`）と sub-branch は保護なし、直接 push OK
+- Phase ブランチ（`feat/phase-*`）は保護なし、直接 push OK（sub-branch は v3.0 で廃止）
 
 ### 10.10 Hotfix（main に直接修正したい場合）
 
@@ -392,3 +402,4 @@ git push -u origin fix/<short-name>
 | 2026-05-07 | v2.8 | §5.3 step 2 の verify 範囲を「コマンド・version・flag・URL」から **scaffold / migration / setup の approach 自体**まで拡張。PHASE0-002 セッション 1 で `yarn create astro@latest .` が既存 repo 後付けに非対応で、approach そのものを Astro Manual Setup 節に切替える必要があった経験を規約化。Phase 0 PBI 全体 audit（PHASE0-005 / 006 / 008 の drift 補正）と同セッションで反映。 |
 | 2026-06-07 | v2.9 | §10 ブランチ運用を Phase 1a 実績フローに刷新：sub-branch 廃止・常設 worktree `.claude/worktrees/phase-1a` への直 commit/push に変更（PHASE1A-008 完了時に同梱）。§10.1 階層図、§10.2 命名表（sub-branch 行削除）、§10.4 着手手順、§10.5 完了手順、§10.7 競合対処、§10.8 CF Pages filter を更新。CLAUDE.md Sandbox 制約行も同期。 |
 | 2026-06-10 | v3.0 | §10 worktree 廃止：feat/phase-1a を直接チェックアウトして作業するフローに変更。§10.1 階層図・§10.4 着手手順・§10.5 完了手順から worktree / EnterWorktree 参照を削除。CLAUDE.md Sandbox 制約行も同期。 |
+| 2026-06-14 | v3.1 | §10 ブランチ運用を deferred-merge に是正：公開前の 1a〜1c は feat/phase-1a に集約し、main マージは公開フェーズ 1d に集約（site-plan §8 Decision #25 整合）。§10.1 図 / §10.3（main 分岐は新規 Phase 系列のみ）/ §10.6（マージは 1d 集約、Phase 0 は制定前の歴史的マージと明記）を更新。CLAUDE.md line 69（次 Phase を main から分岐）と operation-manual.md（毎 Phase マージ承認 + v3.0 で廃止済みの worktree / sub-branch 記述）も連動是正。あわせて §4.6 ルール6 の項目数基準を網羅性の目安に降格し、§7 にサイズ判定の主基準（想定セッション数を技術メモに明記・2 セッション以上は必ず分割）を新設。タイトル version（旧 v2.8）と外部参照（CLAUDE.md / site-plan §12 の旧 v2.9）の版数ドリフトを v3.1 に統一（前 Gate が v2.9 と誤修正していたのを訂正、過去事実の改訂履歴行は不変のまま）。 |

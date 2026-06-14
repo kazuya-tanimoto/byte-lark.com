@@ -1,6 +1,6 @@
 # 運用マニュアル（運営者向け）
 
-最終更新: 2026-05-07
+最終更新: 2026-06-14
 
 本ファイルは byte-lark.com プロジェクトの**運営者（人間ユーザー）向け運用マニュアル**です。Claude Code との多セッション運用において、運営者が「何を / いつ / どう言えばいいか」をまとめます。
 
@@ -16,8 +16,8 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | **中断（コンテキスト消費 / 時間切れ）** | `ここまでで終了` / `中断します` / `今日はここまで` | InProgress な PBI の `## 実装ログ` に「やったこと / 残タスク / 学び / 想定外」追記 → WIP コミット → 報告 |
 | **再開（同一 PBI を続行）** | `続き進めて` / `再開して` | 該当 PBI の実装ログを読んで状況把握 → 続行 |
 | **Phase 0 全完了後の Phase 1a PBI 起票** | `Retrospective Gate (PHASE0-010) の申し送りに従って Phase 1a の PBI を起票して` | Gate PBI の「Phase 1a への申し送り」セクション + 各 Phase 0 PBI の実装ログを読み、Phase 1a PBI をドラフト |
-| **並行 PBI 開始指示** | `PHASE1A-001 と PHASE1A-002 を別 worktree で並行で進めたい。worktree 切ってセッション 2 つ起動する手順教えて` | worktree + sub-branch のセットアップ手順を提示。運営者が別ターミナルで 2 つ目の Claude Code セッションを起動 |
-| **Phase 完了時の main マージ承認** | `Phase 0 完了確認、main へマージしていい？` | Gate PBI の受け入れ条件を再確認 → OK なら `git merge --no-ff` で main へマージ + push |
+| **並行 PBI 開始指示** | `PHASE1A-001 と PHASE1A-002 を並行で進めたい。手順教えて` | 別ターミナルで 2 つ目の Claude Code セッションを `feat/phase-1a` 上で起動（worktree / sub-branch は v3.0 で廃止、単一ブランチに直 commit/push）。push 競合は `git pull --rebase` で解消（下記 Q6 / README §10.7） |
+| **公開フェーズ（1d）の main マージ承認** | `Phase 1d で公開、feat/phase-1a を main にマージしていい？` | Phase 1d PBI の受け入れ条件を再確認 → OK なら `git merge --no-ff feat/phase-1a` で main へマージ + push。**公開前の 1a / 1b / 1c Gate ではマージしない**（README §10.6 / site-plan §8 Decision #25） |
 | **計画書のレビュー依頼** | （別セッションでレビュープロンプトを使用） | レビュー結果を別セッションから持ち込み、本セッションで反映 |
 | **その他全部** | （特に何もしない、Claude 任せ） | プロトコル通りに自動進行 |
 
@@ -39,7 +39,7 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 - **セッション終了前に必ず一言**：「終了」「中断」「ここまで」のいずれかを言ってから閉じる
 - **GitHub UI 操作**：Cloudflare Pages 接続（PHASE0-008）、リポジトリ設定変更等、Claude が手元で完結できない操作は運営者がダッシュボード操作
 - **main 保護設定**（プロジェクト初期化時 1 回）：GitHub UI の Branch protection rules で main への直接 push を禁止、PR 経由必須に
-- **Cloudflare Pages の Preview Branch Filter 設定**（プロジェクト初期化時 1 回）：CF Pages ダッシュボードで Custom branches に Include `feat/phase-*`、Exclude `feat/phase-*-pbi-*` を設定（PBI sub-branch を保持する運用のため、preview 大量生成を抑制）
+- **Cloudflare Pages の Preview Branch Filter 設定**（プロジェクト初期化時 1 回）：CF Pages ダッシュボードで Custom branches に Include `feat/phase-*` を設定（sub-branch は v3.0 で廃止したため Exclude パターンは不要。詳細 README §10.8）
 
 ### 推奨
 
@@ -75,20 +75,10 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 
 - **対処**：「計画書（site-plan）の §X や PBI の受け入れ条件と乖離している」と指摘、Claude に方針確認させる
 
-### Q6: Claude が `git worktree remove` に失敗する
+### Q6: 並行作業中の `git push` が non-fast-forward で fail する
 
-- **原因**：`@astrojs/sitemap` の依存パッケージ（`stream-replace-string`）が `node_modules` 内に `.vscode/` ディレクトリを含んでおり、Claude Code の sandbox が `.vscode/` パスへの書き込み・削除を一律ブロックするため
-- **対処**：運営者ターミナルで実行
-  ```bash
-  cd /Users/kazuya/src/react-blog
-  git worktree remove .claude/worktrees/<worktree名>
-  ```
-  git の管理情報だけ先に消えてディレクトリが残った場合は `rm -rf .claude/worktrees/<worktree名>` で削除
-
-### Q7: 並行作業中の `git push` が non-fast-forward で fail する
-
-- **原因**：並行する別 sub-branch から先に Phase ブランチへマージされ、自分の Phase ブランチが古くなっている
-- **対処**：`git pull --rebase origin feat/phase-<phase>` → conflict あれば手動 resolve（INDEX.md は隣接 PBI 行が同 hunk として競合しやすい）→ `git push origin feat/phase-<phase>`
+- **原因**：別セッションが先に `feat/phase-1a` へ push しており、手元のブランチが古くなっている（worktree / sub-branch は v3.0 で廃止。並行作業は同一ブランチ上の複数セッション）
+- **対処**：`git pull --rebase origin feat/phase-1a` → conflict あれば手動 resolve（INDEX.md は隣接 PBI 行が同 hunk として競合しやすい）→ `git push origin feat/phase-1a`
 - **詳細**：[docs/pbi/README.md](pbi/README.md) §10.7 参照
 
 ## 5. 関連ドキュメント
@@ -110,3 +100,4 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | 2026-05-03 | 初版作成（site-plan v3.6 連動）。シーン別操作表、中断リカバリー、運営者必須・推奨アクション、トラブルシューティング Q1-Q5、関連ドキュメント表 |
 | 2026-05-03 | site-plan v3.7 連動：シーン別操作表に「並行 PBI 開始」「Phase 完了 main マージ承認」追加、必須に main 保護 + CF Pages Branch Filter 追加、Q6（push 競合）追加 |
 | 2026-05-07 | Q6 に worktree 削除の sandbox 制約と運営者対処を追加（旧 Q6 → Q7 に繰り下げ） |
+| 2026-06-14 | ガバナンス文書ドリフト是正（README v3.1 連動）：シーン別表の「並行 PBI 開始」を worktree 廃止後の単一ブランチ運用に、「Phase 完了 main マージ承認」を公開フェーズ（1d）限定に修正。必須チェックリストの CF Pages Branch Filter から sub-branch Exclude を削除。トラブルシューティングから worktree 削除 Q6 を撤去（worktrees 廃止で発生し得ないため）、push 競合 Q7 を Q6 に繰り上げ + 原因記述を単一ブランチ並行に修正 |

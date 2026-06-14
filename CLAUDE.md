@@ -66,7 +66,7 @@
 
 ### How to draft next-Phase PBIs
 - Only after current Phase Done + Retrospective Gate passed
-- Create the Phase branch first: `git checkout -b feat/phase-<phase>` from main (README §10.3)
+- Through Phase 1c, keep working on `feat/phase-1a` — do NOT branch from main (公開前は main 未マージで集約。README §10.3）。`git checkout -b feat/phase-<phase>` from main applies only to new phase lineages: Phase 0 (done) and post-publish 1e+ after Phase 1d merges feat/phase-1a into main (README §10.6, site-plan §8 Decision #25)
 - Read the Gate PBI's "次 Phase への申し送り" section
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
 - Draft next-Phase PBIs reflecting the learnings
@@ -87,7 +87,7 @@
 
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.9)
-- docs/pbi/README.md          PBI format spec (v2.9) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.1) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）
