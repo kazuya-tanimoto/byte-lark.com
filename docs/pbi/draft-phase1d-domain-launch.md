@@ -55,6 +55,19 @@ Status: Draft（番号なし。Phase 1c（デザイン）完了後の 1d 起票�
 - [ ] Google Search Console にプロパティ登録（DNS 認証）+ sitemap-index.xml 送信
 - [ ] OGP デバッガー（Facebook Sharing Debugger / X Card Validator）で実検証（PHASE1A-020 から移管された項目）
 
+### 公開後の監視セットアップ（R-11 / incident-response.md §2 の自動検知を点火）
+
+PHASE1A-021 で監視の**設計**（push 型・自動検知ファースト）は確定済み。本番ドメインが立つここで**実装・点火**する。詳細は `docs/incident-response.md` §2。
+
+- [ ] 監視スクリプト `scripts/health-check.sh`（curl ベース）を作成：本番 URL（https://byte-lark.com）に対し (1) HTTP 200、(2) 改ざんカナリア（`<title>byte-lark.com</title>` 等の想定文字列の存在）、(3) セキュリティ/配信ヘッダが想定通り（公開後は noindex が**付かない**こと）、(4) TLS 証明書の残日数、を確認し、異常時のみ非 0 終了 + 通知。2 回連続失敗で通知等のしきい値で誤報を抑制
+- [ ] **Xserver の cron** に health-check.sh を登録（運営者）。監視する側＝ Xserver / 監視される側＝ Cloudflare の独立インフラ構成。cron は shell・PHP 両対応・外向き curl 可（運営者確認済み）
+- [ ] 異常時通知は**メール + Slack（Incoming Webhook）の二重**。Slack の Webhook URL は秘密情報なので Xserver 側の環境変数 / 権限を絞ったファイルに置き、**リポジトリに commit しない**（Secret scanning と整合）
+- [ ] GitHub セキュリティ通知（Dependabot / Secret scanning / Push protection）の有効化を確認（incident-response.md §2「今すぐやること」。1d 着手時に未設定なら ON）
+- heartbeat / dead man's switch は**本構成では不要**と判断（PHASE1A-021 で整理）：監視スクリプト・cron・業務メールがいずれも Xserver に同居し、Xserver 自体は provider が監視・復旧、サーバー/契約停止時はメール不通で気づくため。スクリプト/cron を変更したら一度手で実行して確認することだけ守る
+- [ ] （任意・推奨）UptimeRobot 等の外部死活監視を本番 URL に設定（死活の二重化・監視自身の watcher）
+- [ ] 動作確認：わざと canary を外した URL / ダウン状態を模擬し、メール + Slack に通知が実際に飛ぶことを確認（誤報しきい値含む）
+- 技術メモ：Claude を cron で回す案（claude.ai クラウド routine）は Claude 契約依存で「監視自身が止まると無通知」のため主役にしない。死活・改ざんの一次検知は Xserver cron に任せ、routine は使うなら週次の総合レビュー等の補助に留める
+
 ### 検証・記録
 - [ ] `yarn build` / `yarn check:ts` グリーン
 - [ ] メール・DNS の最終状態（全レコード）を本 PBI の実装ログに記録
