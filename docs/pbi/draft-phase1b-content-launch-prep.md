@@ -1,7 +1,16 @@
 # 【ドラフト】Phase 1b コンテンツ整備 PBI 群
 
-Status: Draft（番号なし。Phase 1a Gate（PHASE1A-022）通過後の 1b 起票セッションで、本ドラフトを分割して番号付き PBI として正式化する）
+Status: Formalized（2026-06-15 に正式化済み。本ファイルは分割案の根拠として歴史的に保持）
 作成: 2026-06-13（site-plan v3.9 Decision #25 / #26 と同時起票）
+
+> **正式化済み（2026-06-15）**：本ドラフト項目1〜6 を番号付き PBI として起票した。項目4（Contact フォーム化）は §7 基準で 4a/4b に分割。対応表：
+> - 項目1 → PHASE1B-001（skills-qualifications-refresh）
+> - 項目2 → PHASE1B-002（career-refresh-representative-projects）
+> - 項目3 → PHASE1B-003（about-privacy-content-finalize）
+> - 項目4 → PHASE1B-004（contact-form-backend）+ PHASE1B-005（contact-form-frontend）
+> - 項目5 → PHASE1B-006（sample-posts-disposition）
+> - 項目6 → PHASE1B-007（article-ideation-initial-set）
+> - 項目7（記事実装 × n）→ PHASE1B-007 完了時に PHASE1B-008〜 として追加起票（placeholder）
 
 ## 背景
 
