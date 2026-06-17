@@ -18,7 +18,7 @@ const headingId = `skills-category-${set.category_id}`;
           {skill.icon && <img src={skill.icon} alt="" width="28" height="28" loading="lazy" />}
           <div>
             <p class="text-sm font-medium text-foreground">{skill.name}</p>
-            <p class="text-xs text-muted-foreground">{skill.years} 年</p>
+            {skill.years != null && <p class="text-xs text-muted-foreground">{skill.years} 年</p>}
           </div>
         </li>
       ))

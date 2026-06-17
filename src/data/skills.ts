@@ -1,5 +1,9 @@
 import type { SkillSet } from "@/types/skills";
 
+// 年数は運営者確認済みの実務経験年数（2026-06、PHASE1B-001）。
+// 出典: career-docs/master-career-data.md + 職歴タイムライン（2014 職務経歴書 + 2024-08 スキルシート）。
+// アイコンは devicon の実在を raw.githubusercontent.com/devicon.json で照合済み。
+// 不在（SQL / Struts / AI 系）はアイコンなしで統一。
 export const skills: SkillSet[] = [
   {
     category_id: 1,
@@ -9,25 +13,25 @@ export const skills: SkillSet[] = [
         id: 1,
         name: "Linux",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
-        years: 7,
+        years: 12,
       },
       {
         id: 2,
         name: "Apache",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache/apache-original.svg",
-        years: 5,
+        years: 12,
       },
       {
         id: 3,
         name: "Nginx",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg",
-        years: 6,
+        years: 2,
       },
       {
         id: 4,
         name: "Oracle",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg",
-        years: 3,
+        years: 12,
       },
     ],
   },
@@ -39,48 +43,54 @@ export const skills: SkillSet[] = [
         id: 5,
         name: "PHP",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
-        years: 8,
+        years: 11,
       },
       {
         id: 6,
-        name: "C",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg",
-        years: 4,
+        name: "JavaScript",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+        years: 10,
       },
       {
         id: 7,
-        name: "Java",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
-        years: 9,
+        name: "TypeScript",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        years: 3,
       },
       {
         id: 8,
         name: "Python",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
-        years: 5,
+        years: 3,
       },
       {
         id: 9,
-        name: "JavaScript",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+        name: "Java",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
         years: 6,
       },
       {
         id: 10,
-        name: "Kotlin",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
-        years: 2,
+        name: "C",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg",
+        years: 6,
       },
       {
         id: 11,
         name: "VB.Net",
-        years: 10,
+        years: 6,
       },
       {
         id: 12,
         name: "ShellScript",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg",
-        years: 3,
+        years: 10,
+      },
+      {
+        id: 13,
+        name: "SQL",
+        // devicon に汎用 sql アイコンは存在しない（VB.Net / Struts / GAS 同様アイコンなし）
+        years: 12,
       },
     ],
   },
@@ -89,46 +99,40 @@ export const skills: SkillSet[] = [
     category_name: "Frameworks / Libraries",
     items: [
       {
-        id: 13,
-        name: "Laravel",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg",
-        years: 7,
-      },
-      {
         id: 14,
-        name: "Flask",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg",
-        years: 4,
-      },
-      {
-        id: 15,
         name: "React",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-        years: 5,
-      },
-      {
-        id: 16,
-        name: "TypeScript",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-        years: 6,
-      },
-      {
-        id: 17,
-        name: "Django",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg",
         years: 3,
       },
       {
+        id: 15,
+        name: "TailwindCSS",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+        years: 3,
+      },
+      {
+        id: 16,
+        name: "Laravel",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg",
+        years: 5,
+      },
+      {
+        id: 17,
+        name: "CodeIgniter",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/codeigniter/codeigniter-plain.svg",
+        years: 6,
+      },
+      {
         id: 18,
-        name: "FastAPI",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg",
+        name: "Flask",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg",
         years: 2,
       },
       {
         id: 19,
         name: "Struts",
-        // devicon に struts アイコンは存在しない（URL は 404）。VB.Net / GAS 同様アイコンなし
-        years: 8,
+        // devicon に struts アイコンは存在しない（URL は 404）。VB.Net / SQL / GAS 同様アイコンなし
+        years: 6,
       },
     ],
   },
@@ -140,13 +144,13 @@ export const skills: SkillSet[] = [
         id: 20,
         name: "MySQL",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
-        years: 9,
+        years: 11,
       },
       {
         id: 21,
         name: "PostgreSQL",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
-        years: 4,
+        years: 2,
       },
     ],
   },
@@ -156,33 +160,54 @@ export const skills: SkillSet[] = [
     items: [
       {
         id: 22,
-        name: "JetBrains",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jetbrains/jetbrains-original.svg",
-        years: 6,
+        name: "Git",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+        years: 12,
       },
       {
         id: 23,
-        name: "Neovim",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/neovim/neovim-original.svg",
-        years: 6,
+        name: "JetBrains",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jetbrains/jetbrains-original.svg",
+        years: 8,
       },
       {
         id: 24,
+        name: "Neovim",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/neovim/neovim-original.svg",
+        years: 3,
+      },
+      {
+        id: 25,
         name: "Docker",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
         years: 6,
       },
       {
-        id: 25,
+        id: 26,
         name: "GAS",
-        years: 6,
+        // devicon に GAS（Google Apps Script）アイコンは存在しない
+        years: 3,
       },
       {
-        id: 26,
+        id: 27,
         name: "Selenium",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg",
         years: 5,
       },
+    ],
+  },
+  {
+    category_id: 6,
+    category_name: "AI 活用",
+    // 年数表示に馴染まないため名前のみ。devicon に該当アイコンなし。
+    items: [
+      { id: 28, name: "Claude" },
+      { id: 29, name: "Claude Code" },
+      { id: 30, name: "Cursor" },
+      { id: 31, name: "GitHub Copilot" },
+      { id: 32, name: "ChatGPT" },
+      { id: 33, name: "Gemini" },
+      { id: 34, name: "MCP" },
     ],
   },
 ];

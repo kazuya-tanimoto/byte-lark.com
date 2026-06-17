@@ -178,7 +178,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 
 | ID | タイトル | Status |
 |---|---|---|
-| PHASE1B-001 | [skills-qualifications-refresh](20260615-PHASE1B-001-skills-qualifications-refresh.md) | NotStarted |
+| PHASE1B-001 | [skills-qualifications-refresh](20260615-PHASE1B-001-skills-qualifications-refresh.md) | InProgress |
 | PHASE1B-002 | [career-refresh-representative-projects](20260615-PHASE1B-002-career-refresh-representative-projects.md) | NotStarted |
 | PHASE1B-003 | [about-privacy-content-finalize](20260615-PHASE1B-003-about-privacy-content-finalize.md) | NotStarted |
 | PHASE1B-004 | [contact-form-backend](20260615-PHASE1B-004-contact-form-backend.md) | NotStarted |

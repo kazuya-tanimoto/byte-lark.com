@@ -14,10 +14,11 @@ const latestPosts = (
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
   .slice(0, 3);
 
-// Skills 抜粋 M=8: 全カテゴリを flatten し経験年数の降順
+// Skills 抜粋 M=8: 全カテゴリを flatten し経験年数の降順（年数なし=AI 活用は抜粋から除外）
 const topSkills = skills
   .flatMap((set) => set.items)
-  .sort((a, b) => b.years - a.years)
+  .filter((skill) => skill.years != null)
+  .sort((a, b) => (b.years ?? 0) - (a.years ?? 0))
   .slice(0, 8);
 ---
 
