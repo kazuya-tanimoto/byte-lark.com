@@ -178,7 +178,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 
 | ID | タイトル | Status |
 |---|---|---|
-| PHASE1B-001 | [skills-qualifications-refresh](20260615-PHASE1B-001-skills-qualifications-refresh.md) | InProgress |
+| PHASE1B-001 | [skills-qualifications-refresh](20260615-PHASE1B-001-skills-qualifications-refresh.md) | Done |
 | PHASE1B-002 | [career-refresh-representative-projects](20260615-PHASE1B-002-career-refresh-representative-projects.md) | NotStarted |
 | PHASE1B-003 | [about-privacy-content-finalize](20260615-PHASE1B-003-about-privacy-content-finalize.md) | NotStarted |
 | PHASE1B-004 | [contact-form-backend](20260615-PHASE1B-004-contact-form-backend.md) | NotStarted |
@@ -191,7 +191,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 001-003 は運営者インプット待ち（Skills/Career 実データ、About/Privacy 文面承認）が発生し得る。待ち時間は Contact（004 → 005）を並行で進める：
 
 ```
-┌─ PHASE1B-001 (Skills / 資格 現行化)    ← 運営者インプット待ち
+┌─ PHASE1B-001 (Skills / 資格 現行化)    ← Done（2026-06-17）
 ├─ PHASE1B-002 (Career 現行化 + 代表案件)  ← 運営者インプット待ち（R-08）
 └─ PHASE1B-003 (About / Privacy 文面確定)  ← 運営者承認待ち
         ‖ 並行 ‖

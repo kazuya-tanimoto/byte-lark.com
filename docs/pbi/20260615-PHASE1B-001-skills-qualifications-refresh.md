@@ -1,7 +1,8 @@
 # 訪問者は Skills ページで現行の正確なスキル・資格情報を閲覧できる
 
-Status: InProgress
+Status: Done
 Started: 2026-06-15
+Completed: 2026-06-17
 
 ## 誰が
 - 訪問者
@@ -21,8 +22,8 @@ Started: 2026-06-15
 - [x] 運営者が表示内容を「現在の実態として正確」と承認し、実装ログに承認を記録（2026-06-17 承認、追って修正の留保つき）
 - [x] `yarn build` 成功 / `yarn check:ts` エラーなし（0 errors）
 - [x] ローカル スクショ確認（desktop + mobile）：/skills・/ を 1280/390 幅で確認、年数・アイコン・AI 名前のみ表示・Home 抜粋 top8 を目視確認
-- [ ] CF preview スクショ確認（branch alias URL）← push 後
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）← push 後
+- [x] CF preview スクショ確認（branch alias URL）：`https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev/skills` をデスクトップ確認、ローカルと一致
+- [x] E2E / CI green 確認：`scripts/ci-status.sh` で Quality Checks / UI Tests / Workers Builds / e2e / quality すべて completed/success（HEAD 9e3d92e）
 
 ## 技術メモ
 - 想定セッション数: 1（データ更新が主。運営者インプット待ちは実装フェーズ外の外部待ちで、コード作業自体は 1 セッションに収まる）
@@ -82,5 +83,11 @@ Started: 2026-06-15
 運営者承認:
 - 2026-06-17：レンダリング結果（/skills）を確認し「いいんじゃないかな。必要あれば追って修正」と承認
 
-残タスク:
-- commit / push → CF preview スクショ確認 → `scripts/ci-status.sh` で UI Tests / Quality Checks green 確認 → Status: Done + INDEX 同期
+### 2026-06-17 検証報告（§7）
+- ローカル確認: dev server（:4322）で /skills を desktop(1280)+mobile(390)、/ home 抜粋を確認。年数・アイコン・AI 名前のみ・Home 抜粋 top8 に AI 非混入を目視確認
+- CF preview 確認: `https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev/skills`（commit 9e3d92e）をデスクトップで確認、ローカルと一致
+- E2E/CI 確認: `scripts/ci-status.sh` → Quality Checks=success / UI Tests=success / Workers Builds: byte-lark=success / e2e=success / quality=success
+- 未検証項目: なし
+
+学び（プロセス）:
+- CI 待ちで `ci-status.sh` をタイトループ（20s×40）で叩き、無認証 GitHub API の 60req/h 制限に当たり 403 になった。CI 待ちは間隔を空け数回に留めるか、間隔を十分長く取る。バックグラウンドのシェル条件 `if ! cmd` はサンドボックス（fish 系 eval）で `command not found: !` になるため避ける
