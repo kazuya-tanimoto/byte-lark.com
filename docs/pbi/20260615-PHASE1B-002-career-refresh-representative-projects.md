@@ -1,7 +1,8 @@
 # 訪問者は Career ページで現行化された経歴と代表案件を閲覧できる
 
-Status: InProgress
+Status: Done
 Started: 2026-06-20
+Completed: 2026-06-21
 
 ## 誰が
 - 訪問者
@@ -14,14 +15,14 @@ Started: 2026-06-20
 - 関連: site-plan.md FR-04 / R-08 / Phase 1b（コンテンツ整備）
 
 ## 受け入れ条件
-- [ ] 運営者インプット（過去 20 年分から代表案件 1-2 件のサマリ＝時期・役割・技術・規模、既存 2 件の記載確認）を反映して `src/data/career.ts` を更新
-- [ ] id=2 の役割など一次情報が無かった項目を運営者から取得して反映する（取得できないものは捏造せず非表示を維持。`CareerItem.role?` は optional）
-- [ ] About の経歴記述（25 年）と Career ページの内容が整合する
-- [ ] 運営者承認を実装ログに記録
-- [ ] `yarn build` 成功 / `yarn check:ts` エラーなし
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [x] 運営者インプット（過去 20 年分から代表案件 1-2 件のサマリ＝時期・役割・技術・規模、既存 2 件の記載確認）を反映して `src/data/career.ts` を更新 → 当初想定を超え、一次情報（xlsx 20240802 / html 最新 / 2014PDF）を横断して全16案件を再構築。最新版で削除済みの実案件も復元
+- [x] id=2 の役割など一次情報が無かった項目を運営者から取得して反映する → career-docs 一次情報で全案件の役割・規模・雇用形態まで確定（捏造なし）
+- [x] About の経歴記述（25 年）と Career ページの内容が整合する → About「25年」/ Career 2001/07〜 で整合（※About「法人化を予定」の更新は 003 へ申し送り）
+- [x] 運営者承認を実装ログに記録 → 2026-06-21、表示内容・雇用形態ラベルとも「問題ないです」と承認
+- [x] `yarn build` 成功 / `yarn check:ts` エラーなし（0 errors）
+- [x] ローカル スクショ確認（desktop + mobile）：preview :4399 で全16案件・モーダル・雇用形態バッジを desktop/mobile 確認（dev は HMR 不安定のため本番ビルド preview で検証）
+- [x] CF preview スクショ確認（branch alias URL）：`.../career`（9d8ce86 反映）で全16案件＋雇用形態バッジを確認、ローカルと一致
+- [x] E2E / CI green 確認：`scripts/ci-status.sh`（HEAD 9d8ce86）で Quality Checks / UI Tests / Workers Builds / e2e / quality すべて success
 
 ## 技術メモ
 - 想定セッション数: 1（データ更新が主。運営者インプット待ちは実装フェーズ外の外部待ち）
