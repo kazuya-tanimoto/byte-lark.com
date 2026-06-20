@@ -1,21 +1,15 @@
 ---
-import type {
-  CareerDetail,
-  CareerItem,
-  OtherCareerItem,
-} from "../types/career";
+import type { CareerDetail, CareerItem } from "../types/career";
 
 interface Props {
   items: CareerItem[];
   details: CareerDetail[];
-  others?: OtherCareerItem[];
 }
 
-const { items, details, others = [] } = Astro.props;
+const { items, details } = Astro.props;
 
 // 新しい順に表示（from は YYYY/MM 形式のため文字列比較で時系列順になる）
 const sortedItems = [...items].sort((a, b) => b.from.localeCompare(a.from));
-const sortedOthers = [...others].sort((a, b) => b.from.localeCompare(a.from));
 const detailMap = new Map(details.map((d) => [d.id, d]));
 ---
 
@@ -134,34 +128,6 @@ const detailMap = new Map(details.map((d) => [d.id, d]));
     })
   }
 </ol>
-
-{
-  sortedOthers.length > 0 && (
-    <section class="mt-14" aria-labelledby="career-others">
-      <h2
-        id="career-others"
-        class="border-b border-border pb-2 text-lg font-semibold text-foreground"
-      >
-        その他の案件
-      </h2>
-      <ul class="mt-4 space-y-4">
-        {sortedOthers.map((o) => (
-          <li class="grid gap-1 sm:grid-cols-[180px_1fr] sm:gap-4">
-            <p class="text-sm text-muted-foreground">
-              {o.from} 〜 {o.to ?? "現在"}
-            </p>
-            <div>
-              <p class="font-medium text-foreground">{o.title}</p>
-              <p class="mt-1 text-sm leading-relaxed text-muted-foreground">
-                {o.summary}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-}
 
 <script>
   // ネイティブ <dialog> の開閉。詳細テキストは SSG 済み DOM に存在するため、

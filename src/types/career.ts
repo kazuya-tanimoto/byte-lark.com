@@ -28,11 +28,3 @@ export interface CareerDetail {
   /** 成果・ポイント */
   achievements: string[];
 }
-
-/** 詳細モーダルを持たない、古い・小規模な案件の一覧行 */
-export interface OtherCareerItem {
-  from: string;
-  to?: string;
-  title: string;
-  summary: string;
-}

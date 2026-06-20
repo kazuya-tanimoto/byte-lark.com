@@ -96,3 +96,39 @@ Started: 2026-06-20
 - / desktop: Home Career 抜粋が直近4件（決済/ポータル/問診/鉄道）の 2×2 に制限されていることを確認。
 
 未実施（push 後）: CF preview スクショ、E2E/CI green（`scripts/ci-status.sh`）。運営者承認（実レンダリング確認）も未取得。
+
+### 2026-06-21 検証報告（§7・後半）
+
+commit/push: feat/phase-1 aff2c8a（運営者承認済み）。
+
+- ローカル確認: dev :4321 で /career desktop(1280)+mobile(390)、モーダル開閉（決済PF/ポータル）、/ Home 抜粋 直近4件を目視（前半ログ済み）。
+- CF preview 確認: `https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev/career`（aff2c8a 反映済み）を desktop で確認。7案件タイムライン＋「その他の案件」一覧＋モーダル（決済PF）の動作がローカルと一致。
+- E2E/CI 確認: `scripts/ci-status.sh`（HEAD aff2c8a）→ Quality Checks=success / UI Tests=success / Workers Builds: byte-lark=success / e2e=success / quality=success。
+- About 整合: About は「25年」表記、Career は 2001/07〜で整合（FR-04 / 受け入れ条件3）。※About の「2026年6月に法人化を予定」は設立済みのため要更新だが PHASE1B-003 範囲。
+- 未検証項目: なし（表示内容の運営者承認のみ待ち）。
+
+### 2026-06-21 全面やり直し（一次情報の横断・全16案件化）
+
+運営者指摘（重大）: 初版（aff2c8a）は「その他の案件」を最新スキルシートの要約 table からコピペしただけ＝主要7案件も含め最新版2バージョンしか見ておらず、git 履歴・xlsx・2014PDF を集めた目的（最新版で削られた古い案件の詳細を復元）を果たしていなかった。「脳死でスキルシート採用するな、全案件を対象に一次情報を見て採用/除外を判断・報告しろ」。
+
+一次情報の横断調査でやったこと:
+- skill-sheet-pm.html（最新）/ frontend.html（2025-05）/ git 過去版 / xlsx 全年代（220716〜20250127）/ 2014 PDF を横断。
+- xlsx を `unzip`+Python(zipfile/ET) でセル位置ごとに解析（$TMPDIR/read_xlsx.py）。**スキルシート_20240802.xlsx が全案件を同一粒度の詳細（担当業務・コメント・技術・規模・工程）で持つ最完全ソース**と判明。
+- 重要発見:
+  - 最新HTML版に無い実案件「サーバー構築業務の自動化ツール作成」（2020/12〜2021/04, Python/Flask/Selenium, 年間100h圧縮）を xlsx から復元。
+  - 全古い案件（製薬・民泊副業・病院・電力系各案件・通信キャリア各案件）に xlsx でフル詳細あり。
+  - 地雷: `スキルシート_220716.xlsx` にリクナビNEXTテンプレの他人サンプル経歴（中堅建設業・金属業・大手化学/食品、Java/Ruby）が混入→採用厳禁。
+  - 「楽天/Shopify」の出所は xlsx 20240802 と判明（初版で「出所不明」とした誤りを訂正。顧客名なので伏せる方針は不変）。
+
+成果物:
+- `docs/career-source.md` を全面刷新＝**一次情報の集約保管ファイル**（全16案件の詳細＋出所セル番号＋採用/除外メモ＋About用素材）。公開可のみ（公開リポジトリのため）。落とした情報も出所セル番号で辿れる設計。
+- `src/data/career.ts` を全16案件で再構築（`Career` + `CareerDetails`、新しい順）。`OtherCareer`/`OtherCareerItem` 廃止。
+- 表示方針を運営者再確認: 全案件に同一粒度の詳細が揃ったため「全案件モーダル統一」に決定（旧「古いのはモーダルなし」は薄い前提が崩れたため撤回）。`CareerTimeline.astro` から「その他の案件」一覧を削除。
+- About 用素材（得意/合わない領域・性格診断）は career-source.md に分離記録し PHASE1B-003 へ申し送り。
+
+検証（自動）: yarn check:ts 0 errors / yarn build 9 pages / yarn check クリーン。dist 確認＝dialog 16・「その他の案件」無し・サーバー自動化案件あり。
+ローカル確認（MCP Playwright・preview :4399。dev は HMR が data/component 変更を拾わず古い HTML を返したため preview=本番ビルドで検証）: /career desktop で全16案件が新しい順＋全件「詳細を見る」、サーバー自動化モーダル（Python/Flask/Selenium・100h圧縮）、mobile で最古=料金システムのモーダル（C/Pro*C・「80人で最速管理職」）を確認。
+
+学び（プロセス）: 「一次情報を集めた」だけでは不十分で、全案件×全バージョンを横断して最も詳しい記述を採用し、採用/除外を理由付きで残すまでが要件だった。集約結果はファイル（career-source.md）に保管して掘り直しを防ぐ（運営者提案）。
+
+未実施（push 後）: CF preview スクショ、E2E/CI green。表示内容の運営者承認も未取得。

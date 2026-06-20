@@ -1,11 +1,12 @@
-import type { CareerDetail, CareerItem, OtherCareerItem } from "@/types/career";
+import type { CareerDetail, CareerItem } from "@/types/career";
 
-// 出典: career-docs（非公開）の一次情報を横断集約。
-// - 直近〜中堅の詳細: skill-sheet/html-skill-sheet/skill-sheet-pm.html（現行 + git 履歴 54f7a3c で削除前の問診/鉄道/PM標準を回収）
-// - 初期キャリア: skill-sheet/for-gofield/職務経歴書_20141201.pdf
-// 公開不可情報（単価・個人特定情報・自己評価ネガ・性格診断）は除外。顧客名は一次情報に揃えて伏せる。
+// 出典: career-docs（非公開）の一次情報を横断集約（docs/career-source.md に保管）。
+// - 全案件詳細: skill-sheet/spread-sheet-skill-sheet/スキルシート_20240802.xlsx（全案件を同一粒度で保持）
+// - 直近案件（DMM 決済 等）: skill-sheet/html-skill-sheet/skill-sheet-pm.html（xlsx より新しい）
+// - 初期キャリア補完: skill-sheet/for-gofield/職務経歴書_20141201.pdf
+// master（AI 要約の二次情報）は不使用。公開不可情報（単価・個人特定情報・自己評価ネガ）は除外、顧客名は伏せる。
+// 全 16 案件・新しい順。各 id に CareerDetails の詳細が対応（全件モーダルあり）。
 
-// 詳細モーダルを持つ主要案件（新しい順）。
 export const Career: CareerItem[] = [
   {
     id: 1,
@@ -38,6 +39,46 @@ export const Career: CareerItem[] = [
   },
   {
     id: 4,
+    title: "鉄道会社のキャンペーンに伴うシステム開発",
+    summary:
+      "キャンペーンの利用者増対策としてレンタカー予約システムを構築。要件定義〜リリースを一貫対応。",
+    keywords: "PM / SE, PHP / CodeIgniter, MySQL, Docker, 要件定義〜リリース",
+    role: "PM / SE",
+    from: "2020/12",
+    to: "2021/09",
+  },
+  {
+    id: 5,
+    title: "製薬会社向けシステム開発",
+    summary:
+      "製品情報・QA・問い合わせ管理のWebシステムを構築。エージェント経由の人材調達で不足を解消し納期を遵守。",
+    keywords: "SE, PHP / CodeIgniter, MySQL, Docker, 人材調達",
+    role: "SE",
+    from: "2020/10",
+    to: "2020/12",
+  },
+  {
+    id: 6,
+    title: "サーバー構築業務の自動化ツール作成",
+    summary:
+      "サーバー構築・CMS導入を自動化するツールをPythonで開発。年間50件超の作業の7割を自動化し約100時間を圧縮。",
+    keywords: "SE, Python / Flask, Selenium, 業務自動化",
+    role: "SE",
+    from: "2020/12",
+    to: "2021/04",
+  },
+  {
+    id: 7,
+    title: "民泊業者の清掃管理システム構築（副業）",
+    summary:
+      "予約サイトAPI連携とLINE通知で清掃管理を自動化。要件定義〜保守まで一人で一貫対応。",
+    keywords: "SE, PHP / Laravel, GAS, LINE, 副業",
+    role: "SE",
+    from: "2017/11",
+    to: "2020/03",
+  },
+  {
+    id: 8,
     title: "Web制作のサーバーサイド業務／進行管理／各種改善施策",
     summary:
       "サーバーサイド開発に加え、複数ディレクターの案件管理や運用体制の整備を担当。会長から「会社を2度救った」と評される。",
@@ -47,17 +88,17 @@ export const Career: CareerItem[] = [
     to: "2021/11",
   },
   {
-    id: 5,
-    title: "鉄道会社のキャンペーンに伴うシステム開発",
+    id: 9,
+    title: "病院向けパッケージソフトのカスタマイズ業務",
     summary:
-      "エンドユーザーヒアリングから要件定義〜リリースまで一貫対応。非IT人材へ丁寧に説明して納得感を醸成。",
-    keywords: "PM / SE, PHP / CodeIgniter, MySQL, Docker, 要件定義〜リリース",
-    role: "PM / SE",
-    from: "2020/12",
-    to: "2021/09",
+      "産婦人科向けに自社パッケージをカスタマイズして導入。エコー機器ベンダーを含む関係者調整を重視し円滑に進行。",
+    keywords: "PL / SE, PHP / CakePHP, PostgreSQL, 関係者調整",
+    role: "PL / SE",
+    from: "2014/07",
+    to: "2015/02",
   },
   {
-    id: 6,
+    id: 10,
     title: "電力会社基幹システム再構築",
     summary:
       "PLを2名配置した3チーム体制で、基本・詳細設計と進捗・品質管理を担当。緻密な進捗管理で納期を遵守。",
@@ -67,7 +108,7 @@ export const Career: CareerItem[] = [
     to: "2014/06",
   },
   {
-    id: 7,
+    id: 11,
     title: "社内プロジェクトマネジメント標準策定",
     summary:
       "600名規模から選抜され、定量化・見える化に関するPM標準を策定。PM学会四国支部で発表。",
@@ -76,9 +117,59 @@ export const Career: CareerItem[] = [
     from: "2012/07",
     to: "2013/02",
   },
+  {
+    id: 12,
+    title: "Webシステムの設計開発業務",
+    summary:
+      "電力会社の新規Webシステムを顧客先常駐で基本設計〜結合テスト。納品前の最終検証で品質を担保。",
+    keywords: "PM / SE, Java / Struts2 / Spring3, Oracle, 品質検証",
+    role: "PM / SE",
+    from: "2011/01",
+    to: "2012/10",
+  },
+  {
+    id: 13,
+    title: "メインフレームシステムの再構築業務",
+    summary:
+      "口座振替データ管理システムをパッケージのC/Sへ再構築。COBOL解析・Fit&Gap分析からスクラッチ開発まで担当。",
+    keywords: "SE, VB.NET / COBOL, Oracle, パッケージ導入",
+    role: "SE",
+    from: "2009/04",
+    to: "2010/12",
+  },
+  {
+    id: 14,
+    title: "電力系クライアントサーバー・Webシステムの保守業務",
+    summary:
+      "電力系企業のC/S・Webシステム保守で詳細設計〜単体テストを担当。VBAで業務効率化ツールを作成。",
+    keywords: "PG, VB / Java / JSP, Oracle, 保守",
+    role: "PG",
+    from: "2008/01",
+    to: "2009/03",
+  },
+  {
+    id: 15,
+    title: "Webシステムの基本設計および開発管理業務",
+    summary:
+      "通信キャリア携帯ショップ窓口のWebシステム再構築に、リーダーとして途中参画。本番障害対応で立て直しを担う。",
+    keywords: "PL / SE, Java / JSP / Struts1, Oracle, 顧客調整",
+    role: "PL / SE",
+    from: "2007/05",
+    to: "2007/12",
+  },
+  {
+    id: 16,
+    title: "料金システムの開発業務／本番環境維持管理業務",
+    summary:
+      "通信キャリア料金システムの開発・ライブラリ管理から本番環境維持管理まで担当。同期80人で最も早く管理職に抜擢。",
+    keywords: "PL / SE, C / Pro*C, Oracle, シェル自動化",
+    role: "PL / SE",
+    from: "2001/07",
+    to: "2007/04",
+  },
 ];
 
-// 各主要案件の詳細（Career.id と対応）。
+// 各案件の詳細（Career.id と対応）。全 16 案件にモーダルあり。
 export const CareerDetails: CareerDetail[] = [
   {
     id: 1,
@@ -87,7 +178,7 @@ export const CareerDetails: CareerDetail[] = [
     technology: ["Jira, Confluence, Slack", "Cursor, Gemini"],
     responsibilities: [
       "複数プロダクト間の横断課題の整理と経営層への報告",
-      "事業部と決済プラットフォームの複数プロダクト担当チーム間の横断マネジメント",
+      "事業部と決済基盤の複数プロダクト担当チーム間の横断マネジメント",
       "AIを活用した品質改善施策の立案・実装・展開",
     ],
     achievements: [
@@ -128,7 +219,7 @@ export const CareerDetails: CareerDetail[] = [
     role: "SE",
     scale: "チーム4名",
     technology: [
-      "FreeBSD, Apache, MySQL 5.6",
+      "FreeBSD, Apache 2.4, MySQL 5.6",
       "PHP 7.4, CodeIgniter 3, jQuery, Bootstrap",
       "Docker, Git",
     ],
@@ -145,47 +236,118 @@ export const CareerDetails: CareerDetail[] = [
   },
   {
     id: 4,
-    role: "SE / 部長 / PM",
-    scale: "チーム15名 / 会社員",
-    technology: [
-      "Linux, Apache, PHP, Perl, Bash, SQL, GAS",
-      "CodeIgniter 3, jQuery",
-      "Git, Docker, OWASP ZAP",
-    ],
-    responsibilities: [
-      "サーバー構築、CMS導入／カスタマイズ、スクラッチ開発",
-      "複数Webディレクターの案件管理、運用メンバーの業務管理",
-      "Webサイトのセキュリティ設定やツールによる脆弱性診断",
-    ],
-    achievements: [
-      "大口顧客の契約終了など複数の危機を、Webディレクターの鼓舞と案件管理で乗り越える（所属企業の会長から「会社を2度救った」と評される）",
-      "入社当初に技術的な相談相手がおらず、Web系の知識は全て自分で調査・検証して習得",
-      "非技術者との対話が多く、技術の話を身近なものに例えるなど、分かりやすく伝えることで納得感を重視",
-      "Docker・Gitの導入や自動化、エージェント活用での人材発掘、運用業務のアウトソースまで整備",
-    ],
-  },
-  {
-    id: 5,
     role: "PM / SE",
     scale: "チーム4名",
     technology: [
-      "CentOS 8, Apache, MySQL 8.0",
+      "CentOS 8, Apache 2.4, MySQL 8.0",
       "PHP 7.3, CodeIgniter 3, jQuery, Bootstrap",
       "Docker, Git",
     ],
     responsibilities: [
       "エンドユーザーヒアリングおよび画面の設計（要件定義〜詳細設計）",
-      "画面の実装〜結合テスト、本番リリース",
+      "画面の実装〜結合テスト、本番リリース、ローカル開発用のDocker環境構築",
       "他メンバーへの開発タスクの割当および進捗管理",
     ],
     achievements: [
-      "非IT人材のユーザー向けにテクニカルな内容を分かりやすく説明",
-      "要望対応の費用対効果や対応案のメリット・デメリットを説明して納得いただく",
-      "Docker未経験メンバー向けに導入手順を作成して促進し、開発効率を向上",
+      "エンドユーザーが非IT人材のため、技術的な内容を噛み砕き、他のものに例えるなどして分かりやすく説明",
+      "変更要望の費用対効果や対応案のメリット・デメリットを説明して納得いただく",
+      "Docker未経験のメンバー向けに導入手順を作成して促進し、開発効率を向上",
+    ],
+  },
+  {
+    id: 5,
+    role: "SE",
+    scale: "チーム7名",
+    technology: [
+      "FreeBSD, Apache 2.2, MySQL 5.6",
+      "PHP 7.0, CodeIgniter 3, jQuery, Bootstrap",
+      "Docker, Git",
+    ],
+    responsibilities: [
+      "製品情報・QA・問い合わせ管理を行うWebシステムの画面開発・単体テスト",
+      "ローカル開発用のDocker環境構築と開発ノウハウの社内共有",
+      "クラウドソーシングや人材紹介エージェント経由での人材調達",
+    ],
+    achievements: [
+      "エージェント経由で人材を確保して人材不足を解消し、納期を遵守",
+      "自身が窓口となり、社内のコスト折衝や各種契約手続きを実施",
+      "人材確保のノウハウをドキュメント化し、所属企業の人材確保手段の1つとして確立",
     ],
   },
   {
     id: 6,
+    role: "SE",
+    scale: "チーム1名",
+    technology: [
+      "Windows, Mac, Python 3.8, Flask 2.0",
+      "BeautifulSoup 4.10, Selenium 4.1",
+      "JavaScript, jQuery, Bootstrap, Docker, Git",
+    ],
+    responsibilities: [
+      "管理画面GUIを使ったサーバー構築やSSL導入申請を自動化するツールの作成・導入",
+      "CMS（WordPress / a-blog CMS）のインストール自動化",
+    ],
+    achievements: [
+      "年間50件以上のサーバー構築業務の7割程度を自動化し、年間100時間程度の工数圧縮を実現",
+      "Python習得を目的とし、プライベートの自主学習として開発",
+    ],
+  },
+  {
+    id: 7,
+    role: "SE",
+    scale: "チーム1名",
+    technology: [
+      "Ubuntu, Apache 2.4, MySQL 5.6",
+      "PHP 7.2, Laravel 5.8, SQL",
+      "LINE Notify, GoogleAppsScript, Docker, Git",
+    ],
+    responsibilities: [
+      "旅行予約サイトのAPIを使った予約データの取得・更新",
+      "スプレッドシートに清掃予定表を作成し、関係者へLINE通知する清掃管理業務の自動化（要件定義〜リリース・保守まで一貫対応）",
+    ],
+    achievements: [
+      "各APIは日本語情報が無いため、英語ドキュメントやStackOverflowを読み込んで実装",
+      "LINE通知機能はリアルタイム性が高く便利なため、所属企業のサーバー障害検知にも適用",
+      "顧客管理サイト（WordPress）のセキュリティ対策も併せて実施",
+    ],
+  },
+  {
+    id: 8,
+    role: "SE / 部長 / PM",
+    scale: "チーム15名 / 会社員",
+    technology: [
+      "Linux, Apache, PHP, Perl, Bash, SQL, GoogleAppsScript",
+      "CodeIgniter 3, jQuery, Bootstrap",
+      "Git, Docker, OWASP ZAP",
+    ],
+    responsibilities: [
+      "サーバー構築、CMS導入／カスタマイズ、CodeIgniterでのシステム開発",
+      "複数Webディレクターの案件進行管理、運用メンバーの業務管理",
+      "Webサイトのセキュリティ設定やツールによる脆弱性診断",
+    ],
+    achievements: [
+      "大口顧客の契約終了時に過剰な受託案件を抱えるも、Webディレクターの鼓舞と案件管理で乗り越える（所属企業の会長から「会社を2度救った」と評される）",
+      "技術的な相談相手がおらず、Web系の知識は全て自分で調査・検証して習得",
+      "非技術者とのやり取りが多く、技術の話を身近なものに例えるなど、分かりやすく伝えることで納得感を重視",
+      "クラウドストレージ・Docker・Gitや自動化の導入、エージェント活用での人材発掘、運用業務のアウトソースまでノウハウを整備",
+    ],
+  },
+  {
+    id: 9,
+    role: "PL / SE",
+    scale: "チーム6名 / 会社員",
+    technology: ["WindowsServer, Apache, PostgreSQL", "PHP, SQL, CakePHP 2"],
+    responsibilities: [
+      "産婦人科向けに自社パッケージをカスタマイズして導入（基本設計〜システムテスト・現地導入）",
+      "開発メンバーの作業管理",
+      "病院の情シス責任者やエコー機器ベンダー等、関係者との各種調整",
+    ],
+    achievements: [
+      "エコー機器ベンダーの設定作業まで管理範囲に含むため、早めの関係者調整を意識してプロジェクトを進行",
+    ],
+  },
+  {
+    id: 10,
     role: "PM / SE",
     scale: "チーム15名 / 会社員",
     technology: [
@@ -194,16 +356,17 @@ export const CareerDetails: CareerDetail[] = [
       "HTML, JavaScript",
     ],
     responsibilities: [
-      "基本設計および詳細設計、進捗・品質管理、成果物検証",
+      "基本設計および詳細設計",
+      "開発チームの責任者として、基本設計〜単体テスト工程の進捗・品質管理・成果物検証",
       "顧客や他開発ベンダーとの仕様・スケジュール調整",
     ],
     achievements: [
       "PLを2名配置した3チーム体制で、各チームの細かな管理と全体管理を担当",
-      "日々の進捗管理を緻密に行い、問題点の早期発見と対策実施により納期を遵守",
+      "参画人数が多く遅延がコストに直結するため、PLと連携して日々の進捗管理を緻密に行い、問題点の早期発見に注力",
     ],
   },
   {
-    id: 7,
+    id: 11,
     role: "メンバー",
     scale: "チーム10名",
     technology: [],
@@ -216,64 +379,89 @@ export const CareerDetails: CareerDetail[] = [
       "定量データや客観的証拠を揃えた上での判断力・提案力が向上",
     ],
   },
-];
-
-// 詳細モーダルを持たない、それ以前の案件（新しい順）。
-export const OtherCareer: OtherCareerItem[] = [
   {
-    from: "2020/10",
-    to: "2020/12",
-    title: "製薬会社向けシステム開発",
-    summary:
-      "人材調達のノウハウをドキュメント化し、所属企業での人材確保手段として確立。",
+    id: 12,
+    role: "PM / SE",
+    scale: "チーム8名",
+    technology: [
+      "WindowsServer, Oracle",
+      "Java, JSP, JavaScript, jQuery, Struts2, Spring3, MyBatis",
+      "SQL, PL/SQL, VBA, SVN, Redmine",
+    ],
+    responsibilities: [
+      "顧客先に常駐してヒアリングを行いながらの基本設計",
+      "詳細設計〜結合テスト工程の設計および実装",
+      "開発メンバーの進捗・品質管理・成果物検証、顧客との仕様・スケジュール調整",
+    ],
+    achievements: [
+      "成果物を納品前に最終検証する立場として、細かい検証で不具合を炙り出し品質を担保",
+    ],
   },
   {
-    from: "2017/11",
-    to: "2020/03",
-    title: "民泊業者の清掃管理システム構築（副業）",
-    summary:
-      "LINE通知機能を活用した自動清掃管理システムを構築。所属企業のサーバー障害検知にも応用。",
+    id: 13,
+    role: "SE",
+    scale: "チーム8名",
+    technology: [
+      "WindowsServer, Oracle",
+      "VB, YSP/COBOL, SQL, MS-DOS",
+      "VB.NET, Microsoft-VSS, SystemWalker",
+    ],
+    responsibilities: [
+      "COBOLソース解析による現行システムの仕様調査",
+      "再構築に関わる要件定義およびパッケージのFit&Gap分析",
+      "パッケージで満たせない機能のスクラッチ開発（基本設計〜リリース）、システムテスト・パッケージベンダーとの仕様調整",
+    ],
+    achievements: [
+      "パッケージ品質が悪く、独自構築部分とのインターフェース不具合時にはエビデンスを詳細に取得し、ベンダーへ改修を折衝",
+    ],
   },
   {
-    from: "2014/07",
-    to: "2015/02",
-    title: "病院向けパッケージソフト導入",
-    summary:
-      "PL / SEとして産婦人科向けパッケージのカスタマイズに対応。関係者調整を重視し円滑に進行。",
+    id: 14,
+    role: "PG",
+    scale: "チーム最大10名程度",
+    technology: [
+      "WindowsServer, Oracle",
+      "VB, VBA, Java, JSP, SQL",
+      "VB.NET, Struts1, CVS",
+    ],
+    responsibilities: [
+      "電力系企業のC/S・Webシステム保守における詳細設計〜単体テスト（当期間内に5プロジェクトに所属）",
+      "VBAによる業務効率化ツールの作成",
+      "新入社員へのコーディング指導",
+    ],
+    achievements: ["VB型の画面やWebシステムの設計開発スキルを習得"],
   },
   {
-    from: "2011/01",
-    to: "2012/10",
-    title: "Webシステムの設計開発",
-    summary:
-      "電力会社の新規システムのマネジメントおよび基本設計から結合テストまでを担当。",
+    id: 15,
+    role: "PL / SE",
+    scale: "チーム11名",
+    technology: [
+      "HP-UX, Oracle",
+      "Java, JSP, C++, Ksh, SQL",
+      "Struts1, JobCenter",
+    ],
+    responsibilities: [
+      "進行中の開発チームにリーダーとして途中参画し、結合テストを担当",
+      "詳細設計〜結合テスト工程のスケジュール・作業管理および顧客調整",
+    ],
+    achievements: [
+      "参画直後の本番リリース後、連日の本番障害対応に追われるも、状況のヒアリングや社内・顧客・他ベンダーとの調整で対応",
+      "この経験から、悪い状況を立て直すための立ち回り力が向上",
+    ],
   },
   {
-    from: "2009/04",
-    to: "2010/12",
-    title: "メインフレームシステム再構築",
-    summary:
-      "パッケージのFit&Gap分析、不具合発生時の対応。証拠を詳細に収集し改修を推進。",
-  },
-  {
-    from: "2008/01",
-    to: "2009/03",
-    title: "電力系C/S・Webシステム保守",
-    summary:
-      "VBAによる業務効率化ツールを作成。新入社員へのコーディング指導も担当。",
-  },
-  {
-    from: "2007/05",
-    to: "2007/12",
-    title: "Webシステムの基本設計・開発管理",
-    summary:
-      "PMとして途中参画。直後のサービスインで本番障害が頻発する中、プロジェクト内調整や顧客対応により安定化に貢献。",
-  },
-  {
-    from: "2001/07",
-    to: "2007/04",
-    title: "通信キャリア料金システム",
-    summary:
-      "シェルによる本番リリースおよび検証作業の自動化を実現。80人の同期のうち最も早く管理職に抜擢。",
+    id: 16,
+    role: "PL / SE",
+    scale: "チーム最大8名",
+    technology: ["HP-UX, Oracle", "C, Pro*C, Ksh, VBA, SQL", "JP1-AJS2"],
+    responsibilities: [
+      "通信キャリア料金システムの開発・ライブラリ管理",
+      "エンドユーザーからの調査依頼対応、DBリカバリ、本番環境での作業自動化の検討・開発",
+      "担当プロジェクトの管理職として予算管理・メンバーの勤務管理",
+    ],
+    achievements: [
+      "シェル等でコマンド発行作業を半自動化し、手作業のリスクを軽減",
+      "本プロジェクトへのアサイン時、所属企業で80人程いた同期のうち最も早く管理職に抜擢",
+    ],
   },
 ];
