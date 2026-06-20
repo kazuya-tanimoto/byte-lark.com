@@ -2,6 +2,9 @@
 // 一覧カード（CareerItem）と、クリックで開くモーダル詳細（CareerDetail）を分離する。
 // 詳細を持つ案件は CareerDetail を用意し、id で対応づける（持たない案件はカードのみ）。
 
+/** 雇用形態。フリーランス＝業務委託（準委任）、副業＝在職中の請負 */
+export type Employment = "会社員" | "フリーランス" | "副業";
+
 export interface CareerItem {
   id: number;
   title: string;
@@ -10,6 +13,7 @@ export interface CareerItem {
   /** カードに出す技術・役割の短いキーワード列 */
   keywords: string;
   role?: string;
+  employment: Employment;
   /** YYYY/MM。to 省略時は「現在」 */
   from: string;
   to?: string;

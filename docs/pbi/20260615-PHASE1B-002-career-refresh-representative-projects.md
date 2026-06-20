@@ -132,3 +132,15 @@ commit/push: feat/phase-1 aff2c8a（運営者承認済み）。
 学び（プロセス）: 「一次情報を集めた」だけでは不十分で、全案件×全バージョンを横断して最も詳しい記述を採用し、採用/除外を理由付きで残すまでが要件だった。集約結果はファイル（career-source.md）に保管して掘り直しを防ぐ（運営者提案）。
 
 未実施（push 後）: CF preview スクショ、E2E/CI green。表示内容の運営者承認も未取得。
+
+### 2026-06-21 雇用形態ラベル追加
+
+運営者要望: 一覧で会社員かフリーランスか分かるようラベルを付けたい。
+やったこと:
+- 一次情報（xlsx 20240802 r7-14 の雇用形態テーブル）で全16案件の雇用形態を確定。フリーランス転向＝2021/12（問診から）。
+- `types/career.ts`: `Employment`型（会社員/フリーランス/副業）と `CareerItem.employment` 追加。
+- `data/career.ts`: 全16案件に employment 付与。CareerDetails.scale から重複していた「/ 業務委託」「/ 会社員」を除去。
+- `CareerTimeline.astro`: 一覧カードの期間横にバッジ（フリーランス=hibari-sky / 会社員=neutral / 副業=hibari-amber、控えめ。確定HEXは Phase 1c）、モーダルに「雇用形態」行。
+- `career-source.md`: 雇用形態の対応表（一次→サイトラベル）を出所付きで追加。
+- 呼称は運営者確定で「フリーランス」（About/footer の正式表現「業務委託（準委任）」とは別に、一覧は平易表現）。
+- build / check:ts / Biome green。preview で desktop/mobile のバッジ色分け・モーダル雇用形態行を確認。

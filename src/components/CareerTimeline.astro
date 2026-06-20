@@ -11,6 +11,13 @@ const { items, details } = Astro.props;
 // 新しい順に表示（from は YYYY/MM 形式のため文字列比較で時系列順になる）
 const sortedItems = [...items].sort((a, b) => b.from.localeCompare(a.from));
 const detailMap = new Map(details.map((d) => [d.id, d]));
+
+// 雇用形態バッジの色（確定 HEX は Phase 1c。今は控えめに区別）
+const employmentClass: Record<string, string> = {
+  フリーランス: "border-hibari-sky/40 bg-hibari-sky/10 text-hibari-sky",
+  会社員: "border-border bg-muted text-muted-foreground",
+  副業: "border-hibari-amber/40 bg-hibari-amber/10 text-hibari-amber",
+};
 ---
 
 <ol class="relative border-l border-border pl-6 sm:pl-8">
@@ -26,7 +33,14 @@ const detailMap = new Map(details.map((d) => [d.id, d]));
             class="absolute -left-[30px] top-1.5 h-3 w-3 rounded-full border-2 border-hibari-sky bg-background sm:-left-[38px]"
             aria-hidden="true"
           />
-          <p class="text-sm text-muted-foreground">{period}</p>
+          <div class="flex items-center gap-3">
+            <p class="text-sm text-muted-foreground">{period}</p>
+            <span
+              class={`inline-block rounded-full border px-2 py-0.5 text-xs font-medium ${employmentClass[item.employment]}`}
+            >
+              {item.employment}
+            </span>
+          </div>
           <h2 class="mt-1 text-xl font-semibold text-foreground">{item.title}</h2>
           {item.role && (
             <p class="mt-1 text-sm font-medium text-hibari-sky">{item.role}</p>
@@ -75,6 +89,8 @@ const detailMap = new Map(details.map((d) => [d.id, d]));
                     <dd class="text-muted-foreground">{detail.role}</dd>
                     <dt class="font-medium text-foreground">規模</dt>
                     <dd class="text-muted-foreground">{detail.scale}</dd>
+                    <dt class="font-medium text-foreground">雇用形態</dt>
+                    <dd class="text-muted-foreground">{item.employment}</dd>
                   </dl>
 
                   {detail.technology.length > 0 && (
