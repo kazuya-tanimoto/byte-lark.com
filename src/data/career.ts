@@ -1,76 +1,279 @@
-import type { CareerDetail, CareerItem } from "@/types/career";
+import type { CareerDetail, CareerItem, OtherCareerItem } from "@/types/career";
 
+// 出典: career-docs（非公開）の一次情報を横断集約。
+// - 直近〜中堅の詳細: skill-sheet/html-skill-sheet/skill-sheet-pm.html（現行 + git 履歴 54f7a3c で削除前の問診/鉄道/PM標準を回収）
+// - 初期キャリア: skill-sheet/for-gofield/職務経歴書_20141201.pdf
+// 公開不可情報（単価・個人特定情報・自己評価ネガ・性格診断）は除外。顧客名は一次情報に揃えて伏せる。
+
+// 詳細モーダルを持つ主要案件（新しい順）。
 export const Career: CareerItem[] = [
   {
     id: 1,
-    title: "社内ポータルシステム開発",
-    summary: "障害者支援業務にて利用するポータルサイト構築案件に参画中",
-    keywords: "React, Laravel, Tailwind, Docker, AWS, PM, 要件定義〜保守",
-    role: "SE兼EM",
-    from: "2022/09",
+    title: "大規模決済プラットフォームの横断PM",
+    summary:
+      "複数プロダクトを横断するプロジェクトマネジメントと、AIを活用した品質改善施策の立案・展開を担当。",
+    keywords: "横断PM, 品質改善, AI活用, Jira / Confluence",
+    role: "横断PM",
+    from: "2025/07",
+    to: "2026/07",
   },
   {
     id: 2,
-    title: "医薬品購入者向け問診システム開発",
+    title: "障がい者支援ポータルサイトの開発",
     summary:
-      "通販サイト（楽天、Shopify）の医薬品購入者向けのオンライン問診システム構築に参画",
-    keywords: "Codeigniter, jQuery, LAMP, Docker, 要件定義〜実装",
-    from: "2021/01",
-    to: "2022/08",
+      "立ち上げ期から要件定義〜運用までを一貫して主導。途中でスクラムへ移行し、PO的役割とAIによる開発自動化を推進。",
+    keywords: "PM / PO / Dev, AWS, React / TypeScript, Laravel, スクラム",
+    role: "PM / PO / Dev",
+    from: "2022/09",
+  },
+  {
+    id: 3,
+    title: "医薬品購入者向けの問診システム開発",
+    summary:
+      "クライアント2社へのヒアリングから要件定義〜実装まで一気通貫で担当。モックを使ったUI設計手法を提案・導入。",
+    keywords: "SE, PHP / CodeIgniter, MySQL, Docker, 要件定義〜実装",
+    role: "SE",
+    from: "2021/12",
+    to: "2023/06",
+  },
+  {
+    id: 4,
+    title: "Web制作のサーバーサイド業務／進行管理／各種改善施策",
+    summary:
+      "サーバーサイド開発に加え、複数ディレクターの案件管理や運用体制の整備を担当。会長から「会社を2度救った」と評される。",
+    keywords: "SE / 部長 / PM, PHP, CodeIgniter, 脆弱性診断, 進行管理",
+    role: "SE / 部長 / PM",
+    from: "2015/03",
+    to: "2021/11",
+  },
+  {
+    id: 5,
+    title: "鉄道会社のキャンペーンに伴うシステム開発",
+    summary:
+      "エンドユーザーヒアリングから要件定義〜リリースまで一貫対応。非IT人材へ丁寧に説明して納得感を醸成。",
+    keywords: "PM / SE, PHP / CodeIgniter, MySQL, Docker, 要件定義〜リリース",
+    role: "PM / SE",
+    from: "2020/12",
+    to: "2021/09",
+  },
+  {
+    id: 6,
+    title: "電力会社基幹システム再構築",
+    summary:
+      "PLを2名配置した3チーム体制で、基本・詳細設計と進捗・品質管理を担当。緻密な進捗管理で納期を遵守。",
+    keywords: "PM / SE, IBMメインフレーム, COBOL / DB2, 進捗・品質管理",
+    role: "PM / SE",
+    from: "2012/10",
+    to: "2014/06",
+  },
+  {
+    id: 7,
+    title: "社内プロジェクトマネジメント標準策定",
+    summary:
+      "600名規模から選抜され、定量化・見える化に関するPM標準を策定。PM学会四国支部で発表。",
+    keywords: "メンバー, PMBOK, 標準策定, 学会発表",
+    role: "メンバー",
+    from: "2012/07",
+    to: "2013/02",
   },
 ];
 
-export const CareerDetailData: CareerDetail = {
-  id: 1,
-  title: "社内ポータルシステム開発",
-  summary: "障がい者支援業務にて利用するポータルサイト構築案件に参画中",
-  from: "2022/09",
-  responsibility: [
-    {
-      item: "要件定義〜詳細設計、フロントおよびバックエンド開発〜テスト、および保守",
-    },
-    {
-      item: "AWS(EC2、RDS、VPC等)およびLAMPやDockerを使った環境構築",
-    },
-    {
-      item: "開発メンバーのタスク管理、開発オフショア（外国籍）メンバーへの作業指示",
-    },
-  ],
-  technology: [
-    {
-      item: "AWS(EC2, RDS, VPC, ALB, CodeCommit, CodeBuild, CodeDeploy, CloudWatch, S3, CloudFront, Route53, WAF, Inspector, etc)",
-    },
-    {
-      item: "Amazon Linux 2 & 2023, Apache2.4, PHP8.1, MySQL8.0",
-    },
-    {
-      item: "React18(Redux, ESLint, Prettier, Vitest, React Testing Library, React Query, etc)",
-    },
-    {
-      item: "Laravel11(PHPUnit)",
-    },
-    {
-      item: "Docker, Slack, Backlog",
-    },
-  ],
-  role: "SE兼EM",
-  scale: "チーム6名",
-  responsibleProcess:
-    "要件定義、基本設計、詳細設計、実装/単体、結合テスト、保守運用",
-  comment: [
-    {
-      item: "参画当初はいちメンバーとして実装メインの担当だったが、現在は下記業務をメインに担当",
-      subItem: [
-        {
-          item: "開発系：上流設計、品質検証、開発チーム管理",
-        },
-        {
-          item: "運用系：トラブルおよび脆弱性対応、AWS環境構築および改善",
-        },
-      ],
-    },
-    {
-      item: "クライアント企業の採用面談(プロパー、業務委託エンジニア)も実施",
-    },
-  ],
-};
+// 各主要案件の詳細（Career.id と対応）。
+export const CareerDetails: CareerDetail[] = [
+  {
+    id: 1,
+    role: "横断PM",
+    scale: "チーム7名 / 業務委託",
+    technology: ["Jira, Confluence, Slack", "Cursor, Gemini"],
+    responsibilities: [
+      "複数プロダクト間の横断課題の整理と経営層への報告",
+      "事業部と決済プラットフォームの複数プロダクト担当チーム間の横断マネジメント",
+      "AIを活用した品質改善施策の立案・実装・展開",
+    ],
+    achievements: [
+      "根拠ベースの意思決定：外部決済SDKのUX劣化について、各プロダクトのリードやベンダーへのヒアリングと文献からメリット・デメリットを整理。UXが劣化する箇所は見送り、コンバージョン貢献の大きい箇所のみ導入する方針で部長・マネージャーの決裁を得た",
+      "リリース前の齟齬解消：Slack中心で連携が疎だったことに起因するインターフェース認識の食い違いを本番リリース前に検知。両チームを招集して優先対応を調整し、リリースを守った",
+      "PRレビューのAI改善：PRの指摘傾向をAIで分析してレビュー観点を作成・展開。開発者がローカルで回せる仕組みを構築し、リードから「手戻りが明らかに減った」と評価を得た",
+      "決済基盤観点のQA整備：事業部のQAに無かった決済基盤の観点を整理・提供し、基盤起因の不具合を事前に検知",
+      "設計書AIレビューの制度化：設計書のAIレビューフローを整備し、部門のルールとして制定",
+      "運用業務の自動化：本番障害当番のシフト作成やSaaS登録をGASで1クリック化し、マニュアルも整備",
+    ],
+  },
+  {
+    id: 2,
+    role: "PM / PO / Dev",
+    scale: "チーム17名 / 業務委託",
+    technology: [
+      "AWS（EC2, RDS, VPC 等）",
+      "PHP 8.1, MySQL 8.0",
+      "React 18, TypeScript, Laravel 11, TailwindCSS",
+    ],
+    responsibilities: [
+      "プロジェクト初期はウォーターフォールで進行し、約2年前からスクラム開発へ移行",
+      "（ウォーターフォール期）タスク管理と日本・ベトナムの開発メンバーへの指示、要件定義〜運用までの一貫対応、FigmaによるUI設計、フロント/バックエンド開発、AWS環境の構築・管理",
+      "（スクラム期）ビジネス側と対話してニーズを整理、ユーザーストーリーマッピング、プロダクトバックログ整備、モック作成、業務知識の展開、フロントエンドの自動テスト導入",
+    ],
+    achievements: [
+      "立ち上げ期のPMとして要件定義〜運用まで一貫して主導",
+      "業務委託の立場ながら、エンジニア採用面接やオンボーディングを任される",
+      "本番の重大障害発生時にチームを主導し、迅速な復旧に貢献",
+      "業務知識をドキュメント化して開発チームに展開し、組織全体の業務理解向上に寄与",
+      "PBIの執筆からレビュー・Backlog同期までをClaude Code Skillsで自動化し、体感2倍以上の生産性と受け入れ条件の記述粒度向上を両立",
+      "受け入れ条件（Gherkin）からAIでテストケースを自動生成し、E2E自動化へ広げる構想を推進",
+      "構築したAI活用ノウハウを同職種へ共有し、属人化を防いで組織のPBI品質を底上げ",
+    ],
+  },
+  {
+    id: 3,
+    role: "SE",
+    scale: "チーム4名",
+    technology: [
+      "FreeBSD, Apache, MySQL 5.6",
+      "PHP 7.4, CodeIgniter 3, jQuery, Bootstrap",
+      "Docker, Git",
+    ],
+    responsibilities: [
+      "クライアント企業2社の担当者へのヒアリング、画面およびバッチの設計（要件定義〜詳細設計）",
+      "画面モック作成やUIの顧客説明、画面・バッチの実装〜テスト",
+      "ローカル開発用のDocker環境やテストサーバーの構築",
+    ],
+    achievements: [
+      "薬事法とユーザーの利便性のバランスを取りながら顧客調整や設計を実施",
+      "参画企業の開発業務に、モックを使ったUI設計および顧客レビューの手法を提案・導入",
+      "Git経験の少ないメンバー向けにGit Hooksを活用して誤更新を防ぐ環境を整備",
+    ],
+  },
+  {
+    id: 4,
+    role: "SE / 部長 / PM",
+    scale: "チーム15名 / 会社員",
+    technology: [
+      "Linux, Apache, PHP, Perl, Bash, SQL, GAS",
+      "CodeIgniter 3, jQuery",
+      "Git, Docker, OWASP ZAP",
+    ],
+    responsibilities: [
+      "サーバー構築、CMS導入／カスタマイズ、スクラッチ開発",
+      "複数Webディレクターの案件管理、運用メンバーの業務管理",
+      "Webサイトのセキュリティ設定やツールによる脆弱性診断",
+    ],
+    achievements: [
+      "大口顧客の契約終了など複数の危機を、Webディレクターの鼓舞と案件管理で乗り越える（所属企業の会長から「会社を2度救った」と評される）",
+      "入社当初に技術的な相談相手がおらず、Web系の知識は全て自分で調査・検証して習得",
+      "非技術者との対話が多く、技術の話を身近なものに例えるなど、分かりやすく伝えることで納得感を重視",
+      "Docker・Gitの導入や自動化、エージェント活用での人材発掘、運用業務のアウトソースまで整備",
+    ],
+  },
+  {
+    id: 5,
+    role: "PM / SE",
+    scale: "チーム4名",
+    technology: [
+      "CentOS 8, Apache, MySQL 8.0",
+      "PHP 7.3, CodeIgniter 3, jQuery, Bootstrap",
+      "Docker, Git",
+    ],
+    responsibilities: [
+      "エンドユーザーヒアリングおよび画面の設計（要件定義〜詳細設計）",
+      "画面の実装〜結合テスト、本番リリース",
+      "他メンバーへの開発タスクの割当および進捗管理",
+    ],
+    achievements: [
+      "非IT人材のユーザー向けにテクニカルな内容を分かりやすく説明",
+      "要望対応の費用対効果や対応案のメリット・デメリットを説明して納得いただく",
+      "Docker未経験メンバー向けに導入手順を作成して促進し、開発効率を向上",
+    ],
+  },
+  {
+    id: 6,
+    role: "PM / SE",
+    scale: "チーム15名 / 会社員",
+    technology: [
+      "IBMメインフレーム, WindowsServer",
+      "DB2, COBOL, SQL, JCL",
+      "HTML, JavaScript",
+    ],
+    responsibilities: [
+      "基本設計および詳細設計、進捗・品質管理、成果物検証",
+      "顧客や他開発ベンダーとの仕様・スケジュール調整",
+    ],
+    achievements: [
+      "PLを2名配置した3チーム体制で、各チームの細かな管理と全体管理を担当",
+      "日々の進捗管理を緻密に行い、問題点の早期発見と対策実施により納期を遵守",
+    ],
+  },
+  {
+    id: 7,
+    role: "メンバー",
+    scale: "チーム10名",
+    technology: [],
+    responsibilities: [
+      "定量化や見える化に関するマネジメント標準の作成",
+      "プロジェクトマネジメント学会四国支部 年次研究大会にてプレゼンを実施",
+    ],
+    achievements: [
+      "600名規模の従業員の中から選抜され策定業務に従事",
+      "定量データや客観的証拠を揃えた上での判断力・提案力が向上",
+    ],
+  },
+];
+
+// 詳細モーダルを持たない、それ以前の案件（新しい順）。
+export const OtherCareer: OtherCareerItem[] = [
+  {
+    from: "2020/10",
+    to: "2020/12",
+    title: "製薬会社向けシステム開発",
+    summary:
+      "人材調達のノウハウをドキュメント化し、所属企業での人材確保手段として確立。",
+  },
+  {
+    from: "2017/11",
+    to: "2020/03",
+    title: "民泊業者の清掃管理システム構築（副業）",
+    summary:
+      "LINE通知機能を活用した自動清掃管理システムを構築。所属企業のサーバー障害検知にも応用。",
+  },
+  {
+    from: "2014/07",
+    to: "2015/02",
+    title: "病院向けパッケージソフト導入",
+    summary:
+      "PL / SEとして産婦人科向けパッケージのカスタマイズに対応。関係者調整を重視し円滑に進行。",
+  },
+  {
+    from: "2011/01",
+    to: "2012/10",
+    title: "Webシステムの設計開発",
+    summary:
+      "電力会社の新規システムのマネジメントおよび基本設計から結合テストまでを担当。",
+  },
+  {
+    from: "2009/04",
+    to: "2010/12",
+    title: "メインフレームシステム再構築",
+    summary:
+      "パッケージのFit&Gap分析、不具合発生時の対応。証拠を詳細に収集し改修を推進。",
+  },
+  {
+    from: "2008/01",
+    to: "2009/03",
+    title: "電力系C/S・Webシステム保守",
+    summary:
+      "VBAによる業務効率化ツールを作成。新入社員へのコーディング指導も担当。",
+  },
+  {
+    from: "2007/05",
+    to: "2007/12",
+    title: "Webシステムの基本設計・開発管理",
+    summary:
+      "PMとして途中参画。直後のサービスインで本番障害が頻発する中、プロジェクト内調整や顧客対応により安定化に貢献。",
+  },
+  {
+    from: "2001/07",
+    to: "2007/04",
+    title: "通信キャリア料金システム",
+    summary:
+      "シェルによる本番リリースおよび検証作業の自動化を実現。80人の同期のうち最も早く管理職に抜擢。",
+  },
+];

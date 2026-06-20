@@ -1,6 +1,6 @@
 ---
 import CareerTimeline from "../components/CareerTimeline.astro";
-import { Career } from "../data/career";
+import { Career, CareerDetails, OtherCareer } from "../data/career";
 import PageLayout from "../layouts/PageLayout.astro";
 ---
 
@@ -10,10 +10,10 @@ import PageLayout from "../layouts/PageLayout.astro";
 >
   <h1 class="text-3xl font-bold tracking-tight text-foreground">Career</h1>
   <p class="mt-4 leading-relaxed text-muted-foreground">
-    これまでに参画したプロジェクトを時系列（新しい順）で掲載しています。
+    これまでに参画したプロジェクトを時系列（新しい順）で掲載しています。各案件の「詳細を見る」から担当業務や成果をご覧いただけます。
   </p>
 
   <div class="mt-10">
-    <CareerTimeline items={Career} />
+    <CareerTimeline items={Career} details={CareerDetails} others={OtherCareer} />
   </div>
 </PageLayout>

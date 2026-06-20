@@ -14,6 +14,11 @@ const latestPosts = (
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
   .slice(0, 3);
 
+// Career 抜粋 N=4: 新しい順（from の降順）。全件は /career のタイムラインで閲覧
+const topCareer = [...Career]
+  .sort((a, b) => b.from.localeCompare(a.from))
+  .slice(0, 4);
+
 // Skills 抜粋 M=8: 全カテゴリを flatten し経験年数の降順（年数なし=AI 活用は抜粋から除外）
 const topSkills = skills
   .flatMap((set) => set.items)
@@ -29,7 +34,7 @@ const topSkills = skills
   <Hero />
 
   <main class="mx-auto max-w-5xl px-4">
-    <!-- Career 抜粋（実データ 2 件のため全件表示） -->
+    <!-- Career 抜粋（直近 N=4 件。全件は /career） -->
     <section class="border-b border-border py-12" aria-labelledby="home-career">
       <div class="flex items-baseline justify-between">
         <h2 id="home-career" class="text-2xl font-bold text-foreground">Career</h2>
@@ -37,7 +42,7 @@ const topSkills = skills
       </div>
       <div class="mt-6 grid gap-4 sm:grid-cols-2">
         {
-          Career.map((item) => (
+          topCareer.map((item) => (
             <article class="rounded-lg border border-border p-5">
               <p class="text-xs text-muted-foreground">
                 {item.from} 〜 {item.to ?? "現在"}
