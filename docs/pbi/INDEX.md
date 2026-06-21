@@ -180,7 +180,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 |---|---|---|
 | PHASE1B-001 | [skills-qualifications-refresh](20260615-PHASE1B-001-skills-qualifications-refresh.md) | Done |
 | PHASE1B-002 | [career-refresh-representative-projects](20260615-PHASE1B-002-career-refresh-representative-projects.md) | Done |
-| PHASE1B-003 | [about-privacy-content-finalize](20260615-PHASE1B-003-about-privacy-content-finalize.md) | InProgress |
+| PHASE1B-003 | [about-privacy-content-finalize](20260615-PHASE1B-003-about-privacy-content-finalize.md) | Done |
 | PHASE1B-004 | [contact-form-backend](20260615-PHASE1B-004-contact-form-backend.md) | NotStarted |
 | PHASE1B-005 | [contact-form-frontend](20260615-PHASE1B-005-contact-form-frontend.md) | NotStarted |
 | PHASE1B-006 | [sample-posts-disposition](20260615-PHASE1B-006-sample-posts-disposition.md) | NotStarted |
@@ -193,7 +193,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 ```
 ┌─ PHASE1B-001 (Skills / 資格 現行化)    ← Done（2026-06-17）
 ├─ PHASE1B-002 (Career 現行化 + 代表案件)  ← Done（2026-06-21。全16案件を一次情報で再構築・雇用形態ラベル）
-└─ PHASE1B-003 (About / Privacy 文面確定)  ← 運営者承認待ち。002 申し送り: About「法人化を予定」を設立済みへ更新 / career-source.md の「About 用素材」（得意・合わない領域、性格診断）を反映
+└─ PHASE1B-003 (About / Privacy 文面確定)  ← Done（2026-06-21。合同会社バイトラーク設立済みを反映・About 用素材で得意/合わない領域+性格を追加・運営者承認）
         ‖ 並行 ‖
 PHASE1B-004 (Contact backend: Worker /api/contact + Turnstile + Resend)
   ↓

@@ -1,7 +1,8 @@
 # 訪問者は About / Privacy ページで運営者が事実確認・承認した文面を閲覧できる
 
-Status: InProgress
+Status: Done
 Started: 2026-06-21
+Completed: 2026-06-21
 
 ## 誰が
 - 訪問者
@@ -21,8 +22,8 @@ Started: 2026-06-21
 - [x] 両ページとも運営者の明示承認を実装ログに記録（下記 2026-06-21 entry）
 - [x] `yarn build` 成功 / `yarn check:ts` エラーなし（check:ts 0 errors / build 9 pages / test 16 passed）
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ localhost:4321 で About / Privacy を 1280px / 375px で確認、崩れなし
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ `feat-phase-1-byte-lark.tanimoto-a49.workers.dev` の /about・/privacy で確定内容を確認（合同会社バイトラーク・経歴整合・ストレングス/ENTJ・Footer・JSON-LD legalName・制定日 6/21）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ HEAD d702a57 で Quality Checks=success / UI Tests=success / e2e=success / Workers Builds=success
 
 ## 技術メモ
 - 想定セッション数: 1（文面修正の反映が主。運営者の読み込み・承認待ちは実装フェーズ外の外部待ち）
