@@ -38,6 +38,10 @@ e2e.txt
 
 # Cloudflare
 .wrangler/
+# wrangler dev のローカル secret（Turnstile / Resend キー）。値はコミットしない
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
 
 # Misc
 *.local
