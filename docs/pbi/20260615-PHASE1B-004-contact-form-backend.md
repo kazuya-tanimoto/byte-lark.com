@@ -78,6 +78,15 @@ branch alias 実機確認（`https://feat-phase-1-byte-lark.tanimoto-a49.workers
 - `GET /api/contact` → 405 `method_not_allowed`、`POST /api/contact {}` → 503 `service_unavailable`（secret 未投入のため設計どおり停止）→ Worker ルーティングと secret ガードが本番で機能
 - 実送信（Turnstile 通過 → Resend → tanimoto@byte-lark.com）は secret 未投入 + Turnstile ウィジェット未実装のため未確認。運営者セットアップ + 005 で確認
 
+### 2026-06-21 末尾スラッシュ対応（運営者がブラウザで /api/contact/ → 404 を確認）
+
+事象
+- ブラウザで `/api/contact/`（末尾スラッシュ付き）を開くと 404 ページが出た。Worker が `url.pathname === "/api/contact"` の完全一致で判定しており、スラッシュ付きは静的アセット側へ流れて `not_found_handling: "404-page"` の 404 になっていた。サイトは通常ページを末尾スラッシュ付きに揃える設定（`/about` → 307 → `/about/`）のため、スラッシュが付きやすい
+
+対応（commit 4bc5825）
+- `worker/index.ts`：`url.pathname` の末尾スラッシュを正規化して判定（`/api/contact` と `/api/contact/` の両対応）。フロント送信（fetch, スラッシュなし）の挙動は不変
+- 実機確認（branch alias）：`GET /api/contact` と `GET /api/contact/` がともに 405、`POST /api/contact/ {}` が 503、`/` 200・存在しないパス 404。CI（head 4bc5825）は Workers Builds / e2e / quality すべて success
+
 想定外・学び
 - `astro/tsconfigs/strict` の include は `**/*` のため `astro check` が `worker/` も型検査する。`@cloudflare/workers-types` 未導入でも `Request`/`Response`/`fetch`/`URL` は DOM lib で型付くため、`Env` 等は最小インターフェースを自前定義で対応（依存追加=ネットワーク不可を回避）
 - `yarn check`(biome) は `src` のみ対象 → `worker/` は lint 対象外。手書きで整形を合わせた
