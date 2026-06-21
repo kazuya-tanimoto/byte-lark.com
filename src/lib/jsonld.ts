@@ -25,6 +25,7 @@ const AUTHOR = {
 const PUBLISHER = {
   "@type": "Organization",
   name: "byte-lark",
+  legalName: "合同会社バイトラーク",
   url: "https://byte-lark.com",
 } as const;
 
