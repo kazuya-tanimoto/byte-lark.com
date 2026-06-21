@@ -97,7 +97,11 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    if (url.pathname === "/api/contact") {
+    // 末尾スラッシュの有無どちらでも受ける（/api/contact と /api/contact/）。
+    // フロントは /api/contact を叩くが、手動アクセスでスラッシュが付くと
+    // アセット側に流れて 404 になるのを防ぐ。
+    const path = url.pathname.replace(/\/+$/, "");
+    if (path === "/api/contact") {
       return handleContact(request, env);
     }
     return env.ASSETS.fetch(request);
