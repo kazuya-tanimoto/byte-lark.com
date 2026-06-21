@@ -24,7 +24,7 @@ Started: 2026-06-21
 - [x] `yarn build` / `yarn check:ts` グリーン、ハンドラのロジックは可能な範囲で Vitest 単体テストを追加 → 4 ゲート green（check:ts / test:run 30 passed / check / build）。`worker/contact.test.ts` 追加、vitest include に `worker/**/*.test.ts`
 - [x] ローカル スクショ確認（desktop + mobile）：N/A（バックエンド API のみで画面変更なし。フォーム UI 検証は 005）（CLAUDE.md §7）
 - [x] CF preview スクショ確認（branch alias URL）：N/A（同上、画面変更なし）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）：Quality Checks（check / test:run）green を確認。フォーム経由の UI Tests(e2e) は 005 で確認（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）：Quality Checks（check / test:run）green を確認。フォーム経由の UI Tests(e2e) は 005 で確認（CLAUDE.md §7）→ head b56bf8d で Quality Checks=success / UI Tests(e2e)=success / Workers Builds(byte-lark)=success
 
 ## 技術メモ
 - 想定セッション数: 1（実装スコープは Worker 1 エンドポイントに収まる）。外部アカウント連携のデバッグが伸びて 2 セッション化する場合は §7 に従い「Worker scaffold + ルーティング」と「Turnstile / Resend / レートリミット連携」に必ず再分割する
@@ -66,8 +66,17 @@ Started: 2026-06-21
 4. 追加した `send.byte-lark.com` の DNS レコードを `draft-phase1d-domain-launch.md` の NS 移管リストに追記（実レコードはセットアップ時に確定）
 
 残タスク
-- push 後に Quality Checks green 確認（受け入れ条件 §7）と CF build / branch alias で静的配信無破壊を確認
 - 上記運営者セットアップ完了 → 実送信テスト（Turnstile ウィジェットはフロント 005 で載るため、実送信の最終確認は 005 と合流）→ Done 化
+
+### 2026-06-21 push 後 CI + 本番 Worker 動作確認
+
+CI（head b56bf8d、`scripts/ci-status.sh`）
+- Quality Checks: success / UI Tests(e2e): success / Workers Builds(byte-lark): success
+
+branch alias 実機確認（`https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev`、curl）
+- `GET /` → 200、`GET /about` → 307 → `/about/` → 200（Astro 既存の trailing-slash redirect。assets 層の挙動で無変更）、`GET /zzz-does-not-exist` → 404（`not_found_handling: "404-page"` が ASSETS 委譲経由で機能）→ 静的配信の無破壊を実機で確認（受け入れ条件1）
+- `GET /api/contact` → 405 `method_not_allowed`、`POST /api/contact {}` → 503 `service_unavailable`（secret 未投入のため設計どおり停止）→ Worker ルーティングと secret ガードが本番で機能
+- 実送信（Turnstile 通過 → Resend → tanimoto@byte-lark.com）は secret 未投入 + Turnstile ウィジェット未実装のため未確認。運営者セットアップ + 005 で確認
 
 想定外・学び
 - `astro/tsconfigs/strict` の include は `**/*` のため `astro check` が `worker/` も型検査する。`@cloudflare/workers-types` 未導入でも `Request`/`Response`/`fetch`/`URL` は DOM lib で型付くため、`Env` 等は最小インターフェースを自前定義で対応（依存追加=ネットワーク不可を回避）
