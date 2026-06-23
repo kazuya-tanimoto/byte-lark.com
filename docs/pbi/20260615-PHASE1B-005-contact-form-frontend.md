@@ -19,13 +19,13 @@ Started: 2026-06-22
 - [x] 送信時に `/api/contact`（004）へ POST し、成功 / 失敗の状態を画面に表示 → 成功は完了メッセージ、失敗は 429/その他で文言出し分け
 - [x] Contact ページ本文と Footer から mailto リンク・平文メールアドレスを撤去する（`src/pages/contact.astro` line 24 付近 + `src/components/Footer.astro` line 39-40。FR-29 の mailto 廃止）。撤去後は /contact への導線に置換 → 両方撤去、Footer は「お問い合わせフォーム」→ /contact、contact ページはフォームに置換
 - [x] 入力検証（必須欠落・形式不正）でユーザーにフィードバック、Turnstile 未通過時は送信不可 → 必須/メール形式をフィールド単位で表示、トークン未取得時は送信ブロック
-- [ ] フォーム送信〜受信確認の E2E テスト（`tests/e2e/`）を追加し、Turnstile 失敗時の拒否も確認する（テスト用 Turnstile キー or モックを利用）→ `tests/e2e/contact.spec.ts` 追加済（正常系/必須欠落/形式不正/Turnstile 失敗/API 失敗/mailto 撤去の 6 ケース、Turnstile と /api/contact をモック）。CI green は下の E2E/CI 項目で確認
+- [x] フォーム送信〜受信確認の E2E テスト（`tests/e2e/`）を追加し、Turnstile 失敗時の拒否も確認する（テスト用 Turnstile キー or モックを利用）→ `tests/e2e/contact.spec.ts` 追加（正常系/必須欠落/形式不正/Turnstile 失敗/API 失敗/mailto 撤去の 6 ケース、Turnstile と /api/contact をモック）。CI（head 20b7358）の UI Tests=success で green 確認
 - [ ] 運営者準備を然るべきタイミングで運営者に依頼し、完了を確認する（004 受け入れ条件7と対）：Resend（アカウント・`send.byte-lark.com` ドメイン認証 DNS・API キー）/ Cloudflare Turnstile 本番ウィジェット（site key・secret key）/ 本番 Worker への secret 投入（`TURNSTILE_SECRET_KEY`・`RESEND_API_KEY`）。テストキー仮置きから本番キーへ差し替える
 - [ ] 本番キー投入後に実送信テストを1回実施（フォーム→Turnstile→Resend→`tanimoto@byte-lark.com` 受信を確認）し、004 の実送信条件（受け入れ条件3）と合わせて 004・005 をまとめて Done にする
 - [x] `yarn build` 成功 / `yarn check:ts` エラーなし → build 成功 / astro check 0 errors・0 warnings・0 hints
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ dev server（localhost）でフォーム/Turnstile/Footer 撤去を desktop 1280 + mobile 375 で確認、空送信で必須エラー 3 件表示も実機確認
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ push 後
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ push 後
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ branch alias でフォーム/Turnstile（テストキー描画）/Footer の /contact 化を desktop+mobile で確認。mailto リンク 0 件。実機 submit で /api/contact に到達し 503（secret 未投入）→ 失敗文言表示までフロント→Worker 配線を確認
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ head 20b7358 で UI Tests(e2e)=success / Quality Checks(quality)=success / Workers Builds(byte-lark)=success
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -69,3 +69,15 @@ site key の本番差し替え方針（手順依存を避ける）
 学び・想定外
 - @types/react 19 は `FormEvent` / `FormEventHandler` を `@deprecated`（"doesn't actually exist"）→ ハンドラ型は `NonNullable<ComponentProps<"form">["onSubmit"]>` を使い check:ts を 0 hints に
 - MCP Playwright のブラウザは外部ネットワーク到達可（challenges.cloudflare.com から実 Turnstile が描画された）。一方 Bash サンドボックスは allowlist 制限のまま。E2E は CDN 非依存にモックで実装したのでこの差に左右されない
+- lefthook pre-commit の biome は staged 全ファイル対象（`yarn check` は src のみ）。tests/ の整形・suppression 漏れで commit が一度ブロック → `yarn biome check --write tests/...` で是正。E2E spec を書いたら commit 前に biome を tests に通すこと
+
+### 2026-06-23 push 後 CI + CF preview 実機確認
+
+CI（head 20b7358、`scripts/ci-status.sh`）
+- UI Tests(e2e): success / Quality Checks(quality): success / Workers Builds(byte-lark): success（新規 contact.spec.ts も ubuntu Chromium で green）
+
+CF preview 実機（`https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev/contact`、MCP Playwright）
+- desktop 1280 / mobile 375 でフォーム・Turnstile（site key 未設定→テストキーにフォールバックし実描画）・対応領域・Footer の /contact 化を確認。mailto リンク 0 件（撤去を実機確認）
+- 実機 submit（テストキーで Turnstile 通過）→ /api/contact に到達し 503（secret 未投入の設計どおり停止）→ UI に失敗文言表示。フロント→Worker の配線を本番 Worker で確認（実送信成功は運営者 secret 投入後）
+
+残（004 と合流で Done）: 運営者準備（Resend / Turnstile 本番ウィジェット / Worker secret + CF Build env `PUBLIC_TURNSTILE_SITE_KEY`）→ 実送信 1 回
