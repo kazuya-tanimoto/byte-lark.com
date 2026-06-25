@@ -81,3 +81,12 @@ CF preview 実機（`https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev/con
 - 実機 submit（テストキーで Turnstile 通過）→ /api/contact に到達し 503（secret 未投入の設計どおり停止）→ UI に失敗文言表示。フロント→Worker の配線を本番 Worker で確認（実送信成功は運営者 secret 投入後）
 
 残（004 と合流で Done）: 運営者準備（Resend / Turnstile 本番ウィジェット / Worker secret + CF Build env `PUBLIC_TURNSTILE_SITE_KEY`）→ 実送信 1 回
+
+### 2026-06-26 運営者セットアップ完了 → 再ビルド
+
+運営者が外部設定を完了（運営者と画面を見ながら逐次実施）。
+- Resend：アカウント作成 → `send.byte-lark.com` 追加 → DKIM(TXT) / SPF(TXT) / MX を Xserver DNS に登録 → Verified（dig で公開リゾルバ反映を確認のうえ Verify）。API キー発行
+- Turnstile：ウィジェット `byte-lark-contact` 作成。Hostnames に `byte-lark.com` と branch alias `feat-phase-1-byte-lark.tanimoto-a49.workers.dev` を登録。Managed モード
+- byte-lark Worker（CF dashboard）：実行時 Secret に `TURNSTILE_SECRET_KEY` / `RESEND_API_KEY`、Build 変数に `PUBLIC_TURNSTILE_SITE_KEY`（公開 site key）を投入
+
+CF はバージョンごとに bindings をスナップショット固定するため、これらを取り込むには鍵投入後の再ビルドが必要。本コミットを引き金に feat/phase-1 を再ビルドし、branch alias で「POST /api/contact が 503 を脱する（secret 有効）」「フロントが本番 site key を使う」を実機確認 → 運営者がブラウザで実送信 1 回 → 004・005 を Done 化する段取り。
