@@ -470,11 +470,11 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 |---|---|---|---|
 | Q1 | Hero の肩書 / キャッチ / 自己紹介 1-2 行 | HomePage Hero | **確定: 肩書「現場を前に進める PM / PO」**（PHASE1A-008 で 3 案から運営者選定） |
 | Q2 | About の本文（経歴サマリ・興味領域・OSS 活動） | AboutPage | **確定: ですます調 × 見出し整理型**（PHASE1A-009 で運営者選定。最終文面承認は Phase 1b） |
-| Q3 | Contact の問合せメール（法人化前後で分けるか） | ContactPage / Footer | **確定: tanimoto@byte-lark.com**（PHASE1A-006 / 014、Footer・Contact 共通） |
+| Q3 | Contact の問合せメール（法人化前後で分けるか） | ContactPage / Footer | **確定→更新: Phase 1b でフォーム化（FR-29）。平文メール非公開、通知先 info@byte-lark.com**（当初 PHASE1A-006/014 で tanimoto@ を Footer/Contact 表示 → PHASE1B-004/005 で /api/contact + Resend 通知 info@ に変更、mailto 撤去） |
 | Q4 | Footer 法人メタ情報（法人化前の表記） | Footer | **確定: 「byte-lark（個人事業主）」+「2026年6月 法人化予定」**（PHASE1A-006、§13.1 準拠） |
 | Q5 | 記事 cover 画像の運用方針 | Blog 全般 | **確定: 装飾不要**（optional フィールドのみ定義、Decision #23 参照） |
 | Q6 | SNS リンクの配置（GitHub / X / その他） | HomePage / Footer | **確定: GitHub リンクのみ（Footer）**（PHASE1A-006） |
-| Q7 | byte-lark 法人ドメインメール / 個人メール の使い分け | Contact 全般 | **確定: tanimoto@byte-lark.com に統一**（PHASE1A-006 / 014。法人化後の切替は §13.2） |
+| Q7 | byte-lark 法人ドメインメール / 個人メール の使い分け | Contact 全般 | **確定→更新: 問い合わせ通知先は info@byte-lark.com、tanimoto@ は運営者個人連絡先**（当初 PHASE1A-006/014 は tanimoto@ 統一 → PHASE1B-005 で info@ に変更。法人化後の切替は §13.2） |
 | Q8 | デプロイ先 | インフラ | **確定: Cloudflare Workers**（Decision #17 参照） |
 | Q9 | アクセス解析ツール | 全ページ + Footer | **確定: Cloudflare Web Analytics**（Decision #18 参照） |
 | Q10 | プライバシーポリシー本文 | `/privacy` | **確定: 簡易案（5 章構成）**（PHASE1A-015。フォームなし・Cookieless ＋ 法人化改定が目前が根拠。最終文面承認は Phase 1b、法人化改定は §13.2） |

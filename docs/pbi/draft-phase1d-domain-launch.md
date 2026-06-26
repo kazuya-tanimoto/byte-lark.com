@@ -33,10 +33,10 @@ Status: Draft（番号なし。Phase 1c（デザイン）完了後の 1d 起票�
 - [ ] Lighthouse は branch alias では **A11y / Best Practices のみ**信頼できる。**Performance / SEO は branch alias では検証不能**（`*.workers.dev` の noindex 強制 + 本番キャッシュ無し + 計測ノイズ。PHASE1A-020 で確認）→ 下記「ドメイン接続後」で本番計測する
 
 ### NS 移管（メール無停止が最優先）
-- [ ] CF にゾーン追加 → インポートされたレコードを現 Xserver DNS と全件突合（MX / SPF / DKIM / send.byte-lark.com を重点確認）
+- [ ] CF にゾーン追加 → インポートされたレコードを現 Xserver DNS と全件突合（MX / SPF / DKIM、特に Resend 用の `resend._domainkey.send` TXT・`send.send` の MX/SPF を漏れなく移すこと。欠けると Contact フォームのメール送信が壊れる）
 - [ ] MX を `sv16806.xserver.jp` 直指しに変更、SPF から `+a:byte-lark.com` を削除（CF ゾーン側で設定してから NS を切替）
 - [ ] レジストラで NS を CF 指定値に変更 → ゾーン Active 化確認
-- [ ] **メール送受信テスト**（tanimoto@byte-lark.com で送信・受信とも）
+- [ ] **メール送受信テスト**（`tanimoto@byte-lark.com` と Contact 通知先 `info@byte-lark.com` の両方で送受信。info@ はフォーム通知の宛先なので NS 移管後も受信できること）
 
 ### マージ・ドメイン接続
 - [ ] feat/phase-1 系列の最終状態を main へマージ（merge --no-ff、README §10.6）→ 本番 Worker デプロイ確認

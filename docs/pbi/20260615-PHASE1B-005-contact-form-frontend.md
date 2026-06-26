@@ -90,3 +90,17 @@ CF preview 実機（`https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev/con
 - byte-lark Worker（CF dashboard）：実行時 Secret に `TURNSTILE_SECRET_KEY` / `RESEND_API_KEY`、Build 変数に `PUBLIC_TURNSTILE_SITE_KEY`（公開 site key）を投入
 
 CF はバージョンごとに bindings をスナップショット固定するため、これらを取り込むには鍵投入後の再ビルドが必要。本コミットを引き金に feat/phase-1 を再ビルドし、branch alias で「POST /api/contact が 503 を脱する（secret 有効）」「フロントが本番 site key を使う」を実機確認 → 運営者がブラウザで実送信 1 回 → 004・005 を Done 化する段取り。
+
+### 2026-06-26 実送信合格 → 通知先 info@ 化 + メール参照の全体掃除
+
+再ビルド後の branch alias 実機確認（head 512e367）
+- フロントのトークンが本物（`1.…`、ダミーでない）→ 本番 site key 反映済み。本物 Turnstile が MCP ブラウザでも通過（workers.dev ホスト名許可も有効）
+- 無効トークンの安全プローブ → 403 `turnstile_failed`（invalid-input-response）。503 を脱した＝Worker の Turnstile/Resend secret が両方有効
+- 運営者がブラウザで実送信 1 回 → `tanimoto@byte-lark.com` に通知メール受信を確認（件名・本文とも正しい）。**フォーム→Turnstile→Resend→受信の本番経路が通り、004 の実送信条件も同時に満たした**
+
+通知先を tanimoto@ → info@byte-lark.com へ変更（運営者が info@ メールボックスを新設、公開窓口を info@ に集約）
+- 実体：`worker/index.ts` の `DEFAULT_RECIPIENT`、`worker/contact.test.ts`、`.dev.vars.example`、`SECURITY.md`（脆弱性報告先）、`src/pages/privacy.astro`（平文 mailto を撤去し /contact フォーム誘導に。FR-29 一貫）
+- 文書（現状/決定ログ）：`site-plan.md` Q3/Q7、`incident-response.md`（Contact=フォームへ記述更新 + 通知先 info@。運営者の一次対応連絡先 line は本人直通の tanimoto@ を意図的に維持）、`draft-phase1d` 移管チェック（Resend 用 DNS を明記、メール疎通テストに info@ 追加）
+- 過去の記録（Done PBI 群・draft-phase1b・004/005 当時の受け入れ条件）は当時の事実なので不変。変更は本ログに集約
+- 4 ゲート再 green（biome / astro check 0/0/0 / vitest 30 passed / build）
+- 残：本変更を再ビルドして branch alias で info@ 宛に実送信 1 回（info@ が受信できることを確認）→ 004・005 を Done 化

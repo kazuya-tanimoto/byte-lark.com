@@ -10,5 +10,5 @@ TURNSTILE_SECRET_KEY="1x0000000000000000000000000000000AA"
 RESEND_API_KEY="re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 # 任意: 通知メールの宛先 / 送信元を上書きする場合のみ設定（未設定なら worker のデフォルト）。
-# CONTACT_RECIPIENT="tanimoto@byte-lark.com"
+# CONTACT_RECIPIENT="info@byte-lark.com"
 # CONTACT_SENDER="byte-lark Contact <contact@send.byte-lark.com>"

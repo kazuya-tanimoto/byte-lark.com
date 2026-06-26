@@ -24,7 +24,7 @@ export interface Env {
   CONTACT_SENDER?: string;
 }
 
-const DEFAULT_RECIPIENT = "tanimoto@byte-lark.com";
+const DEFAULT_RECIPIENT = "info@byte-lark.com";
 const DEFAULT_SENDER = "byte-lark Contact <contact@send.byte-lark.com>";
 
 function json(body: unknown, status: number): Response {

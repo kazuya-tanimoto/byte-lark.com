@@ -129,10 +129,10 @@ describe("escapeHtml / buildEmail", () => {
   it("宛先 / 返信先 / 件名を組み立てる", () => {
     const msg = buildEmail(
       validInput,
-      "tanimoto@byte-lark.com",
+      "info@byte-lark.com",
       "byte-lark <contact@send.byte-lark.com>",
     );
-    expect(msg.to).toEqual(["tanimoto@byte-lark.com"]);
+    expect(msg.to).toEqual(["info@byte-lark.com"]);
     expect(msg.reply_to).toBe("taro@example.com");
     expect(msg.subject).toContain("山田 太郎");
     expect(msg.text).toContain("お仕事の相談です。");
