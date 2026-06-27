@@ -1,7 +1,8 @@
 # 運営者は Worker /api/contact 経由で Turnstile 検証済みの問合せをメールで受信できる
 
-Status: InProgress
+Status: Done
 Started: 2026-06-21
+Completed: 2026-06-27
 
 ## 誰が
 - 運営者
@@ -16,11 +17,11 @@ Started: 2026-06-21
 ## 受け入れ条件
 - [x] `wrangler.jsonc` に Worker の `main` スクリプトを追加し、既存の静的 assets 配信（`not_found_handling: "404-page"`）と併存させる（assets binding 経由のルーティング、静的配信を壊さない）→ `main: worker/index.ts` + `assets.binding: ASSETS` 追加。assets-first がデフォルトのため `/api/contact` 以外は ASSETS へ委譲。無破壊は push 後 CF build / branch alias で確認
 - [x] `/api/contact`（POST）が Turnstile トークンをサーバー側で検証（siteverify）し、失敗時は送信を拒否（4xx）→ `verifyTurnstile`（公式 siteverify）。失敗時 403、必須欠落 400。Vitest でカバー
-- [ ] 検証通過時に Resend で `tanimoto@byte-lark.com` へ通知メールを送信する（送信元は `send.byte-lark.com` サブドメイン認証）→ `sendViaResend`（POST /emails）実装済。実送信テストは運営者の Resend アカウント + ドメイン認証 + Turnstile ウィジェット（フロント 005）が揃ってから
+- [x] 検証通過時に Resend で `tanimoto@byte-lark.com` へ通知メールを送信する（送信元は `send.byte-lark.com` サブドメイン認証）→ `sendViaResend`（POST /emails）。2026-06-27 実送信テスト合格（フォーム→Turnstile→Resend→受信を branch alias で確認。当初 tanimoto@ で受信 → 005 で通知先を info@byte-lark.com に変更し info@ でも受信確認）。送信元 `contact@send.byte-lark.com`（認証済み）
 - [x] 同一 IP の連続投稿を抑制するレートリミットを実装する（CF 公式の最新手段を着手時に一次確認: Rate Limiting binding / KV 等）→ 一次確認の結果、CF 公式 Rate Limiting binding（GA、wrangler 4.36+）を採用。`ratelimits`（60 秒 5 件 / IP）。ダッシュボード事前作成不要
 - [x] Turnstile secret / Resend API キーは Workers secret（`wrangler secret` orダッシュボード）。リポジトリに置かない → コードは `env` から読む。`.dev.vars` を gitignore 追加、`.dev.vars.example`（公式テストキーのダミー値）のみコミット。実値は運営者が `wrangler secret put` / ダッシュボードで投入
 - [x] 異常系（Turnstile 失敗 / 必須項目欠落 / Resend エラー）で適切なステータスとメッセージを返す → 405 / 503（secret 未投入）/ 429（rate limit）/ 400（JSON 不正・検証失敗）/ 403（Turnstile 失敗）/ 502（Resend 失敗）を JSON で返却
-- [ ] 運営者準備（Resend アカウント作成・ドメイン認証 DNS レコード登録・API キー発行）の完了を確認する。認証用 DNS レコードは現 Xserver DNS に追加し（NS 移管を待たない）、1d 移管リスト（`draft-phase1d-domain-launch.md`）に含める → 運営者向けセットアップ手順を実装ログに記載。完了確認待ち
+- [x] 運営者準備（Resend アカウント作成・ドメイン認証 DNS レコード登録・API キー発行）の完了を確認する。認証用 DNS レコードは現 Xserver DNS に追加し（NS 移管を待たない）、1d 移管リスト（`draft-phase1d-domain-launch.md`）に含める → 運営者が Resend アカウント + `send.byte-lark.com` 認証（DKIM/SPF/MX を Xserver DNS に登録、Verified）+ API キー発行を完了。Resend 用 DNS（`resend._domainkey.send` / `send.send`）は `draft-phase1d-domain-launch.md` の NS 移管チェックに明記済み
 - [x] `yarn build` / `yarn check:ts` グリーン、ハンドラのロジックは可能な範囲で Vitest 単体テストを追加 → 4 ゲート green（check:ts / test:run 30 passed / check / build）。`worker/contact.test.ts` 追加、vitest include に `worker/**/*.test.ts`
 - [x] ローカル スクショ確認（desktop + mobile）：N/A（バックエンド API のみで画面変更なし。フォーム UI 検証は 005）（CLAUDE.md §7）
 - [x] CF preview スクショ確認（branch alias URL）：N/A（同上、画面変更なし）（CLAUDE.md §7）
@@ -90,3 +91,10 @@ branch alias 実機確認（`https://feat-phase-1-byte-lark.tanimoto-a49.workers
 想定外・学び
 - `astro/tsconfigs/strict` の include は `**/*` のため `astro check` が `worker/` も型検査する。`@cloudflare/workers-types` 未導入でも `Request`/`Response`/`fetch`/`URL` は DOM lib で型付くため、`Env` 等は最小インターフェースを自前定義で対応（依存追加=ネットワーク不可を回避）
 - `yarn check`(biome) は `src` のみ対象 → `worker/` は lint 対象外。手書きで整形を合わせた
+
+### 2026-06-27 実送信合格 → Done
+
+- 運営者セットアップ完了（Resend `send.byte-lark.com` 認証 + API キー / Turnstile 本番ウィジェット / Worker secret + Build 変数）。詳細は 005 実装ログに集約
+- branch alias で実送信テスト合格（フォーム→Turnstile siteverify→Resend→受信）。当初 tanimoto@ で受信確認 → 005 で通知先を `info@byte-lark.com` に変更（`DEFAULT_RECIPIENT`）し info@ でも受信確認
+- CF はバージョンごとに bindings をスナップショット固定するため、secret/Build 変数投入後に再ビルドして branch alias の preview 版へ反映（鍵投入前のビルドでは 503・テストキーのままだった点を実機で確認済み）
+- 005 と同時に Done 化（2026-06-27）。本番ドメインでの最終確認は Phase 1d（`draft-phase1d-domain-launch.md`、Resend 用 DNS の移管 + info@/tanimoto@ 疎通テストを明記済み）

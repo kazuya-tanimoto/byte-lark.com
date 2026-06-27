@@ -181,8 +181,8 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 | PHASE1B-001 | [skills-qualifications-refresh](20260615-PHASE1B-001-skills-qualifications-refresh.md) | Done |
 | PHASE1B-002 | [career-refresh-representative-projects](20260615-PHASE1B-002-career-refresh-representative-projects.md) | Done |
 | PHASE1B-003 | [about-privacy-content-finalize](20260615-PHASE1B-003-about-privacy-content-finalize.md) | Done |
-| PHASE1B-004 | [contact-form-backend](20260615-PHASE1B-004-contact-form-backend.md) | InProgress |
-| PHASE1B-005 | [contact-form-frontend](20260615-PHASE1B-005-contact-form-frontend.md) | InProgress |
+| PHASE1B-004 | [contact-form-backend](20260615-PHASE1B-004-contact-form-backend.md) | Done |
+| PHASE1B-005 | [contact-form-frontend](20260615-PHASE1B-005-contact-form-frontend.md) | Done |
 | PHASE1B-006 | [sample-posts-disposition](20260615-PHASE1B-006-sample-posts-disposition.md) | NotStarted |
 | PHASE1B-007 | [article-ideation-initial-set](20260615-PHASE1B-007-article-ideation-initial-set.md) | NotStarted |
 
@@ -195,11 +195,11 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 ├─ PHASE1B-002 (Career 現行化 + 代表案件)  ← Done（2026-06-21。全16案件を一次情報で再構築・雇用形態ラベル）
 └─ PHASE1B-003 (About / Privacy 文面確定)  ← Done（2026-06-21。合同会社バイトラーク設立済みを反映・About 用素材で得意/合わない領域+性格を追加・運営者承認）
         ‖ 並行 ‖
-PHASE1B-004 (Contact backend: Worker /api/contact + Turnstile + Resend)
+PHASE1B-004 (Contact backend: Worker /api/contact + Turnstile + Resend)  ← Done（2026-06-27。実送信合格）
   ↓
-PHASE1B-005 (Contact frontend: フォーム UI + Turnstile + mailto 撤去 + E2E) ← 004 依存
+PHASE1B-005 (Contact frontend: フォーム UI + Turnstile + mailto 撤去 + E2E) ← Done（2026-06-27。004 と合流。通知先 info@byte-lark.com）
   ↓
-PHASE1B-006 (サンプル記事処置)
+PHASE1B-006 (サンプル記事処置)  ← 次の着手対象
   ↓
 PHASE1B-007 (記事ネタ出し・初期記事セット確定)
   ↓

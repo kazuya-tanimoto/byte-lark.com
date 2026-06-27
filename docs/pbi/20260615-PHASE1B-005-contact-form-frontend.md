@@ -1,7 +1,8 @@
 # 訪問者は Contact ページのフォームから問合せを送信できる
 
-Status: InProgress
+Status: Done
 Started: 2026-06-22
+Completed: 2026-06-27
 
 ## 誰が
 - 訪問者
@@ -20,8 +21,8 @@ Started: 2026-06-22
 - [x] Contact ページ本文と Footer から mailto リンク・平文メールアドレスを撤去する（`src/pages/contact.astro` line 24 付近 + `src/components/Footer.astro` line 39-40。FR-29 の mailto 廃止）。撤去後は /contact への導線に置換 → 両方撤去、Footer は「お問い合わせフォーム」→ /contact、contact ページはフォームに置換
 - [x] 入力検証（必須欠落・形式不正）でユーザーにフィードバック、Turnstile 未通過時は送信不可 → 必須/メール形式をフィールド単位で表示、トークン未取得時は送信ブロック
 - [x] フォーム送信〜受信確認の E2E テスト（`tests/e2e/`）を追加し、Turnstile 失敗時の拒否も確認する（テスト用 Turnstile キー or モックを利用）→ `tests/e2e/contact.spec.ts` 追加（正常系/必須欠落/形式不正/Turnstile 失敗/API 失敗/mailto 撤去の 6 ケース、Turnstile と /api/contact をモック）。CI（head 20b7358）の UI Tests=success で green 確認
-- [ ] 運営者準備を然るべきタイミングで運営者に依頼し、完了を確認する（004 受け入れ条件7と対）：Resend（アカウント・`send.byte-lark.com` ドメイン認証 DNS・API キー）/ Cloudflare Turnstile 本番ウィジェット（site key・secret key）/ 本番 Worker への secret 投入（`TURNSTILE_SECRET_KEY`・`RESEND_API_KEY`）。テストキー仮置きから本番キーへ差し替える
-- [ ] 本番キー投入後に実送信テストを1回実施（フォーム→Turnstile→Resend→`tanimoto@byte-lark.com` 受信を確認）し、004 の実送信条件（受け入れ条件3）と合わせて 004・005 をまとめて Done にする
+- [x] 運営者準備を然るべきタイミングで運営者に依頼し、完了を確認する（004 受け入れ条件7と対）：Resend（アカウント・`send.byte-lark.com` ドメイン認証 DNS・API キー）/ Cloudflare Turnstile 本番ウィジェット（site key・secret key）/ 本番 Worker への secret 投入（`TURNSTILE_SECRET_KEY`・`RESEND_API_KEY`）。テストキー仮置きから本番キーへ差し替える → 運営者が全て投入完了。テストキー → 本番 site key（`PUBLIC_TURNSTILE_SITE_KEY`）へ差し替え済（branch alias で本物トークンを確認）
+- [x] 本番キー投入後に実送信テストを1回実施（フォーム→Turnstile→Resend→`tanimoto@byte-lark.com` 受信を確認）し、004 の実送信条件（受け入れ条件3）と合わせて 004・005 をまとめて Done にする → 2026-06-27 branch alias で実送信（本物 Turnstile 通過）→ まず tanimoto@ で受信確認（004 条件3 同時達成）、その後通知先を info@byte-lark.com に変更し info@ でも受信確認
 - [x] `yarn build` 成功 / `yarn check:ts` エラーなし → build 成功 / astro check 0 errors・0 warnings・0 hints
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ dev server（localhost）でフォーム/Turnstile/Footer 撤去を desktop 1280 + mobile 375 で確認、空送信で必須エラー 3 件表示も実機確認
 - [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）→ branch alias でフォーム/Turnstile（テストキー描画）/Footer の /contact 化を desktop+mobile で確認。mailto リンク 0 件。実機 submit で /api/contact に到達し 503（secret 未投入）→ 失敗文言表示までフロント→Worker 配線を確認
@@ -103,4 +104,4 @@ CF はバージョンごとに bindings をスナップショット固定する�
 - 文書（現状/決定ログ）：`site-plan.md` Q3/Q7、`incident-response.md`（Contact=フォームへ記述更新 + 通知先 info@。運営者の一次対応連絡先 line は本人直通の tanimoto@ を意図的に維持）、`draft-phase1d` 移管チェック（Resend 用 DNS を明記、メール疎通テストに info@ 追加）
 - 過去の記録（Done PBI 群・draft-phase1b・004/005 当時の受け入れ条件）は当時の事実なので不変。変更は本ログに集約
 - 4 ゲート再 green（biome / astro check 0/0/0 / vitest 30 passed / build）
-- 残：本変更を再ビルドして branch alias で info@ 宛に実送信 1 回（info@ が受信できることを確認）→ 004・005 を Done 化
+- 再ビルド（head 85c1b0f、Workers Builds success）後、branch alias で info@ 宛に実送信 → **info@byte-lark.com で受信確認**。これをもって 004・005 を Done 化（2026-06-27）
