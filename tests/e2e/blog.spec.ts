@@ -1,61 +1,18 @@
 import { expect, test } from "@playwright/test";
 
-const POST_TITLE = "Astro Content Collections で型安全なブログ基盤を構築する";
-
-test.describe("Blog 一覧 → 記事詳細", () => {
-  test("一覧の記事カードから記事詳細へ遷移できる", async ({ page }) => {
+// サンプル記事（hello-astro / draft-sample）は PHASE1B-006 で削除した。
+// 実記事は Phase 1b の記事実装 PBI（008+）で投入される。実記事投入後に、
+// 一覧→詳細遷移 / カテゴリフィルタ / draft 非表示 / 詳細ページ a11y の E2E を
+// 再有効化する（PHASE1B-006 実装ログ / 007 申し送り参照）。
+test.describe("Blog 一覧（公開記事ゼロ）", () => {
+  test("公開記事が無い場合は空メッセージが表示される", async ({ page }) => {
     await page.goto("/blog");
-    await page.getByRole("link", { name: new RegExp(POST_TITLE) }).click();
-    await expect(page).toHaveURL(/\/blog\/hello-astro-content-collections\/?$/);
     await expect(
-      page.getByRole("heading", { level: 1, name: POST_TITLE }),
+      page.getByRole("heading", { level: 1, name: "Blog" }),
     ).toBeVisible();
-  });
-
-  test("draft 記事は一覧に表示されない", async ({ page }) => {
-    await page.goto("/blog");
-    await expect(page.getByText("下書きサンプル記事")).toHaveCount(0);
-  });
-});
-
-test.describe("カテゴリフィルタ", () => {
-  test("初期状態では「全て」が選択され全記事が表示される", async ({ page }) => {
-    await page.goto("/blog");
-    await expect(page.getByRole("button", { name: "全て" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    await expect(page.locator("[data-blog-item]:visible")).toHaveCount(1);
-  });
-
-  test("Tech 選択で tech 記事のみ表示される", async ({ page }) => {
-    await page.goto("/blog");
-    await page.getByRole("button", { name: "Tech" }).click();
-    await expect(page.getByRole("button", { name: "Tech" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    await expect(
-      page.locator('[data-blog-item][data-category="tech"]:visible'),
-    ).toHaveCount(1);
-  });
-
-  test("該当記事ゼロのカテゴリでは空メッセージが表示される", async ({
-    page,
-  }) => {
-    // 現状 life カテゴリの公開記事は 0 件
-    await page.goto("/blog");
-    await page.getByRole("button", { name: "Life" }).click();
-    await expect(page.locator("[data-blog-item]:visible")).toHaveCount(0);
-    await expect(
-      page.getByText("該当するカテゴリの記事はありません。"),
-    ).toBeVisible();
-
-    // 「全て」へ戻すと再表示され、空メッセージは消える
-    await page.getByRole("button", { name: "全て" }).click();
-    await expect(page.locator("[data-blog-item]:visible")).toHaveCount(1);
-    await expect(
-      page.getByText("該当するカテゴリの記事はありません。"),
-    ).toBeHidden();
+    await expect(page.getByText("記事はまだありません。")).toBeVisible();
+    // 記事カードもカテゴリフィルタも描画されない
+    await expect(page.locator("[data-blog-item]")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "全て" })).toHaveCount(0);
   });
 });
