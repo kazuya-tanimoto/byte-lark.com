@@ -4,7 +4,7 @@ description: "数年かけても完成しなかった個人サイトを、Claude
 category: tech
 tags: ["claude code", "astro", "cloudflare workers", "ai駆動開発", "個人開発"]
 publishedAt: 2026-06-28
-draft: false
+draft: true
 slug: building-this-blog-with-claude-code
 ---
 
