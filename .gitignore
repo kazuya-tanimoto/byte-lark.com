@@ -63,3 +63,6 @@ lerna-debug.log*
 
 # Playwright MCP artifacts
 .playwright-mcp/
+
+# 記事の取材メモ（運営者の生回答・下書き素材。完成記事だけ公開する）
+docs/article-interviews/

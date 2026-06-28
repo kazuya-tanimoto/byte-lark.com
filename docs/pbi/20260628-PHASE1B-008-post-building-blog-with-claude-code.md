@@ -1,6 +1,7 @@
 # 訪問者は「Claude Code と PBI 駆動でこのブログを作った話」（tech）を読める
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-06-28
 
 ## 誰が
 - 訪問者
@@ -31,3 +32,22 @@ Status: NotStarted
 
 ## 備考
 - `draft-phase1b-content-launch-prep.md` 項目7（記事実装 × n）の正式化。PHASE1B-007 確定の初期セット 6 本のうち 1 本目
+
+## 実装ログ
+
+### 2026-06-28
+
+やったこと
+- 着手（InProgress）。このリポジトリの構築履歴（51 本の PBI / コミット弧 / 想定外ログ）を一次情報として読み込み、記事ネタを集約。
+- ヒアリング1巡目を実施。質問（背景込み）と運営者回答を `docs/article-interviews/building-this-blog-with-claude-code.md` に集約（セッション跨ぎで消えないため）。以後の取材・ドラフトはこのファイルを参照する。
+- 記事方針: 用語（site-plan / INDEX / §7検証ゲート 等）はブログ本文で平易に言い換える（運営者指摘。そのまま使わない）。文体確定後 `docs/writing-style-guide.md` に蒸留予定。
+
+- ヒアリング2〜3巡目＋振り返り（深掘りF）まで完了。事実確認（モデル docs 引用句／Lost in the Middle／公式ベストプラクティスが手法をほぼ追認／コミット由来タイムライン）を取材メモに記録。
+- 全文ドラフトを作成（`src/content/posts/building-this-blog-with-claude-code.md`、`draft: true`、本文約6,520字）。`yarn build` 通過（frontmatter 検証 OK）。
+- 取材メモの gitignore 方針確定（`docs/article-interviews/` を gitignore。生メモ非公開・完成記事のみ公開）。
+
+残タスク
+- 本文が合意レンジ（4,000〜5,000字）超過（約6,520字）。運営者と長さ方針を相談（今 Claude が圧縮 or リライトで調整）。
+- 運営者リライト → `draft: false`。
+- draft:false 後に §7 検証（ローカル＋CF preview スクショ、OGP / Article JSON-LD 出力確認、E2E/CI green）。
+- 「最良モデルを使え」の中の人ブログは未特定（docs 引用で代替。運営者が想起すれば追記）。
