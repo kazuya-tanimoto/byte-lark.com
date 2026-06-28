@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-06-15
+最終更新: 2026-06-28
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -184,7 +184,14 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 | PHASE1B-004 | [contact-form-backend](20260615-PHASE1B-004-contact-form-backend.md) | Done |
 | PHASE1B-005 | [contact-form-frontend](20260615-PHASE1B-005-contact-form-frontend.md) | Done |
 | PHASE1B-006 | [sample-posts-disposition](20260615-PHASE1B-006-sample-posts-disposition.md) | Done |
-| PHASE1B-007 | [article-ideation-initial-set](20260615-PHASE1B-007-article-ideation-initial-set.md) | NotStarted |
+| PHASE1B-007 | [article-ideation-initial-set](20260615-PHASE1B-007-article-ideation-initial-set.md) | Done |
+| PHASE1B-008 | [post-building-blog-with-claude-code](20260628-PHASE1B-008-post-building-blog-with-claude-code.md) | NotStarted |
+| PHASE1B-009 | [post-contact-form-on-workers](20260628-PHASE1B-009-post-contact-form-on-workers.md) | NotStarted |
+| PHASE1B-010 | [post-legacy-to-modern](20260628-PHASE1B-010-post-legacy-to-modern.md) | NotStarted |
+| PHASE1B-011 | [post-claude-code-for-po-work](20260628-PHASE1B-011-post-claude-code-for-po-work.md) | NotStarted |
+| PHASE1B-012 | [post-incorporating-bytelark](20260628-PHASE1B-012-post-incorporating-bytelark.md) | NotStarted |
+| PHASE1B-013 | [post-work-fit-strengthsfinder](20260628-PHASE1B-013-post-work-fit-strengthsfinder.md) | NotStarted |
+| **PHASE1B-014** | [**retrospective-gate**](20260628-PHASE1B-014-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
 ### Phase 1b 推奨着手順序
 
@@ -201,10 +208,16 @@ PHASE1B-005 (Contact frontend: フォーム UI + Turnstile + mailto 撤去 + E2E
   ↓
 PHASE1B-006 (サンプル記事処置)  ← Done（2026-06-28。両サンプル + sample-cover.png 削除、空 content dir は .gitkeep で保持、E2E を空 Blog 向けに調整。CF ビルドは node_modules/.astro キャッシュ汚染で一度赤→Clear Cache で解消）
   ↓
-PHASE1B-007 (記事ネタ出し・初期記事セット確定)  ← 次の着手対象
+PHASE1B-007 (記事ネタ出し・初期記事セット確定)  ← Done（2026-06-28。初期セット 6 本確定 / 記事 PBI 008〜013 + Gate 014 起票 / バックログを docs/article-backlog.md に集約）
   ↓
-記事実装 PBI 群（PHASE1B-008〜、本数は 007 で確定）+ Phase 1b Retrospective Gate
-  ← 007 完了時に追加起票（draft 項目7 = placeholder。番号は起票時に確定）
+┌─ PHASE1B-008 (T1 サイト構築総括・tech)
+├─ PHASE1B-009 (T2 自前フォーム実装・tech)
+├─ PHASE1B-010 (T3 レガシー→モダン移行・tech)        ← 記事実装グループ（1 記事 1 PBI、並列可）
+├─ PHASE1B-011 (T5 実案件で Claude 活用 PO 業務・tech)
+├─ PHASE1B-012 (L1 法人化・life)
+└─ PHASE1B-013 (L2+L3 合う仕事×ストレングス・life)
+  ↓
+PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 全 Done 後、1c 移行前の必須ゲート
 ```
 
 ---
@@ -257,4 +270,5 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-06-14 | **PHASE1A-022 完了（Done）＝ Phase 1a Gate 通過**。全 PBI Done 確認（018 のみ Moved）、検証コマンド 5 種 green、CI green を確認のうえ `## Phase 1b への申し送り` を集約。site-plan §10 未決事項の確定反映 / §12 v2.9 / §6.4 追記でドリフト修正。main マージは v3.9 Decision #25 で Phase 1d 移管済みのため Gate では実施せず（運営者承認）。次セッションは Phase 1b PBI 起票（draft-phase1b-content-launch-prep.md の正式化）から |
 | 2026-06-14 | ガバナンス文書ドリフト一括是正（docs のみ）：README §10 ブランチ運用を deferred-merge に是正し v3.0 → v3.1（公開前 1a〜1c は feat/phase-1a 集約、main マージは 1d。Decision #25 整合）。版数を v3.1 に統一（README タイトル / CLAUDE.md / site-plan §12 の現行参照のみ。過去事実の改訂履歴・Done PBI 本体は不変）。README §4.6 ルール6 を網羅性の目安に降格 + §7 にサイズ判定の主基準（想定セッション数を技術メモに明記 / 2 セッション以上は必ず分割）を新設。CLAUDE.md line 69/90・operation-manual.md（毎 Phase マージ + v3.0 廃止済み worktree 記述）も連動是正。Phase 1b 正式化は次セッション |
 | 2026-06-14 | 統合ブランチ改名（README v3.2 連動）：公開前 1a〜1c を集約する統合ブランチを `feat/phase-1a` → `feat/phase-1` にリネーム（名前と中身のズレ解消、deferred-merge 構造は不変）。README §10 / CLAUDE.md / operation-manual.md / draft-phase1d の現行・前方参照と CF プレビュー URL を連動更新。`feat/phase-*` パターン内のため CF filter / main 保護は無変更。Done PBI 本体の当時のブランチ名は不変 |
+| 2026-06-28 | **PHASE1B-007 完了（Done）＋ 記事実装 PBI 群・Phase 1b Gate 起票**：運営者 + Claude のネタ出しで初期記事セット 6 本を確定（tech 4: T1 サイト構築総括 / T2 自前フォーム実装 / T3 レガシー→モダン移行 / T5 実案件 Claude 活用 PO、life 2: L1 法人化 / L2+L3 合う仕事×ストレングスファインダー）。記事実装 PBI PHASE1B-008〜013（1 記事 1 PBI）+ Phase 1b Retrospective Gate PHASE1B-014 を NotStarted で起票。公開後バックログ（T4/T6/T7/L4/L5/L6）は死蔵防止のため `docs/article-backlog.md` に切り出し。R-01 月次ネタ出し routine は Phase 1d 公開後に点火（article-backlog 起点）と判断 |
 | 2026-06-15 | **Phase 1b PBI 起票（7 件）**：`draft-phase1b-content-launch-prep.md` を正式化。PHASE1B-001（Skills/資格 現行化）/ 002（Career 現行化 + 代表案件）/ 003（About/Privacy 文面確定）/ 004（Contact backend）/ 005（Contact frontend）/ 006（サンプル記事処置）/ 007（記事ネタ出し・初期記事セット確定）。draft 項目4（Contact フォーム化 FR-29）を §7 基準でバックエンド 004 / フロント 005 に分割。各 PBI 技術メモに想定セッション数を明記（全件 1 セッション、004 は 2 セッション化時の再分割条件を付記）、受け入れ条件に §7 検証ゲート 3 項目を常設。PHASE1A-022 申し送り + Phase 1a 各実装ログ（devicon 403 判定 / HMR / Career id=2 一次情報なし / About=ですます調・Privacy=簡易案 / wrangler は assets のみ / Footer も平文 mailto）を反映。draft 項目7（記事実装 × n）と Phase 1b Gate は 007 完了時に追加起票（placeholder）。INDEX セッション開始チェック 3 種 green 確認済み |
