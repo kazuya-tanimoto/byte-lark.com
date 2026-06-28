@@ -183,7 +183,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 | PHASE1B-003 | [about-privacy-content-finalize](20260615-PHASE1B-003-about-privacy-content-finalize.md) | Done |
 | PHASE1B-004 | [contact-form-backend](20260615-PHASE1B-004-contact-form-backend.md) | Done |
 | PHASE1B-005 | [contact-form-frontend](20260615-PHASE1B-005-contact-form-frontend.md) | Done |
-| PHASE1B-006 | [sample-posts-disposition](20260615-PHASE1B-006-sample-posts-disposition.md) | InProgress |
+| PHASE1B-006 | [sample-posts-disposition](20260615-PHASE1B-006-sample-posts-disposition.md) | Done |
 | PHASE1B-007 | [article-ideation-initial-set](20260615-PHASE1B-007-article-ideation-initial-set.md) | NotStarted |
 
 ### Phase 1b 推奨着手順序
@@ -199,9 +199,9 @@ PHASE1B-004 (Contact backend: Worker /api/contact + Turnstile + Resend)  ← Don
   ↓
 PHASE1B-005 (Contact frontend: フォーム UI + Turnstile + mailto 撤去 + E2E) ← Done（2026-06-27。004 と合流。通知先 info@byte-lark.com）
   ↓
-PHASE1B-006 (サンプル記事処置)  ← 次の着手対象
+PHASE1B-006 (サンプル記事処置)  ← Done（2026-06-28。両サンプル + sample-cover.png 削除、空 content dir は .gitkeep で保持、E2E を空 Blog 向けに調整。CF ビルドは node_modules/.astro キャッシュ汚染で一度赤→Clear Cache で解消）
   ↓
-PHASE1B-007 (記事ネタ出し・初期記事セット確定)
+PHASE1B-007 (記事ネタ出し・初期記事セット確定)  ← 次の着手対象
   ↓
 記事実装 PBI 群（PHASE1B-008〜、本数は 007 で確定）+ Phase 1b Retrospective Gate
   ← 007 完了時に追加起票（draft 項目7 = placeholder。番号は起票時に確定）
