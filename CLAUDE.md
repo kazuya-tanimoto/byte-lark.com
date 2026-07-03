@@ -74,6 +74,11 @@
 - Append to INDEX.md as Status: NotStarted
 - Commit on the Phase branch (docs-only)
 
+## Stop Hook フィードバック対応
+
+Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブロックされた場合、そのフィードバックは次のターンの `<system-reminder>` に含まれる。
+次のターンでは、ユーザーの新しい質問に答える前に、まず Stop hook の指摘（未消化の検証工程）を解消すること。
+
 ## Sandbox 制約
 - Phase 1a 以降の git 操作は統合ブランチ feat/phase-1 を直接チェックアウトして行う（sub-branch 不使用、worktree 不使用）。feat/phase-1 に直 commit / 直 push する（1a〜1c を集約、main マージは 1d。詳細: docs/pbi/README.md §10.4-10.6）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
