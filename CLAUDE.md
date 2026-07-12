@@ -41,6 +41,7 @@
    - If any InProgress PBI exists, read its 実装ログ first; resume only if explicitly handed off
    - Otherwise, pick the oldest NotStarted in the current Phase
    - Earlier Phases must be Done (Gate passed)
+   - 例外（先行トラック）: site-plan §8 Decision #28 の Phase 1c 先行トラック（PHASE1C-001〜007）は Phase 1b Gate 未通過でも着手可。記事 PBI（PHASE1B-008〜013）とはセッション単位で切替（どちらを進めるかは運営者指示に従う。README §9 例外）
 4. Update PBI Status: NotStarted → InProgress + Started date
 5. Sync INDEX.md
 6. Implement
@@ -66,6 +67,7 @@
 
 ### How to draft next-Phase PBIs
 - Only after current Phase Done + Retrospective Gate passed
+  - 例外: site-plan Decision Log で「先行トラック」と明示された PBI 群は前 Phase Gate 前に起票可（現行: Phase 1c 先行トラック、Decision #28 / README §9 例外。仕上げトラック + 1c Gate は 1b Gate 後に起票）
 - Through Phase 1c, keep working on the integration branch `feat/phase-1` — do NOT branch from main (公開前は main 未マージで集約。README §10.3）。`git checkout -b feat/phase-<phase>` from main applies only to new phase lineages: Phase 0 (done) and post-publish 1e+ after Phase 1d merges feat/phase-1 into main (README §10.6, site-plan §8 Decision #25)
 - Read the Gate PBI's "次 Phase への申し送り" section
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
@@ -91,8 +93,8 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 - wip(pbi): PHASE0-NNN <note>    # 中間コミット
 
 ## Related Docs
-- docs/site-plan.md           Site construction plan (current: v3.9)
-- docs/pbi/README.md          PBI format spec (v3.2) including §10 branch ops
+- docs/site-plan.md           Site construction plan (current: v3.10)
+- docs/pbi/README.md          PBI format spec (v3.3) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）

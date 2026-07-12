@@ -1,6 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.9)
+# byte-lark.com サイト構築計画書 (v3.10)
 
-最終更新: 2026-06-13
+最終更新: 2026-07-12
+
+> v3.9 → v3.10 主な変更：**Phase 1c 先行トラックの導入（1b 記事執筆との並行許可）**。1c（デザインブラッシュアップ）を二段構えに分割：**先行トラック**（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）は 1b Gate 通過前でも起票・着手可、**仕上げトラック**（B-3 CSS サイズ / 全記事での最終再検証 / 1c Gate）は従来どおり 1b Gate 通過後に起票。Decision #28 追加、§7 ロードマップ 1c 行・「PBI の起票タイミング」節を連動更新。README §9 例外（v3.3）/ INDEX.md / CLAUDE.md / draft-phase1c-design-polish.md / PHASE1B-014 も連動。先行トラック PBI（PHASE1C-001〜007）を同日起票。
 
 > v3.8 → v3.9 主な変更：**Phase 再編（公開の独立フェーズ化）**。新 1b = コンテンツ整備（Skills / Career 実データ化、About / Privacy 文面確定、Contact フォーム化、初期記事セット）、新 1c = デザインブラッシュアップ（旧 1b）、新 1d = 公開（NS 移管 / カスタムドメイン / Web Analytics / Search Console。旧 PHASE1A-018 を移管）、新 1e = カテゴリ別一覧（旧 1c）。Decision #25（公開フェーズ分離）・#26（Contact 自前フォーム = Worker + Turnstile + Resend）追加、FR-29 追加、FR-19 / FR-28 / Decision #4 #15 #21 #23 / R-06 #07 #08 #12 / Q11 / §6.7 の Phase 名を連動更新。**読み替え注意**：Done 済み PBI 内の旧 Phase 名は当時の表記のまま（旧 1b → 新 1c、旧 1c → 新 1e と読む）。
 
@@ -382,7 +384,7 @@ Astro の標準機能で完全対応：
 | **Gate 1a→1b** | Retrospective Gate（同上） | Gate PBI 完了 | 0.25 日 |
 | **1b 起票** | 別セッションで Phase 1b PBI 起票（`docs/pbi/draft-phase1b-content-launch-prep.md` を正式化） | INDEX.md 追加・レビュー完了 | 0.25-0.5 日 |
 | **1b** | コンテンツ整備：Skills / Career を現行実データに更新 + 代表案件追記（運営者インプット）、About / Privacy 文面の事実確認・承認、サンプル記事の処置、Contact フォーム化（FR-29）、記事ネタ出し → 初期記事セット実装（1 記事 1 PBI、本数はネタ出し PBI で確定） | 全ページの文面・データが運営者承認済み、初期記事セットがリポジトリ上で公開状態、フォーム E2E グリーン | 3-5 日 + 記事執筆 |
-| **1c** | デザインブラッシュアップ：ClaudeDesign で草案 → カラー / タイポ / ロゴ確定（**ロゴ反復上限 5 ラウンド**） → 実装反映。**1b の実コンテンツで検証**（旧 1b） | デザイン確定 + ロゴ刷新 + 視覚的一貫性 + 仮 HEX → 確定 HEX 置換 | 4-6 日 |
+| **1c** | デザインブラッシュアップ：ClaudeDesign で草案 → カラー / タイポ / ロゴ確定（**ロゴ反復上限 5 ラウンド**） → 実装反映。**1b の実コンテンツで検証**（旧 1b）。**二段構え（Decision #28）**：先行トラック（記事非依存、PHASE1C-001〜007）は 1b 記事執筆と並行可、仕上げトラック（B-3 / 全記事最終再検証 / 1c Gate）は 1b Gate 後に起票 | デザイン確定 + ロゴ刷新 + 視覚的一貫性 + 仮 HEX → 確定 HEX 置換 | 4-6 日 |
 | **1d** | 公開：再 QA（E2E / Lighthouse）→ NS 移管（Xserver → CF、MX / SPF 引き継ぎ設計込み）→ main マージ → Workers カスタムドメイン接続 → www 旧 Netlify サイト畳み → Web Analytics 有効化 → Search Console 登録 + sitemap 送信（`docs/pbi/draft-phase1d-domain-launch.md` を正式化） | `https://byte-lark.com` で全ページ表示 + メール送受信継続 + Analytics データ取得 | 1-2 日 + DNS 伝播 |
 | **1e** | カテゴリ別一覧追加（記事数到達時のみ）。PBI は到達時点で起票（旧 1c） | `/blog/tech`, `/blog/life` 公開、Lighthouse 維持 | 0.5 日 |
 | **2** | 広告収益化（AdSense / Amazon アソシエイト）。並行検討：ニュースレター / Substack / note 連携 | 記事 30 本以上、AdSense 審査通過、配置最適化、CWV 維持 | 後日（記事数次第） |
@@ -392,6 +394,8 @@ Astro の標準機能で完全対応：
 ### PBI の起票タイミング（重要）
 
 **全 PBI を着手前に書き切らない**。Phase ごとに起票し、各 Phase 完了後の Retrospective Gate で得た学びを次 Phase PBI に反映する。
+
+**例外（Decision #28、README §9 例外と対）**：Decision Log で明示的に「先行トラック」と定義した PBI 群は、前 Phase Gate 通過前でも起票・着手できる。現行の適用対象は Phase 1c 先行トラック（記事非依存のデザイン項目、PHASE1C-001〜007）のみ。前 Phase の学びを反映すべき残り（仕上げトラック + 1c Gate）は従来どおり 1b Gate 通過後に起票する。
 
 ```
 [現在地]
@@ -441,6 +445,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | 25 | **Phase 再編（v3.9）**：公開を独立フェーズ 1d に分離、1b をコンテンツ整備として新設（旧 1b デザイン → 1c、旧 1c カテゴリ → 1e）。公開は 1c 完了 + 初期記事セット + 再 QA を前提条件とする | 未完成サイト（仮デザイン・サンプル記事・未承認文面・旧コード由来の Career / Skills）を法人ドメインで公開・クロールさせないため / 公開は DNS・メール継続（MX が apex 名指し）・旧 www Netlify サイトの畳みを含む一度きりの重要イベントで独立管理が必要 / コンテンツ先・デザイン後にすると実記事でタイポ・カード設計を検証でき手戻りがない | 1a 内で公開（旧計画）→ main は Hello, World! のままで公開すると placeholder がクロールされる / production branch 一時切替 → 未完成サイトの全世界公開で棄却 |
 | 26 | **Contact は自前フォームに置換**（Worker `/api/contact` + Cloudflare Turnstile + Resend、送信元は `send.byte-lark.com` サブドメイン認証、API キーは Workers secret、mailto 廃止）（FR-29） | アドレス平文公開は収集ボットに拾われ、CF のメール難読化は Workers 配信に不適用（公式 docs 明記）/ メーラー未設定環境では mailto が無反応で商談機会を取りこぼす / Turnstile・Resend とも無料枠で月数十件は余裕 / CSRF はセッション認証なしのため主論点でなく、対策の本命は Turnstile サーバー側検証 + レートリミット | mailto 維持 → スパム露出 + UX 劣化 / Google Form → 法人サイトの体裁劣化・Google 依存 / SES → サンドボックス解除等の手間が小規模用途に見合わない |
 | 27 | **E2E は CI（GitHub Actions）で検証**：`yarn test:e2e` は Bash サンドボックスで Chromium が起動できない（macOS Seatbelt が Mach port 登録を拒否、FATAL）。CI（`.github/workflows/ui-tests.yml`）を Playwright 公式コンテナ `mcr.microsoft.com/playwright:v<ver>-noble` 化し push で自動実行、Claude は `scripts/ci-status.sh`（無認証 REST API、public repo）で合否確認。スクショ確認は MCP Playwright で実施 | 旧 `--with-deps` は noble runner の apt で 60 分ハング→timeout でテスト未実行だった / 運営者手動実行は自走を妨げる / gh CLI は sandbox 内で TLS・keychain により不可、curl は可 | 運営者ターミナル手動実行（旧 PBI 019 前提）→ 毎回手作業で自走せず / sandbox で直接実行 → Chromium 起動不可 |
+| 28 | **Phase 1c 先行トラックの 1b 並行**（v3.10）：1c を「先行トラック（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）」と「仕上げトラック（B-3 CSS サイズ / 全記事最終再検証 / 1c Gate）」に二分し、先行トラックは 1b Gate 通過前に起票・着手可とする。運用はセッション単位の切替（push 競合は README §10.7） | 1b 残タスク（記事 PBI 008〜013）は運営者リライト・ヒアリング律速で待ち時間が発生する / Decision #25「実コンテンツで検証」の前提は、全ページ実データ承認済み（PHASE1B-001〜005）+ 実記事 1 本（008 ドラフト）で実質充足 / ロゴは反復上限 5 ラウンドでリードタイム最長、早期着手が R-06（1c 長期化）の緩和になる / Gate の学び反映（README §9）は仕上げトラック起票に残る | 厳格順守（1b 完了まで 1c 禁止）→ 運営者律速の待ち時間に開発が止まる / 1c 全量起票 → 1b Gate 申し送りの反映機会が消え、記事依存 PBI が長期 InProgress 化 |
 
 ## 9. リスク / 留意事項
 
@@ -513,7 +518,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 
 ## 12. 次アクション
 
-1. 本計画書 v3.9 のレビュー・確定（別セッション）
+1. 本計画書 v3.10 のレビュー・確定（別セッション）
 2. Phase 0 PBI 10 件のレビュー（別セッション、`docs/pbi/INDEX.md` 経由）
 3. Phase 0 実装着手：feat/phase-0 ブランチで Vite 削除 + Astro 初期化（別セッション、複数セッションに分かれる可能性あり）
 4. Phase 0 完了 → Retrospective Gate (PHASE0-010) 通過
@@ -521,7 +526,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 6. Phase 1a レビュー → Phase 1a 実装
 7. 以降、Phase 1b（コンテンツ整備）/ 1c（デザイン）/ 1d（公開）/ 1e（カテゴリ別一覧）/ 2 を同様のサイクルで進行
 
-PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.2 を参照。
+PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.3 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
 **運営者向け運用マニュアル**（シーン別フレーズ / リカバリー / トラブルシューティング）は `docs/operation-manual.md` を参照。
 
@@ -603,3 +608,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-06-14 | Phase 1a Retrospective Gate（PHASE1A-022）での事実修正（クラリフィケーション、v 番号据え置き）。§10 未決事項 Q1/Q2/Q3/Q4/Q6/Q7/Q10/Q12 を Phase 1a 実装での確定値に反映（各 PHASE1A-006/008/009/014/015 参照）、§12 の README 参照を v2.8 → v2.9、§6.4 構成図に `src/types/` と `public/favicon.svg`〔暫定〕を追記。なお main マージ＋本番デプロイは v3.9 Decision #25 で Phase 1d 移管済みのため Gate では実施せず（PHASE1A-022 マージ節を N/A 化、運営者承認） |
 | 2026-06-14 | ガバナンス文書ドリフト一括是正（クラリフィケーション、v 番号据え置き）。README §10 ブランチ運用を deferred-merge に是正し README を v3.0 → v3.1 化（公開前 1a〜1c は feat/phase-1a 集約、main マージは 1d。site-plan §7 1d 行は元から整合）。連動して §12 の README 参照を v2.9 → v3.1 に訂正（前 Gate の v2.9 修正が誤り。README 現行は v3.0 だった）、§14 メンテ表の v2.x / v3.x 行を README の v3.x 名前空間移行に合わせて更新。CLAUDE.md line 69/90・operation-manual.md（毎 Phase マージ + 旧 worktree 記述）・INDEX.md も同コミットで是正。過去事実の改訂履歴行（直前の line 含む）と Done PBI 本体は不変のまま。 |
 | 2026-06-14 | 統合ブランチ改名（クラリフィケーション、v 番号据え置き。README v3.2 連動）。公開前 1a〜1c を集約する統合ブランチを `feat/phase-1a` → `feat/phase-1` にリネーム（sub-phase 名で統合ブランチを呼ぶ名前と中身のズレを解消。deferred-merge 構造は不変）。§12 の README 参照を v3.2 に更新。CLAUDE.md / README §10 / operation-manual.md / draft-phase1d の現行・前方参照と CF プレビュー URL（`feat-phase-1-...`）も連動更新。`feat/phase-*` パターン内なので CF filter / main 保護は無変更。Done PBI 本体の当時のブランチ名は不変。 |
+| 2026-07-12 | v3.10：**Phase 1c 先行トラック導入（1b 記事執筆との並行許可）**。1c を先行トラック（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）と仕上げトラック（B-3 CSS サイズ / 全記事最終再検証 / 1c Gate、1b Gate 後に起票）に二分。背景：1b 残タスク（記事 008〜013）が運営者リライト・ヒアリング律速で、記事非依存のデザイン作業を待たせる実益がない（実コンテンツ検証の前提は 1b-001〜005 承認済み + 008 ドラフトで実質充足）。Decision #28 追加、§7 ロードマップ 1c 行・「PBI の起票タイミング」節に例外注記、§12 参照更新。README §9 例外追加（v3.3）、INDEX.md Phase 1c 節・着手ルール、CLAUDE.md、draft-phase1c-design-polish.md 着手条件、PHASE1B-014 申し送り宛先を連動更新。先行トラック PBI（PHASE1C-001〜007）を同日起票 |
