@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-06-28
+最終更新: 2026-07-12
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -23,6 +23,7 @@ PHASE0-005 完了後は `CLAUDE.md` の "How to start/end/draft" セクション
 - InProgress な PBI が存在すれば、その実装ログを読んで再開
 - なければ、現在 Phase の最初の NotStarted PBI を着手（推奨着手順序図に従う）
 - 前 Phase の Gate PBI が Done になっていない場合、次 Phase に進まない
+- **例外（先行トラック）**：site-plan §8 Decision #28 で定義された Phase 1c 先行トラック（PHASE1C-001〜007）は、Phase 1b Gate（PHASE1B-014）未通過でも着手可。記事 PBI（PHASE1B-008〜013）とはセッション単位で切り替えて進める（README §9 例外 / push 競合は §10.7）
 
 ### 着手後・中断時・完了時の手順
 [docs/pbi/README.md](README.md) §5 を参照（着手時の手順 §5.3、中断時の手順 §5.4、完了済み PBI の扱い §5.5、コミット規約 §6）。
@@ -224,7 +225,36 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 全 Done 後、1c 移�
 
 ## Phase 1c：デザインブラッシュアップ（旧 1b）
 
-PBI は **Phase 1b 完了後**に別セッションで起票する。**[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) を正式化する**（確定 HEX + color-contrast 再有効化、タイポ確定、ロゴ刷新、加えて PHASE1A-020 で判明した品質仕上げ: blog 見出しレベル / about 低速 CLS（フォント）/ CSS サイズ / favicon 意匠）。
+二段構え（site-plan v3.10 §8 Decision #28）：**先行トラック**（記事非依存、下表）は 2026-07-12 起票済みで Phase 1b 記事執筆と並行着手可。**仕上げトラック**（B-3 CSS サイズ見直し / 全初期記事セットでのデザイン最終再検証 / Phase 1c Gate）は **Phase 1b Gate（PHASE1B-014）通過後**に別セッションで起票する（[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) の残項目を正式化）。
+
+表は推奨着手順序に従って並べる：
+
+| ID | タイトル | Status |
+|---|---|---|
+| PHASE1C-001 | [design-direction](20260712-PHASE1C-001-design-direction.md) | NotStarted |
+| PHASE1C-002 | [brand-colors-contrast](20260712-PHASE1C-002-brand-colors-contrast.md) | NotStarted |
+| PHASE1C-003 | [typography-scale](20260712-PHASE1C-003-typography-scale.md) | NotStarted |
+| PHASE1C-004 | [logo-redesign](20260712-PHASE1C-004-logo-redesign.md) | NotStarted |
+| PHASE1C-005 | [favicon-touch-icons](20260712-PHASE1C-005-favicon-touch-icons.md) | NotStarted |
+| PHASE1C-006 | [blogcard-heading-level](20260712-PHASE1C-006-blogcard-heading-level.md) | NotStarted |
+| PHASE1C-007 | [font-loading-cls](20260712-PHASE1C-007-font-loading-cls.md) | NotStarted |
+
+### Phase 1c 先行トラック 推奨着手順序
+
+```
+PHASE1C-001 (デザイン方向性確定) ← 最初。002/003/004 の入力
+  ↓
+┌─ PHASE1C-002 (確定 HEX + color-contrast 再有効化)
+├─ PHASE1C-003 (タイポスケール確定)
+└─ PHASE1C-004 (ロゴ刷新。001 の途中からでも並行可、反復 5 ラウンド上限)
+  ↓
+PHASE1C-005 (favicon 意匠 ← 002/004 依存)
+
+PHASE1C-006 (BlogCard 見出しレベル) ← 依存なし、任意タイミング
+PHASE1C-007 (フォント読み込み CLS)  ← 依存なし、任意タイミング
+  ↓
+（仕上げトラック：1b Gate 通過後に起票 — B-3 CSS サイズ / 全記事最終再検証 / 1c Gate）
+```
 
 ---
 
@@ -272,3 +302,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-06-14 | 統合ブランチ改名（README v3.2 連動）：公開前 1a〜1c を集約する統合ブランチを `feat/phase-1a` → `feat/phase-1` にリネーム（名前と中身のズレ解消、deferred-merge 構造は不変）。README §10 / CLAUDE.md / operation-manual.md / draft-phase1d の現行・前方参照と CF プレビュー URL を連動更新。`feat/phase-*` パターン内のため CF filter / main 保護は無変更。Done PBI 本体の当時のブランチ名は不変 |
 | 2026-06-28 | **PHASE1B-007 完了（Done）＋ 記事実装 PBI 群・Phase 1b Gate 起票**：運営者 + Claude のネタ出しで初期記事セット 6 本を確定（tech 4: T1 サイト構築総括 / T2 自前フォーム実装 / T3 レガシー→モダン移行 / T5 実案件 Claude 活用 PO、life 2: L1 法人化 / L2+L3 合う仕事×ストレングスファインダー）。記事実装 PBI PHASE1B-008〜013（1 記事 1 PBI）+ Phase 1b Retrospective Gate PHASE1B-014 を NotStarted で起票。公開後バックログ（T4/T6/T7/L4/L5/L6）は死蔵防止のため `docs/article-backlog.md` に切り出し。R-01 月次ネタ出し routine は Phase 1d 公開後に点火（article-backlog 起点）と判断 |
 | 2026-06-15 | **Phase 1b PBI 起票（7 件）**：`draft-phase1b-content-launch-prep.md` を正式化。PHASE1B-001（Skills/資格 現行化）/ 002（Career 現行化 + 代表案件）/ 003（About/Privacy 文面確定）/ 004（Contact backend）/ 005（Contact frontend）/ 006（サンプル記事処置）/ 007（記事ネタ出し・初期記事セット確定）。draft 項目4（Contact フォーム化 FR-29）を §7 基準でバックエンド 004 / フロント 005 に分割。各 PBI 技術メモに想定セッション数を明記（全件 1 セッション、004 は 2 セッション化時の再分割条件を付記）、受け入れ条件に §7 検証ゲート 3 項目を常設。PHASE1A-022 申し送り + Phase 1a 各実装ログ（devicon 403 判定 / HMR / Career id=2 一次情報なし / About=ですます調・Privacy=簡易案 / wrangler は assets のみ / Footer も平文 mailto）を反映。draft 項目7（記事実装 × n）と Phase 1b Gate は 007 完了時に追加起票（placeholder）。INDEX セッション開始チェック 3 種 green 確認済み |
+| 2026-07-12 | **Phase 1c 先行トラック起票（site-plan v3.10 Decision #28 連動）**：1c を先行トラック（記事非依存）と仕上げトラック（1b Gate 後起票）に二分し、先行トラック PHASE1C-001（デザイン方向性）/ 002（確定 HEX + color-contrast 再有効化）/ 003（タイポスケール）/ 004（ロゴ刷新）/ 005（favicon）/ 006（BlogCard 見出しレベル B-1）/ 007（フォント CLS B-2）を NotStarted で起票。着手ルールに先行トラック例外を追記（README §9 例外 / v3.3 連動）。1b 記事 PBI（008〜013）とはセッション単位で切替並行。draft-phase1c-design-polish.md は仕上げトラックの anchor として更新 |
