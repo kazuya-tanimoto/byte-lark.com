@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>案2「春空」— PHASE1C-001 デザイン草案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&family=Noto+Sans+JP:wght@400..700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fcfbf8;
+    --wash: #edf7fd;
+    --card: #ffffff;
+    --border: #ece9e3;
+    --text: #322e29;
+    --muted: #605a50;
+    --sky: #0273b0;
+    --sky-deep: #075985;
+    --sky-soft: #bfe3f7;
+    --amber-text: #96570a;
+    --amber-chip-bg: #fbeed7;
+    --amber-chip-text: #7c4a08;
+    --sun: #f0a32a;
+    --green-chip-bg: #e3f4e3;
+    --green-chip-text: #166534;
+    --earth: #57534e;
+    --radius: 14px;
+    --shadow: 0 1px 3px rgba(70, 55, 30, 0.06), 0 6px 20px rgba(70, 55, 30, 0.06);
+    --font-body: "Noto Sans JP", sans-serif;
+    --font-head: "Zen Kaku Gothic New", "Noto Sans JP", sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.95; }
+  h1, h2, h3, .logo { font-family: var(--font-head); font-weight: 500; }
+  a { color: var(--sky); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; border-radius: 4px; }
+  .wrap { max-width: 64rem; margin: 0 auto; padding: 0 1rem; }
+
+  /* ---- 草案スペック部 ---- */
+  .spec { border-bottom: 1px solid var(--border); background: linear-gradient(180deg, var(--wash), var(--bg)); }
+  .spec .wrap { padding: 2.5rem 1rem; }
+  .spec h1 { font-size: 1.6rem; line-height: 1.5; }
+  .spec .lead { margin-top: 0.75rem; color: var(--muted); max-width: 46rem; }
+  .spec .tone { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .spec .tone span { font-size: 0.8rem; background: var(--card); box-shadow: var(--shadow); border-radius: 999px; padding: 0.2rem 0.8rem; color: var(--earth); }
+  .spec-section { border-bottom: 1px solid var(--border); }
+  .spec-section .wrap { padding: 2rem 1rem; }
+  .spec-section h2 { font-size: 1.15rem; }
+  .swatches { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
+  .swatch { background: var(--card); box-shadow: var(--shadow); border-radius: var(--radius); overflow: hidden; font-size: 0.75rem; }
+  .swatch .chip { height: 56px; }
+  .swatch dl { padding: 0.5rem 0.7rem; line-height: 1.55; }
+  .swatch dt { font-weight: 600; }
+  .swatch dd { color: var(--muted); }
+  .contrast { margin-top: 1rem; font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+  .contrast li { list-style: none; }
+  .contrast b { color: var(--green-chip-text); font-weight: 600; }
+  .type-specimen { margin-top: 1.25rem; display: grid; gap: 1rem; }
+  .type-specimen .row { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; align-items: baseline; border-top: 1px dashed var(--border); padding-top: 1rem; }
+  .type-specimen .meta { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+
+  /* ---- 適用イメージ ---- */
+  .demo-label { background: var(--text); color: #fff; font-size: 0.78rem; letter-spacing: 0.08em; }
+  .demo-label .wrap { padding: 0.4rem 1rem; }
+
+  header.site { position: sticky; top: 0; background: rgba(252, 251, 248, 0.92); backdrop-filter: blur(6px); z-index: 10; }
+  header.site nav { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 0; }
+  .logo { font-size: 1.15rem; color: var(--text); font-weight: 700; }
+  .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+  .nav-links a { font-size: 0.875rem; font-weight: 500; color: var(--muted); padding: 0.45rem 0.8rem; border-radius: 999px; }
+  .nav-links a:hover { background: rgba(2, 115, 176, 0.07); color: var(--text); text-decoration: none; }
+  .nav-links a.active { color: var(--sky); background: rgba(2, 115, 176, 0.09); }
+
+  /* 署名要素: 揚雲雀の軌跡 — 左下から右上へ点線で昇る飛行線 + ヒバリ */
+  .hero { position: relative; background: linear-gradient(180deg, #e7f4fc 0%, var(--bg) 92%); overflow: hidden; }
+  .hero .wrap { padding: 5rem 1rem; position: relative; }
+  .hero svg.flight { position: absolute; right: 1rem; bottom: 0.5rem; width: 320px; max-width: 45%; height: auto; opacity: 0.9; }
+  .hero .role { display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--amber-chip-text); background: var(--amber-chip-bg); border-radius: 999px; padding: 0.2rem 0.85rem; letter-spacing: 0.03em; }
+  .hero h1 { margin-top: 1rem; font-size: 2.6rem; font-weight: 700; line-height: 1.3; letter-spacing: 0.01em; }
+  .hero h1 small { font-size: 1.05rem; font-weight: 500; color: var(--muted); margin-left: 0.6rem; font-family: var(--font-body); }
+  .hero .copy { margin-top: 1rem; font-size: 1.35rem; font-weight: 500; font-family: var(--font-head); }
+  .hero .summary { margin-top: 0.75rem; max-width: 40rem; color: var(--muted); }
+  .hero .cta { margin-top: 2.25rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn-primary { background: var(--sky); color: #fff; border-radius: 999px; padding: 0.7rem 1.6rem; font-size: 0.875rem; font-weight: 500; box-shadow: var(--shadow); }
+  .btn-primary:hover { background: var(--sky-deep); text-decoration: none; }
+  .btn-secondary { background: var(--card); color: var(--text); border-radius: 999px; padding: 0.7rem 1.6rem; font-size: 0.875rem; font-weight: 500; box-shadow: var(--shadow); }
+  .btn-secondary:hover { background: var(--wash); text-decoration: none; }
+
+  section.home { padding: 3.25rem 0; }
+  section.home + section.home { padding-top: 0.5rem; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; }
+  /* h2 の朝日ドット */
+  .section-head h2, .post h2 { font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
+  .section-head h2::before, .post h2::before { content: ""; width: 0.7rem; height: 0.7rem; border-radius: 999px; background: radial-gradient(circle at 35% 35%, #f6c35c, var(--sun)); flex: none; }
+  .section-head a { font-size: 0.875rem; font-weight: 500; }
+  .cards { margin-top: 1.5rem; display: grid; gap: 1.25rem; grid-template-columns: 1fr 1fr; }
+  .card { background: var(--card); border-radius: var(--radius); padding: 1.4rem; box-shadow: var(--shadow); }
+  .card .period { font-size: 0.75rem; color: var(--muted); }
+  .card h3 { margin-top: 0.3rem; font-size: 1.05rem; font-weight: 700; }
+  .card .desc { margin-top: 0.5rem; font-size: 0.875rem; color: var(--muted); line-height: 1.85; }
+  .card .keywords { margin-top: 0.8rem; font-size: 0.75rem; color: var(--earth); }
+  .skills { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; list-style: none; }
+  .skills li { background: var(--card); border-radius: var(--radius); padding: 0.85rem 1rem; box-shadow: var(--shadow); }
+  .skills .name { font-size: 0.875rem; font-weight: 500; }
+  .skills .years { font-size: 0.75rem; color: var(--muted); }
+  .blogcard { background: var(--card); border-radius: var(--radius); padding: 1.2rem; max-width: 24rem; box-shadow: var(--shadow); transition: transform 0.15s; }
+  .blogcard:hover { transform: translateY(-2px); }
+  .blogcard .meta { display: flex; gap: 0.5rem; align-items: center; font-size: 0.75rem; color: var(--muted); }
+  .badge-tech { border-radius: 999px; background: var(--wash); padding: 0.12rem 0.65rem; font-weight: 700; color: var(--sky); }
+  .badge-life { border-radius: 999px; background: var(--green-chip-bg); padding: 0.12rem 0.65rem; font-weight: 700; color: var(--green-chip-text); }
+  .blogcard h3 { margin-top: 0.55rem; font-size: 1.02rem; font-weight: 700; line-height: 1.55; }
+  .blogcard p { margin-top: 0.45rem; font-size: 0.875rem; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  article.post { padding: 3rem 0; background: var(--card); }
+  article.post .wrap { max-width: 46rem; }
+  article.post .meta { font-size: 0.8rem; color: var(--muted); display: flex; gap: 0.6rem; align-items: center; }
+  article.post h1 { margin-top: 0.9rem; font-size: 2.05rem; font-weight: 700; line-height: 1.45; }
+  article.post h2 { margin-top: 2.75rem; font-size: 1.4rem; }
+  article.post p { margin-top: 1.2rem; }
+  article.post ul { margin-top: 1.2rem; padding-left: 1.4rem; }
+  article.post li { margin-top: 0.45rem; }
+  article.post li::marker { color: var(--sun); }
+  article.post pre { margin-top: 1.3rem; background: var(--bg); border-radius: var(--radius); padding: 1.1rem 1.3rem; font-size: 0.82rem; line-height: 1.7; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; box-shadow: inset 0 0 0 1px var(--border); }
+  .about-quote { padding: 3.25rem 0; }
+  .about-quote .wrap { max-width: 46rem; }
+  .about-quote h2 { font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
+  .about-quote h2::before { content: ""; width: 0.7rem; height: 0.7rem; border-radius: 999px; background: radial-gradient(circle at 35% 35%, #f6c35c, var(--sun)); flex: none; }
+  .about-quote p { margin-top: 1rem; color: var(--muted); }
+
+  footer.site { background: linear-gradient(180deg, var(--bg), #eef6fb); font-size: 0.875rem; }
+  footer.site .wrap { padding: 3rem 1rem 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  footer.site h2 { font-size: 0.9rem; font-weight: 700; }
+  footer.site p, footer.site a { color: var(--muted); }
+  footer.site ul { list-style: none; margin-top: 0.5rem; }
+  .copyright .wrap { display: block; padding: 1.25rem 1rem 2rem; font-size: 0.75rem; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hero h1 { font-size: 1.95rem; }
+    .hero .copy { font-size: 1.2rem; }
+    .hero svg.flight { opacity: 0.35; }
+    .cards { grid-template-columns: 1fr; }
+    .skills { grid-template-columns: 1fr 1fr; }
+    article.post h1 { font-size: 1.6rem; }
+    footer.site .wrap { grid-template-columns: 1fr; }
+    .type-specimen .row { grid-template-columns: 1fr; gap: 0.25rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="spec">
+  <div class="wrap">
+    <h1>案2「春空」— 春の朝、明るく軽やかな個人ブランド</h1>
+    <p class="lead">ブランドコンセプト（飛翔・春の訪れ・晴れやか）を最も素直に形にした案。暖白の紙面にごく淡い空色の面を重ね、角丸と柔らかい影で「軽快さ・抜け感」を出します。見出しは Zen Kaku Gothic New（幾何学的で軽い和文ゴシック）に切り替え、朝日（amber）をドットマーカーやラベルで日常的に効かせます。署名要素は Hero の「揚雲雀の軌跡」——左下から右上へ点線で昇る飛行線です。</p>
+    <div class="tone"><span>明るい</span><span>軽やか</span><span>親しみ</span><span>春・朝</span></div>
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="wrap">
+    <h2>カラーパレット候補</h2>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#0273B0"></div><dl><dt>#0273B0 sky</dt><dd>primary（リンク・ボタン）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#075985"></div><dl><dt>#075985 sky-deep</dt><dd>hover・押下</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#EDF7FD;border-bottom:1px solid #ece9e3"></div><dl><dt>#EDF7FD wash</dt><dd>空の面（Hero・帯・Tech チップ）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#F0A32A"></div><dl><dt>#F0A32A sun</dt><dd>朝日ドット（装飾専用）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#96570A"></div><dl><dt>#96570A amber-text</dt><dd>accent 文字</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#FBEED7"></div><dl><dt>#FBEED7 amber-chip</dt><dd>ラベル面（文字 #7C4A08）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#E3F4E3"></div><dl><dt>#E3F4E3 green-chip</dt><dd>Life 系ラベル面（文字 #166534）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#322E29"></div><dl><dt>#322E29 text</dt><dd>本文（暖黒）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#605A50"></div><dl><dt>#605A50 muted</dt><dd>補助テキスト</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#FCFBF8;border-bottom:1px solid #ece9e3"></div><dl><dt>#FCFBF8 bg</dt><dd>地（暖白）</dd></dl></div>
+    </div>
+    <ul class="contrast">
+      <li><b>AA 検証済み</b>（WCAG 2.x）: 本文/地 13.0:1 ／ muted/地 6.6:1 ／ sky/地 5.0:1 ／ sky/空の面 4.7:1 ／ amber-text/地 5.5:1 ／ チップ内文字 6.2〜6.5:1 — 全て 4.5:1 以上。sun ドットは装飾専用で文字に使いません。</li>
+    </ul>
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="wrap">
+    <h2>タイポスケール（比率 1.28 / 本文 16px / 行間 1.95 / 見出し Zen Kaku Gothic New）</h2>
+    <div class="type-specimen">
+      <div class="row"><div class="meta">h1 — 42px / 700<br>Zen Kaku Gothic New</div><div style="font-family:'Zen Kaku Gothic New';font-size:2.6rem;font-weight:700;line-height:1.3">晴れた空へ、まっすぐ昇る</div></div>
+      <div class="row"><div class="meta">h2 — 24px / 700 + 朝日ドット</div><div style="font-family:'Zen Kaku Gothic New';font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:0.6rem"><span style="width:0.7rem;height:0.7rem;border-radius:999px;background:radial-gradient(circle at 35% 35%,#f6c35c,#f0a32a);flex:none"></span>経歴と実績 Career &amp; Works</div></div>
+      <div class="row"><div class="meta">h3 — 17px / 700</div><div style="font-family:'Zen Kaku Gothic New';font-size:1.05rem;font-weight:700">大規模決済プラットフォームの横断PM</div></div>
+      <div class="row"><div class="meta">本文 — 16px / 400<br>Noto Sans JP / 行間 1.95</div><div>25年にわたり業務システム開発の現場に携わってきました。近年はフリーランスとして、大規模決済プラットフォームの横断 PM などに参画しています。Astro と Tailwind CSS のような英数字も自然に混植できます。</div></div>
+      <div class="row"><div class="meta">small — 14px / 400</div><div style="font-size:0.875rem;color:#605a50">補助情報・カード内説明文・フッターに使用します。2026年6月28日</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-label"><div class="wrap">適用イメージ — Home（Hero + Career + Skills + Blog）</div></div>
+
+<header class="site">
+  <div class="wrap"><nav>
+    <a href="#" class="logo">byte-lark</a>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Home</a></li><li><a href="#">About</a></li><li><a href="#">Career</a></li><li><a href="#">Skills</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li>
+    </ul>
+  </nav></div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <svg class="flight" viewBox="0 0 320 180" fill="none" aria-hidden="true">
+      <path d="M10 170 C 90 160, 180 120, 250 60" stroke="#0273B0" stroke-width="2" stroke-dasharray="1 10" stroke-linecap="round" opacity="0.55"/>
+      <g transform="translate(252 44) rotate(-18)">
+        <path d="M0 8 C 6 2, 14 0, 22 3 C 16 6, 12 7, 9 12 C 7 9, 4 8, 0 8 Z" fill="#0273B0" opacity="0.8"/>
+        <path d="M9 12 C 12 14, 18 15, 24 13 C 19 17, 13 18, 8 16 Z" fill="#0273B0" opacity="0.55"/>
+      </g>
+      <circle cx="292" cy="26" r="14" fill="url(#sun2)" opacity="0.9"/>
+      <defs><radialGradient id="sun2" cx="0.35" cy="0.35" r="1"><stop offset="0%" stop-color="#F6C35C"/><stop offset="100%" stop-color="#F0A32A"/></radialGradient></defs>
+    </svg>
+    <p class="role">PM / PO・フルスタックエンジニア</p>
+    <h1>谷本 和也<small>Kazuya Tanimoto</small></h1>
+    <p class="copy">現場を前に進める PM / PO</p>
+    <p class="summary">設計も開発もマネジメントも。25年の現場経験とAI活用で、停滞しないチームをつくります。</p>
+    <div class="cta">
+      <a href="#" class="btn-primary">経歴を見る</a>
+      <a href="#" class="btn-secondary">お問い合わせ</a>
+    </div>
+  </div>
+</div>
+
+<section class="home">
+  <div class="wrap">
+    <div class="section-head"><h2>Career</h2><a href="#">すべて見る →</a></div>
+    <div class="cards">
+      <article class="card">
+        <p class="period">2025/07 〜 2026/07</p>
+        <h3>大規模決済プラットフォームの横断PM</h3>
+        <p class="desc">複数プロダクトを横断するプロジェクトマネジメントと、AIを活用した品質改善施策の立案・展開を担当。</p>
+        <p class="keywords">横断PM, 品質改善, AI活用, Jira / Confluence</p>
+      </article>
+      <article class="card">
+        <p class="period">2022/09 〜 現在</p>
+        <h3>障がい者支援ポータルサイトの開発</h3>
+        <p class="desc">立ち上げ期から要件定義〜運用までを一貫して主導。途中でスクラムへ移行し、PO的役割とAIによる開発自動化を推進。</p>
+        <p class="keywords">PM / PO / Dev, AWS, React / TypeScript, Laravel, スクラム</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="home">
+  <div class="wrap">
+    <div class="section-head"><h2>Skills</h2><a href="#">すべて見る →</a></div>
+    <ul class="skills">
+      <li><p class="name">Linux</p><p class="years">12 年</p></li>
+      <li><p class="name">SQL</p><p class="years">12 年</p></li>
+      <li><p class="name">PHP</p><p class="years">11 年</p></li>
+      <li><p class="name">JavaScript</p><p class="years">10 年</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="home">
+  <div class="wrap">
+    <div class="section-head"><h2>Blog</h2><a href="#">すべて見る →</a></div>
+    <div class="cards" style="margin-top:1.5rem">
+      <article class="blogcard">
+        <div class="meta"><span class="badge-tech">Tech</span><time>2026年6月28日</time></div>
+        <h3>AIに開発を任せるなら、仕組みがいる</h3>
+        <p>数年かけても完成しなかった個人サイトを、Claude Code で約6週間で作り直した記録。AI に任せきりにせず品質を保つための仕組みを実体験ベースで書きます。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="demo-label"><div class="wrap">適用イメージ — 記事詳細（実記事より抜粋）</div></div>
+
+<article class="post">
+  <div class="wrap">
+    <div class="meta"><span class="badge-tech">Tech</span><time>2026年6月28日</time></div>
+    <h1>AIに開発を任せるなら、仕組みがいる</h1>
+    <p>こんにちは。本サイト最初のブログ記事はこのサイトをAIで作った話にします。このサイト、全部AI（Claude Code）で実装しました。私は全くコードを書いていません。</p>
+    <p>どんなものを作るかをAIと壁打ちしながら決めて、AIが作ったものを評価して、イマイチなところを修正してもらう。その繰り返しでできあがりました。</p>
+    <h2>3：完了前のチェックリスト</h2>
+    <p>完了の前に必ず通す確認をルール化しました。各タスクの条件に、こういうチェックを常設しています。</p>
+    <pre>- [ ] 自動テストが すべて通る
+- [ ] ローカルでPlaywrightを使って打鍵確認（PC + スマホ幅）
+- [ ] 公開前プレビューでPlaywrightを使って打鍵確認</pre>
+    <h2>向き不向き</h2>
+    <ul>
+      <li>向く人：AIの答えを評価して「それ違くない？」と見抜ける／イマイチを都度直せる</li>
+      <li>向かない人：コードを書くのが何より楽しい／真偽を判断できず言いなりになる</li>
+    </ul>
+  </div>
+</article>
+
+<div class="demo-label"><div class="wrap">適用イメージ — About（抜粋）</div></div>
+
+<div class="about-quote">
+  <div class="wrap">
+    <h2>屋号の由来</h2>
+    <p>byte-lark は、IT の情報単位である byte と、ヒバリを意味する lark を組み合わせた名前です。ドイツ語の Beitrag（バイトラーク）には「貢献」という意味があります。春の空へまっすぐ昇るヒバリのように、関わるプロジェクトとチームを軽やかに前へ進める存在でありたい、という思いを込めています。</p>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div><h2>byte-lark</h2><p style="margin-top:0.5rem">合同会社バイトラーク（byte-lark）</p><p>2026年6月設立</p></div>
+    <div><h2>Links</h2><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+    <div><h2>Contact</h2><p style="margin-top:0.5rem"><a href="#">お問い合わせフォーム</a></p></div>
+  </div>
+  <div class="copyright"><div class="wrap">© 2026 byte-lark. All rights reserved.</div></div>
+</footer>
+
+</body>
+</html>

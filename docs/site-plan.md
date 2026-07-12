@@ -280,16 +280,18 @@ Tailwind の theme extension で以下を定義。**Phase 1a 冒頭で仮 HEX �
 
 検証済み事実（Wikipedia / Animal Diversity Web）：ヒバリは streaked greyish-brown / earth-toned cryptic plumage、腹は buff-white。実物色（earth）はアクセントに留め、主役は飛翔・春の周辺色。
 
+**確定候補値（PHASE1C-001、2026-07-13）**：運営者が草案 3 案から案2「春空」を選定し、確定パレット候補（HEX / oklch / AA 検証値）を [docs/design-direction.md](design-direction.md) §2 に記録。トークン置換の実装と color-contrast 再有効化は PHASE1C-002 で行う。
+
 **a11y 追跡（PHASE1A-019 起点）**：仮 HEX の primary / hibari-sky（`oklch(0.685 ...)`）は白背景でコントラスト比約 2.8:1 と WCAG AA（4.5:1）未満のため、E2E の axe チェック（`tests/e2e/a11y.spec.ts`）で `color-contrast` ルールを**一時除外**している。**Phase 1c で確定 HEX に置換する際、コントラスト AA を満たす値を選定したうえでこの除外を解除し、color-contrast を再有効化すること**（NFR-02 の完全充足は確定 HEX 確定後）。
 
 **a11y 追跡 追加（PHASE1A-020 起点）**：Lighthouse で `/blog/` の見出しレベル飛び（h1→h3、`heading-order` 失敗。A11y スコアは 94 で 90+ は維持、axe の critical/serious では未検出）を確認。`BlogCard` の見出しを文脈で h2/h3 出し分けできるよう Phase 1c で対応する（[draft-phase1c-design-polish.md](../pbi/draft-phase1c-design-polish.md) B-1）。
 
 #### 6.5.3 タイポグラフィ
 
-- 英文：Inter / Geist 等のサンセリフ（Tailwind デフォルト or Google Fonts）
-- 和文：Noto Sans JP（Google Fonts）
-- 見出しはやや軽めのウェイト（500-600）で「軽快さ・抜け感」を演出
-- フォントサイズ階層・行間・和欧混植調整は Phase 1c で確定（TODO: タイポスケール定義）
+- 見出し：Zen Kaku Gothic New（Google Fonts、500 / 700）— PHASE1C-001「春空」選定で確定（2026-07-13、[docs/design-direction.md](design-direction.md) §3）
+- 本文和文：Noto Sans JP（Google Fonts）。本文 Latin における Geist の去就は PHASE1C-003 で確定
+- 見出しはやや軽めのウェイト（500-700）で「軽快さ・抜け感」を演出
+- フォントサイズ階層・行間・和欧混植調整は Phase 1c で確定（方向性は docs/design-direction.md §3 に記録済み、実装・最終確定は PHASE1C-003）
 
 #### 6.5.4 ロゴ
 
@@ -609,3 +611,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-06-14 | ガバナンス文書ドリフト一括是正（クラリフィケーション、v 番号据え置き）。README §10 ブランチ運用を deferred-merge に是正し README を v3.0 → v3.1 化（公開前 1a〜1c は feat/phase-1a 集約、main マージは 1d。site-plan §7 1d 行は元から整合）。連動して §12 の README 参照を v2.9 → v3.1 に訂正（前 Gate の v2.9 修正が誤り。README 現行は v3.0 だった）、§14 メンテ表の v2.x / v3.x 行を README の v3.x 名前空間移行に合わせて更新。CLAUDE.md line 69/90・operation-manual.md（毎 Phase マージ + 旧 worktree 記述）・INDEX.md も同コミットで是正。過去事実の改訂履歴行（直前の line 含む）と Done PBI 本体は不変のまま。 |
 | 2026-06-14 | 統合ブランチ改名（クラリフィケーション、v 番号据え置き。README v3.2 連動）。公開前 1a〜1c を集約する統合ブランチを `feat/phase-1a` → `feat/phase-1` にリネーム（sub-phase 名で統合ブランチを呼ぶ名前と中身のズレを解消。deferred-merge 構造は不変）。§12 の README 参照を v3.2 に更新。CLAUDE.md / README §10 / operation-manual.md / draft-phase1d の現行・前方参照と CF プレビュー URL（`feat-phase-1-...`）も連動更新。`feat/phase-*` パターン内なので CF filter / main 保護は無変更。Done PBI 本体の当時のブランチ名は不変。 |
 | 2026-07-12 | v3.10：**Phase 1c 先行トラック導入（1b 記事執筆との並行許可）**。1c を先行トラック（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）と仕上げトラック（B-3 CSS サイズ / 全記事最終再検証 / 1c Gate、1b Gate 後に起票）に二分。背景：1b 残タスク（記事 008〜013）が運営者リライト・ヒアリング律速で、記事非依存のデザイン作業を待たせる実益がない（実コンテンツ検証の前提は 1b-001〜005 承認済み + 008 ドラフトで実質充足）。Decision #28 追加、§7 ロードマップ 1c 行・「PBI の起票タイミング」節に例外注記、§12 参照更新。README §9 例外追加（v3.3）、INDEX.md Phase 1c 節・着手ルール、CLAUDE.md、draft-phase1c-design-polish.md 着手条件、PHASE1B-014 申し送り宛先を連動更新。先行トラック PBI（PHASE1C-001〜007）を同日起票 |
+| 2026-07-13 | デザイン方向性確定（PHASE1C-001 完了の事実反映、クラリフィケーション、v 番号据え置き）。運営者が草案 3 案（快晴 / 春空 / 野の羽色、モックは docs/design-drafts/phase1c-001/）から**案2「春空」を選定**（修正指示なし）。確定記録を docs/design-direction.md に新設（パレット HEX/oklch + AA 検証値 / タイポ方向性 / トーン・署名要素 / 002〜005 への引き継ぎ）。§6.5.2 に確定候補値の所在を追記、§6.5.3 見出し書体を Zen Kaku Gothic New に更新 |

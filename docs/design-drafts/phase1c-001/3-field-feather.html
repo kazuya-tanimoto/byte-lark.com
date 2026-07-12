@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>案3「野の羽色」— PHASE1C-001 デザイン草案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --alt: #f6f4f0;
+    --border: #d8d2c8;
+    --border-soft: #e9e5de;
+    --text: #292524;
+    --muted: #57534e;
+    --sky: #075985;
+    --sky-vivid: #0ea5e9;
+    --amber: #b45309;
+    --amber-vivid: #d97706;
+    --green: #15803d;
+    --earth: #78716c;
+    --radius: 4px;
+    --font: "IBM Plex Sans JP", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.85; }
+  a { color: var(--sky); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  .wrap { max-width: 64rem; margin: 0 auto; padding: 0 1rem; }
+  /* 署名要素: 羽の縞 — ヒバリの羽の縞模様（earth / amber / sky の 3 本線） */
+  .plume { height: 8px; background:
+    linear-gradient(var(--earth), var(--earth)) 0 0 / 100% 2px no-repeat,
+    linear-gradient(var(--amber-vivid), var(--amber-vivid)) 0 3px / 100% 2px no-repeat,
+    linear-gradient(var(--sky-vivid), var(--sky-vivid)) 0 6px / 100% 2px no-repeat; }
+  .eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber); font-weight: 500; }
+
+  /* ---- 草案スペック部 ---- */
+  .spec { border-bottom: 1px solid var(--border); background: var(--alt); }
+  .spec .wrap { padding: 2.5rem 1rem; }
+  .spec h1 { font-size: 1.55rem; font-weight: 600; line-height: 1.45; }
+  .spec .lead { margin-top: 0.75rem; color: var(--muted); max-width: 46rem; }
+  .spec .tone { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .spec .tone span { font-family: var(--mono); font-size: 0.75rem; border: 1px solid var(--border); background: var(--bg); padding: 0.12rem 0.7rem; color: var(--muted); }
+  .spec-section { border-bottom: 1px solid var(--border-soft); }
+  .spec-section .wrap { padding: 2rem 1rem; }
+  .spec-section h2 { font-size: 1.1rem; font-weight: 600; }
+  .swatches { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
+  .swatch { border: 1px solid var(--border-soft); border-radius: var(--radius); overflow: hidden; background: var(--bg); font-size: 0.75rem; }
+  .swatch .chip { height: 56px; }
+  .swatch dl { padding: 0.5rem 0.65rem; line-height: 1.55; }
+  .swatch dt { font-weight: 600; font-family: var(--mono); font-size: 0.72rem; }
+  .swatch dd { color: var(--muted); }
+  .contrast { margin-top: 1rem; font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+  .contrast li { list-style: none; }
+  .contrast b { color: var(--green); font-weight: 600; }
+  .type-specimen { margin-top: 1.25rem; display: grid; gap: 1rem; }
+  .type-specimen .row { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; align-items: baseline; border-top: 1px dashed var(--border); padding-top: 1rem; }
+  .type-specimen .meta { font-size: 0.72rem; color: var(--muted); line-height: 1.5; font-family: var(--mono); }
+
+  /* ---- 適用イメージ ---- */
+  .demo-label { background: var(--text); color: #fff; font-size: 0.78rem; letter-spacing: 0.08em; }
+  .demo-label .wrap { padding: 0.4rem 1rem; }
+
+  header.site { position: sticky; top: 0; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.96); z-index: 10; }
+  header.site nav { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 0; }
+  .logo { font-weight: 600; font-size: 1.05rem; color: var(--text); letter-spacing: -0.005em; }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--muted); padding: 0.45rem 0.7rem; border-bottom: 2px solid transparent; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  .nav-links a.active { color: var(--sky); border-bottom-color: var(--sky-vivid); }
+
+  .hero { border-bottom: 1px solid var(--border-soft); }
+  .hero .wrap { padding: 4rem 1rem 3.5rem; }
+  .hero .role { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.14em; color: var(--amber); }
+  .hero h1 { margin-top: 0.6rem; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; }
+  .hero h1 small { font-family: var(--mono); font-size: 0.95rem; font-weight: 400; color: var(--earth); margin-left: 0.6rem; letter-spacing: 0.04em; }
+  .hero .copy { margin-top: 1rem; font-size: 1.25rem; font-weight: 600; }
+  .hero .summary { margin-top: 0.7rem; max-width: 42rem; color: var(--muted); }
+  .hero .cta { margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn-primary { background: var(--sky); color: #fff; border-radius: var(--radius); padding: 0.6rem 1.4rem; font-size: 0.875rem; font-weight: 500; }
+  .btn-primary:hover { background: #064c72; text-decoration: none; }
+  .btn-secondary { border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: var(--radius); padding: 0.6rem 1.4rem; font-size: 0.875rem; font-weight: 500; }
+  .btn-secondary:hover { background: var(--alt); text-decoration: none; }
+
+  section.home { border-bottom: 1px solid var(--border-soft); padding: 3rem 0; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; }
+  .section-head .title-group h2 { font-size: 1.35rem; font-weight: 600; margin-top: 0.2rem; }
+  .section-head a { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em; }
+  .cards { margin-top: 1.5rem; display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+  .card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; background: var(--bg); }
+  .card.current { border-left: 3px solid var(--sky-vivid); }
+  .card .period { font-family: var(--mono); font-size: 0.72rem; color: var(--earth); letter-spacing: 0.04em; }
+  .card .period .now { color: var(--sky); font-weight: 500; }
+  .card h3 { margin-top: 0.35rem; font-size: 1rem; font-weight: 600; }
+  .card .desc { margin-top: 0.5rem; font-size: 0.875rem; color: var(--muted); line-height: 1.8; }
+  .card .keywords { margin-top: 0.75rem; font-family: var(--mono); font-size: 0.7rem; color: var(--earth); }
+  .skills { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; list-style: none; }
+  .skills li { border: 1px solid var(--border); border-radius: var(--radius); padding: 0.7rem 0.9rem; display: flex; justify-content: space-between; align-items: baseline; }
+  .skills .name { font-size: 0.875rem; font-weight: 500; }
+  .skills .years { font-family: var(--mono); font-size: 0.72rem; color: var(--earth); }
+  .blogcard { border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; max-width: 24rem; }
+  .blogcard:hover { border-color: var(--sky); }
+  .blogcard .meta { display: flex; gap: 0.7rem; align-items: baseline; font-family: var(--mono); font-size: 0.72rem; color: var(--earth); }
+  .badge { color: var(--sky); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+  .blogcard h3 { margin-top: 0.5rem; font-size: 1rem; font-weight: 600; line-height: 1.55; }
+  .blogcard p { margin-top: 0.4rem; font-size: 0.875rem; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  article.post { padding: 3rem 0; border-bottom: 1px solid var(--border-soft); }
+  article.post .wrap { max-width: 46rem; }
+  article.post .meta { font-family: var(--mono); font-size: 0.75rem; color: var(--earth); display: flex; gap: 0.8rem; align-items: baseline; }
+  article.post h1 { margin-top: 0.8rem; font-size: 1.85rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.45; }
+  article.post .post-plume { margin-top: 1.4rem; width: 72px; }
+  article.post h2 { margin-top: 2.5rem; font-size: 1.3rem; font-weight: 600; }
+  article.post p { margin-top: 1.1rem; }
+  article.post ul { margin-top: 1.1rem; padding-left: 1.4rem; }
+  article.post li { margin-top: 0.4rem; }
+  article.post li::marker { color: var(--amber-vivid); }
+  article.post pre { margin-top: 1.25rem; background: var(--alt); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 1rem 1.25rem; font-size: 0.8rem; line-height: 1.7; overflow-x: auto; font-family: var(--mono); }
+  .about-quote { padding: 3rem 0; }
+  .about-quote .wrap { max-width: 46rem; }
+  .about-quote h2 { font-size: 1.3rem; font-weight: 600; margin-top: 0.2rem; }
+  .about-quote p { margin-top: 1rem; color: var(--muted); }
+
+  footer.site { background: var(--alt); font-size: 0.875rem; }
+  footer.site .wrap { padding: 2.5rem 1rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  footer.site h2 { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--earth); font-weight: 500; }
+  footer.site p, footer.site a { color: var(--muted); }
+  footer.site ul { list-style: none; margin-top: 0.5rem; }
+  .copyright { border-top: 1px solid var(--border-soft); }
+  .copyright .wrap { display: block; padding: 1.25rem 1rem; font-family: var(--mono); font-size: 0.7rem; color: var(--earth); }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hero h1 { font-size: 1.7rem; }
+    .hero .copy { font-size: 1.1rem; }
+    .cards { grid-template-columns: 1fr; }
+    .skills { grid-template-columns: 1fr 1fr; }
+    article.post h1 { font-size: 1.45rem; }
+    footer.site .wrap { grid-template-columns: 1fr; }
+    .type-specimen .row { grid-template-columns: 1fr; gap: 0.25rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="spec">
+  <div class="wrap">
+    <h1>案3「野の羽色」— 大地に立つヒバリ、質実なエンジニアの手触り</h1>
+    <p class="lead">ヒバリの実物（縞模様の羽・野原の鳥）を起点にした案。白地に石色・土色の輪郭をはっきり引き、空色は「小さく・濃く・強く」だけ使います。書体は IBM Plex Sans JP + IBM Plex Mono で、日付・キーワード・ラベルをモノスペースに統一——25年の現場経験という「質実な職人性」を伝えます。署名要素は「羽の縞」——earth / amber / sky の 3 本線ディバイダで、ヒバリの羽の縞を象ります。</p>
+    <div class="tone"><span>質実</span><span>職人</span><span>engineering</span><span>大地と縞羽</span></div>
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="wrap">
+    <h2>カラーパレット候補</h2>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#075985"></div><dl><dt>#075985 sky</dt><dd>primary（リンク・ボタン。小さく濃く）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#0EA5E9"></div><dl><dt>#0EA5E9 sky-vivid</dt><dd>装飾専用（縞・在職マーカー）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#B45309"></div><dl><dt>#B45309 amber</dt><dd>accent 文字（eyebrow ラベル）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#D97706"></div><dl><dt>#D97706 amber-vivid</dt><dd>装飾専用（縞・リストマーカー）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#15803D"></div><dl><dt>#15803D green</dt><dd>secondary（Life 系・成功）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#78716C"></div><dl><dt>#78716C earth</dt><dd>羽色（メタ情報・mono 文字）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#292524"></div><dl><dt>#292524 text</dt><dd>本文（stone 黒）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#57534E"></div><dl><dt>#57534E muted</dt><dd>補助テキスト</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#D8D2C8"></div><dl><dt>#D8D2C8 border</dt><dd>輪郭（現行より濃く、形を立てる）</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#F6F4F0;border-bottom:1px solid #e9e5de"></div><dl><dt>#F6F4F0 alt</dt><dd>面（コード・フッター）</dd></dl></div>
+    </div>
+    <ul class="contrast">
+      <li><b>AA 検証済み</b>（WCAG 2.x、白地上）: 本文 15.2:1 ／ muted 7.6:1 ／ sky 7.6:1 ／ amber 5.0:1 ／ green 5.0:1 ／ 面 #F6F4F0 上でも amber 4.6:1・sky 6.9:1 — 全て 4.5:1 以上。earth #78716C は 14px 未満の本文には使わず、メタ情報（AA-large 相当の限定用途）に留める規律。</li>
+    </ul>
+  </div>
+</div>
+
+<div class="spec-section">
+  <div class="wrap">
+    <h2>タイポスケール（比率 1.22 / 本文 16px / 行間 1.85 / IBM Plex Sans JP + Plex Mono）</h2>
+    <div class="type-specimen">
+      <div class="row"><div class="meta">h1 — 35px / 700</div><div style="font-size:2.2rem;font-weight:700;letter-spacing:-0.01em;line-height:1.3">晴れた空へ、まっすぐ昇る</div></div>
+      <div class="row"><div class="meta">eyebrow — 11.5px mono<br>tracking 0.18em</div><div class="eyebrow">Career — 経歴</div></div>
+      <div class="row"><div class="meta">h2 — 22px / 600</div><div style="font-size:1.35rem;font-weight:600">経歴と実績 Career &amp; Works</div></div>
+      <div class="row"><div class="meta">h3 — 16px / 600</div><div style="font-size:1rem;font-weight:600">大規模決済プラットフォームの横断PM</div></div>
+      <div class="row"><div class="meta">本文 — 16px / 400<br>行間 1.85</div><div>25年にわたり業務システム開発の現場に携わってきました。近年はフリーランスとして、大規模決済プラットフォームの横断 PM などに参画しています。Astro と Tailwind CSS のような英数字も Plex の骨格で揃います。</div></div>
+      <div class="row"><div class="meta">meta — 11.5px mono</div><div style="font-family:'IBM Plex Mono';font-size:0.72rem;color:#78716c;letter-spacing:0.04em">2025/07 — 2026/07 ・ 横断PM, 品質改善, AI活用</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-label"><div class="wrap">適用イメージ — Home（Hero + Career + Skills + Blog）</div></div>
+
+<header class="site">
+  <div class="wrap"><nav>
+    <a href="#" class="logo">byte-lark</a>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Home</a></li><li><a href="#">About</a></li><li><a href="#">Career</a></li><li><a href="#">Skills</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li>
+    </ul>
+  </nav></div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="role">PM / PO・フルスタックエンジニア</p>
+    <h1>谷本 和也<small>Kazuya Tanimoto</small></h1>
+    <p class="copy">現場を前に進める PM / PO</p>
+    <p class="summary">設計も開発もマネジメントも。25年の現場経験とAI活用で、停滞しないチームをつくります。</p>
+    <div class="cta">
+      <a href="#" class="btn-primary">経歴を見る</a>
+      <a href="#" class="btn-secondary">お問い合わせ</a>
+    </div>
+  </div>
+</div>
+<div class="plume" role="presentation"></div>
+
+<section class="home">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="title-group"><p class="eyebrow">Career — 経歴</p><h2>経歴と実績</h2></div>
+      <a href="#">すべて見る →</a>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <p class="period">2025/07 — 2026/07</p>
+        <h3>大規模決済プラットフォームの横断PM</h3>
+        <p class="desc">複数プロダクトを横断するプロジェクトマネジメントと、AIを活用した品質改善施策の立案・展開を担当。</p>
+        <p class="keywords">横断PM, 品質改善, AI活用, Jira / Confluence</p>
+      </article>
+      <article class="card current">
+        <p class="period">2022/09 — <span class="now">現在</span></p>
+        <h3>障がい者支援ポータルサイトの開発</h3>
+        <p class="desc">立ち上げ期から要件定義〜運用までを一貫して主導。途中でスクラムへ移行し、PO的役割とAIによる開発自動化を推進。</p>
+        <p class="keywords">PM / PO / Dev, AWS, React / TypeScript, Laravel, スクラム</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="home">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="title-group"><p class="eyebrow">Skills — 技術</p><h2>技術スタック</h2></div>
+      <a href="#">すべて見る →</a>
+    </div>
+    <ul class="skills">
+      <li><p class="name">Linux</p><p class="years">12y</p></li>
+      <li><p class="name">SQL</p><p class="years">12y</p></li>
+      <li><p class="name">PHP</p><p class="years">11y</p></li>
+      <li><p class="name">JavaScript</p><p class="years">10y</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="home">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="title-group"><p class="eyebrow">Blog — 記事</p><h2>最新記事</h2></div>
+      <a href="#">すべて見る →</a>
+    </div>
+    <div class="cards" style="margin-top:1.5rem">
+      <article class="blogcard">
+        <div class="meta"><span class="badge">Tech</span><time>2026-06-28</time></div>
+        <h3>AIに開発を任せるなら、仕組みがいる</h3>
+        <p>数年かけても完成しなかった個人サイトを、Claude Code で約6週間で作り直した記録。AI に任せきりにせず品質を保つための仕組みを実体験ベースで書きます。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="demo-label"><div class="wrap">適用イメージ — 記事詳細（実記事より抜粋）</div></div>
+
+<article class="post">
+  <div class="wrap">
+    <div class="meta"><span class="badge">Tech</span><time>2026-06-28</time></div>
+    <h1>AIに開発を任せるなら、仕組みがいる</h1>
+    <div class="plume post-plume" role="presentation"></div>
+    <p>こんにちは。本サイト最初のブログ記事はこのサイトをAIで作った話にします。このサイト、全部AI（Claude Code）で実装しました。私は全くコードを書いていません。</p>
+    <p>どんなものを作るかをAIと壁打ちしながら決めて、AIが作ったものを評価して、イマイチなところを修正してもらう。その繰り返しでできあがりました。</p>
+    <h2>3：完了前のチェックリスト</h2>
+    <p>完了の前に必ず通す確認をルール化しました。各タスクの条件に、こういうチェックを常設しています。</p>
+    <pre>- [ ] 自動テストが すべて通る
+- [ ] ローカルでPlaywrightを使って打鍵確認（PC + スマホ幅）
+- [ ] 公開前プレビューでPlaywrightを使って打鍵確認</pre>
+    <h2>向き不向き</h2>
+    <ul>
+      <li>向く人：AIの答えを評価して「それ違くない？」と見抜ける／イマイチを都度直せる</li>
+      <li>向かない人：コードを書くのが何より楽しい／真偽を判断できず言いなりになる</li>
+    </ul>
+  </div>
+</article>
+
+<div class="demo-label"><div class="wrap">適用イメージ — About（抜粋）</div></div>
+
+<div class="about-quote">
+  <div class="wrap">
+    <p class="eyebrow">About — byte-lark</p>
+    <h2>屋号の由来</h2>
+    <p>byte-lark は、IT の情報単位である byte と、ヒバリを意味する lark を組み合わせた名前です。ドイツ語の Beitrag（バイトラーク）には「貢献」という意味があります。春の空へまっすぐ昇るヒバリのように、関わるプロジェクトとチームを軽やかに前へ進める存在でありたい、という思いを込めています。</p>
+  </div>
+</div>
+
+<div class="plume" role="presentation"></div>
+<footer class="site">
+  <div class="wrap">
+    <div><h2>byte-lark</h2><p style="margin-top:0.5rem">合同会社バイトラーク（byte-lark）</p><p>2026年6月設立</p></div>
+    <div><h2>Links</h2><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+    <div><h2>Contact</h2><p style="margin-top:0.5rem"><a href="#">お問い合わせフォーム</a></p></div>
+  </div>
+  <div class="copyright"><div class="wrap">© 2026 byte-lark. All rights reserved.</div></div>
+</footer>
+
+</body>
+</html>

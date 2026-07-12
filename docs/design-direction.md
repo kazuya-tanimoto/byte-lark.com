@@ -1,0 +1,94 @@
+# デザイン方向性 確定記録（PHASE1C-001）
+
+確定日: 2026-07-13
+選定者: 運営者（提示 3 案から選定、修正指示なし）
+選定結果: **案2「春空」— 春の朝、明るく軽やかな個人ブランド**
+
+本ドキュメントは Phase 1c 実装 PBI（PHASE1C-002 確定 HEX / 003 タイポスケール / 004 ロゴ / 005 favicon）の入力となる確定内容を記録する。色相骨格（primary=空色 / accent=朝日・羽色 / secondary=草原 / earth / neutral）は site-plan §8 Decision #14（Plan B）から不変。
+
+---
+
+## 1. 選定の経緯
+
+- 入力: ブランドコンセプト（site-plan §6.5.1）・現行仮パレット（§6.5.2 Plan B）・タイポ方針（§6.5.3）
+- 提示 3 案（モックは `docs/design-drafts/phase1c-001/` に保存。実コンテンツ＝Hero / Career / Skills / 実記事「AIに開発を任せるなら、仕組みがいる」/ About 屋号の由来への適用イメージ + パレット/タイポ標本入り）:
+  - 案1「快晴」（`1-clear-sky.html`）: 端正・信頼。現行骨格を活かし空色を締める進化案。Geist + Noto Sans JP 継続
+  - **案2「春空」（`2-spring-sky.html`）: 明るい・軽やか・親しみ。暖白地 + 淡い空色の面、Zen Kaku Gothic New 見出し ← 選定**
+  - 案3「野の羽色」（`3-field-feather.html`）: 質実・職人。IBM Plex Sans JP + Plex Mono、縞羽モチーフ
+- 選定理由: ブランドイメージ群（飛翔・春の訪れ・晴れやか・明るい未来）とタイポ方針（軽めのウェイトで「軽快さ・抜け感」）への合致が最も強い
+- 草案作成手段: ClaudeDesign は利用不可だったため、PBI 技術メモのフォールバック（HTML モック + MCP Playwright スクショ確認）で実施
+
+## 2. カラーパレット確定値（PHASE1C-002 の入力）
+
+ライトモードの確定候補値。全て WCAG AA 検証済み（§4 参照）。oklch は sRGB からの換算値（実装時は oklch 表記でトークン化、現行 `global.css` の `--color-hibari-*` 群を置換する）。
+
+### 文字・インタラクティブ（AA 対象）
+
+| 役割 | HEX | oklch | 用途 |
+|---|---|---|---|
+| sky (primary) | `#0273B0` | `oklch(0.533 0.128 242.8)` | リンク・ボタン・強調文字 |
+| sky-deep | `#075985` | `oklch(0.443 0.100 240.8)` | hover・押下 |
+| amber-text (accent) | `#96570A` | `oklch(0.518 0.115 62.6)` | accent 文字 |
+| amber-chip-text | `#7C4A08` | `oklch(0.458 0.099 65.4)` | amber チップ内文字 |
+| green-chip-text | `#166534` | `oklch(0.448 0.108 151.3)` | green チップ内文字（Life 系） |
+| text | `#322E29` | `oklch(0.304 0.011 73.5)` | 本文（暖黒） |
+| muted | `#605A50` | `oklch(0.470 0.018 80.6)` | 補助テキスト |
+| earth | `#57534E` | `oklch(0.444 0.010 73.6)` | 羽色（キーワード等の脇役文字） |
+
+### 面・装飾（文字に使わない）
+
+| 役割 | HEX | oklch | 用途 |
+|---|---|---|---|
+| bg | `#FCFBF8` | `oklch(0.988 0.004 91.4)` | 地（暖白） |
+| card | `#FFFFFF` | `oklch(1 0 0)` | カード面 |
+| wash | `#EDF7FD` | `oklch(0.970 0.013 233.7)` | 空の面（Hero グラデ・帯・Tech チップ） |
+| sun | `#F0A32A` | `oklch(0.773 0.154 72.5)` | 朝日ドット・装飾専用 |
+| amber-chip | `#FBEED7` | `oklch(0.953 0.033 82.0)` | amber ラベル面 |
+| green-chip | `#E3F4E3` | `oklch(0.950 0.029 145.3)` | green ラベル面 |
+| border | `#ECE9E3` | `oklch(0.935 0.009 84.6)` | 罫線（使用は控えめ、面と影を優先） |
+
+### 運用規律
+
+- sun / wash 等の装飾色は文字色に使わない（AA 回避ではなく役割分離）
+- ダークモードの確定値は PHASE1C-002 で本パレットの明度反転から導出する（現行 `.dark` トークンの置換）
+
+## 3. タイポグラフィ方向性（PHASE1C-003 の入力）
+
+- 見出し: **Zen Kaku Gothic New**（Google Fonts、500 / 700。variable 非対応の静的ウェイト）
+- 本文: **Noto Sans JP**（400 / 500、現行継続）
+- 本文 Latin における Geist の去就（残すか Noto の従属欧文に統一するか）は PHASE1C-003 で確定
+- スケール感（モック検証値）: 比率 1.28 / 本文 16px / 行間 1.95（本文）
+  - h1 42px/700、h2 24px/700、h3 17px/700、small 14px
+  - h2 には朝日ドットマーカー（`radial-gradient` の円、装飾）
+- フォント読み込み（preload / display / サブセット）は PHASE1C-007（CLS 対応）と連携。Zen Kaku Gothic New は使用ウェイト 2 種のみ読み込む
+
+## 4. コントラスト検証値（WCAG 2.x、PHASE1C-002 の color-contrast 再有効化前提）
+
+| 組合せ | 比 | 判定 |
+|---|---|---|
+| text `#322E29` / bg `#FCFBF8` | 13.0:1 | AA ✓ |
+| muted `#605A50` / bg | 6.6:1 | AA ✓ |
+| sky `#0273B0` / bg | 5.0:1 | AA ✓ |
+| sky / card `#FFFFFF` | 5.1:1 | AA ✓ |
+| sky / wash `#EDF7FD` | 4.7:1 | AA ✓ |
+| 白 / sky（primary ボタン） | 5.1:1 | AA ✓ |
+| amber-text `#96570A` / bg | 5.5:1 | AA ✓ |
+| amber-chip-text / amber-chip | 6.5:1 | AA ✓ |
+| green-chip-text / green-chip | 6.2:1 | AA ✓ |
+| earth `#57534E` / bg | 7.4:1 | AA ✓ |
+
+## 5. トーン・形・署名要素
+
+- トーン語彙: 明るい / 軽やか / 親しみ / 春・朝
+- 面: 暖白の地にごく淡い空色の面（wash）を重ねる。Hero は `wash → bg` の縦グラデーション
+- カード: 罫線でなく柔らかい影（`0 1px 3px rgba(70,55,30,.06), 0 6px 20px rgba(70,55,30,.06)`）+ 白面
+- 角丸: 14px（チップ・ボタンはピル形 999px）
+- 署名要素: **揚雲雀の軌跡** — Hero 右下に、左下から右上へ昇る点線の飛行線 + ヒバリのシルエット + 朝日。1 ページ 1 回だけ使う
+- リストマーカー・h2 マーカーに朝日（sun）を小さく日常使いする
+
+## 6. 各実装 PBI への引き継ぎ
+
+- **PHASE1C-002（確定 HEX + color-contrast 再有効化）**: §2 の値で `global.css` のトークン（`--color-hibari-*` + セマンティック）を置換、`tests/e2e/a11y.spec.ts` の `color-contrast` 除外を解除。ダーク値の導出もここで
+- **PHASE1C-003（タイポスケール）**: §3 の方向性で確定・実装。Geist の去就、和欧混植・行間の微調整、見出しマーカーの実装
+- **PHASE1C-004（ロゴ）**: sky `#0273B0` 基調 + sun `#F0A32A`。トーンは「軽やか・上昇（揚雲雀）」。モック Hero の飛行線モチーフと整合させる
+- **PHASE1C-005（favicon）**: 確定色 + 新ロゴ意匠に差し替え
