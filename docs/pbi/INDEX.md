@@ -192,6 +192,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 | PHASE1B-011 | [post-claude-code-for-po-work](20260628-PHASE1B-011-post-claude-code-for-po-work.md) | NotStarted |
 | PHASE1B-012 | [post-incorporating-bytelark](20260628-PHASE1B-012-post-incorporating-bytelark.md) | NotStarted |
 | PHASE1B-013 | [post-work-fit-strengthsfinder](20260628-PHASE1B-013-post-work-fit-strengthsfinder.md) | NotStarted |
+| PHASE1B-015 | [codeql-dual-setup-fix](20260713-PHASE1B-015-codeql-dual-setup-fix.md) | NotStarted |
 | **PHASE1B-014** | [**retrospective-gate**](20260628-PHASE1B-014-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
 ### Phase 1b 推奨着手順序
@@ -217,8 +218,10 @@ PHASE1B-007 (記事ネタ出し・初期記事セット確定)  ← Done（2026-
 ├─ PHASE1B-011 (T5 実案件で Claude 活用 PO 業務・tech)
 ├─ PHASE1B-012 (L1 法人化・life)
 └─ PHASE1B-013 (L2+L3 合う仕事×ストレングス・life)
+
+PHASE1B-015 (CodeQL 二重構成解消・CI 保守) ← 依存なし、任意タイミングで実施可（2026-07-13 追加起票。Gate 前まで）
   ↓
-PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 全 Done 後、1c 移行前の必須ゲート
+PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 + 015 全 Done 後、1c 移行前の必須ゲート
 ```
 
 ---
@@ -304,3 +307,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-06-15 | **Phase 1b PBI 起票（7 件）**：`draft-phase1b-content-launch-prep.md` を正式化。PHASE1B-001（Skills/資格 現行化）/ 002（Career 現行化 + 代表案件）/ 003（About/Privacy 文面確定）/ 004（Contact backend）/ 005（Contact frontend）/ 006（サンプル記事処置）/ 007（記事ネタ出し・初期記事セット確定）。draft 項目4（Contact フォーム化 FR-29）を §7 基準でバックエンド 004 / フロント 005 に分割。各 PBI 技術メモに想定セッション数を明記（全件 1 セッション、004 は 2 セッション化時の再分割条件を付記）、受け入れ条件に §7 検証ゲート 3 項目を常設。PHASE1A-022 申し送り + Phase 1a 各実装ログ（devicon 403 判定 / HMR / Career id=2 一次情報なし / About=ですます調・Privacy=簡易案 / wrangler は assets のみ / Footer も平文 mailto）を反映。draft 項目7（記事実装 × n）と Phase 1b Gate は 007 完了時に追加起票（placeholder）。INDEX セッション開始チェック 3 種 green 確認済み |
 | 2026-07-12 | **Phase 1c 先行トラック起票（site-plan v3.10 Decision #28 連動）**：1c を先行トラック（記事非依存）と仕上げトラック（1b Gate 後起票）に二分し、先行トラック PHASE1C-001（デザイン方向性）/ 002（確定 HEX + color-contrast 再有効化）/ 003（タイポスケール）/ 004（ロゴ刷新）/ 005（favicon）/ 006（BlogCard 見出しレベル B-1）/ 007（フォント CLS B-2）を NotStarted で起票。着手ルールに先行トラック例外を追記（README §9 例外 / v3.3 連動）。1b 記事 PBI（008〜013）とはセッション単位で切替並行。draft-phase1c-design-polish.md は仕上げトラックの anchor として更新 |
 | 2026-07-13 | **PHASE1C-001 完了（Done）**：デザイン草案 3 案（快晴 / 春空 / 野の羽色）を HTML モック（`docs/design-drafts/phase1c-001/`）で提示し、運営者が**案2「春空」を選定**（修正指示なし）。確定記録 `docs/design-direction.md` を新設（パレット HEX/oklch + AA 検証値 / タイポ方向性 / 署名要素 / 002〜005 への引き継ぎ）、site-plan §6.5.2/6.5.3 を同コミットで整合。次は PHASE1C-002（確定 HEX + color-contrast 再有効化）/ 003 / 004 が着手可能 |
+| 2026-07-13 | **PHASE1B-015 起票（CI 保守）**：CodeQL 二重構成（GitHub default setup 有効 + 自前 `codeql.yml` advanced 構成の併存で SARIF 拒否）により 2026-06-28 以降 `Analyze (javascript)` が全 push で failure と判明（PHASE1C-001 セッションで一次調査済み、エラー全文と履歴は PBI 技術メモ）。解消 PBI を Phase 1b 期中の横断タスクとして追加起票（PHASE1A-021 前例に倣う、依存なし・任意タイミング）。Gate（014）の完了確認対象を 001〜013 + 015 に連動更新 |
