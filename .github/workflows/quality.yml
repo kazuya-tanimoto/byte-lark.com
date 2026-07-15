@@ -4,6 +4,11 @@ on:
     branches: [main, "feat/*"]
   pull_request:
     branches: [main, "feat/*"]
+
+# GITHUB_TOKEN を読み取り専用に固定
+permissions:
+  contents: read
+
 jobs:
   quality:
     runs-on: ubuntu-latest
