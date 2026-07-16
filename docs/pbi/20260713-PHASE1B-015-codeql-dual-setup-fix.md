@@ -1,7 +1,8 @@
 # 運営者と Claude は CodeQL の二重構成を解消し、コードスキャンを単一の green な構成で運用できる
 
-Status: InProgress
+Status: Done
 Started: 2026-07-15
+Completed: 2026-07-15
 
 ## 誰が
 - Claude（実施）+ 運営者（方式選定、必要なら GitHub 設定操作）
@@ -17,12 +18,12 @@ Started: 2026-07-15
 - [x] 方式を運営者が選定する（Claude がフラット評価を添えて提示）：2026-07-15 案B を選定
   - 案A：default setup を無効化（GitHub UI・admin 操作）して自前 `codeql.yml`（advanced 構成）へ一本化。codeql-action v2 → v3 更新を必ず伴う
   - 案B：自前 `.github/workflows/codeql.yml` を削除して default setup へ一本化（repo 変更のみで完結）。`actions` 言語（workflow 解析）のカバレッジが default setup で維持されるかを実施時に一次情報で確認する → 確認済み：default setup の check suite に `Analyze (javascript-typescript)` と `Analyze (actions)` が両方 success で存在（26d10ef、2026-07-15 API 実測）
-- [ ] 選定方式を実施し、push 後に CodeQL 系 check が単一構成になり failure の check-run が消えることを確認
-- [ ] default setup スキャンが検出済みの medium alert（workflow の GITHUB_TOKEN permissions 未設定、ui-tests.yml L19-44）に対応：各 workflow へ最小 permissions ブロックを追加
-- [ ] 対応内容と判断根拠を実装ログに記録（default setup が有効化された経緯も運営者に確認して記録）
+- [x] 選定方式を実施し、push 後に CodeQL 系 check が単一構成になり failure の check-run が消えることを確認：03efd32 の check-runs は default setup の `Analyze (javascript-typescript)` / `Analyze (actions)` のみ（両方 success）、`Analyze (javascript)` の failure check-run は消滅（2026-07-15 確認）
+- [x] default setup スキャンが検出済みの medium alert（workflow の GITHUB_TOKEN permissions 未設定、ui-tests.yml L19-44）に対応：各 workflow へ最小 permissions ブロックを追加（ui-tests.yml / quality.yml に `permissions: contents: read`。alert クローズ自体の API 確認は認証必須（401）のため不可、運営者が Security → Code scanning で確認）
+- [x] 対応内容と判断根拠を実装ログに記録（default setup が有効化された経緯も運営者に確認して記録：心当たりなし、有効化時期 2025-02-19 のみ API で確定）
 - [x] ローカル スクショ確認（desktop + mobile）：N/A（理由: CI 設定のみの変更で UI 非変更）（CLAUDE.md §7）
 - [x] CF preview スクショ確認（branch alias URL）：N/A（理由: 同上）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）：workflow 変更を含むため実施必須（UI Tests / Quality Checks green + CodeQL 解消をあわせて確認）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）：workflow 変更を含むため実施必須（UI Tests / Quality Checks green + CodeQL 解消をあわせて確認）（CLAUDE.md §7）→ 03efd32 で UI Tests(e2e) success / Quality Checks(quality) success / Workers Builds success / CodeQL(default setup) success（2026-07-15）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -49,8 +50,15 @@ Started: 2026-07-15
   - 方式選定：案A/案B をフラット評価付きで提示し、運営者が案B（default setup へ一本化）を選定
   - 実施：`.github/workflows/codeql.yml` を削除、`ui-tests.yml` / `quality.yml` に workflow レベルの `permissions: contents: read` を追加（medium alert「Workflow does not contain permissions」対応。upload-artifact は追加権限不要）
 - 残タスク
-  - commit / push → CI green + CodeQL 単一構成の確認
-  - main 上の週次 cron 停止：ファイル削除は feat/phase-1 のみで main には残るため、運営者による workflow 無効化が必要（Actions タブ → CodeQL → Disable workflow、または手元ターミナルで `gh workflow disable CodeQL`）。Phase 1d の main マージでファイル自体が消えるまでの暫定措置
+  - ~~commit / push → CI green + CodeQL 単一構成の確認~~ → 完了（03efd32、検証報告参照）
+  - main 上の週次 cron 停止：ファイル削除は feat/phase-1 のみで main には残るため、運営者による workflow 無効化が必要（Actions タブ → CodeQL → Disable workflow、または手元ターミナルで `gh workflow disable CodeQL --repo kazuya-tanimoto/byte-lark.com`）。Phase 1d の main マージでファイル自体が消えるまでの暫定措置。**Done 時点で workflow state = active（未実施）を API で確認済み → 運営者作業として申し送り**（実施しない場合、毎週日曜 04:45 JST 頃に failure が 1 件ずつ積まれ続けるのみで、feat/phase-1 の CI 判定には影響しない）
+  - medium alert（ui-tests.yml permissions）のクローズ確認：無認証 API では読めない（401）ため、運営者が GitHub UI（Security → Code scanning）で open alert が消えたことを確認
+
+### 検証報告（2026-07-15、03efd32）
+- ローカル確認: N/A（CI 設定のみの変更で UI 非変更）
+- CF preview 確認: N/A（同上。なお Workers Builds check は success）
+- E2E/CI 確認: `scripts/ci-status.sh` で UI Tests(e2e) success / Quality Checks(quality) success。03efd32 の check-runs は CodeQL 系が default setup のみ（`Analyze (javascript-typescript)` success / `Analyze (actions)` success / `CodeQL` success）となり、advanced 構成の `Analyze (javascript)` failure は消滅
+- 未検証項目: medium alert のクローズ（無認証 API 不可、運営者 UI 確認へ申し送り）、main 週次 cron の無効化（運営者作業、未実施を確認済み）
 - 学び
   - pull_request トリガーは「base が main の PR」で発火するため、`branches: [main]` でも feature ブランチへの push ごとに走る（PR が開いている限り）
   - default setup の解析言語構成は check suite の check-run 名（`Analyze (…)`）から無認証で読み取れる
