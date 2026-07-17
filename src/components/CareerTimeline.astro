@@ -12,9 +12,9 @@ const { items, details } = Astro.props;
 const sortedItems = [...items].sort((a, b) => b.from.localeCompare(a.from));
 const detailMap = new Map(details.map((d) => [d.id, d]));
 
-// 雇用形態バッジの色（確定 HEX は Phase 1c。今は控えめに区別）
+// 雇用形態バッジの色。淡い sky 面上の sky 文字は 4.3:1 と AA 未達のため sky-deep を使う
 const employmentClass: Record<string, string> = {
-  フリーランス: "border-hibari-sky/40 bg-hibari-sky/10 text-hibari-sky",
+  フリーランス: "border-hibari-sky/40 bg-hibari-sky/10 text-hibari-sky-deep",
   会社員: "border-border bg-muted text-muted-foreground",
   副業: "border-hibari-amber/40 bg-hibari-amber/10 text-hibari-amber",
 };

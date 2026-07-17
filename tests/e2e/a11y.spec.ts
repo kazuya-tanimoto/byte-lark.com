@@ -23,9 +23,6 @@ test.describe("アクセシビリティ（axe / WCAG 2.1 AA）", () => {
       expect(response?.status()).toBe(expectedStatus);
       const results = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-        // color-contrast は Phase 1c の確定 HEX 置換まで除外（仮カラーが AA 4.5:1 未満）。
-        // 確定 HEX 反映時にこの除外を外して再有効化する（site-plan §6.5.2 / PBI 019 実装ログに追跡）。
-        .disableRules(["color-contrast"])
         .analyze();
 
       const severe = results.violations.filter(

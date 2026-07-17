@@ -10,13 +10,18 @@
   --font-heading: var(--font-sans);
   --font-sans: "Geist Variable", "Noto Sans JP Variable", sans-serif;
 
-  --color-hibari-sky: oklch(0.685 0.169 237.323);
-  --color-hibari-sky-light: oklch(0.746 0.16 232.661);
-  --color-hibari-amber: oklch(0.769 0.188 70.08);
-  --color-hibari-amber-light: oklch(0.828 0.189 84.429);
-  --color-hibari-green: oklch(0.723 0.219 149.579);
-  --color-hibari-green-light: oklch(0.792 0.209 151.711);
-  --color-hibari-earth: oklch(0.444 0.011 73.639);
+  /* 確定パレット「春空」（docs/design-direction.md §2、PHASE1C-002）。
+     sun / wash / チップ面は装飾・面専用で文字に使わない（同 §2 運用規律） */
+  --color-hibari-sky: oklch(0.533 0.128 242.8); /* #0273B0 */
+  --color-hibari-sky-deep: oklch(0.443 0.1 240.8); /* #075985 hover・淡い sky 面上の文字 */
+  --color-hibari-wash: oklch(0.97 0.013 233.7); /* #EDF7FD 空の面 */
+  --color-hibari-sun: oklch(0.773 0.154 72.5); /* #F0A32A 朝日・装飾専用 */
+  --color-hibari-amber: oklch(0.518 0.115 62.6); /* #96570A accent 文字 */
+  --color-hibari-amber-chip: oklch(0.953 0.033 82); /* #FBEED7 */
+  --color-hibari-amber-chip-text: oklch(0.458 0.099 65.4); /* #7C4A08 */
+  --color-hibari-green-chip: oklch(0.95 0.029 145.3); /* #E3F4E3 */
+  --color-hibari-green-chip-text: oklch(0.448 0.108 151.3); /* #166534 */
+  --color-hibari-earth: oklch(0.444 0.01 73.6); /* #57534E */
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -60,77 +65,81 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* セマンティックトークン確定値（PHASE1C-002）。文字/面の全組合せを oklch → sRGB 実測で
+   WCAG AA 検証済み（検証値は PBI 実装ログ）。muted は面=wash / 文字=#605A50 の対で使う */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.268 0.007 34.298);
+  --background: oklch(0.988 0.004 91.4); /* #FCFBF8 暖白 */
+  --foreground: oklch(0.304 0.011 73.5); /* #322E29 暖黒 13.0:1 */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.268 0.007 34.298);
+  --card-foreground: oklch(0.304 0.011 73.5);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.268 0.007 34.298);
-  --primary: oklch(0.685 0.169 237.323);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.97 0.001 106.424);
-  --secondary-foreground: oklch(0.268 0.007 34.298);
-  --muted: oklch(0.97 0.001 106.424);
-  --muted-foreground: oklch(0.553 0.013 58.071);
-  --accent: oklch(0.769 0.188 70.08);
-  --accent-foreground: oklch(0.268 0.007 34.298);
-  --earth: oklch(0.444 0.011 73.639);
-  --earth-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.923 0.003 48.717);
-  --input: oklch(0.923 0.003 48.717);
-  --ring: oklch(0.685 0.169 237.323);
-  --chart-1: oklch(0.685 0.169 237.323);
-  --chart-2: oklch(0.769 0.188 70.08);
-  --chart-3: oklch(0.723 0.219 149.579);
-  --chart-4: oklch(0.444 0.011 73.639);
-  --chart-5: oklch(0.553 0.013 58.071);
+  --popover-foreground: oklch(0.304 0.011 73.5);
+  --primary: oklch(0.533 0.128 242.8); /* sky 5.0:1 on bg */
+  --primary-foreground: oklch(1 0 0); /* 5.1:1 on sky */
+  --secondary: oklch(0.95 0.029 145.3); /* green-chip */
+  --secondary-foreground: oklch(0.448 0.108 151.3); /* 6.2:1 */
+  --muted: oklch(0.97 0.013 233.7); /* wash */
+  --muted-foreground: oklch(0.47 0.018 80.6); /* #605A50 6.6:1 on bg, 6.3:1 on wash */
+  --accent: oklch(0.953 0.033 82); /* amber-chip */
+  --accent-foreground: oklch(0.458 0.099 65.4); /* 6.5:1 */
+  --earth: oklch(0.444 0.01 73.6);
+  --earth-foreground: oklch(1 0 0); /* 7.6:1 */
+  --destructive: oklch(0.577 0.245 27.325); /* 4.6:1 on bg */
+  --border: oklch(0.935 0.009 84.6); /* #ECE9E3 */
+  --input: oklch(0.935 0.009 84.6);
+  --ring: oklch(0.533 0.128 242.8);
+  --chart-1: oklch(0.533 0.128 242.8);
+  --chart-2: oklch(0.773 0.154 72.5);
+  --chart-3: oklch(0.448 0.108 151.3);
+  --chart-4: oklch(0.444 0.01 73.6);
+  --chart-5: oklch(0.47 0.018 80.6);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.268 0.007 34.298);
-  --sidebar-primary: oklch(0.685 0.169 237.323);
+  --sidebar: oklch(0.988 0.004 91.4);
+  --sidebar-foreground: oklch(0.304 0.011 73.5);
+  --sidebar-primary: oklch(0.533 0.128 242.8);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.97 0.001 106.424);
-  --sidebar-accent-foreground: oklch(0.268 0.007 34.298);
-  --sidebar-border: oklch(0.923 0.003 48.717);
-  --sidebar-ring: oklch(0.685 0.169 237.323);
+  --sidebar-accent: oklch(0.97 0.013 233.7);
+  --sidebar-accent-foreground: oklch(0.304 0.011 73.5);
+  --sidebar-border: oklch(0.935 0.009 84.6);
+  --sidebar-ring: oklch(0.533 0.128 242.8);
 }
 
+/* ダーク確定値（PHASE1C-002 で確定パレットの明度反転から導出、AA 実測済み）。
+   現状 .dark を付与する仕組みがなく画面到達不能のため、実表示での検証は未実施 */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.746 0.16 232.661);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.828 0.189 84.429);
-  --accent-foreground: oklch(0.205 0 0);
-  --earth: oklch(0.553 0.013 58.071);
-  --earth-foreground: oklch(1 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.746 0.16 232.661);
-  --chart-1: oklch(0.746 0.16 232.661);
-  --chart-2: oklch(0.828 0.189 84.429);
-  --chart-3: oklch(0.792 0.209 151.711);
-  --chart-4: oklch(0.553 0.013 58.071);
-  --chart-5: oklch(0.708 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.746 0.16 232.661);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.746 0.16 232.661);
+  --background: oklch(0.22 0.008 73.5); /* #1D1A17 暖黒 */
+  --foreground: oklch(0.96 0.004 91.4); /* #F3F2EF 15.5:1 */
+  --card: oklch(0.26 0.008 73.5);
+  --card-foreground: oklch(0.96 0.004 91.4);
+  --popover: oklch(0.26 0.008 73.5);
+  --popover-foreground: oklch(0.96 0.004 91.4);
+  --primary: oklch(0.72 0.11 242.8); /* #62ACE4 7.0:1 on bg */
+  --primary-foreground: oklch(0.22 0.008 73.5); /* 7.0:1 on primary */
+  --secondary: oklch(0.32 0.035 151.3);
+  --secondary-foreground: oklch(0.85 0.075 151.3); /* 8.1:1 */
+  --muted: oklch(0.3 0.015 233.7); /* 夜空の面 */
+  --muted-foreground: oklch(0.76 0.015 80.6); /* 8.1:1 on bg, 6.3:1 on muted */
+  --accent: oklch(0.33 0.045 72.5);
+  --accent-foreground: oklch(0.85 0.075 80); /* 7.7:1 */
+  --earth: oklch(0.7 0.012 73.6); /* 6.5:1 on bg */
+  --earth-foreground: oklch(0.22 0.008 73.5);
+  --destructive: oklch(0.704 0.191 22.216); /* 6.0:1 on bg */
+  --border: oklch(0.32 0.008 84.6);
+  --input: oklch(0.36 0.008 84.6);
+  --ring: oklch(0.72 0.11 242.8);
+  --chart-1: oklch(0.72 0.11 242.8);
+  --chart-2: oklch(0.78 0.12 72.5);
+  --chart-3: oklch(0.85 0.075 151.3);
+  --chart-4: oklch(0.7 0.012 73.6);
+  --chart-5: oklch(0.76 0.015 80.6);
+  --sidebar: oklch(0.26 0.008 73.5);
+  --sidebar-foreground: oklch(0.96 0.004 91.4);
+  --sidebar-primary: oklch(0.72 0.11 242.8);
+  --sidebar-primary-foreground: oklch(0.22 0.008 73.5);
+  --sidebar-accent: oklch(0.3 0.015 233.7);
+  --sidebar-accent-foreground: oklch(0.96 0.004 91.4);
+  --sidebar-border: oklch(0.32 0.008 84.6);
+  --sidebar-ring: oklch(0.72 0.11 242.8);
 }
 
 @layer base {

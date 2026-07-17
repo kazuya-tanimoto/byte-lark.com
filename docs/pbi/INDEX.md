@@ -235,7 +235,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 + 015 全 Done 後、1c
 | ID | タイトル | Status |
 |---|---|---|
 | PHASE1C-001 | [design-direction](20260712-PHASE1C-001-design-direction.md) | Done |
-| PHASE1C-002 | [brand-colors-contrast](20260712-PHASE1C-002-brand-colors-contrast.md) | NotStarted |
+| PHASE1C-002 | [brand-colors-contrast](20260712-PHASE1C-002-brand-colors-contrast.md) | InProgress |
 | PHASE1C-003 | [typography-scale](20260712-PHASE1C-003-typography-scale.md) | NotStarted |
 | PHASE1C-004 | [logo-redesign](20260712-PHASE1C-004-logo-redesign.md) | NotStarted |
 | PHASE1C-005 | [favicon-touch-icons](20260712-PHASE1C-005-favicon-touch-icons.md) | NotStarted |

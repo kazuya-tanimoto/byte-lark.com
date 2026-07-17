@@ -27,7 +27,7 @@
 - shadcn/ui は React Island 必要箇所のみ（Header/Footer 等の静的部品は Astro 自前）
 - OGP / SEO は SSG 時に静的生成（クライアント JS 非依存）
 - Blog category は frontmatter、URL は flat /blog/:slug
-- Color palette: Hibari brand (sky / amber / green / earth / neutral)、確定 HEX は Phase 1c（デザイン）後
+- Color palette: 確定パレット「春空」（docs/design-direction.md §2、PHASE1C-002 で global.css トークンに反映済み）。sun / wash / チップ面は文字色に使わない
 
 ## Code Style
 - TypeScript strict, 2-space indent, 100 char line, named exports preferred
