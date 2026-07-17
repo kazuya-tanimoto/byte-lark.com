@@ -13,7 +13,9 @@
   /* 確定パレット「春空」（docs/design-direction.md §2、PHASE1C-002）。
      sun / wash / チップ面は装飾・面専用で文字に使わない（同 §2 運用規律） */
   --color-hibari-sky: oklch(0.533 0.128 242.8); /* #0273B0 */
-  --color-hibari-sky-deep: oklch(0.443 0.1 240.8); /* #075985 hover・淡い sky 面上の文字 */
+  --color-hibari-sky-deep: oklch(
+    0.443 0.1 240.8
+  ); /* #075985 hover・淡い sky 面上の文字 */
   --color-hibari-wash: oklch(0.97 0.013 233.7); /* #EDF7FD 空の面 */
   --color-hibari-sun: oklch(0.773 0.154 72.5); /* #F0A32A 朝日・装飾専用 */
   --color-hibari-amber: oklch(0.518 0.115 62.6); /* #96570A accent 文字 */
@@ -79,7 +81,9 @@
   --secondary: oklch(0.95 0.029 145.3); /* green-chip */
   --secondary-foreground: oklch(0.448 0.108 151.3); /* 6.2:1 */
   --muted: oklch(0.97 0.013 233.7); /* wash */
-  --muted-foreground: oklch(0.47 0.018 80.6); /* #605A50 6.6:1 on bg, 6.3:1 on wash */
+  --muted-foreground: oklch(
+    0.47 0.018 80.6
+  ); /* #605A50 6.6:1 on bg, 6.3:1 on wash */
   --accent: oklch(0.953 0.033 82); /* amber-chip */
   --accent-foreground: oklch(0.458 0.099 65.4); /* 6.5:1 */
   --earth: oklch(0.444 0.01 73.6);
