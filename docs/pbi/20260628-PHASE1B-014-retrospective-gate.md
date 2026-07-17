@@ -6,7 +6,7 @@ Status: NotStarted
 - 運営者 + Claude
 
 ## 何をできる
-- Phase 1b の全 PBI（001〜013、015）が Done になったことを確認できる
+- Phase 1b の全 PBI（001〜013、015。016 は Phase 非依存の環境整備のため対象外）が Done になったことを確認できる
 - Phase 1b で得た知見・想定外・つまずきを集約し、Phase 1c（デザインブラッシュアップ）PBI 起票時の参考資料として明文化できる
 
 ## なんのために
@@ -17,6 +17,7 @@ Status: NotStarted
 
 ### Phase 1b 完了確認
 - [ ] PHASE1B-001 〜 PHASE1B-013 および PHASE1B-015（CodeQL 二重構成解消、2026-07-13 追加起票）のすべてが Status: Done
+  - PHASE1B-016（Claude Code devcontainer 環境整備、2026-07-17 起票）は Phase 非依存の開発環境整備のため**本 Gate の完了確認対象外**（未完でも Gate 通過可。docs/devcontainer-plan.md 参照）
 - [ ] `docs/pbi/INDEX.md` の Phase 1b セクションがすべて `[Done]` 表示
 - [ ] feat/phase-1 ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がすべて成功
 
