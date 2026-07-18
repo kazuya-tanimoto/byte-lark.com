@@ -52,6 +52,21 @@ Started: 2026-07-17
   - devcontainer CLI 未導入・docker socket は sandbox から権限拒否を実測（ステップ 1 未完のまま着手した分はステップ 2 の範囲で完結）
   - セッション途中で運営者が計画書に §6 ステップ 8 と §4 ccbox 方針変更（repo に置かない）を追記 → 作成済みの scripts/ccbox.fish を削除して追随
 
+### 2026-07-18〜19 セッション①後半（ステップ 3〜5 完了）
+
+- やったこと
+  - ステップ 1 完了確認（devcontainer CLI 0.87.0 / PAT 発行済み。PAT は運営者判断で「repo ごと・無期限」に決定 → 計画書 §3-6/§6/§8 更新）
+  - ステップ 3：初回ビルドで 3 つ踏み抜き、いずれも修正して firewall 自己検証 2 行 green を確認
+    1. corepack の初回 DL 確認プロンプトで postCreate が停止 → `COREPACK_ENABLE_DOWNLOAD_PROMPT=0`
+    2. 雛形の許可ドメイン statsig.anthropic.com が NXDOMAIN で起動失敗 → 削除 + 解決失敗を「必須 2 ドメインのみ致命・他は警告」に変更
+    3. example.com が CF 配下に移転しており、CF 全レンジ許可と自己検証が原理的に両立しない → workers.dev ホスト 2 つのドメイン許可に絞り込み + IPv6 を lo 以外全遮断（許可ドメイン全件の解決 IP と非衝突を DoH で確認してから再ビルド）
+  - ステップ 4：claude ログイン（Claude Max・volume 永続化）+ グローバル CLAUDE.md 持ち込み / node 24.18・yarn 4.14.1 / build / test:run 30 件 / `yarn add`→`remove` 実通信 + package.json・yarn.lock 復元、すべて green
+  - ステップ 5：`yarn test:e2e` 29 件 green（5.4s。母艦 sandbox では起動不可だった E2E が初のローカル実行）
+- 残タスク：ステップ 6（コンテナ内 `gh auth login` → push → CI green）/ 7（--auto 試運転 + 文書化）/ 8（dotfiles 型紙化 + ccbox/ccbox-init）
+- 学び・つまずき
+  - postStart（firewall）失敗でもコンテナは走り続け、次の `devcontainer up` は success に見える → 「up 成功＝firewall 有効」ではない。ccbox に起動前チェックを入れる（計画書 §8）
+  - firewall スクリプトはイメージ焼き込み（sudo 固定パス化の安全設計）のため、修正のたび `--remove-existing-container` で再ビルドが必要
+
 ## 備考
 - Phase 非依存の開発環境整備（横断タスク）。PHASE1A-021 / PHASE1B-015 の「依存なし・任意タイミング」前例に倣い Phase 1b 期中に起票するが、サイト品質と無関係のため **Gate（PHASE1B-014）の完了確認対象には含めない**（Gate ファイルに対象外の旨を明記済み）
 - 採番は起票順のため Gate（PHASE1B-014）より後の番号

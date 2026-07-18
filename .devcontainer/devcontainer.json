@@ -23,7 +23,10 @@
     "NODE_OPTIONS": "--max-old-space-size=4096",
     "CLAUDE_CONFIG_DIR": "/home/node/.claude",
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
-    "YARN_INSTALL_STATE_PATH": "/home/node/.cache/yarn/install-state.gz"
+    "YARN_INSTALL_STATE_PATH": "/home/node/.cache/yarn/install-state.gz",
+    "COREPACK_ENABLE_DOWNLOAD_PROMPT": "0",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8"
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
   "workspaceFolder": "/workspace",

@@ -28,6 +28,9 @@ sync_claude_config() {
 setup_git() {
   git config --global user.name "Kazuya Tanimoto"
   git config --global user.email "tanimoto@byte-lark.com"
+  # bind mount した repo の所有権が uid 違いに見える環境向け（idempotent）
+  git config --global --get-all safe.directory 2>/dev/null | grep -qx /workspace \
+    || git config --global --add safe.directory /workspace
   # push 認証は fine-grained PAT。コンテナ内で一度 `gh auth login`（PAT 貼り付け）すれば
   # gh 用 volume に永続化される。credential helper の張り直しは毎起動行う
   if gh auth status >/dev/null 2>&1; then

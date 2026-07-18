@@ -74,6 +74,8 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 - repo は yarnPath 方式（`.yarn/releases/yarn-4.14.1.cjs` コミット済み）→ コンテナ内の yarn 本体取得は補助的で済む
 - 母艦 repo の `node_modules` は macOS ARM ネイティブバイナリ入り（sharp / esbuild 等）→ **コンテナ（Linux）と bind mount 共用すると相互破壊** → named volume で分離が必要（§4）
 - 母艦の devcontainer CLI は未導入（ステップ 1 未完）。docker socket は sandbox から権限拒否 → ビルド・起動系は運営者ターミナルで実行してもらう運用で確定
+- 公式雛形の許可ドメイン `statsig.anthropic.com` は **NXDOMAIN**（初回起動で firewall 初期化が失敗 → DoH で実測、雛形の記載が古い）→ 削除し、解決失敗の扱いを「必須 2 ドメインのみ起動失敗・他は警告して続行（fail-closed）」に変更。corepack の初回ダウンロード確認プロンプトで postCreate が止まる事象も実測 → `COREPACK_ENABLE_DOWNLOAD_PROMPT=0` を containerEnv に追加
+- **example.com は現在 Cloudflare 配下**（A: 104.20.23.154 / 172.66.147.243 = CF レンジ内、DoH + 公式 ips-v4 で実測）→ CF 全レンジ許可だと自己検証（example.com 遮断）が原理的に通らない。§4 の CF レンジ許可方針を撤回し、使う workers.dev ホストだけドメイン解決で許可に変更（preview URL の解決 IP は example.com と別と実測済み）。あわせて IPv6 を lo 以外全遮断に（firewall が IPv4 のみで、OrbStack はコンテナに IPv6 を配り得るため素通り経路になる）
 
 ---
 
@@ -84,7 +86,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 3. settings はコンテナ用の薄いものを新規作成（モデル・effort 等の方針のみ引き継ぐ。母艦のは持ち込まない — 2.4 の通り壊れるため）
 4. ログインはコンテナ専用 volume に永続化（公式雛形の方式のまま。初回 1 回）
 5. repo 単位の記憶（memory）は初期構成では共有しない。不便が出たら読み取り専用の持ち込みを検討（書き戻しは不可のまま）
-6. push 認証は **fine-grained PAT**（この repo 限定・contents: read/write のみ・期限付き）。母艦の keychain / SSH 鍵はコンテナに入れない
+6. push 認証は **fine-grained PAT**（この repo 限定・contents: read/write のみ）。期限は無期限運用（2026-07-18 運営者決定：repo ごと 1 本のため入れ替え負担が非現実的。即時悪用への防御は期限でなく repo 限定＝被害範囲の限定が担う。last used を時々確認し、不要になった分は失効）。母艦の keychain / SSH 鍵はコンテナに入れない
 7. firewall は default-deny を維持し、必要な通信先だけ追加する（§4）
 
 ---
@@ -100,7 +102,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
   - `~/dotfiles/claude` の **read-only bind mount**（→ /mnt/host-claude。コピー元。RO なので書き戻し不可 — §3-1）
 - `Dockerfile`：node:20 → **node:24**（CI と一致。§7）。`corepack enable`（yarn 4）。Playwright Chromium の **OS 依存パッケージのみ焼き込み**（`npx playwright@1.59.1 install-deps chromium`。ブラウザ本体は postCreate で repo の解決バージョンに追随）。`fix-perms.sh` 追加（node_modules volume の初回所有権修正）。node に許す sudo は init-firewall.sh + fix-perms.sh の**固定 2 本のみ**
 - `init-firewall.sh`：公式ベース。repo 固有の許可先を **`allowed-domains.conf` に分離**（§6 ステップ 8 の型紙化対応：テンプレ本体は repo 間共通、conf だけ repo 側で編集）。VS Code 系 3 ドメイン削除（ターミナル完結）、**SSH(22) 全開放を削除**（push は HTTPS + PAT のみ、SSH 鍵は持ち込まないため公式より狭める）、ipset add は -exist 化（GitHub レンジと個別 IP の重複許容）
-- `allowed-domains.conf`（repo 固有の許可先）：registry.yarnpkg.com / repo.yarnpkg.com / raw.githubusercontent.com / cdn.playwright.dev / playwright.download.prss.microsoft.com / docs.astro.build / developers.cloudflare.com / plausible.io + **Cloudflare 公式 IP レンジ**（`cidr-url https://www.cloudflare.com/ips-v4` 書式で起動時に動的取得。CF preview は IP 回転に弱いドメイン解決方式でなくレンジ許可が正）
+- `allowed-domains.conf`（repo 固有の許可先）：registry.yarnpkg.com / repo.yarnpkg.com / raw.githubusercontent.com / cdn.playwright.dev / playwright.download.prss.microsoft.com / docs.astro.build / developers.cloudflare.com / plausible.io + CF preview の **workers.dev ホスト 2 つ**（ドメイン解決で許可。当初の CF 全レンジ許可は example.com（CF 配下）まで通り自己検証と両立しないため撤回 — §2.5。`cidr-url <URL>` 書式自体はテンプレ機能として残置）
 - `claude-settings.json`：コンテナ用の薄い settings（model / effortLevel / permissions 方針のみ母艦から引き継ぎ。hooks・statusline・sandbox 節は持ち込まない — §3-3）。「無いときだけ」`CLAUDE_CONFIG_DIR` へ配置（コンテナ内での調整を上書きしない）
 - `setup-container.sh`：postCreate = fix-perms → CLAUDE.md/settings 取り込み → git 設定（識別子 + `gh auth setup-git`）→ `yarn install` → `yarn playwright install chromium`（**firewall 適用前に走る**ため初回取得が通る）／ postStart = CLAUDE.md 再取り込み（毎起動最新化）+ gh credential helper 張り直しのみ
 - 起動 wrapper：fish 関数 `ccbox`。`ccbox` = コンテナが無ければ `devcontainer up` → `devcontainer exec` で claude 起動、`ccbox --auto` = `--dangerously-skip-permissions` 付き（放置自走用）。定義は `~/dotfiles` の fish functions で管理（repo には置かない。§6 ステップ 8 の型紙化と一体。ステップ 3〜7 の間は `devcontainer up` / `exec` を直接叩く）
@@ -124,7 +126,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 1. **運営者の事前準備**（Claude Code 外のターミナルで実施。sandbox 内では不可）
    - `npm install -g @devcontainers/cli`
    - OrbStack（または Docker Desktop）を起動
-   - GitHub で fine-grained PAT を発行（対象: この repo のみ / 権限: Contents read+write / 有効期限を設定）
+   - GitHub で fine-grained PAT を発行（対象: この repo のみ / 権限: Contents read+write / 期限は無期限運用 — §3-6）
    - 完了条件：`devcontainer --version` が通る、`docker info` が通る、PAT が手元にある
 2. **`.devcontainer/` 一式の作成**（Claude）
    - 公式雛形 3 ファイルを取得し、§4 の差分を適用して repo に追加
@@ -167,11 +169,13 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 
 ## 8. リスクと対処
 
-- firewall が IP ベースで DNS 回転に弱い → GitHub は meta API から動的取得（雛形どおり）、Cloudflare は公式 IP レンジで許可。それ以外のドメイン追加時も同じ観点で確認
+- firewall が IP ベースで DNS 回転に弱い → GitHub は meta API から動的取得（雛形どおり）。CF preview は使う workers.dev ホストのドメイン解決で許可（回転で塞がったらコンテナ再起動で再解決。全レンジ許可は §2.5 の理由で不採用）
+- CDN のエッジ IP は多数のサイトで共有される（CF / GitHub Pages 等）→ IP 許可はエッジ共有サイトへの通信を完全には塞げない。DNS(53) も全開放（雛形どおり）のため、出口制限は「雑な悪用・大量通信を止める」水準と割り切る。完全な出口制限が要る作業はコンテナでやらない
 - bind mount した repo はコンテナから書き換え可能 → 意図どおり（作業対象）。git 管理下なので壊れても復旧可能。repo 以外の母艦ファイルは見えないことが境界
-- PAT 漏洩 → repo 限定・最小権限・期限付きで被害範囲を限定。イメージ / commit に焼き込まない
+- PAT 漏洩 → repo 限定・最小権限で被害範囲を限定（無期限運用のため、fine-grained PAT 一覧の last used を時々確認し、不要分は失効 — §3-6）。イメージ / commit に焼き込まない
 - コンテナ内では claude-in-chrome・claude.ai コネクタ MCP・母艦の記憶が使えない → 住み分け（§1.3-3）で運用。記憶の共有は必要になってから RO で検討
 - `--dangerously-skip-permissions` はコンテナ境界と firewall が正常なことが前提 → 起動時の firewall 自己検証が落ちたら自走させない
+- **postStart（firewall 初期化）が失敗してもコンテナは走り続け、次回の `devcontainer up` は既存コンテナ検出だけで success を返す**（2026-07-18 実測）→ 「up が成功した＝firewall 有効」ではない。ccbox は claude 起動前に firewall 有効チェック（コンテナ内から example.com への到達が失敗することの確認）を行い、失敗時は起動を拒否する（ステップ 8 で実装）。firewall スクリプト修正時はイメージ再ビルド（`--remove-existing-container`）が必要（イメージ焼き込み方式のため）
 
 ---
 

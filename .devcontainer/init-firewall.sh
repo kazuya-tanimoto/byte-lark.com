@@ -22,6 +22,18 @@ iptables -t mangle -F
 iptables -t mangle -X
 ipset destroy allowed-domains 2>/dev/null || true
 
+# IPv6 は lo 以外すべて遮断（許可リストは IPv4 で運用。OrbStack 等はコンテナに IPv6 を
+# 配ることがあり、塞がないと IPv4 の allowlist を素通りできる）
+if command -v ip6tables >/dev/null 2>&1; then
+    ip6tables -F 2>/dev/null || true
+    ip6tables -X 2>/dev/null || true
+    ip6tables -P INPUT DROP 2>/dev/null || true
+    ip6tables -P FORWARD DROP 2>/dev/null || true
+    ip6tables -P OUTPUT DROP 2>/dev/null || true
+    ip6tables -A INPUT -i lo -j ACCEPT 2>/dev/null || true
+    ip6tables -A OUTPUT -o lo -j ACCEPT 2>/dev/null || true
+fi
+
 # 2. Selectively restore ONLY internal Docker DNS resolution
 if [ -n "$DOCKER_DNS_RULES" ]; then
     echo "Restoring Docker DNS rules..."
@@ -54,14 +66,21 @@ add_cidr() {
     ipset add -exist allowed-domains "$cidr"
 }
 
+# usage: add_domain <domain> [required]
+# required 指定時のみ解決失敗で起動失敗。それ以外は警告して続行
+# （default-deny のため、許可されないだけで安全側に倒れる）
 add_domain() {
-    local domain="$1"
+    local domain="$1" required="${2:-}"
     echo "Resolving $domain..."
     local ips
     ips=$(dig +noall +answer A "$domain" | awk '$4 == "A" {print $5}')
     if [ -z "$ips" ]; then
-        echo "ERROR: Failed to resolve $domain"
-        exit 1
+        if [ "$required" = "required" ]; then
+            echo "ERROR: Failed to resolve $domain (required)"
+            exit 1
+        fi
+        echo "WARN: Failed to resolve $domain - skipping (this destination stays blocked)"
+        return 0
     fi
     local ip
     while read -r ip; do
@@ -78,14 +97,18 @@ add_cidr_url() {
     local url="$1"
     echo "Fetching CIDR list from $url..."
     local ranges
-    ranges=$(curl -sf "$url")
+    ranges=$(curl -sf "$url" || true)
     if [ -z "$ranges" ]; then
-        echo "ERROR: Failed to fetch CIDR list from $url"
-        exit 1
+        echo "WARN: Failed to fetch CIDR list from $url - skipping (these ranges stay blocked)"
+        return 0
     fi
     local cidr
     while read -r cidr; do
         [ -z "$cidr" ] && continue
+        if [[ ! "$cidr" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}$ ]]; then
+            echo "WARN: Invalid CIDR from $url: $cidr - skipping line"
+            continue
+        fi
         add_cidr "$cidr" "$url"
     done < <(echo "$ranges")
 }
@@ -109,11 +132,16 @@ while read -r cidr; do
 done < <(echo "$gh_ranges" | jq -r '(.web + .api + .git)[]' | aggregate -q)
 
 # Base allowed domains (Claude Code 本体が必要とする通信先)
+# 必須: これが引けないと Claude Code / npm が動かないため起動失敗にする
 for domain in \
     "registry.npmjs.org" \
-    "api.anthropic.com" \
+    "api.anthropic.com"; do
+    add_domain "$domain" required
+done
+# 任意（テレメトリ・エラー報告）: 解決失敗は警告のみ
+# ※公式雛形にあった statsig.anthropic.com は NXDOMAIN（2026-07-18 実測）のため削除
+for domain in \
     "sentry.io" \
-    "statsig.anthropic.com" \
     "statsig.com"; do
     add_domain "$domain"
 done
