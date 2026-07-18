@@ -1,6 +1,6 @@
 # 運用マニュアル（運営者向け）
 
-最終更新: 2026-06-14
+最終更新: 2026-07-19
 
 本ファイルは byte-lark.com プロジェクトの**運営者（人間ユーザー）向け運用マニュアル**です。Claude Code との多セッション運用において、運営者が「何を / いつ / どう言えばいいか」をまとめます。
 
@@ -81,7 +81,27 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 - **対処**：`git pull --rebase origin feat/phase-1` → conflict あれば手動 resolve（INDEX.md は隣接 PBI 行が同 hunk として競合しやすい）→ `git push origin feat/phase-1`
 - **詳細**：[docs/pbi/README.md](pbi/README.md) §10.7 参照
 
-## 5. 関連ドキュメント
+## 5. devcontainer（コンテナ自走環境）の運用
+
+Claude Code をコンテナ内で全権限自走させるための環境（PHASE1B-016 で導入。設計・経緯は `docs/devcontainer-plan.md`）。母艦 sandbox で不可能な作業（`yarn add` 等のネットワーク系 / ローカル E2E / 放置自走）はこちらで行う。
+
+### 起動と利用
+
+- 通常起動：`ccd`（fish 関数、dotfiles 管理）。コンテナが無ければビルド・起動してから claude を開く
+- 放置自走：`ccd --auto`（alias `ccda` でも可。`--dangerously-skip-permissions` 付き。default-deny firewall 内なので許可プロンプトなしで自走させてよい）
+- ccd 整備前（計画書 §6 ステップ 8 完了まで）は直接実行：
+  - `devcontainer up --workspace-folder .`
+  - `devcontainer exec --workspace-folder . claude`
+- 初回のみ：コンテナ内で claude ログインと `gh auth login`（PAT 貼り付け）。どちらも専用 volume に永続化され 2 回目以降は不要
+
+### 注意点
+
+- 「`devcontainer up` が success ＝ firewall 有効」ではない（firewall 初期化が失敗してもコンテナは走り続け、次回 up は既存コンテナ検出だけで success を返す）。ccd は claude 起動前に firewall チェックを行う（ステップ 8 で実装）。手動起動時は `curl -m 5 https://example.com` が**失敗する**ことを確認してから自走させる
+- `.devcontainer/init-firewall.sh` 等イメージ焼き込みのファイルを修正したら、`devcontainer up --workspace-folder . --remove-existing-container` で再ビルドしないと反映されない
+- PAT は fine-grained（この repo 限定 / Contents read+write / 無期限運用）。GitHub の fine-grained PAT 一覧で last used を時々確認し、使わなくなったら失効させる
+- コンテナから母艦の設定（`~/dotfiles`、`~/.claude` 等）への書き戻しは禁止。グローバル CLAUDE.md は read-only mount からのコピー持ち込みのみ、コンテナ内の Claude 設定は volume 内に閉じる
+
+## 6. 関連ドキュメント
 
 | ドキュメント | 役割 | 主な読者 |
 |---|---|---|
@@ -90,10 +110,11 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | `docs/pbi/INDEX.md` | 全 PBI 状態一覧 + 着手ルール | Claude / 全員 |
 | `docs/pbi/*.md` | 個別 PBI | Claude |
 | `docs/writing-workflow.md` | 記事執筆ワークフロー（Phase 1a 冒頭で作成予定） | 運営者 |
+| `docs/devcontainer-plan.md` | devcontainer 環境の設計・実施手順（PHASE1B-016） | Claude / 運営者 |
 | **本ファイル** | **運営者向け運用マニュアル** | **運営者** |
 | `CLAUDE.md` | プロジェクト規約 + 多セッション運用プロトコル（PHASE0-005 で全面書き換え） | Claude |
 
-## 6. 改訂履歴
+## 7. 改訂履歴
 
 | 日付 | 変更内容 |
 |---|---|
@@ -102,3 +123,4 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | 2026-05-07 | Q6 に worktree 削除の sandbox 制約と運営者対処を追加（旧 Q6 → Q7 に繰り下げ） |
 | 2026-06-14 | ガバナンス文書ドリフト是正（README v3.1 連動）：シーン別表の「並行 PBI 開始」を worktree 廃止後の単一ブランチ運用に、「Phase 完了 main マージ承認」を公開フェーズ（1d）限定に修正。必須チェックリストの CF Pages Branch Filter から sub-branch Exclude を削除。トラブルシューティングから worktree 削除 Q6 を撤去（worktrees 廃止で発生し得ないため）、push 競合 Q7 を Q6 に繰り上げ + 原因記述を単一ブランチ並行に修正 |
 | 2026-06-14 | 統合ブランチ改名（README v3.2 連動）：シーン別表・Q6 の `feat/phase-1a` 参照を `feat/phase-1` に更新（1a〜1c を集約する統合ブランチ。deferred-merge 構造は不変） |
+| 2026-07-19 | §5 devcontainer 運用を新設（PHASE1B-016 連動）：起動手順（ccd / 手動）、firewall 有効確認、PAT の扱い、書き戻し禁止。旧 §5 関連ドキュメント → §6（devcontainer-plan.md 行追加）、旧 §6 改訂履歴 → §7 に繰り下げ |

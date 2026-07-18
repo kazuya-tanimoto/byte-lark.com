@@ -23,6 +23,11 @@ sync_claude_config() {
   if [ ! -f "$CONFIG_DIR/settings.json" ]; then
     cp /workspace/.devcontainer/claude-settings.json "$CONFIG_DIR/settings.json"
   fi
+  # statusline は母艦と同じ見た目にする（毎起動コピーで最新化）
+  if [ -f "$HOST_CLAUDE/statusline.sh" ]; then
+    cp "$HOST_CLAUDE/statusline.sh" "$CONFIG_DIR/statusline.sh"
+    chmod +x "$CONFIG_DIR/statusline.sh"
+  fi
 }
 
 setup_git() {

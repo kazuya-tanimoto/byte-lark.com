@@ -25,6 +25,8 @@
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
     "YARN_INSTALL_STATE_PATH": "/home/node/.cache/yarn/install-state.gz",
     "COREPACK_ENABLE_DOWNLOAD_PROMPT": "0",
+    "COLORTERM": "truecolor",
+    "CCD_REPO_NAME": "${localWorkspaceFolderBasename}",
     "LANG": "C.UTF-8",
     "LC_ALL": "C.UTF-8"
   },

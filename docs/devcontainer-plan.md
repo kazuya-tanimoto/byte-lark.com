@@ -105,16 +105,16 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 - `allowed-domains.conf`（repo 固有の許可先）：registry.yarnpkg.com / repo.yarnpkg.com / raw.githubusercontent.com / cdn.playwright.dev / playwright.download.prss.microsoft.com / docs.astro.build / developers.cloudflare.com / plausible.io + CF preview の **workers.dev ホスト 2 つ**（ドメイン解決で許可。当初の CF 全レンジ許可は example.com（CF 配下）まで通り自己検証と両立しないため撤回 — §2.5。`cidr-url <URL>` 書式自体はテンプレ機能として残置）
 - `claude-settings.json`：コンテナ用の薄い settings（model / effortLevel / permissions 方針のみ母艦から引き継ぎ。hooks・statusline・sandbox 節は持ち込まない — §3-3）。「無いときだけ」`CLAUDE_CONFIG_DIR` へ配置（コンテナ内での調整を上書きしない）
 - `setup-container.sh`：postCreate = fix-perms → CLAUDE.md/settings 取り込み → git 設定（識別子 + `gh auth setup-git`）→ `yarn install` → `yarn playwright install chromium`（**firewall 適用前に走る**ため初回取得が通る）／ postStart = CLAUDE.md 再取り込み（毎起動最新化）+ gh credential helper 張り直しのみ
-- 起動 wrapper：fish 関数 `ccbox`。`ccbox` = コンテナが無ければ `devcontainer up` → `devcontainer exec` で claude 起動、`ccbox --auto` = `--dangerously-skip-permissions` 付き（放置自走用）。定義は `~/dotfiles` の fish functions で管理（repo には置かない。§6 ステップ 8 の型紙化と一体。ステップ 3〜7 の間は `devcontainer up` / `exec` を直接叩く）
+- 起動 wrapper：fish 関数 `ccd`（claude code devcontainer の略。旧仮称 ccbox、2026-07-19 運営者決定で改名）。`ccd` = コンテナが無ければ `devcontainer up` → `devcontainer exec` で claude 起動、`ccd --auto` = `--dangerously-skip-permissions` 付き（放置自走用。省タイプ alias `ccda` を併設）。定義は `~/dotfiles` の fish functions で管理（repo には置かない。§6 ステップ 8 の型紙化と一体。ステップ 3〜7 の間は `devcontainer up` / `exec` を直接叩く）
 
 ---
 
 ## 5. 日常の使い方（決定済み UX）
 
 - 初回のみ：イメージビルド数分 + コンテナ内で claude ログイン 1 回
-- 以後：`ccbox` 一発。コンテナを立ち上げたままなら待ちゼロ、停止からの再開でも数秒〜十数秒 + firewall 初期化数秒
+- 以後：`ccd` 一発。コンテナを立ち上げたままなら待ちゼロ、停止からの再開でも数秒〜十数秒 + firewall 初期化数秒
 - 前提：OrbStack（または Docker Desktop）が起動していること
-- 放置自走：`ccbox --auto` でタスクを投げる。firewall の自己検証がパスしていることが前提
+- 放置自走：`ccd --auto` でタスクを投げる。firewall の自己検証がパスしていることが前提
 - ブラウザ絡みの運用作業は従来どおり母艦セッションで（§1.3-3）
 
 ---
@@ -130,7 +130,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
    - 完了条件：`devcontainer --version` が通る、`docker info` が通る、PAT が手元にある
 2. **`.devcontainer/` 一式の作成**（Claude）
    - 公式雛形 3 ファイルを取得し、§4 の差分を適用して repo に追加
-   - コンテナ用 settings.json、CLAUDE.md コピーの仕組みも同時に作成（ccbox は dotfiles 管理のため repo には置かない — §4。ステップ 8 で作成）
+   - コンテナ用 settings.json、CLAUDE.md コピーの仕組みも同時に作成（ccd は dotfiles 管理のため repo には置かない — §4。ステップ 8 で作成）
    - 完了条件：ファイル一式がレビュー可能な状態で提示され、運営者承認 → commit
 3. **ビルドと起動確認**
    - `devcontainer up --workspace-folder .`（初回ビルド）
@@ -148,12 +148,12 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
    - 完了条件：コンテナ発の push で CI green
 7. **放置自走の試運転と運用ルールの文書化**
    - `--dangerously-skip-permissions` で小さいタスクを 1 件完走させる
-   - CLAUDE.md / docs/operation-manual.md に追記：コンテナ/母艦の住み分け、起動手順（ccbox）、書き戻し禁止原則、PAT の扱い
+   - CLAUDE.md / docs/operation-manual.md に追記：コンテナ/母艦の住み分け、起動手順（ccd）、書き戻し禁止原則、PAT の扱い
    - 完了条件：試運転完走 + 文書追記の commit
 8. **dotfiles への型紙化（横展開の仕組み化。2026-07-17 運営者指示で追加）**
    - 完動した `.devcontainer/` 一式を `~/dotfiles/claude/devcontainer/` にテンプレとして格納。repo 固有の許可ドメインはテンプレ本体から分離し、repo 側の設定ファイル 1 個だけ編集すれば済む構造にする
-   - fish 関数 `ccbox-init` を dotfiles に作成：任意の repo で実行すると `.devcontainer/` 一式を生成する。`ccbox` 本体も dotfiles の fish functions で管理
-   - 目的：他 repo への展開を「react-blog から手でコピー」という手順依存にしない。新 repo は `ccbox-init` → 許可ドメイン編集 → `ccbox` の 3 手（+ PAT 発行のみ手動）で導入できる形に
+   - fish 関数 `ccd-init` を dotfiles に作成：任意の repo で実行すると `.devcontainer/` 一式を生成する。`ccd` 本体も dotfiles の fish functions で管理
+   - 目的：他 repo への展開を「react-blog から手でコピー」という手順依存にしない。新 repo は `ccd-init` → 許可ドメイン編集 → `ccd` の 3 手（+ PAT 発行のみ手動）で導入できる形に
    - 完了条件：別 repo（todo-next 等）で上記 3 手により起動できることを確認。dotfiles 側の commit は運営者承認のうえ実施
 
 ---
@@ -175,7 +175,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 - PAT 漏洩 → repo 限定・最小権限で被害範囲を限定（無期限運用のため、fine-grained PAT 一覧の last used を時々確認し、不要分は失効 — §3-6）。イメージ / commit に焼き込まない
 - コンテナ内では claude-in-chrome・claude.ai コネクタ MCP・母艦の記憶が使えない → 住み分け（§1.3-3）で運用。記憶の共有は必要になってから RO で検討
 - `--dangerously-skip-permissions` はコンテナ境界と firewall が正常なことが前提 → 起動時の firewall 自己検証が落ちたら自走させない
-- **postStart（firewall 初期化）が失敗してもコンテナは走り続け、次回の `devcontainer up` は既存コンテナ検出だけで success を返す**（2026-07-18 実測）→ 「up が成功した＝firewall 有効」ではない。ccbox は claude 起動前に firewall 有効チェック（コンテナ内から example.com への到達が失敗することの確認）を行い、失敗時は起動を拒否する（ステップ 8 で実装）。firewall スクリプト修正時はイメージ再ビルド（`--remove-existing-container`）が必要（イメージ焼き込み方式のため）
+- **postStart（firewall 初期化）が失敗してもコンテナは走り続け、次回の `devcontainer up` は既存コンテナ検出だけで success を返す**（2026-07-18 実測）→ 「up が成功した＝firewall 有効」ではない。ccd は claude 起動前に firewall 有効チェック（コンテナ内から example.com への到達が失敗することの確認）を行い、失敗時は起動を拒否する（ステップ 8 で実装）。firewall スクリプト修正時はイメージ再ビルド（`--remove-existing-container`）が必要（イメージ焼き込み方式のため）
 
 ---
 
