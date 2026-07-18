@@ -65,6 +65,16 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 - 記憶（memory）・履歴は `~/.claude/projects/<プロジェクトパス由来のキー>/` に保存 → コンテナ内はプロジェクトパスが変わる（`/workspace`）ため、共有してもそのままでは紐づかない
 - 母艦 sandbox は既にかなり緩めてある（`gh` は excludedCommands 済み、レジストリ系ドメイン許可済み、`allowUnsandboxedCommands: false`）。それでも 1.1 の詰まりが残る、というのが現状（＝設定緩和の限界。devcontainer 方針の裏付け）
 
+### 2.5 実施セッションでの追加実測（2026-07-18）
+
+- `mcr.microsoft.com/playwright:v1.59.1-noble` の同梱 Node は **24**（microsoft/playwright v1.59.1 の Dockerfile.noble、`NODE_VERSION=24`）＝ CI と一致
+- raw.githubusercontent.com は 185.199.108.0/22 で、GitHub meta の **web / api / git いずれにも含まれる**
+- E2E スイート（a11y / blog / contact / navigation の 4 spec）に**スクリーンショット比較なし** → CI イメージと描画環境を完全一致させる必然性は低い
+- Playwright のブラウザ取得ホストは `cdn.playwright.dev` / `playwright.download.prss.microsoft.com`（v1.59.1 の registry/index.ts 実測）
+- repo は yarnPath 方式（`.yarn/releases/yarn-4.14.1.cjs` コミット済み）→ コンテナ内の yarn 本体取得は補助的で済む
+- 母艦 repo の `node_modules` は macOS ARM ネイティブバイナリ入り（sharp / esbuild 等）→ **コンテナ（Linux）と bind mount 共用すると相互破壊** → named volume で分離が必要（§4）
+- 母艦の devcontainer CLI は未導入（ステップ 1 未完）。docker socket は sandbox から権限拒否 → ビルド・起動系は運営者ターミナルで実行してもらう運用で確定
+
 ---
 
 ## 3. 設計方針（安全原則）
@@ -81,18 +91,19 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 
 ## 4. 公式雛形からのカスタマイズ（この repo 向け差分）
 
-- ベースイメージ：node:20 → **node:24**（CI と揃える）。※E2E 依存の入れやすさで `mcr.microsoft.com/playwright:v1.59.1-noble` ベースへの変更も可（同梱 Node のバージョンを実測して判断。§7 未決事項）
-- `corepack enable`（yarn 4.14.1）
-- TZ を Asia/Tokyo に
-- Playwright：chromium + OS 依存パッケージを導入（`yarn playwright install --with-deps chromium` 相当）。**これによりコンテナ内で `yarn test:e2e` が回せる**（母艦 sandbox では不可能だったローカル E2E が可能になる）
-- firewall 許可先の追加：
-  - `registry.yarnpkg.com` / `repo.yarnpkg.com`（yarn 4）
-  - `raw.githubusercontent.com`（GitHub meta の IP 帯に含まれるか実施時に確認、含まれなければ追加）
-  - CF preview（`*.workers.dev`）：Cloudflare 配下のため**公式 IP レンジ（https://www.cloudflare.com/ips-v4）で追加**。init-firewall.sh はドメインを DNS 解決した IP を ipset に入れる方式で、CDN の IP 回転に弱いため、CF はレンジ許可が正
-  - 必要に応じて plausible.io / docs 系（docs.astro.build 等）
-- CLAUDE.md 持ち込み：`postCreateCommand` / `postStartCommand` で dotfiles の実体からコンテナ内 `CLAUDE_CONFIG_DIR` へコピー（mount しない — §3-1/2）
-- コンテナ用 settings.json 新規作成（§3-3）
-- 起動 wrapper：fish 関数 `ccbox`（仮称）を用意。`ccbox` = コンテナが無ければ `devcontainer up` → `devcontainer exec` で claude 起動、`ccbox --auto` = `--dangerously-skip-permissions` 付き（放置自走用）。定義ファイルは repo の `scripts/` に置き、導入手順で `~/.config/fish/functions/` へ配置
+2026-07-18 実装済み。`.devcontainer/` の最終構成（各判断の根拠は §2.5 / §7）：
+
+- `devcontainer.json`：公式ベース。VS Code 向け customizations は削除（ターミナル完結フロー）。TZ は Asia/Tokyo（localEnv:TZ 優先）。mounts は 5 本：
+  - bash 履歴 / claude 設定の named volume（公式のまま。ログインは claude 設定 volume に永続化）
+  - gh 設定の named volume（PAT ログインの永続化。§7）
+  - **node_modules の named volume**：母艦の node_modules（macOS ARM バイナリ）とコンテナ（Linux）の相互破壊を防ぐ分離（§2.5）。yarn の install-state も `YARN_INSTALL_STATE_PATH` でコンテナ内へ退避し、母艦側の `.yarn/install-state.gz` を汚さない
+  - `~/dotfiles/claude` の **read-only bind mount**（→ /mnt/host-claude。コピー元。RO なので書き戻し不可 — §3-1）
+- `Dockerfile`：node:20 → **node:24**（CI と一致。§7）。`corepack enable`（yarn 4）。Playwright Chromium の **OS 依存パッケージのみ焼き込み**（`npx playwright@1.59.1 install-deps chromium`。ブラウザ本体は postCreate で repo の解決バージョンに追随）。`fix-perms.sh` 追加（node_modules volume の初回所有権修正）。node に許す sudo は init-firewall.sh + fix-perms.sh の**固定 2 本のみ**
+- `init-firewall.sh`：公式ベース。repo 固有の許可先を **`allowed-domains.conf` に分離**（§6 ステップ 8 の型紙化対応：テンプレ本体は repo 間共通、conf だけ repo 側で編集）。VS Code 系 3 ドメイン削除（ターミナル完結）、**SSH(22) 全開放を削除**（push は HTTPS + PAT のみ、SSH 鍵は持ち込まないため公式より狭める）、ipset add は -exist 化（GitHub レンジと個別 IP の重複許容）
+- `allowed-domains.conf`（repo 固有の許可先）：registry.yarnpkg.com / repo.yarnpkg.com / raw.githubusercontent.com / cdn.playwright.dev / playwright.download.prss.microsoft.com / docs.astro.build / developers.cloudflare.com / plausible.io + **Cloudflare 公式 IP レンジ**（`cidr-url https://www.cloudflare.com/ips-v4` 書式で起動時に動的取得。CF preview は IP 回転に弱いドメイン解決方式でなくレンジ許可が正）
+- `claude-settings.json`：コンテナ用の薄い settings（model / effortLevel / permissions 方針のみ母艦から引き継ぎ。hooks・statusline・sandbox 節は持ち込まない — §3-3）。「無いときだけ」`CLAUDE_CONFIG_DIR` へ配置（コンテナ内での調整を上書きしない）
+- `setup-container.sh`：postCreate = fix-perms → CLAUDE.md/settings 取り込み → git 設定（識別子 + `gh auth setup-git`）→ `yarn install` → `yarn playwright install chromium`（**firewall 適用前に走る**ため初回取得が通る）／ postStart = CLAUDE.md 再取り込み（毎起動最新化）+ gh credential helper 張り直しのみ
+- 起動 wrapper：fish 関数 `ccbox`。`ccbox` = コンテナが無ければ `devcontainer up` → `devcontainer exec` で claude 起動、`ccbox --auto` = `--dangerously-skip-permissions` 付き（放置自走用）。定義は `~/dotfiles` の fish functions で管理（repo には置かない。§6 ステップ 8 の型紙化と一体。ステップ 3〜7 の間は `devcontainer up` / `exec` を直接叩く）
 
 ---
 
@@ -117,7 +128,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
    - 完了条件：`devcontainer --version` が通る、`docker info` が通る、PAT が手元にある
 2. **`.devcontainer/` 一式の作成**（Claude）
    - 公式雛形 3 ファイルを取得し、§4 の差分を適用して repo に追加
-   - コンテナ用 settings.json、CLAUDE.md コピーの仕組み、`scripts/` の fish 関数も同時に作成
+   - コンテナ用 settings.json、CLAUDE.md コピーの仕組みも同時に作成（ccbox は dotfiles 管理のため repo には置かない — §4。ステップ 8 で作成）
    - 完了条件：ファイル一式がレビュー可能な状態で提示され、運営者承認 → commit
 3. **ビルドと起動確認**
    - `devcontainer up --workspace-folder .`（初回ビルド）
@@ -137,15 +148,20 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
    - `--dangerously-skip-permissions` で小さいタスクを 1 件完走させる
    - CLAUDE.md / docs/operation-manual.md に追記：コンテナ/母艦の住み分け、起動手順（ccbox）、書き戻し禁止原則、PAT の扱い
    - 完了条件：試運転完走 + 文書追記の commit
+8. **dotfiles への型紙化（横展開の仕組み化。2026-07-17 運営者指示で追加）**
+   - 完動した `.devcontainer/` 一式を `~/dotfiles/claude/devcontainer/` にテンプレとして格納。repo 固有の許可ドメインはテンプレ本体から分離し、repo 側の設定ファイル 1 個だけ編集すれば済む構造にする
+   - fish 関数 `ccbox-init` を dotfiles に作成：任意の repo で実行すると `.devcontainer/` 一式を生成する。`ccbox` 本体も dotfiles の fish functions で管理
+   - 目的：他 repo への展開を「react-blog から手でコピー」という手順依存にしない。新 repo は `ccbox-init` → 許可ドメイン編集 → `ccbox` の 3 手（+ PAT 発行のみ手動）で導入できる形に
+   - 完了条件：別 repo（todo-next 等）で上記 3 手により起動できることを確認。dotfiles 側の commit は運営者承認のうえ実施
 
 ---
 
-## 7. 未決事項（実施セッションで一次情報を確認して確定）
+## 7. 未決事項の確定（2026-07-18、いずれも一次情報で確認 — §2.5 / §9）
 
-- ベースイメージ：node:24 か `mcr.microsoft.com/playwright:v1.59.1-noble` か（後者の同梱 Node バージョンを実測してから判断）
-- PAT の渡し方：`devcontainer.json` の `containerEnv`（localEnv 参照）/ コンテナ内 `gh auth login` / git credential store のどれにするか（PAT がイメージや repo に焼き込まれない方式を必須条件とする）
-- raw.githubusercontent.com が GitHub meta の IP 帯に含まれるか
-- MCP Playwright（スクショ確認用）をコンテナ内でも使うか、E2E スイートで代替するか
+- ベースイメージ：**node:24 を採用**。playwright:v1.59.1-noble の同梱 Node も 24 で CI とは揃う（§2.5）が、E2E にスクリーンショット比較がなく描画環境の完全一致は不要なため、公式雛形の構造（node ユーザー / sudoers / volume 設計）をほぼ無傷で保てる node:24 + OS 依存パッケージ焼き込みを採用
+- PAT の渡し方：**コンテナ内 `gh auth login`（初回 1 回、PAT 貼り付け）を採用**。gh 設定用 named volume で永続化し、毎起動 `gh auth setup-git` で git credential helper を張り直す。PAT は母艦のディスク・環境変数・イメージ・repo のいずれにも残らない（必須条件を満たす）。containerEnv（localEnv 参照）案は母艦側に PAT を平文で常駐させるため不採用
+- raw.githubusercontent.com：**GitHub meta の web / api / git に含まれる**（185.199.108.0/22）。ただし将来の帯変更に備え allowed-domains.conf にも明示追加（-exist 化により重複は無害）
+- MCP Playwright：**コンテナには入れない**。スクショ確認は母艦セッションの担当（§1.3-3 の住み分けどおり）、コンテナ側の UI 検証は E2E スイートで行う
 
 ---
 
@@ -167,5 +183,8 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 - Anthropic engineering blog: https://www.anthropic.com/engineering/claude-code-sandboxing
 - Cloudflare IP レンジ: https://www.cloudflare.com/ips-v4
 - devcontainer CLI: https://www.npmjs.com/package/@devcontainers/cli （latest 0.87.0、2026-07-17 時点）
+- Playwright noble イメージの Node バージョン: https://raw.githubusercontent.com/microsoft/playwright/v1.59.1/utils/docker/Dockerfile.noble （`NODE_VERSION=24`、2026-07-18 取得）
+- Playwright ブラウザ取得ホスト: microsoft/playwright v1.59.1 `packages/playwright-core/src/server/registry/index.ts`
+- GitHub meta（IP 帯の実測）: https://api.github.com/meta （raw.githubusercontent.com = 185.199.108.0/22 が web/api/git に含まれることを確認、2026-07-18）
 - 検討の前段メモ: `/Users/kazuya/src/todo-next/docs/notes/claude-code-macos-sandbox.md`（2026-06-28、別 repo）
 - 専用 PC 案却下の記録: `docs/article-interviews/building-this-blog-with-claude-code.md` 深掘りE

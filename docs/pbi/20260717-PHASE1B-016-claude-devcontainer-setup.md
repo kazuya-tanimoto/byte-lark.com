@@ -1,6 +1,7 @@
 # 運営者と Claude は devcontainer の中で Claude Code を安全に全権限自走させ、sandbox 起因の詰まりなしに開発できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-07-17
 
 ## 誰が
 - Claude（実施）+ 運営者（事前準備: devcontainer CLI 導入 / Docker ランタイム起動 / PAT 発行、および各所の承認）
@@ -17,7 +18,7 @@ Status: NotStarted
 - 母艦 sandbox の追加緩和はやらない（防御を薄くするだけ）という決定の実装
 
 ## 受け入れ条件
-- [ ] [docs/devcontainer-plan.md](../devcontainer-plan.md) §6 のステップ 1〜7 を、各ステップの完了条件どおりに完了（計画書が単一の実施手順書。読み直してから着手）
+- [ ] [docs/devcontainer-plan.md](../devcontainer-plan.md) §6 のステップ 1〜8 を、各ステップの完了条件どおりに完了（計画書が単一の実施手順書。読み直してから着手。ステップ 8 = dotfiles への型紙化は 2026-07-17 運営者指示で追加）
 - [ ] `.devcontainer/` 一式が §3 の安全原則（持ち込みコピー・書き戻し禁止 / コンテナ用 settings 新規 / PAT 最小権限）を満たしていることを、diff 提示のうえ運営者が承認
 - [ ] firewall 自己検証（example.com 遮断 + api.github.com 到達）のログを確認
 - [ ] コンテナ内で `yarn install` / `yarn build` / `yarn test:run` / `yarn test:e2e` green + `yarn add` 系が sandbox 起因の失敗なく通ることを確認
@@ -36,7 +37,20 @@ Status: NotStarted
 
 ## 実装ログ
 
-（着手時に記載）
+### 2026-07-18 セッション①前半（ステップ 2: `.devcontainer/` 一式の作成 — 運営者承認待ち）
+
+- やったこと
+  - 計画書 §7 の未決事項 4 件をすべて一次情報で確定し、計画書 §7 を確定内容に更新（ベースイメージ node:24 / PAT はコンテナ内 `gh auth login` + 専用 volume / raw.githubusercontent.com は meta 帯に含まれるが明示追加 / MCP Playwright はコンテナに入れない）
+  - `.devcontainer/` 6 ファイルを作成（公式雛形 2026-07-17 取得分ベース）：devcontainer.json / Dockerfile / init-firewall.sh / allowed-domains.conf / claude-settings.json / setup-container.sh + fix-perms.sh。bash・fish・JSON の構文チェック済み
+  - ステップ 8（型紙化）を見据え、repo 固有の許可ドメインを allowed-domains.conf に分離（テンプレ本体は repo 間共通）
+  - 計画書 §2.5（追加実測）/ §4（最終構成）/ §9（出典）を更新。§6 ステップ 2 の記述を §4 の ccbox 方針（dotfiles 管理）に整合
+- 残タスク
+  - 運営者：ステップ 1（devcontainer CLI 導入 / PAT 発行。OrbStack は起動済みらしいが `docker info` は sandbox から確認不可）
+  - diff 承認 → commit → ステップ 3 以降（ビルド系は運営者ターミナルで実行しログを貼ってもらう運用）
+- 学び・つまずき
+  - 母艦 repo の node_modules は macOS ARM バイナリ入りで、bind mount のままコンテナと共用すると相互破壊 → named volume で分離し、yarn install-state も `YARN_INSTALL_STATE_PATH` でコンテナ内へ退避（計画時に見えていなかった論点）
+  - devcontainer CLI 未導入・docker socket は sandbox から権限拒否を実測（ステップ 1 未完のまま着手した分はステップ 2 の範囲で完結）
+  - セッション途中で運営者が計画書に §6 ステップ 8 と §4 ccbox 方針変更（repo に置かない）を追記 → 作成済みの scripts/ccbox.fish を削除して追随
 
 ## 備考
 - Phase 非依存の開発環境整備（横断タスク）。PHASE1A-021 / PHASE1B-015 の「依存なし・任意タイミング」前例に倣い Phase 1b 期中に起票するが、サイト品質と無関係のため **Gate（PHASE1B-014）の完了確認対象には含めない**（Gate ファイルに対象外の旨を明記済み）

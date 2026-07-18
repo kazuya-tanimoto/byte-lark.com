@@ -1,0 +1,19 @@
+{
+  "model": "opus[1m]",
+  "effortLevel": "xhigh",
+  "permissions": {
+    "allow": ["WebFetch", "WebSearch"],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(rm -rf $HOME*)",
+      "Bash(sudo *)",
+      "Bash(chmod -R *)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | bash)",
+      "Bash(wget * | sh)",
+      "Bash(wget * | bash)"
+    ],
+    "ask": ["Bash(git push *)", "Bash(git push)"]
+  }
+}
