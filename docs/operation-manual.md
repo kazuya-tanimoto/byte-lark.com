@@ -89,15 +89,14 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 
 - 通常起動：`ccd`（fish 関数、dotfiles 管理）。コンテナが無ければビルド・起動してから claude を開く
 - 放置自走：`ccd --auto`（alias `ccda` でも可。`--dangerously-skip-permissions` 付き。default-deny firewall 内なので許可プロンプトなしで自走させてよい）
-- ccd 整備前（計画書 §6 ステップ 8 完了まで）は直接実行：
-  - `devcontainer up --workspace-folder .`
-  - `devcontainer exec --workspace-folder . claude`
+- コンテナ再作成：`ccd --rebuild`（イメージ焼き込みファイルの修正後に使う。下記注意点参照）
+- 他 repo への導入：repo ルートで `ccd-init` → 生成される案内に従って調整（型紙と汎用手順は `~/dotfiles/claude/devcontainer/README.md`）
 - 初回のみ：コンテナ内で claude ログインと `gh auth login`（PAT 貼り付け）。どちらも専用 volume に永続化され 2 回目以降は不要
 
 ### 注意点
 
-- 「`devcontainer up` が success ＝ firewall 有効」ではない（firewall 初期化が失敗してもコンテナは走り続け、次回 up は既存コンテナ検出だけで success を返す）。ccd は claude 起動前に firewall チェックを行う（ステップ 8 で実装）。手動起動時は `curl -m 5 https://example.com` が**失敗する**ことを確認してから自走させる
-- `.devcontainer/init-firewall.sh` 等イメージ焼き込みのファイルを修正したら、`devcontainer up --workspace-folder . --remove-existing-container` で再ビルドしないと反映されない
+- 「`devcontainer up` が success ＝ firewall 有効」ではない（firewall 初期化が失敗してもコンテナは走り続け、次回 up は既存コンテナ検出だけで success を返す）。ccd は claude 起動前に firewall チェックを行い、コンテナ内から example.com に到達できたら起動を拒否する。`devcontainer exec` を直接使うときは `curl -m 5 https://example.com` が**失敗する**ことを確認してから自走させる
+- `.devcontainer/init-firewall.sh` 等イメージ焼き込みのファイルを修正したら、`ccd --rebuild`（= `devcontainer up --workspace-folder . --remove-existing-container`）で再ビルドしないと反映されない
 - PAT は fine-grained（この repo 限定 / Contents read+write / 無期限運用）。GitHub の fine-grained PAT 一覧で last used を時々確認し、使わなくなったら失効させる
 - コンテナから母艦の設定（`~/dotfiles`、`~/.claude` 等）への書き戻しは禁止。グローバル CLAUDE.md は read-only mount からのコピー持ち込みのみ、コンテナ内の Claude 設定は volume 内に閉じる
 
@@ -124,3 +123,4 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 | 2026-06-14 | ガバナンス文書ドリフト是正（README v3.1 連動）：シーン別表の「並行 PBI 開始」を worktree 廃止後の単一ブランチ運用に、「Phase 完了 main マージ承認」を公開フェーズ（1d）限定に修正。必須チェックリストの CF Pages Branch Filter から sub-branch Exclude を削除。トラブルシューティングから worktree 削除 Q6 を撤去（worktrees 廃止で発生し得ないため）、push 競合 Q7 を Q6 に繰り上げ + 原因記述を単一ブランチ並行に修正 |
 | 2026-06-14 | 統合ブランチ改名（README v3.2 連動）：シーン別表・Q6 の `feat/phase-1a` 参照を `feat/phase-1` に更新（1a〜1c を集約する統合ブランチ。deferred-merge 構造は不変） |
 | 2026-07-19 | §5 devcontainer 運用を新設（PHASE1B-016 連動）：起動手順（ccd / 手動）、firewall 有効確認、PAT の扱い、書き戻し禁止。旧 §5 関連ドキュメント → §6（devcontainer-plan.md 行追加）、旧 §6 改訂履歴 → §7 に繰り下げ |
+| 2026-07-19 | §5 更新（PHASE1B-016 ステップ 8 完了）：ccd / ccda / ccd-init を dotfiles に実装済みとなったため暫定の直接実行手順を削除。`ccd --rebuild` と他 repo 導入（ccd-init + dotfiles 型紙 README）を追記 |

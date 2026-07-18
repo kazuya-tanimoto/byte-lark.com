@@ -21,7 +21,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 「Claude 専用（壊れてもいい）PC でフル権限実行」案は 2026-06-28 に却下済み。隔離の境界が実 OS 自身になるため、実 OS・実認証情報がそのまま晒され、隔離として弱い。経緯の記録：
 
 - `docs/article-interviews/building-this-blog-with-claude-code.md` の「深掘りE」（2026-06-28）
-- 調査メモ（公式 docs 裏取り済み）: `/Users/kazuya/src/todo-next/docs/notes/claude-code-macos-sandbox.md`
+- 調査メモ（公式 docs 裏取り済み）: [notes/claude-code-macos-sandbox.md](notes/claude-code-macos-sandbox.md)（2026-07-19 に todo-next から本 repo へ移設）
 
 公式の立場：`--dangerously-skip-permissions` を使うなら必ずコンテナ / VM の中で。bare の Bash sandbox は Bash しか縛らず（Read/Edit・MCP・hook は sandbox の外）、単体では完全無人実行の隔離にならない。
 
@@ -175,7 +175,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 - PAT 漏洩 → repo 限定・最小権限で被害範囲を限定（無期限運用のため、fine-grained PAT 一覧の last used を時々確認し、不要分は失効 — §3-6）。イメージ / commit に焼き込まない
 - コンテナ内では claude-in-chrome・claude.ai コネクタ MCP・母艦の記憶が使えない → 住み分け（§1.3-3）で運用。記憶の共有は必要になってから RO で検討
 - `--dangerously-skip-permissions` はコンテナ境界と firewall が正常なことが前提 → 起動時の firewall 自己検証が落ちたら自走させない
-- **postStart（firewall 初期化）が失敗してもコンテナは走り続け、次回の `devcontainer up` は既存コンテナ検出だけで success を返す**（2026-07-18 実測）→ 「up が成功した＝firewall 有効」ではない。ccd は claude 起動前に firewall 有効チェック（コンテナ内から example.com への到達が失敗することの確認）を行い、失敗時は起動を拒否する（ステップ 8 で実装）。firewall スクリプト修正時はイメージ再ビルド（`--remove-existing-container`）が必要（イメージ焼き込み方式のため）
+- **postStart（firewall 初期化）が失敗してもコンテナは走り続け、次回の `devcontainer up` は既存コンテナ検出だけで success を返す**（2026-07-18 実測）→ 「up が成功した＝firewall 有効」ではない。ccd は claude 起動前に firewall 有効チェック（コンテナ内から example.com への到達が失敗することの確認）を行い、失敗時は起動を拒否する（2026-07-19 ステップ 8 で実装済み）。firewall スクリプト修正時はイメージ再ビルド（`--remove-existing-container`）が必要（イメージ焼き込み方式のため）
 
 ---
 

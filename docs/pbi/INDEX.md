@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-07-18
+最終更新: 2026-07-19
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -193,7 +193,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 | PHASE1B-012 | [post-incorporating-bytelark](20260628-PHASE1B-012-post-incorporating-bytelark.md) | NotStarted |
 | PHASE1B-013 | [post-work-fit-strengthsfinder](20260628-PHASE1B-013-post-work-fit-strengthsfinder.md) | NotStarted |
 | PHASE1B-015 | [codeql-dual-setup-fix](20260713-PHASE1B-015-codeql-dual-setup-fix.md) | Done |
-| PHASE1B-016 | [claude-devcontainer-setup](20260717-PHASE1B-016-claude-devcontainer-setup.md) | InProgress |
+| PHASE1B-016 | [claude-devcontainer-setup](20260717-PHASE1B-016-claude-devcontainer-setup.md) | Done |
 | **PHASE1B-014** | [**retrospective-gate**](20260628-PHASE1B-014-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
 ### Phase 1b 推奨着手順序
@@ -312,5 +312,6 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-07-13 | **PHASE1C-001 完了（Done）**：デザイン草案 3 案（快晴 / 春空 / 野の羽色）を HTML モック（`docs/design-drafts/phase1c-001/`）で提示し、運営者が**案2「春空」を選定**（修正指示なし）。確定記録 `docs/design-direction.md` を新設（パレット HEX/oklch + AA 検証値 / タイポ方向性 / 署名要素 / 002〜005 への引き継ぎ）、site-plan §6.5.2/6.5.3 を同コミットで整合。次は PHASE1C-002（確定 HEX + color-contrast 再有効化）/ 003 / 004 が着手可能 |
 | 2026-07-13 | **PHASE1B-015 起票（CI 保守）**：CodeQL 二重構成（GitHub default setup 有効 + 自前 `codeql.yml` advanced 構成の併存で SARIF 拒否）により 2026-06-28 以降 `Analyze (javascript)` が全 push で failure と判明（PHASE1C-001 セッションで一次調査済み、エラー全文と履歴は PBI 技術メモ）。解消 PBI を Phase 1b 期中の横断タスクとして追加起票（PHASE1A-021 前例に倣う、依存なし・任意タイミング）。Gate（014）の完了確認対象を 001〜013 + 015 に連動更新 |
 | 2026-07-17 | **PHASE1B-016 起票（Claude Code devcontainer 環境整備）+ 計画書新設**：macOS Bash sandbox 起因の詰まり（yarn ネットワーク系 / E2E Chromium / docker / 承認多発）と放置自走不可を、公式 devcontainer 雛形（default-deny firewall）ベースのコンテナ移行で解消する横断タスクを起票。検討セッション（2026-07-17）の決定事項——devcontainer 一本・母艦 sandbox 緩和はしない・持ち込みコピー/書き戻し禁止・fine-grained PAT・コンテナ/母艦の住み分け——と調査済み事実・実施ステップ 7 段を `docs/devcontainer-plan.md` に固定化（どのセッションでも同一手順で実施可能にするため）。Phase 非依存のため Gate 014 の完了確認対象外（Gate ファイルに明記） |
+| 2026-07-19 | **PHASE1B-016 完了（Done）**：Claude Code の devcontainer 自走環境を導入。default-deny firewall 内で `--dangerously-skip-permissions` 放置自走が可能に（母艦 sandbox で不可だった yarn ネットワーク系 / ローカル E2E / docker も解消）。コンテナ発 push → CI green（fine-grained PAT 経路）、statusline 母艦同一化（COLORTERM / CCD_REPO_NAME）、CLAUDE.md・operation-manual §5 に運用を文書化。dotfiles へ型紙化（`~/dotfiles/claude/devcontainer/` + fish 関数 ccd / ccda / ccd-init）し、todo-next で 3 手導入（ccd-init → conf 調整 → ccd）の起動を実証。2026-06-28 の sandbox 調査メモを docs/notes/ へ移設 |
 | 2026-07-18 | **PHASE1C-002 完了（Done）**：確定パレット「春空」を global.css トークンへ反映（AA 未達 2 箇所を sky-deep 文字化）、E2E の color-contrast 除外を解除。CI green + CF preview 実測 + Lighthouse A11y 全 8 ページ 100 / color-contrast pass（運営者ターミナル実行）で受け入れ条件全達成。検証中に npx lighthouse の不可視インストールプロンプトで 8 時間ハング → 根本原因を npm ログ + libnpmexec ソースで特定し、恒久対策として `scripts/lighthouse-audit.sh` を新設（npx 不使用・Phase 1d の本番 Performance/SEO 計測でも使用）。残：「春空」見た目適用 PBI の起票 |
 | 2026-07-15 | **PHASE1B-015 完了（Done）**：運営者が案B（default setup へ一本化）を選定し、自前 `codeql.yml` を削除 + `ui-tests.yml` / `quality.yml` に `permissions: contents: read` を追加（medium alert 対応）。03efd32 で CI green + CodeQL 単一構成（`Analyze (javascript)` failure 消滅、default setup の javascript-typescript / actions とも success）を確認。追加判明：failure の発火経路は PR #28 の pull_request トリガー、main 週次 cron も同因で毎週 failure（無効化は運営者作業として申し送り、Phase 1d の main マージで根治）、default setup 有効化は 2025-02-19（経緯は運営者も心当たりなし）。1b 残は記事 PBI 008〜013 + Gate 014 |

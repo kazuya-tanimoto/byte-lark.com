@@ -1,7 +1,8 @@
 # 運営者と Claude は devcontainer の中で Claude Code を安全に全権限自走させ、sandbox 起因の詰まりなしに開発できる
 
-Status: InProgress
+Status: Done
 Started: 2026-07-17
+Completed: 2026-07-19
 
 ## 誰が
 - Claude（実施）+ 運営者（事前準備: devcontainer CLI 導入 / Docker ランタイム起動 / PAT 発行、および各所の承認）
@@ -18,16 +19,16 @@ Started: 2026-07-17
 - 母艦 sandbox の追加緩和はやらない（防御を薄くするだけ）という決定の実装
 
 ## 受け入れ条件
-- [ ] [docs/devcontainer-plan.md](../devcontainer-plan.md) §6 のステップ 1〜8 を、各ステップの完了条件どおりに完了（計画書が単一の実施手順書。読み直してから着手。ステップ 8 = dotfiles への型紙化は 2026-07-17 運営者指示で追加）
+- [x] [docs/devcontainer-plan.md](../devcontainer-plan.md) §6 のステップ 1〜8 を、各ステップの完了条件どおりに完了（計画書が単一の実施手順書。読み直してから着手。ステップ 8 = dotfiles への型紙化は 2026-07-17 運営者指示で追加）（2026-07-19 ステップ 8 完了で全 8 ステップ done。todo-next で ccd-init → ccd の 3 手起動を運営者が確認）
 - [x] `.devcontainer/` 一式が §3 の安全原則（持ち込みコピー・書き戻し禁止 / コンテナ用 settings 新規 / PAT 最小権限）を満たしていることを、diff 提示のうえ運営者が承認（2026-07-19 commit b0543c2 承認）
 - [x] firewall 自己検証（example.com 遮断 + api.github.com 到達）のログを確認（2026-07-19 green）
 - [x] コンテナ内で `yarn install` / `yarn build` / `yarn test:run` / `yarn test:e2e` green + `yarn add` 系が sandbox 起因の失敗なく通ることを確認（2026-07-19 全 green。E2E 29 件 5.4s）
 - [x] コンテナ発の push → CI green（PAT 経路の確認）（2026-07-19 b0543c2 push → Quality Checks / UI Tests / CodeQL すべて success）
 - [x] `--dangerously-skip-permissions` で小タスク 1 件を完走（放置自走の試運転）（2026-07-19 `-p` 非対話モードで build / test:run 30 件 / test:e2e 29 件を 1m38s 完走、許可プロンプトなし）
 - [x] CLAUDE.md / docs/operation-manual.md にコンテナ/母艦の住み分け・起動手順・書き戻し禁止原則を追記（2026-07-19 CLAUDE.md「Devcontainer 自走環境」節 + operation-manual §5）
-- [ ] ローカル スクショ確認（desktop + mobile）：N/A（理由: 開発環境整備でサイト UI 非変更）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）：N/A（理由: 同上）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）：repo へのファイル追加を伴うため実施必須（CLAUDE.md §7）
+- [x] ローカル スクショ確認（desktop + mobile）：N/A（理由: 開発環境整備でサイト UI 非変更）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）：N/A（理由: 同上）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）：repo へのファイル追加を伴うため実施必須（CLAUDE.md §7）（実装 push b0543c2 / 4f65ef5 とも Quality Checks / UI Tests / CodeQL / Workers Builds すべて success。最終 docs commit も push 後に同スクリプトで確認）
 
 ## 技術メモ
 - 想定セッション数: 2（①環境構築〜基本動作 = 計画書 §6 ステップ 2〜5 / ②push 経路・自走試運転・文書化 = ステップ 6〜7。ステップ 1 は運営者の事前準備）
@@ -78,6 +79,20 @@ Started: 2026-07-17
 - 学び・つまずき
   - postStart（firewall）失敗でもコンテナは走り続け、次の `devcontainer up` は success に見える → 「up 成功＝firewall 有効」ではない。ccd に起動前チェックを入れる（計画書 §8）
   - firewall スクリプトはイメージ焼き込み（sudo 固定パス化の安全設計）のため、修正のたび `--remove-existing-container` で再ビルドが必要
+
+### 2026-07-19 セッション③（ステップ 8 完了 → PBI Done）
+
+- やったこと
+  - dotfiles へ型紙化：`~/dotfiles/claude/devcontainer/template/`（react-blog の完動 7 ファイル。差分は devcontainer.json の name プレースホルダ化と allowed-domains.conf の共通シード化のみ、`diff -r` で確認）+ 汎用 README（導入 3 手 / コマンド一覧 / 安全原則 / 型紙の更新方針）
+  - fish 関数 `ccd` / `ccda` / `ccd-init` を `~/dotfiles/fish/conf.d/ccd.fish` に実装（firewall 有効チェック＝example.com 到達で起動拒否、`--rebuild` 併設）。読み込みは backlog.fish と同じ conf.d symlink 方式
+  - 新 Mac bootstrap の穴を修正（運営者指摘）：make-symlinks.sh に conf.d 全件ループを追加。既存 backlog.fish の symlink も手作業依存だったものを仕組み化
+  - todo-next で 3 手導入を検証：ccd-init（name 置換 OK・7 ファイル生成）→ ccd → 初回ビルド → firewall チェック → claude ログイン画面到達（運営者実施）
+  - 2026-06-28 の sandbox 調査メモを todo-next から `docs/notes/claude-code-macos-sandbox.md` へ移設（計画書 §1.2 の参照も repo 内リンクに更新）
+  - operation-manual §5 の暫定手順（ccd 整備前の直接実行）を削除し、`ccd --rebuild` / ccd-init を追記
+- 残タスク：なし（dotfiles 側の commit は運営者実行。fish/config.fish の運営者自身の編集は staging に含めない）
+- 学び・つまずき
+  - Write ツールは 644 でファイルを作る → 実行権は chmod 後に git のモード記録で担保（`cp -R` はモードを引き継ぐので ccd-init の生成物にも波及）
+  - sandbox からは dotfiles への git 操作・`~/.config` への書き込み・docker 接続が不可 → 実行権付与 / symlink / 起動検証 / dotfiles commit は運営者ターミナルへスクリプトで切り出す
 
 ## 備考
 - Phase 非依存の開発環境整備（横断タスク）。PHASE1A-021 / PHASE1B-015 の「依存なし・任意タイミング」前例に倣い Phase 1b 期中に起票するが、サイト品質と無関係のため **Gate（PHASE1B-014）の完了確認対象には含めない**（Gate ファイルに対象外の旨を明記済み）
