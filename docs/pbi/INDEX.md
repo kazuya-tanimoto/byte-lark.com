@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-07-19
+最終更新: 2026-07-25
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -244,6 +244,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 + 015 全 Done 後、1c
 | PHASE1C-005 | [favicon-touch-icons](20260712-PHASE1C-005-favicon-touch-icons.md) | NotStarted |
 | PHASE1C-006 | [blogcard-heading-level](20260712-PHASE1C-006-blogcard-heading-level.md) | NotStarted |
 | PHASE1C-007 | [font-loading-cls](20260712-PHASE1C-007-font-loading-cls.md) | NotStarted |
+| PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | NotStarted |
 
 ### Phase 1c 先行トラック 推奨着手順序
 
@@ -256,6 +257,7 @@ PHASE1C-001 (デザイン方向性確定) ← 最初。002/003/004 の入力
   ↓
 PHASE1C-005 (favicon 意匠 ← 002/004 依存)
 
+PHASE1C-008 (署名要素の見た目適用 ← 001/002 依存、003 の後が推奨。朝日マーカー全般を担当)
 PHASE1C-006 (BlogCard 見出しレベル) ← 依存なし、任意タイミング
 PHASE1C-007 (フォント読み込み CLS)  ← 依存なし、任意タイミング
   ↓
@@ -315,3 +317,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-07-19 | **PHASE1B-016 完了（Done）**：Claude Code の devcontainer 自走環境を導入。default-deny firewall 内で `--dangerously-skip-permissions` 放置自走が可能に（母艦 sandbox で不可だった yarn ネットワーク系 / ローカル E2E / docker も解消）。コンテナ発 push → CI green（fine-grained PAT 経路）、statusline 母艦同一化（COLORTERM / CCD_REPO_NAME）、CLAUDE.md・operation-manual §5 に運用を文書化。dotfiles へ型紙化（`~/dotfiles/claude/devcontainer/` + fish 関数 ccd / ccda / ccd-init）し、todo-next で 3 手導入（ccd-init → conf 調整 → ccd）の起動を実証。2026-06-28 の sandbox 調査メモを docs/notes/ へ移設 |
 | 2026-07-18 | **PHASE1C-002 完了（Done）**：確定パレット「春空」を global.css トークンへ反映（AA 未達 2 箇所を sky-deep 文字化）、E2E の color-contrast 除外を解除。CI green + CF preview 実測 + Lighthouse A11y 全 8 ページ 100 / color-contrast pass（運営者ターミナル実行）で受け入れ条件全達成。検証中に npx lighthouse の不可視インストールプロンプトで 8 時間ハング → 根本原因を npm ログ + libnpmexec ソースで特定し、恒久対策として `scripts/lighthouse-audit.sh` を新設（npx 不使用・Phase 1d の本番 Performance/SEO 計測でも使用）。残：「春空」見た目適用 PBI の起票 |
 | 2026-07-15 | **PHASE1B-015 完了（Done）**：運営者が案B（default setup へ一本化）を選定し、自前 `codeql.yml` を削除 + `ui-tests.yml` / `quality.yml` に `permissions: contents: read` を追加（medium alert 対応）。03efd32 で CI green + CodeQL 単一構成（`Analyze (javascript)` failure 消滅、default setup の javascript-typescript / actions とも success）を確認。追加判明：failure の発火経路は PR #28 の pull_request トリガー、main 週次 cron も同因で毎週 failure（無効化は運営者作業として申し送り、Phase 1d の main マージで根治）、default setup 有効化は 2025-02-19（経緯は運営者も心当たりなし）。1b 残は記事 PBI 008〜013 + Gate 014 |
+| 2026-07-25 | **PHASE1C-008 起票（署名要素の見た目適用）**：design-direction §5 のトーン・形・署名要素（影カード・角丸 14px・チップ/ボタンのピル・朝日マーカー・Hero の wash→bg 縦グラデ・揚雲雀の軌跡）を実装する PBI を NotStarted で起票（PHASE1C-002 実装ログ 2026-07-17 運営者判断＝002 から分離の受け皿）。h2 朝日ドットマーカーが design-direction §3（003 タイポ）と §5（008）で重複していた件を **008 が朝日マーカー全般（h2 ドット + リストマーカー）を持つ**と確定し、003・008 両 PBI 本文と design-direction §3/§6 に境界を明記。着手順序図・Phase 1c 表を同期 |
