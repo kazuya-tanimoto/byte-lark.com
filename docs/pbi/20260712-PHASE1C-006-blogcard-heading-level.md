@@ -22,7 +22,7 @@ Started: 2026-07-26
 - [x] `yarn build` / `yarn check:ts` エラーなし
 - [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）：**母艦セッション担当**
 - [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）：**母艦セッション担当**
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）：head 95fa5de で UI Tests / Quality Checks とも completed/success（Workers Builds / CodeQL も success）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -43,7 +43,7 @@ Started: 2026-07-26
   - `yarn build` / `yarn check`（Biome, 38 files）/ `yarn check:ts`（0 errors）green
   - `yarn test:run`（Vitest 30 passed）green
   - `yarn test:e2e`（Playwright 29 passed、コンテナ内ローカル実行）green
-  - CI（push 後）：（下記追記）
+  - CI（push 後、head 95fa5de）：`scripts/ci-status.sh` で **UI Tests / Quality Checks とも completed/success**（Workers Builds: byte-lark / CodeQL も success）
 - 想定外だった点：
   - 唯一の記事 building-this-blog-with-claude-code は `draft: true`（運営者リライト中・未コミット、本セッションでは不可侵）。このため現状 `/blog` は公開記事 0 件でカードが描画されず、PBI が狙う「h1→h3 スキップ」自体が現時点では発生しない。コード変更（記事公開時に `/blog` カードが h2 で出る）は正しいが、**実カードでの h2 出力・Lighthouse heading-order pass は記事公開後でないと実測不能**。E2E `blog.spec.ts` も現状「カード 0 件」を前提にしており本変更と非干渉
 - 残タスク（次セッション / 母艦）：
