@@ -29,7 +29,7 @@ const posts = (
         <ul class="mt-6 grid gap-4 sm:grid-cols-2">
           {posts.map((post) => (
             <li data-blog-item data-category={post.data.category}>
-              <BlogCard post={post} />
+              <BlogCard post={post} headingLevel="h2" />
             </li>
           ))}
         </ul>

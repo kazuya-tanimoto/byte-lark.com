@@ -4,11 +4,16 @@ import type { CollectionEntry } from "astro:content";
 
 interface Props {
   post: CollectionEntry<"posts">;
+  /** カードタイトルの見出しレベル。既定は h3（Home の h2 セクション配下）。
+      h1 直下の一覧（/blog/）では h2 を渡して見出し階層を保つ */
+  headingLevel?: "h2" | "h3";
 }
 
-const { post } = Astro.props;
+const { post, headingLevel = "h3" } = Astro.props;
 const { title, description, category, publishedAt, cover, slug } = post.data;
 const href = `/blog/${slug ?? post.id}/`;
+// 見た目のサイズはタグと独立（クラス側で吸収）。タグだけ切り替える
+const Heading = headingLevel;
 
 const categoryLabel = category === "tech" ? "Tech" : "Life";
 const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
@@ -40,7 +45,7 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
           {dateFormatter.format(publishedAt)}
         </time>
       </div>
-      <h3 class="font-semibold leading-snug text-foreground">{title}</h3>
+      <Heading class="font-semibold leading-snug text-foreground">{title}</Heading>
       <p class="line-clamp-2 text-sm text-muted-foreground">{description}</p>
     </div>
   </a>
