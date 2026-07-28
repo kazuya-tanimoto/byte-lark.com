@@ -15,13 +15,13 @@ Started: 2026-07-26
 
 ## 受け入れ条件
 - [x] `src/components/BlogCard.astro` に見出しレベルの prop を追加（`headingLevel?: "h2" | "h3"`、既定は現行互換の h3。動的タグで切替）
-- [x] `/blog/`（h1 直下）ではカードタイトルが h2 で出力される（コード上 `headingLevel="h2"` 指定。※現状 記事が draft のみで実カード 0 件のため、実出力での確認は記事公開後）
-- [x] Home の Blog セクション（h2「Blog」配下）では h3 のまま（既定値、prop 未指定。リグレッションなし）
+- [x] `/blog/`（h1 直下）ではカードタイトルが h2 で出力される（2026-07-26 母艦で実測。dev 限定の一時記事を置いて DOM 確認 → `H1: Blog` → `H2: 記事タイトル` でスキップなし。一時記事は確認後に削除）
+- [x] Home の Blog セクション（h2「Blog」配下）では h3 のまま（既定値、prop 未指定。同実測で `H2: Blog` → `H3: 記事タイトル`、カードタイトルの computed style は h2 側と同一の 16px / 600 でリグレッションなし）
 - [ ] Lighthouse `heading-order` 監査が `/blog/` で pass、Accessibility 90+ 維持（実カードが必要＝記事公開後に母艦/運営者ターミナルで実測。現状 0 件では意味を成さない）
 - [x] E2E（`tests/e2e/` の a11y チェック含む）green（コンテナ内 `yarn test:e2e` 29 passed）
 - [x] `yarn build` / `yarn check:ts` エラーなし
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）：**母艦セッション担当**
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）：**母艦セッション担当**
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）：2026-07-26 母艦。dev 限定の一時記事ありで `/blog/`（1280 / 390）と Home の Blog セクション（1280 / 390）を確認。カード見た目は h2 化前後で不変、レイアウト崩れなし
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）：2026-07-26 母艦。`/blog/`（1280 / 390）。公開記事 0 件のため「記事はまだありません。」の空表示で、見出しは `H1: Blog` のみ。崩れなし＝リグレッションなしを確認（実カードでの確認は上記ローカル実測が代替）
 - [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）：head 95fa5de で UI Tests / Quality Checks とも completed/success（Workers Builds / CodeQL も success）
 
 ## 技術メモ
@@ -50,3 +50,18 @@ Started: 2026-07-26
   - **§7 スクショ確認（ローカル dev + CF preview）は母艦セッション担当**。当該 2 チェックは未チェックのまま残す
   - Lighthouse heading-order pass / A11y 90+：実カードが必要なため記事公開後に母艦/運営者ターミナルで実測（現状 0 件では意味を成さない）
   - Status は **InProgress のまま**（Done にしない）
+
+### 2026-07-26 セッション 2（母艦・§7 検証）
+- コンテナ側の成果を一次確認：feat/phase-1 の HEAD は 2ca2ae3（push 済み、ローカルと origin 一致）。`scripts/ci-status.sh` を再実行し **Quality Checks / UI Tests とも completed/success**（Workers Builds: byte-lark / CodeQL も success）
+- 「実カード 0 件で測れない」の裏取り：記事は building-this-blog-with-claude-code 1 本のみで `draft: true`、`src/pages/blog/index.astro` は `data.draft !== true` で絞り込み → `/blog` は 0 件で確定
+- 実カードでの見出し実測（0 件問題の回避策）：運営者承認のうえ、**コミットしない一時記事**（カバー画像なし）を `src/content/posts/` に置いて `yarn dev` で確認 → 確認後に削除（削除後 `git status` は運営者リライト中ファイル 1 件のみ＝クリーン）
+  - `/blog/`：`H1: Blog` → `H2: 見出しレベル確認用の一時記事`（スキップなし）
+  - Home：`H2: Blog` → `H3: 同記事`（既定値のまま）
+  - カードタイトルの computed style は両方とも 16px / font-weight 600 ＝ **タグを変えても視覚サイズは不変**を実測（技術メモの前提が満たされていることの確認）
+- CF preview（branch alias、2ca2ae3 デプロイ済み）：`/blog/` は空表示のみ。実カードは映らないため、上記ローカル実測で代替した
+- スクショ 6 枚は scratchpad に保存（repo には残していない）
+- 想定外だった点：
+  - 母艦の Bash サンドボックスでも `yarn dev` の localhost バインドは通った（Playwright の Chromium 起動不可とは別問題だった）。ローカル検証で運営者に dev 起動を依頼する必要はない
+- 残タスク：
+  - Lighthouse `heading-order` / A11y 90+ の実測のみ。実カードが必要＝記事公開（PHASE1B-008）待ち。`bash scripts/lighthouse-audit.sh` は既定で branch alias を見に行き、対象パスに `/blog/` を含むため公開後は 1 コマンドで済む
+  - Status は **InProgress のまま**（この 1 項目の扱いは運営者判断待ち）
