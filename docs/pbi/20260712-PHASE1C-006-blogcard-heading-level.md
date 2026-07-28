@@ -1,7 +1,8 @@
 # 訪問者は /blog 一覧で見出し階層が正しい（h1→h2）記事カードを閲覧できる
 
-Status: InProgress
+Status: Done
 Started: 2026-07-26
+Completed: 2026-07-28
 
 ## 誰が
 - 訪問者
@@ -17,7 +18,7 @@ Started: 2026-07-26
 - [x] `src/components/BlogCard.astro` に見出しレベルの prop を追加（`headingLevel?: "h2" | "h3"`、既定は現行互換の h3。動的タグで切替）
 - [x] `/blog/`（h1 直下）ではカードタイトルが h2 で出力される（2026-07-26 母艦で実測。dev 限定の一時記事を置いて DOM 確認 → `H1: Blog` → `H2: 記事タイトル` でスキップなし。一時記事は確認後に削除）
 - [x] Home の Blog セクション（h2「Blog」配下）では h3 のまま（既定値、prop 未指定。同実測で `H2: Blog` → `H3: 記事タイトル`、カードタイトルの computed style は h2 側と同一の 16px / 600 でリグレッションなし）
-- [ ] Lighthouse `heading-order` 監査が `/blog/` で pass、Accessibility 90+ 維持（実カードが必要＝記事公開後に母艦/運営者ターミナルで実測。現状 0 件では意味を成さない）
+- [x] Lighthouse `heading-order` 監査が `/blog/` で pass、Accessibility 90+ 維持（2026-07-28 コンテナ内で実測。一時記事を入れたビルド成果物を `astro preview` で配信し Lighthouse 12.8.2 を実行 → `/blog/` は heading-order pass / Accessibility **100**、Home も pass / 100。失格 audit なし）
 - [x] E2E（`tests/e2e/` の a11y チェック含む）green（コンテナ内 `yarn test:e2e` 29 passed）
 - [x] `yarn build` / `yarn check:ts` エラーなし
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）：2026-07-26 母艦。dev 限定の一時記事ありで `/blog/`（1280 / 390）と Home の Blog セクション（1280 / 390）を確認。カード見た目は h2 化前後で不変、レイアウト崩れなし
@@ -65,3 +66,21 @@ Started: 2026-07-26
 - 残タスク：
   - Lighthouse `heading-order` / A11y 90+ の実測のみ。実カードが必要＝記事公開（PHASE1B-008）待ち。`bash scripts/lighthouse-audit.sh` は既定で branch alias を見に行き、対象パスに `/blog/` を含むため公開後は 1 コマンドで済む
   - Status は **InProgress のまま**（この 1 項目の扱いは運営者判断待ち）
+
+### 2026-07-28 セッション 3（コンテナ・Lighthouse 実測 → Done）
+
+運営者判断：記事公開を待たず、母艦セッション 2 と同じ「コミットしない一時記事」方式でローカル計測して閉じる。
+
+- コンテナで Lighthouse が回ることを一次確認：Playwright の chromium 実体（`~/.cache/ms-playwright/chromium-1217/chrome-linux/chrome`）あり、npm レジストリ到達可（`npm view lighthouse` = 13.4.1 応答）。母艦の「Chrome 起動不可」制約はコンテナには効かない
+- 計測手順：一時記事（`draft: false`、カバー画像なし）を置いて `yarn build` → `yarn preview`（配信されるのは CF と同じビルド成果物）→ scratchpad に入れた lighthouse 12.8.2 を `CHROME_PATH` 指定で実行（`--only-categories=accessibility`、`--headless --no-sandbox`）
+- 結果：
+  - `/blog/`：heading-order **pass**、Accessibility **100**、失格 audit なし
+  - `/`（Home、リグレッション確認）：heading-order **pass**、Accessibility **100**、失格 audit なし
+  - ビルド成果物の DOM も併せて確認 — `/blog/` は `h1: Blog` → `h2: 記事タイトル`、Home は `h2: Blog` → `h3: 記事タイトル`（既定値のまま）
+- 後始末：一時記事を削除して再ビルド。`git status` は運営者リライト中の記事 1 件のみ＝クリーン
+- 想定外だった点：
+  - `pkill -f "astro preview"` は Bash ツール自身のコマンド行がパターンに一致して自分を殺す（exit 144）。`pgrep`/`ps` で PID を特定して `kill` する形にした
+  - 既定ロケールでは `wc -m` がバイト数を返す（日本語 1 文字 = 3）。文字数を数えるときは `LC_ALL=C.UTF-8` を付ける
+- 申し送り：
+  - 今回の計測対象は CF branch alias ではなくローカル preview（branch alias は公開記事 0 件で実カードが作れないため）。見出し順はビルド成果物の DOM 構造で決まるので結論は環境非依存だが、記事公開（PHASE1B-008）後に `bash scripts/lighthouse-audit.sh` を 1 回流して branch alias でも裏取りしておくと確実
+  - コンテナ内 Lighthouse 実行手順は PHASE1C-007（フォント読み込み CLS）でそのまま使える。throttle 条件付きモバイル計測もコンテナで完結する見込み
