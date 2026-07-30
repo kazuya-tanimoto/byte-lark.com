@@ -1203,17 +1203,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource-variable/geist@npm:^5.2.8":
-  version: 5.2.8
-  resolution: "@fontsource-variable/geist@npm:5.2.8"
-  checksum: 10c0/be455d4498ab0323b45d8bb37698dca810ae761643e85583605e18fc4175dec9b5ca518193673544b32a096cb3073fec0df0ef5cec92ce6ab0f58b29cd7ba596
-  languageName: node
-  linkType: hard
-
 "@fontsource-variable/noto-sans-jp@npm:^5.2.10":
   version: 5.2.10
   resolution: "@fontsource-variable/noto-sans-jp@npm:5.2.10"
   checksum: 10c0/c93a5518d314ea7255be2bc4b3331af9ba8f2700af6f7f84ab35625f4f24f5718b57c4005dc4f5d43156a6fc751bee95d5f4512ddde336c994ecf8ac4ab45abd
+  languageName: node
+  linkType: hard
+
+"@fontsource/zen-kaku-gothic-new@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource/zen-kaku-gothic-new@npm:5.3.0"
+  checksum: 10c0/5bb9d2444d34b3a714d69e732a0bc72b43a55131b1fbdcb6dbdcc65949b0bb75ce1c9728c04f654e6cbe4bdf8aeac75f4fcb29ec9bc22dba92783b4a8580acf5
   languageName: node
   linkType: hard
 
@@ -8501,8 +8501,8 @@ __metadata:
     "@astrojs/sitemap": "npm:^3.7.2"
     "@axe-core/playwright": "npm:^4.11.3"
     "@biomejs/biome": "npm:^2.4.14"
-    "@fontsource-variable/geist": "npm:^5.2.8"
     "@fontsource-variable/noto-sans-jp": "npm:^5.2.10"
+    "@fontsource/zen-kaku-gothic-new": "npm:^5.3.0"
     "@playwright/test": "npm:^1.59.1"
     "@tailwindcss/vite": "npm:^4.2.4"
     "@testing-library/dom": "npm:^10.4.1"

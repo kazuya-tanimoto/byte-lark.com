@@ -85,7 +85,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
             )
           }
         </div>
-        <h1 class="text-3xl font-bold tracking-tight text-foreground">{title}</h1>
+        <h1 class="text-2xl font-bold text-foreground sm:text-3xl">{title}</h1>
         {
           tags.length > 0 && (
             <ul class="mt-4 flex flex-wrap gap-2">
@@ -100,7 +100,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
       {
         toc.length > 0 && (
           <nav aria-label="目次" class="mb-8 rounded-lg border border-border bg-muted/30 p-4">
-            <h2 class="mb-2 text-sm font-semibold text-foreground">目次</h2>
+            <h2 class="mb-2 text-sm font-bold text-foreground">目次</h2>
             <ul class="space-y-1 text-sm">
               {toc.map((h) => (
                 <li class={h.depth === 3 ? "ml-4" : ""}>
@@ -125,27 +125,32 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 </BaseLayout>
 
 <style>
-  /* Phase 1a の機能要件としての最小限の本文タイポグラフィ。本格的なデザインは Phase 1b。 */
+  /* 記事本文のタイポグラフィ（PHASE1C-003 で確定。docs/design-direction.md §3）。
+     節見出し h2 は 24px / 500 — ページの節見出し（700）より軽くして、読み進める流れを切らない */
   .post-body :global(h2) {
-    margin-top: 2rem;
+    margin-top: 2.75rem;
     margin-bottom: 0.75rem;
-    font-size: 1.5rem;
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
     font-weight: 700;
     scroll-margin-top: 5rem;
   }
   .post-body :global(h3) {
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
     margin-bottom: 0.5rem;
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: var(--text-lg);
+    line-height: var(--text-lg--line-height);
+    font-weight: 700;
     scroll-margin-top: 5rem;
   }
   .post-body :global(p),
   .post-body :global(ul),
   .post-body :global(ol),
   .post-body :global(blockquote) {
-    margin-bottom: 1rem;
-    line-height: 1.8;
+    margin-bottom: 1.2rem;
+  }
+  .post-body :global(li) {
+    margin-top: 0.45rem;
   }
   .post-body :global(ul),
   .post-body :global(ol) {
@@ -167,11 +172,13 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
     color: var(--color-muted-foreground);
   }
   .post-body :global(pre) {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     overflow-x: auto;
     border-radius: 0.5rem;
     padding: 1rem;
-    font-size: 0.875rem;
+    /* コードは本文より一段小さく、行間も詰める（本文の 1.95 のままだと間延びする） */
+    font-size: 0.8125rem;
+    line-height: 1.7;
   }
   .post-body :global(:not(pre) > code) {
     border-radius: 0.25rem;

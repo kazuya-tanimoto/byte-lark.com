@@ -1,6 +1,7 @@
 # 訪問者は確定タイポグラフィ（スケール・行間・和欧混植）で見出し・本文を読める
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-07-30
 
 ## 誰が
 - 訪問者

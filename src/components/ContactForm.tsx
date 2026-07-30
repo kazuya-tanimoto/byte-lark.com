@@ -173,7 +173,7 @@ export function ContactForm() {
         className="rounded-lg border border-border bg-muted/30 p-6"
       >
         <p className="font-semibold text-foreground">送信が完了しました。</p>
-        <p className="mt-2 leading-relaxed text-muted-foreground">
+        <p className="mt-2 text-muted-foreground">
           お問い合わせありがとうございます。通常 2〜3
           営業日以内にご返信いたします。
         </p>

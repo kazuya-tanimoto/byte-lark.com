@@ -36,9 +36,9 @@ const ogMeta = buildOgMeta({
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    {/* 欧文 Geist は preload（軽量・全ページで即使う）。和文 Noto Sans JP は
-        文字範囲ごとに分割された多数の woff2 になるため preload しない（PHASE1C-007） */}
-    <Font cssVariable="--font-geist" preload />
+    {/* 見出し Zen Kaku Gothic New（PHASE1C-003）・本文 Noto Sans JP（PHASE1C-007）。
+        どちらも文字範囲ごとに分割された多数の woff2 になるため preload しない */}
+    <Font cssVariable="--font-zen-kaku" />
     <Font cssVariable="--font-noto-sans-jp" />
     <title>{title}</title>
     <meta name="description" content={description} />

@@ -288,10 +288,14 @@ Tailwind の theme extension で以下を定義。**Phase 1a 冒頭で仮 HEX �
 
 #### 6.5.3 タイポグラフィ
 
-- 見出し：Zen Kaku Gothic New（Google Fonts、500 / 700）— PHASE1C-001「春空」選定で確定（2026-07-13、[docs/design-direction.md](design-direction.md) §3）
-- 本文和文：Noto Sans JP（Google Fonts）。本文 Latin における Geist の去就は PHASE1C-003 で確定
-- 見出しはやや軽めのウェイト（500-700）で「軽快さ・抜け感」を演出
-- フォントサイズ階層・行間・和欧混植調整は Phase 1c で確定（方向性は docs/design-direction.md §3 に記録済み、実装・最終確定は PHASE1C-003）
+PHASE1C-003 で確定・実装済み（2026-07-30）。実体は `src/styles/global.css` の `@theme`（`--text-*` と `--font-*`）、書体の読み込みは `astro.config.mjs` の `fonts`。
+
+- 書体は 2 つ。見出し＝Zen Kaku Gothic New（500 / 700）、本文＝Noto Sans JP。欧文専用だった Geist は**廃止**（和文・欧文を 1 ファミリで揃え、縦方向の寸法差をなくすため。選定された「春空」モックも本文は Noto Sans JP 単独）
+- サイズ / 行間：本文 16px・行間 1.95。見出しは Hero の h1 42px、ページ h1 と記事タイトル 32px、h2 24px、h3 17px、補助 14px。行間は大きい文字ほど詰める（1.95 → 1.3）
+- ウェイトは 500 / 700 の 2 段のみ（Zen Kaku Gothic New が持つウェイト）。見出しは原則 700、Hero のリード文だけ 500
+- 和文の調整：見出しに `font-feature-settings: "palt"`（字送りを字形に合わせて詰める）、折り返しは `text-wrap: balance` + `word-break: auto-phrase` の併用（文節で折る。未対応ブラウザは balance だけの挙動に落ちる）
+- コードブロックは等幅ファミリの後ろに Noto Sans JP を足し、和文コメントの書体が端末任せにならないようにする
+- 読み込み方：見出しは `font-display: swap`（初回訪問でもブランドの書体が出るように）、本文は `optional`（ページの高さの大半を占めるため、差し替えのずれを避ける）。実測は PHASE1C-003 実装ログ
 
 #### 6.5.4 ロゴ
 
