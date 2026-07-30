@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-07-30
+最終更新: 2026-07-31
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -239,7 +239,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 + 015 全 Done 後、1c
 |---|---|---|
 | PHASE1C-001 | [design-direction](20260712-PHASE1C-001-design-direction.md) | Done |
 | PHASE1C-002 | [brand-colors-contrast](20260712-PHASE1C-002-brand-colors-contrast.md) | Done |
-| PHASE1C-003 | [typography-scale](20260712-PHASE1C-003-typography-scale.md) | InProgress |
+| PHASE1C-003 | [typography-scale](20260712-PHASE1C-003-typography-scale.md) | Done |
 | PHASE1C-004 | [logo-redesign](20260712-PHASE1C-004-logo-redesign.md) | NotStarted |
 | PHASE1C-005 | [favicon-touch-icons](20260712-PHASE1C-005-favicon-touch-icons.md) | NotStarted |
 | PHASE1C-006 | [blogcard-heading-level](20260712-PHASE1C-006-blogcard-heading-level.md) | Done |
@@ -318,5 +318,6 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-07-18 | **PHASE1C-002 完了（Done）**：確定パレット「春空」を global.css トークンへ反映（AA 未達 2 箇所を sky-deep 文字化）、E2E の color-contrast 除外を解除。CI green + CF preview 実測 + Lighthouse A11y 全 8 ページ 100 / color-contrast pass（運営者ターミナル実行）で受け入れ条件全達成。検証中に npx lighthouse の不可視インストールプロンプトで 8 時間ハング → 根本原因を npm ログ + libnpmexec ソースで特定し、恒久対策として `scripts/lighthouse-audit.sh` を新設（npx 不使用・Phase 1d の本番 Performance/SEO 計測でも使用）。残：「春空」見た目適用 PBI の起票 |
 | 2026-07-15 | **PHASE1B-015 完了（Done）**：運営者が案B（default setup へ一本化）を選定し、自前 `codeql.yml` を削除 + `ui-tests.yml` / `quality.yml` に `permissions: contents: read` を追加（medium alert 対応）。03efd32 で CI green + CodeQL 単一構成（`Analyze (javascript)` failure 消滅、default setup の javascript-typescript / actions とも success）を確認。追加判明：failure の発火経路は PR #28 の pull_request トリガー、main 週次 cron も同因で毎週 failure（無効化は運営者作業として申し送り、Phase 1d の main マージで根治）、default setup 有効化は 2025-02-19（経緯は運営者も心当たりなし）。1b 残は記事 PBI 008〜013 + Gate 014 |
 | 2026-07-30 | **PHASE1C-007 完了（Done）**：フォント読み込みを Astro 公式 Fonts API へ移行し、和文 Noto Sans JP を `display: "optional"` に変更。調査で「CLS の大きさは訪問者の端末フォント次第で振れる」ことを実測（不利なフォールバックで 0.0901、近いフォールバックで 0.004。6 月の母艦 0.23 と整合）、optional 採用で最悪ケースが 0.0038 に。branch alias の `/about` は 5 回とも CLS 0.000 / Perf 100。Astro の最適化フォールバックは寸法表が欧文システムフォントのみで和文に効かない（むしろ欧文が約 2 倍で描かれる面ができる）ため和文側は無効化、provider は外部 CDN 依存を避けて local を採用。site-plan Decision #24 を更新（v 番号据え置き）。副産物：コンテナ内で Lighthouse / Playwright スクショまで完結でき、§7 検証に母艦を要しないことを確認 |
+| 2026-07-31 | **PHASE1C-003 完了（Done）**：タイポスケールを確定・実装。見出し書体に Zen Kaku Gothic New（500 / 700）を導入し、欧文専用の Geist は廃止して本文を Noto Sans JP 一本に（和文と欧文で縦方向の寸法がずれる問題を混植の解消そのもので解決。選定モックも本文は Noto 単独）。サイズ / 行間は global.css の @theme に `--text-*` として定義（本文 16px / 行間 1.95、見出し 42 / 32 / 24 / 17 / 14px）、ウェイトは 500・700 の 2 段に統一。和文の折り返しは `text-wrap: balance` + `word-break: auto-phrase` の併用が最良と実測して採用。読み込み方は「見出し swap / 本文 optional」に分けた——optional では初回訪問でほぼ当たらない（サブセット 50 件前後が 100ms の猶予に間に合わない）ことを CDP で実測し、見出しだけ swap にしても差し替えのずれは 0.0016 以下（本文まで swap にすると /about で 0.0913）。site-plan §6.5.3 と design-direction §3 を確定内容に更新 |
 | 2026-07-28 | **PHASE1C-006 完了（Done）**：BlogCard に `headingLevel` prop を追加し `/blog/` のカードタイトルを h2 化（Home は既定 h3 のまま）。最後まで残っていた Lighthouse `heading-order` 実測は、記事公開を待たず「コミットしない一時記事 + ローカル preview」方式でコンテナ内 Lighthouse 12.8.2 を実行して充足（`/blog/` `/` とも heading-order pass / Accessibility 100 / 失格 audit なし）。副産物として **コンテナ内で Lighthouse が回る**ことを確認（Playwright の chromium 実体を `CHROME_PATH` 指定、母艦の Chrome 起動不可制約は非適用）→ PHASE1C-007 の CLS 計測で流用可。記事公開後に branch alias で 1 回裏取りする申し送りを PBI に記載 |
 | 2026-07-25 | **PHASE1C-008 起票（署名要素の見た目適用）**：design-direction §5 のトーン・形・署名要素（影カード・角丸 14px・チップ/ボタンのピル・朝日マーカー・Hero の wash→bg 縦グラデ・揚雲雀の軌跡）を実装する PBI を NotStarted で起票（PHASE1C-002 実装ログ 2026-07-17 運営者判断＝002 から分離の受け皿）。h2 朝日ドットマーカーが design-direction §3（003 タイポ）と §5（008）で重複していた件を **008 が朝日マーカー全般（h2 ドット + リストマーカー）を持つ**と確定し、003・008 両 PBI 本文と design-direction §3/§6 に境界を明記。着手順序図・Phase 1c 表を同期 |
