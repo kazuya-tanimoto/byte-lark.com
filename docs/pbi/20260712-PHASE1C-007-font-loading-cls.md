@@ -1,6 +1,7 @@
 # 訪問者は低速回線でも本文のレイアウトずれ（CLS）なくページを読める
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-07-28
 
 ## 誰が
 - 訪問者
