@@ -23,7 +23,7 @@ const currentPath = Astro.url.pathname;
           <a
             href={href}
             class:list={[
-              "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
               currentPath === href || (href !== "/" && currentPath.startsWith(href))
                 ? "bg-primary/10 text-hibari-sky-deep"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -37,7 +37,7 @@ const currentPath = Astro.url.pathname;
 
     <button
       type="button"
-      class="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+      class="inline-flex items-center justify-center rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
       aria-label="メニューを開く"
       aria-expanded="false"
       data-menu-toggle
@@ -55,7 +55,7 @@ const currentPath = Astro.url.pathname;
           <a
             href={href}
             class:list={[
-              "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              "block rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
               currentPath === href || (href !== "/" && currentPath.startsWith(href))
                 ? "bg-primary/10 text-hibari-sky-deep"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",

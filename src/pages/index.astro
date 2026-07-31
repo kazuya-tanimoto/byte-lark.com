@@ -35,15 +35,15 @@ const topSkills = skills
 
   <main class="mx-auto max-w-5xl px-4">
     <!-- Career 抜粋（直近 N=4 件。全件は /career） -->
-    <section class="border-b border-border py-12" aria-labelledby="home-career">
+    <section class="py-12" aria-labelledby="home-career">
       <div class="flex items-baseline justify-between">
-        <h2 id="home-career" class="text-2xl font-bold text-foreground">Career</h2>
+        <h2 id="home-career" class="heading-sun text-2xl font-bold text-foreground">Career</h2>
         <a href="/career" class="text-sm text-hibari-sky hover:underline">すべて見る →</a>
       </div>
       <div class="mt-6 grid gap-4 sm:grid-cols-2">
         {
           topCareer.map((item) => (
-            <article class="rounded-lg border border-border p-5">
+            <article class="rounded-lg bg-card p-5 shadow-card">
               <p class="text-xs text-muted-foreground">
                 {item.from} 〜 {item.to ?? "現在"}
               </p>
@@ -57,15 +57,15 @@ const topSkills = skills
     </section>
 
     <!-- Skills 抜粋（M=8: 経験年数の降順） -->
-    <section class="border-b border-border py-12" aria-labelledby="home-skills">
+    <section class="py-12" aria-labelledby="home-skills">
       <div class="flex items-baseline justify-between">
-        <h2 id="home-skills" class="text-2xl font-bold text-foreground">Skills</h2>
+        <h2 id="home-skills" class="heading-sun text-2xl font-bold text-foreground">Skills</h2>
         <a href="/skills" class="text-sm text-hibari-sky hover:underline">すべて見る →</a>
       </div>
       <ul class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {
           topSkills.map((skill) => (
-            <li class="flex items-center gap-3 rounded-lg border border-border p-3">
+            <li class="flex items-center gap-3 rounded-lg bg-card p-3 shadow-card">
               {skill.icon && <img src={skill.icon} alt="" width="28" height="28" loading="lazy" />}
               <div>
                 <p class="text-sm font-medium text-foreground">{skill.name}</p>
@@ -78,12 +78,14 @@ const topSkills = skills
     </section>
 
     <!-- Qualifications（FR-15: 独立ページなし） -->
-    <section class="border-b border-border py-12" aria-labelledby="home-qualifications">
-      <h2 id="home-qualifications" class="text-2xl font-bold text-foreground">Qualifications</h2>
+    <section class="py-12" aria-labelledby="home-qualifications">
+      <h2 id="home-qualifications" class="heading-sun text-2xl font-bold text-foreground">
+        Qualifications
+      </h2>
       <ul class="mt-6 space-y-3">
         {
           qualifications.map((q) => (
-            <li class="flex flex-wrap items-baseline justify-between gap-2 border-b border-border/60 pb-3 last:border-b-0">
+            <li class="flex flex-wrap items-baseline justify-between gap-2 rounded-lg bg-card px-4 py-3 shadow-card">
               <span class="font-medium text-foreground">{q.name}</span>
               <span class="text-sm text-muted-foreground">{q.acquiredAt} 取得</span>
             </li>
@@ -95,7 +97,7 @@ const topSkills = skills
     <!-- 最新記事 -->
     <section class="py-12" aria-labelledby="home-blog">
       <div class="flex items-baseline justify-between">
-        <h2 id="home-blog" class="text-2xl font-bold text-foreground">Blog</h2>
+        <h2 id="home-blog" class="heading-sun text-2xl font-bold text-foreground">Blog</h2>
         <a href="/blog" class="text-sm text-hibari-sky hover:underline">すべて見る →</a>
       </div>
       <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

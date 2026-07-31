@@ -168,10 +168,7 @@ export function ContactForm() {
 
   if (state === "success") {
     return (
-      <div
-        role="status"
-        className="rounded-lg border border-border bg-muted/30 p-6"
-      >
+      <div role="status" className="rounded-lg bg-card p-6 shadow-card">
         <p className="font-semibold text-foreground">送信が完了しました。</p>
         <p className="mt-2 text-muted-foreground">
           お問い合わせありがとうございます。通常 2〜3

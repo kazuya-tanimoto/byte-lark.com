@@ -1,6 +1,7 @@
 # 訪問者は「春空」の署名的な見た目（影カード・角丸・朝日マーカー・Hero グラデ・揚雲雀）でサイトを閲覧できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-07-31
 
 ## 誰が
 - 訪問者
@@ -14,16 +15,16 @@ Status: NotStarted
 - 関連: site-plan.md §6.5.1（ブランドコンセプト）/ §8 Decision #28 / Phase 1c 先行トラック / docs/design-direction.md §5・§6
 
 ## 受け入れ条件
-- [ ] 影カード：カード面を罫線でなく柔らかい影＋白面（card）で表す。影値は design-direction §5 の `0 1px 3px rgba(70,55,30,.06), 0 6px 20px rgba(70,55,30,.06)`。対象は BlogCard および各ページのカード状の面（Career/Skills/Qualifications 等）。罫線（border）主体の表現を影主体に置換する
-- [ ] 角丸：カード等の面は 14px（`--radius` を 0.875rem に確定）。チップ（カテゴリラベル等）とボタンはピル形（999px / `rounded-full`）
-- [ ] 朝日マーカー：h2 見出しに朝日（sun）の小さなドットマーカー（`radial-gradient` の円、装飾）、および本文/一覧のリストマーカーに朝日を小さく日常使いする（design-direction §5・§6。**PHASE1C-003 でなく本 PBI が持つ**——下記「PHASE1C-003 との境界」参照）
-- [ ] Hero：背景を `wash → bg` の縦グラデーションにする
-- [ ] 揚雲雀の軌跡：Hero 右下に、左下から右上へ昇る点線の飛行線 + ヒバリのシルエット + 朝日。**1 ページに 1 回だけ**使う（他ページ・他セクションで重複させない）
-- [ ] sun / wash 等の装飾色は文字色に使わない（design-direction §2 運用規律を維持）。装飾要素は装飾のみに使う
-- [ ] 装飾（揚雲雀・マーカー）が支援技術のノイズにならない（意味を持たない装飾は `aria-hidden` 等で読み上げ対象外にする）
-- [ ] Lighthouse Accessibility 90+ 維持（装飾追加でコントラスト/heading への悪影響がない）
-- [ ] `yarn build` / `yarn check` / `yarn check:ts` エラーなし
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
+- [x] 影カード：カード面を罫線でなく柔らかい影＋白面（card）で表す。影値は design-direction §5 の `0 1px 3px rgba(70,55,30,.06), 0 6px 20px rgba(70,55,30,.06)`。対象は BlogCard および各ページのカード状の面（Career/Skills/Qualifications 等）。罫線（border）主体の表現を影主体に置換する
+- [x] 角丸：カード等の面は 14px（`--radius` を 0.875rem に確定）。チップ（カテゴリラベル等）とボタンはピル形（999px / `rounded-full`）
+- [x] 朝日マーカー：h2 見出しに朝日（sun）の小さなドットマーカー（`radial-gradient` の円、装飾）、および本文/一覧のリストマーカーに朝日を小さく日常使いする（design-direction §5・§6。**PHASE1C-003 でなく本 PBI が持つ**——下記「PHASE1C-003 との境界」参照）
+- [x] Hero：背景を `wash → bg` の縦グラデーションにする
+- [x] 揚雲雀の軌跡：Hero 右下に、左下から右上へ昇る点線の飛行線 + ヒバリのシルエット + 朝日。**1 ページに 1 回だけ**使う（他ページ・他セクションで重複させない）
+- [x] sun / wash 等の装飾色は文字色に使わない（design-direction §2 運用規律を維持）。装飾要素は装飾のみに使う
+- [x] 装飾（揚雲雀・マーカー）が支援技術のノイズにならない（意味を持たない装飾は `aria-hidden` 等で読み上げ対象外にする）
+- [x] Lighthouse Accessibility 90+ 維持（装飾追加でコントラスト/heading への悪影響がない）
+- [x] `yarn build` / `yarn check` / `yarn check:ts` エラーなし
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
 - [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
 - [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
@@ -44,4 +45,29 @@ Status: NotStarted
 - この境界は PHASE1C-003 の PBI 本文にも明記済み（重複起票の防止）
 
 ## 実装ログ
-（未着手）
+
+### 2026-07-31
+
+やったこと
+- 着手（InProgress）。design-direction §5 と選定モック `docs/design-drafts/phase1c-001/2-spring-sky.html` を実装の基準にした。
+- トークン（`src/styles/global.css`）：`--radius` を 0.625rem → 0.875rem（14px）、影 `--shadow-card` を §5 の確定値で追加（Tailwind の `shadow-card` として使用）、朝日の光側 `--color-hibari-sun-light`（#F6C35C = `oklch(0.843 0.133 82.7)`、装飾専用）を追加。
+- 影カード化：BlogCard / Home の Career・Skills・Qualifications / SkillSet / 記事の目次 / Contact の送信完了パネルを、罫線から「白面 + 柔らかい影」に置換。Home の節区切り罫線とページ h2 の下線も落とした（モックは罫線を使わず、影カードと併用すると面が立て込むため）。
+- チップ・ボタンのピル化：shadcn Button の `rounded-lg` 系を `rounded-full` に（カテゴリ絞り込み・送信ボタンに波及）、Hero / 404 のボタン、Header のナビ、Hero の肩書きチップも同様。カテゴリチップは Tech = 空の面 + sky 文字、Life = 草原の面 + green 文字に色分けした。
+- 朝日マーカー：h2 の左に朝日ドット（`.heading-sun` と `.post-body h2`）、`ul > li::marker` を sun 色に。番号付きリストは数字が文字に見えるため対象外。Career のタイムライン h2 は既に左に sky の点があるので付けない。
+- Hero：背景を `wash → bg` の縦グラデにし、右下に「揚雲雀の軌跡」（点線の飛行線 + ヒバリ + 朝日）を inline SVG で追加（`aria-hidden` + `pointer-events-none`、Home のみ 1 回）。対にして Footer を `bg → wash` の縦グラデにした。
+- `scripts/lighthouse-audit.sh` に `CHROME_FLAGS` の上書き口を足した（コンテナ内は Chrome のサンドボックスが使えず `--no-sandbox` が要るため。既定値は従来どおり）。
+
+検証（ローカル）
+- スクショ：dev サーバー + Playwright で 8 ページ × PC(1280) / スマホ(390) 幅。記事ページ用に一時記事（未コミット、確認後に削除）を置いて本文の見え方も確認。
+- Lighthouse（コンテナ内 / ローカル preview）：8 ページすべて Accessibility 100・color-contrast pass。記事ページも 100・失格 audit ゼロ。
+- `yarn build` / `yarn check` / `yarn check:ts` エラーなし、`yarn test:run` 30 件パス、`yarn test:e2e` 29 件パス。
+
+学び・つまずき
+- 朝日ドットを `background-image` の `radial-gradient` で描いたら円でなく四角に出た。背景画像は背景領域の矩形を塗るだけで円形には切り抜かれない。`::before` + `border-radius` で描き直した（絶対配置なので見出しの折り返し計算にも入らない）。
+- ドットの縦位置は「1 行分の高さ（1.5em）の中央 − 円の半径」で 1 行目の中心に合う。h2 の行間が 1.5 固定である前提に依存しているので、タイポスケールを変えるときはここも見直す。
+- コンテナからは jsdelivr（Skills アイコンの配信元）に到達できず、ローカルのスクショではアイコンが壊れて写る。今回の変更とは無関係で、実表示は CF preview 側で確認する。
+
+残タスク
+- CF preview スクショ確認（push 後、branch alias）。あわせて Skills アイコンの実表示も確認する。
+- CI（UI Tests / Quality Checks）green 確認。
+- 記事公開後に、記事ページの見え方を branch alias で 1 回裏取り（現状 branch alias は公開記事 0 件。PHASE1C-006 と同じ申し送り）。

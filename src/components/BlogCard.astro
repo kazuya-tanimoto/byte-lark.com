@@ -16,6 +16,12 @@ const href = `/blog/${slug ?? post.id}/`;
 const Heading = headingLevel;
 
 const categoryLabel = category === "tech" ? "Tech" : "Life";
+// カテゴリチップの色分け（PHASE1C-008）。Tech = 空の面 + sky 文字（4.7:1）、
+// Life = 草原の面 + green 文字（6.2:1）。どちらも AA を満たす組合せに限る
+const categoryChipClass =
+  category === "tech"
+    ? "bg-muted text-hibari-sky"
+    : "bg-secondary text-secondary-foreground";
 const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
   year: "numeric",
   month: "long",
@@ -23,7 +29,7 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
 });
 ---
 
-<article class="overflow-hidden rounded-lg border border-border bg-background transition-shadow hover:shadow-md">
+<article class="overflow-hidden rounded-lg bg-card shadow-card transition-transform motion-safe:hover:-translate-y-0.5">
   <a href={href} class="flex h-full flex-col">
     {
       cover && (
@@ -38,7 +44,7 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
     }
     <div class="flex flex-1 flex-col gap-2 p-4">
       <div class="flex items-center gap-2 text-xs text-muted-foreground">
-        <span class="rounded-full bg-muted px-2 py-0.5 font-medium text-foreground">
+        <span class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}>
           {categoryLabel}
         </span>
         <time datetime={publishedAt.toISOString().slice(0, 10)}>

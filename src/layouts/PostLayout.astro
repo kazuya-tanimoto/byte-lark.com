@@ -55,6 +55,11 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
   day: "numeric",
 });
 const categoryLabel = category === "tech" ? "Tech" : "Life";
+// カテゴリチップの色分けは BlogCard と揃える（PHASE1C-008）
+const categoryChipClass =
+  category === "tech"
+    ? "bg-muted text-hibari-sky"
+    : "bg-secondary text-secondary-foreground";
 
 const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
@@ -74,7 +79,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
       <header class="mb-8 border-b border-border pb-6">
         <div class="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span
-            class="rounded-full bg-muted px-2.5 py-0.5 font-medium text-foreground"
+            class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}
           >{categoryLabel}</span>
           <time datetime={isoDate(publishedAt)}>{dateFormatter.format(publishedAt)} 公開</time>
           {
@@ -99,7 +104,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 
       {
         toc.length > 0 && (
-          <nav aria-label="目次" class="mb-8 rounded-lg border border-border bg-muted/30 p-4">
+          <nav aria-label="目次" class="mb-8 rounded-lg bg-card p-4 shadow-card">
             <h2 class="mb-2 text-sm font-bold text-foreground">目次</h2>
             <ul class="space-y-1 text-sm">
               {toc.map((h) => (
@@ -174,7 +179,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
   .post-body :global(pre) {
     margin-bottom: 1.2rem;
     overflow-x: auto;
-    border-radius: 0.5rem;
+    border-radius: var(--radius);
     padding: 1rem;
     /* コードは本文より一段小さく、行間も詰める（本文の 1.95 のままだと間延びする） */
     font-size: 0.8125rem;

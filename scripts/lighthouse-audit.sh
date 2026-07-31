@@ -6,6 +6,11 @@
 #   bash scripts/lighthouse-audit.sh https://byte-lark.com            # 本番を accessibility のみ
 #   bash scripts/lighthouse-audit.sh https://byte-lark.com performance,accessibility,best-practices,seo
 #
+# devcontainer 内から回すときは Chrome のサンドボックスが使えないので、
+# CHROME_PATH に Playwright の chromium 実体を、CHROME_FLAGS に --no-sandbox を渡す:
+#   CHROME_PATH=~/.cache/ms-playwright/chromium-1217/chrome-linux/chrome \
+#   CHROME_FLAGS="--headless --no-sandbox" bash scripts/lighthouse-audit.sh http://localhost:4322
+#
 # 注意: npx lighthouse は使わないこと。npx はキャッシュ状態次第で「Ok to proceed?」の
 # 対話プロンプトを出し、出力をパイプ/リダイレクトしていると不可視のまま永久に stdin を
 # 待ち続ける（2026-07-17 の PHASE1C-002 検証で 8 時間ハングした実績）。本スクリプトは
@@ -34,7 +39,7 @@ for p in "${PATHS[@]}"; do
   "$LH" "$BASE$p" \
     --only-categories="$CATEGORIES" \
     --output=json --output-path="$OUT/$name.json" \
-    --chrome-flags="--headless"
+    --chrome-flags="${CHROME_FLAGS:---headless}"
   if [ ! -s "$OUT/$name.json" ]; then
     SUMMARY+=("$p  計測失敗（上のログ参照）")
     continue
