@@ -1,4 +1,6 @@
 ---
+import Logo from "../assets/logo-bird.svg";
+
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
@@ -13,8 +15,9 @@ const currentPath = Astro.url.pathname;
 
 <header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
   <nav class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-    <a href="/" class="font-heading text-lg font-bold text-foreground">
-      byte-lark
+    <a href="/" class="inline-flex items-center gap-2">
+      <Logo width={26} height={26} class="shrink-0" aria-hidden="true" />
+      <span class="font-heading text-lg font-bold text-foreground">byte-lark</span>
     </a>
 
     <ul class="hidden gap-1 md:flex">
