@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-07-31
+最終更新: 2026-08-01
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -244,7 +244,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 + 015 全 Done 後、1c
 | PHASE1C-005 | [favicon-touch-icons](20260712-PHASE1C-005-favicon-touch-icons.md) | NotStarted |
 | PHASE1C-006 | [blogcard-heading-level](20260712-PHASE1C-006-blogcard-heading-level.md) | Done |
 | PHASE1C-007 | [font-loading-cls](20260712-PHASE1C-007-font-loading-cls.md) | Done |
-| PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | InProgress |
+| PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | Done |
 
 ### Phase 1c 先行トラック 推奨着手順序
 
@@ -320,4 +320,5 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-07-30 | **PHASE1C-007 完了（Done）**：フォント読み込みを Astro 公式 Fonts API へ移行し、和文 Noto Sans JP を `display: "optional"` に変更。調査で「CLS の大きさは訪問者の端末フォント次第で振れる」ことを実測（不利なフォールバックで 0.0901、近いフォールバックで 0.004。6 月の母艦 0.23 と整合）、optional 採用で最悪ケースが 0.0038 に。branch alias の `/about` は 5 回とも CLS 0.000 / Perf 100。Astro の最適化フォールバックは寸法表が欧文システムフォントのみで和文に効かない（むしろ欧文が約 2 倍で描かれる面ができる）ため和文側は無効化、provider は外部 CDN 依存を避けて local を採用。site-plan Decision #24 を更新（v 番号据え置き）。副産物：コンテナ内で Lighthouse / Playwright スクショまで完結でき、§7 検証に母艦を要しないことを確認 |
 | 2026-07-31 | **PHASE1C-003 完了（Done）**：タイポスケールを確定・実装。見出し書体に Zen Kaku Gothic New（500 / 700）を導入し、欧文専用の Geist は廃止して本文を Noto Sans JP 一本に（和文と欧文で縦方向の寸法がずれる問題を混植の解消そのもので解決。選定モックも本文は Noto 単独）。サイズ / 行間は global.css の @theme に `--text-*` として定義（本文 16px / 行間 1.95、見出し 42 / 32 / 24 / 17 / 14px）、ウェイトは 500・700 の 2 段に統一。和文の折り返しは `text-wrap: balance` + `word-break: auto-phrase` の併用が最良と実測して採用。読み込み方は「見出し swap / 本文 optional」に分けた——optional では初回訪問でほぼ当たらない（サブセット 50 件前後が 100ms の猶予に間に合わない）ことを CDP で実測し、見出しだけ swap にしても差し替えのずれは 0.0016 以下（本文まで swap にすると /about で 0.0913）。site-plan §6.5.3 と design-direction §3 を確定内容に更新 |
 | 2026-07-28 | **PHASE1C-006 完了（Done）**：BlogCard に `headingLevel` prop を追加し `/blog/` のカードタイトルを h2 化（Home は既定 h3 のまま）。最後まで残っていた Lighthouse `heading-order` 実測は、記事公開を待たず「コミットしない一時記事 + ローカル preview」方式でコンテナ内 Lighthouse 12.8.2 を実行して充足（`/blog/` `/` とも heading-order pass / Accessibility 100 / 失格 audit なし）。副産物として **コンテナ内で Lighthouse が回る**ことを確認（Playwright の chromium 実体を `CHROME_PATH` 指定、母艦の Chrome 起動不可制約は非適用）→ PHASE1C-007 の CLS 計測で流用可。記事公開後に branch alias で 1 回裏取りする申し送りを PBI に記載 |
+| 2026-08-01 | **PHASE1C-008 完了（Done）**：design-direction §5 の署名要素（影カード・角丸 14px・チップ/ボタンのピル・朝日マーカー・Hero の `wash → bg` 縦グラデ・揚雲雀の軌跡）を全ページに適用。CF preview 検証の過程で、**Cloudflare が push を 1 回取りこぼしていた**ことが判明——b9c83b0 は GitHub Actions は走ったのに CF 側に build 行が無く、branch alias が ed39801 のビルドを配信し続けていた（CF 設定は正常、それ以前は毎 push ビルド済み）。新しいコミット（b2edc1c）の push で再点火し反映を確認。以後は check-runs の `Workers Builds: byte-lark` の有無でビルド実行を機械的に判別できる。予防策として CF の Deploy Hooks 未設定を申し送り。Skills アイコンの実表示は、コンテナから jsdelivr へ到達できずスクショでは壊れて写るため運営者が母艦のブラウザで確認（全て表示）——**外部 CDN 由来の画像はコンテナのスクショでは検証できない**という学び。申し送り：記事ページの裏取り（公開記事 0 件、PHASE1C-006 と同じ） |
 | 2026-07-25 | **PHASE1C-008 起票（署名要素の見た目適用）**：design-direction §5 のトーン・形・署名要素（影カード・角丸 14px・チップ/ボタンのピル・朝日マーカー・Hero の wash→bg 縦グラデ・揚雲雀の軌跡）を実装する PBI を NotStarted で起票（PHASE1C-002 実装ログ 2026-07-17 運営者判断＝002 から分離の受け皿）。h2 朝日ドットマーカーが design-direction §3（003 タイポ）と §5（008）で重複していた件を **008 が朝日マーカー全般（h2 ドット + リストマーカー）を持つ**と確定し、003・008 両 PBI 本文と design-direction §3/§6 に境界を明記。着手順序図・Phase 1c 表を同期 |
