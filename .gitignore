@@ -66,3 +66,6 @@ lerna-debug.log*
 
 # 記事の取材メモ（運営者の生回答・下書き素材。完成記事だけ公開する）
 docs/article-interviews/
+
+# herdr へ状態を渡すための受け渡しファイル（コンテナ内 Claude Code → 母艦の見張り）
+.herdr-state/
