@@ -197,16 +197,27 @@
      折り返しは balance（行の長さを均す）と auto-phrase（文節で折る）の併用が最良と実測。
      例:「大規模決済プラットフォームの横断PM」→ balance 単独では
      「大規模決済プラット / フォームの横断PM」と語中で切れるが、併用なら
-     「大規模決済プラットフォームの / 横断PM」になる。auto-phrase 未対応の
-     ブラウザは単に無視するので、balance だけの挙動に落ちる */
+     「大規模決済プラットフォームの / 横断PM」になる */
   h1,
   h2,
   h3,
   h4 {
     font-family: var(--font-heading);
     font-feature-settings: "palt" 1;
-    text-wrap: balance;
-    word-break: auto-phrase;
+  }
+
+  /* balance は文節折りが効くブラウザ（Chrome/Edge）限定で併用する。
+     auto-phrase 未対応の Safari 等で balance 単独になると、右端に余裕があるのに
+     行長を均すため語中の中途半端な位置で折れて見える（iPhone 実機で確認）。
+     未対応環境は素の右端折り返しに落とす方が自然 */
+  @supports (word-break: auto-phrase) {
+    h1,
+    h2,
+    h3,
+    h4 {
+      text-wrap: balance;
+      word-break: auto-phrase;
+    }
   }
 
   /* 箇条書きの点を朝日にする（PHASE1C-008 署名要素の「日常使い」）。
