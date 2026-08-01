@@ -241,7 +241,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 + 015 全 Done 後、1c
 | PHASE1C-002 | [brand-colors-contrast](20260712-PHASE1C-002-brand-colors-contrast.md) | Done |
 | PHASE1C-003 | [typography-scale](20260712-PHASE1C-003-typography-scale.md) | Done |
 | PHASE1C-004 | [logo-redesign](20260712-PHASE1C-004-logo-redesign.md) | Done |
-| PHASE1C-005 | [favicon-touch-icons](20260712-PHASE1C-005-favicon-touch-icons.md) | NotStarted |
+| PHASE1C-005 | [favicon-touch-icons](20260712-PHASE1C-005-favicon-touch-icons.md) | InProgress |
 | PHASE1C-006 | [blogcard-heading-level](20260712-PHASE1C-006-blogcard-heading-level.md) | Done |
 | PHASE1C-007 | [font-loading-cls](20260712-PHASE1C-007-font-loading-cls.md) | Done |
 | PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | Done |

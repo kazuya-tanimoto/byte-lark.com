@@ -35,7 +35,12 @@ const ogMeta = buildOgMeta({
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* アイコン一式は PHASE1C-005 で確定（sky タイル + 白抜きバッジ）。
+        原本は src/assets/logo-badge.svg、生成は scripts/generate-icons.mjs。
+        ico は rel を見ない RSS リーダー等が root を直接取りに来るための後方互換 */}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     {/* 見出し Zen Kaku Gothic New（PHASE1C-003）・本文 Noto Sans JP（PHASE1C-007）。
         どちらも文字範囲ごとに分割された多数の woff2 になるため preload しない */}
     <Font cssVariable="--font-zen-kaku" />

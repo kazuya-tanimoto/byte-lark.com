@@ -193,10 +193,12 @@ slug: vite-react-spa-ogp-pitfall      # frontmatter で明示推奨（ファイ�
 ├── tsconfig.json
 ├── biome.jsonc                       Biome 2 設定（.astro override 含む）
 ├── package.json
-├── public/                           静的アセット（favicon.svg〔暫定・意匠は Phase 1c〕, robots.txt, og-default.png）
+├── public/                           静的アセット（favicon.svg / favicon.ico / apple-touch-icon.png〔PHASE1C-005 確定・scripts/generate-icons.mjs で生成〕, robots.txt, og-default.png）
 ├── src/
 │   ├── assets/                       ビルド時最適化対象（logo, ヒーロー画像）
-│   │   ├── logo.svg                  Phase 1c で更新予定
+│   │   ├── logo.svg                  フルマーク（PHASE1C-004 確定、墨一色 currentColor）
+│   │   ├── logo-badge.svg            ヘッダー 26px 用バッジ。アイコン一式の原本
+│   │   ├── logo-bird.svg             鳥単体
 │   │   └── posts/                    記事 cover 画像
 │   ├── components/                   汎用コンポーネント
 │   │   ├── ui/                       shadcn/ui からコピペした Radix ベース React コンポーネント（**インタラクティブ系のみ**）
