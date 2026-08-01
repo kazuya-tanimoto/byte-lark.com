@@ -32,6 +32,11 @@ byte-lark.com ブログの「これから書く記事ネタ」のストック。
 | L4 バイク・猫・アウトドアと考える時間 | life | 人柄を見せるゆるネタ。SEO 狙いは薄い |
 | L5 屋号 byte-lark の由来（深掘り） | life | 事業 / ブランドの話。About 既出（byte / lark / Beitrag）の深掘り。技術ではないので life |
 | L6 iPhone Air を買った（生活ガジェット） | life | 購入後に執筆。暮らしの道具としてのレビュー |
+| T8 alacritty + tmux から ghostty + herdr へ乗り換えた | tech | 開発環境 3 連作の 1 本目。乗り換えの動機、herdr の spaces / agents で何が変わったか |
+| T9 devcontainer で Claude Code を自走させる環境を作った | tech | 3 連作の 2 本目。設計と手順は `docs/devcontainer-plan.md`、PBI は PHASE1B-016。T1（サイト構築総括）で軽く触れた話の本編 |
+| T10 コンテナの中で動くエージェントを herdr のサイドバーに出す | tech | 3 連作の 3 本目。取材メモ完備: `docs/article-interviews/20260731-herdr-devcontainer-agent-bridge.md`（gitignore 対象）。切り口案 9 本入り |
+
+開発環境 3 連作（T8 → T9 → T10）は、環境を移す → 隔離する → 隔離したものを部分的に繋ぐ、という 1 本の流れ。T10 は前 2 本の前提の上に立つので、公開順は崩さない。
 
 ## 月次ネタ出し routine（R-01）プロンプト例
 
