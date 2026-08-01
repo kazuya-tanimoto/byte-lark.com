@@ -1,7 +1,8 @@
 # 訪問者は「Claude Code と PBI 駆動でこのブログを作った話」（tech）を読める
 
-Status: InProgress
+Status: Done
 Started: 2026-06-28
+Completed: 2026-08-01
 
 ## 誰が
 - 訪問者
@@ -14,14 +15,14 @@ Started: 2026-06-28
 - 関連: site-plan.md FR-19 / Phase 1b / docs/writing-workflow.md / PHASE1B-007（ネタ出し）
 
 ## 受け入れ条件
-- [ ] 運営者 + Claude でヒアリング（writing-workflow §3）→ Claude が Markdown ドラフト生成（`yarn new-post --slug building-this-blog-with-claude-code --category tech`、`draft: true`）
-- [ ] frontmatter 完備：title（`| byte-lark.com` サフィックス無し）/ description（80-120字・OGP 兼用）/ category: tech / tags / publishedAt / slug。本文冒頭に `# タイトル` を重複させない（PostLayout が title を h1 出力。PHASE1A-022 申し送り）
-- [ ] 運営者がリライトし `draft: false` に変更（最終承認を実装ログに記録）
-- [ ] OGP / Article JSON-LD が記事ページで正しく出力される（headline 汚染なし、`buildArticleJsonLd()`）
-- [ ] `yarn build` 成功 / `yarn check:ts` エラーなし
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] 運営者 + Claude でヒアリング（writing-workflow §3）→ Claude が Markdown ドラフト生成（`yarn new-post --slug building-this-blog-with-claude-code --category tech`、`draft: true`）
+- [x] frontmatter 完備：title（`| byte-lark.com` サフィックス無し）/ description（80-120字・OGP 兼用）/ category: tech / tags / publishedAt / slug。本文冒頭に `# タイトル` を重複させない（PostLayout が title を h1 出力。PHASE1A-022 申し送り）
+- [x] 運営者がリライトし `draft: false` に変更（最終承認を実装ログに記録）
+- [x] OGP / Article JSON-LD が記事ページで正しく出力される（headline 汚染なし、`buildArticleJsonLd()`）→ CF preview で og:type=article / twitter card / Article JSON-LD の出力を確認（2026-08-01）
+- [x] `yarn build` 成功 / `yarn check:ts` エラーなし
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）→ 一覧 + 記事ページ desktop/mobile、運営者も iPhone 実機で確認
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）→ ced3772 で UI Tests / Quality Checks とも success
 
 ## 技術メモ
 - 想定セッション数: 1（ヒアリング → ドラフト → 運営者リライト。運営者リライト待ちは実装フェーズ外）
@@ -64,3 +65,15 @@ Started: 2026-06-28
 
 **申し送り（Phase 1d 公開時）**
 - 本記事の `publishedAt`（現在 2026-06-28）を **公開当日の日付に更新してから** main マージ・公開すること（運営者指示 2026-08-01）。表示制御は draft のみで日付は出し分けに影響しないため、公開日表記の正しさだけの問題。
+
+### 2026-08-01（完了）
+
+やったこと
+- 文字数は最終約5,300字で決着（合意レンジ 4,000〜5,000 近傍。リライトで運営者承認）。
+- draft:false 化に伴い CI の UI Tests が想定どおり赤に（`blog.spec.ts` が「公開記事ゼロ」前提）→ 006/007 申し送りの E2E 再有効化を実施（ced3772）：一覧表示 / 一覧→詳細遷移 / カテゴリフィルタ / draft 非表示（恒久 fixture `e2e-draft-fixture.md` 追加）+ a11y 対象に記事詳細を再追加。件数は data 属性から動的に数え、記事追加で壊れない作りにした。
+- 見出し折り返しの実機不具合を修正（bab886d）：iPhone Safari で `text-wrap: balance` が語中の中途半端な位置で折れる → balance + auto-phrase を `@supports (word-break: auto-phrase)` で Chrome/Edge 限定にし、未対応環境は素の右端折り返しに。運営者が iPhone 実機で改善を確認。
+- §7 検証（ローカル desktop/mobile スクショ、CF preview スクショ + OGP / Article JSON-LD / RSS 出力確認、CI green）をすべて実施し Done。
+
+学び・つまずき
+- 「公開記事ゼロ前提」の E2E は記事投入コミットで必ず赤になる。今後の記事 PBI（009+）は既存テストが動的カウントなので影響なし。
+- `text-wrap: balance` は auto-phrase 未対応ブラウザ（Safari）では単独適用になり、見た目がかえって悪化する。実機（別エンジン）確認の重要性を再認識。
