@@ -1,7 +1,8 @@
 # 訪問者はヒバリ意匠 + ブランドカラーを反映した新ロゴを Header で見られる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-01
+Completed: 2026-08-01
 
 ## 誰が
 - 訪問者
@@ -15,13 +16,13 @@ Started: 2026-08-01
 
 ## 受け入れ条件
 - [x] 最初のラウンド前に、ロゴの合格条件チェックリストを運営者と確定する（Q11）→ 下記「合格条件チェックリスト（確定）」
-- [ ] ClaudeDesign で草案提示 → 運営者フィードバックの反復。**上限 5 ラウンド**（Decision #15）、各ラウンドの提示内容と判断を実装ログに記録
-- [ ] 確定ロゴを SVG で `src/assets/` に配置し、Header のテキストワードマーク（`Header.astro` の `byte-lark` 文字）を置換。表示サイズ・retina で確認。未参照のまま残っている `src/assets/logo.png` も処置する
-- [ ] 5 ラウンドで未確定の場合は R-06 に従い「現行ロゴのまま Phase 1d 公開を先行」を運営者が明示判断し、その記録をもって本 PBI を Done とする（ロゴ検討の継続は別 PBI を起票）
-- [ ] `yarn build` / `yarn check:ts` エラーなし
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。R-06 発動で UI 変更なしの場合は `[x] N/A（R-06 発動・置換なし）` に書き換え）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。同上）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。同上）
+- [x] 草案提示 → 運営者フィードバックの反復（ClaudeDesign は利用不可のためモック+画像生成AIで代替）。全 7 ラウンドを実装ログに記録（上限 5 は Decision #15 の 2026-08-01 延長で消化超過を承認済み）
+- [x] 確定ロゴを SVG で `src/assets/` に配置（logo.svg=フルマーク / logo-badge.svg=ヘッダー用バッジ / logo-bird.svg=鳥単体）。Header はバッジ+ワードマーク横並びに置換、26px・DPR2 で確認。未参照 `src/assets/logo.png` は削除（運営者承認）
+- [x] N/A（Decision #15 延長のうえラウンド 7 で確定、R-06 不発動）
+- [x] `yarn build` / `yarn check:ts` エラーなし（コンテナ内で実行、0 errors）
+- [x] ローカル スクショ確認（desktop 1280 + mobile 390、DPR2。コンテナ内 Playwright）
+- [x] CF preview スクショ確認（branch alias URL、875c0bf 配信をバッジ SVG の viewBox マーカーで確認の上 desktop/mobile スクショ）
+- [x] E2E / CI green 確認（`scripts/ci-status.sh`：UI Tests=success / Quality Checks=success。ローカル E2E 33 件パスも実施）
 
 ## 合格条件チェックリスト（確定）
 
@@ -192,6 +193,15 @@ PHASE1C-008 で Hero に実装した署名要素（`src/components/Hero.astro`�
 - 形態学的オープニング（細線除去）も試したが尾が寸断されて品位を損ない不採用。Gemini7 は胴体の量感があり原形のままで 26/16px 成立（small-test.png / badge-test.png に実寸検証）
 - アセット構成の確定：logo.svg = フルマーク（大サイズ用）／logo-badge.svg = バッジ（ヘッダー 26px、新規）／logo-bird.svg = Gemini7 鳥単体（favicon 素材、Gemini5 鳥から差し替え）。全て currentColor
 - ローカル E2E 33 件パス（コンテナ内実行）。ブログ E2E の既存失敗は別セッションの ced3772 が実記事前提へ修正済みで解消見込み
+
+#### 完了処置（2026-08-01）
+
+- §7 検証ゲート全通過（ローカル / CF preview / CI green、検証報告はチャット出力済み）
+- `src/assets/logo.png` 削除（未参照の旧遺物、運営者承認）
+- design-drafts は選別コミット（運営者承認）：旧案 2 種 + 採用シェイプ原本（Gemini5/7）+ ラウンド HTML シート + 実寸検証 PNG + preview を保存。ボツ世代の高解像度 PNG（ChatGPT1〜3 / Gemini1〜4・6、約 17MB）はコミット対象外（ローカルには残置）
+- 申し送り（PHASE1C-005 favicon）：logo-badge.svg / logo-bird.svg（いずれも Gemini7 の簡略鳥、currentColor）が素材。16px はバッジで成立することを badge-test.png で実寸確認済み
+- 申し送り（ダークモード PBI）：全アセット currentColor のため色は自動反転する設計だが、実表示検証は未実施（.dark 到達手段がないため）
+- 申し送り（既存）：Hero の装飾ヒバリとロゴの鳥の描き分け統一検討
 
 #### セッション引き継ぎ（コンテナ → 母艦、明示ハンドオフ）
 
