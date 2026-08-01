@@ -41,7 +41,7 @@
    - If any InProgress PBI exists, read its 実装ログ first; resume only if explicitly handed off
    - Otherwise, pick the oldest NotStarted in the current Phase
    - Earlier Phases must be Done (Gate passed)
-   - 例外（先行トラック）: site-plan §8 Decision #28 の Phase 1c 先行トラック（PHASE1C-001〜007）は Phase 1b Gate 未通過でも着手可。記事 PBI（PHASE1B-008〜013）とはセッション単位で切替（どちらを進めるかは運営者指示に従う。README §9 例外）
+   - 例外（先行トラック）: site-plan §8 Decision #28 の Phase 1c 先行トラック（PHASE1C-001〜007）は Phase 1b Gate 未通過でも着手可。記事 PBI（PHASE1B-008〜013）とは並行可、ただし別名 clone の別作業ツリーに限る（1 ツリー 1 セッション。INDEX.md は pull→即コミット、同一 PBI を 2 セッションで触らない。README §9 並行運用）。どの PBI を進めるかは運営者指示に従う
 4. Update PBI Status: NotStarted → InProgress + Started date
 5. Sync INDEX.md
 6. Implement
