@@ -1,7 +1,8 @@
 # 訪問者はブランド確定意匠の favicon / apple-touch-icon を各ブラウザ・端末で見られる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-01
+Completed: 2026-08-01
 
 ## 誰が
 - 訪問者
@@ -19,8 +20,8 @@ Started: 2026-08-01
 - [x] ブラウザタブでの表示確認（小サイズで意匠がつぶれないこと。スクショ）
 - [x] `yarn build` / `yarn check:ts` エラーなし
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -72,3 +73,11 @@ Started: 2026-08-01
 - `yarn build` / `yarn check:ts`（0 errors）/ `yarn check`（biome）/ `yarn test:run`（30 passed）/ `yarn test:e2e`（33 passed、コンテナ内実行）
 - 配信実物を dev server から取得して 16 / 20 / 32 / 48 / 180px で並べ、明るいタブ・暗いタブ両方で確認。3 ファイルとも 200 で返り、head に link 3 本が出ることも確認
 - **ブラウザの実タブそのものは撮れない**（ヘッドレスにブラウザ枠がないため）。実寸レンダリングでの代替確認である旨を明記しておく
+- CF preview（branch alias）でも同じ確認を実施。3 ファイルとも 200 で、バイト数はローカルと一致（svg 7802 / ico 2019 / png 7116）、Content-Type は `image/svg+xml` / `image/vnd.microsoft.icon` / `image/png`。head の link 3 本、Home の desktop / mobile、ヘッダーの回転後バッジも確認
+- CI（9dc4c9f）：UI Tests / Quality Checks とも success。`Workers Builds: byte-lark` の check-run も success で、PHASE1C-008 で起きた CF のビルド取りこぼしは今回発生していない
+- 運営者への提示物は 1 ファイルに寄せた（`favicon-implemented.html`。data URI で全て内包、外部参照ゼロ）。初回は `<meta charset="utf-8">` を書き忘れてローカルで開くと文字化けした → 生成側に追加済み。**publish したページと違い、ローカルで直接開く HTML は charset を自分で持たせないといけない**
+
+#### 次への申し送り
+
+- iOS ホーム画面の実表示は未確認（実機が要る）。角丸マスクは再現で見ただけ
+- ダークモード PBI を立てるときは、アイコンだけ `currentColor` ではなく sky 固定である点に注意（タブ地に依存させない判断。ロゴ本体とは扱いが違う）
