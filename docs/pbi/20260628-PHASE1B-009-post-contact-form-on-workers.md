@@ -1,6 +1,7 @@
 # 訪問者は「バックエンドなしのサイトに問い合わせフォームを足す」（tech）を読める
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-01
 
 ## 誰が
 - 訪問者
@@ -31,3 +32,20 @@ Status: NotStarted
 
 ## 備考
 - 初期セット 6 本のうち 2 本目（T2）
+
+## 実装ログ
+
+### 2026-08-01 着手・ドラフト作成
+
+やったこと
+- ヒアリング（writing-workflow §3、8問）→ 運営者回答。読者=バリバリでない人、トーン=前回記事準拠、読み物は短め・コードで長くなるのは可、ハマりどころ選定は Claude 任せ
+- `yarn new-post --slug contact-form-on-cloudflare-workers --category tech` → ドラフト執筆（draft: true）。素材は 004/005 実装ログ・実コード（worker/index.ts, contact.ts, wrangler.jsonc, ContactForm.tsx）・site-plan Decision #26
+- ハマりどころは2本に絞る：secret 投入後の再デプロイ必須（バージョンが設定を焼き付ける）/ 末尾スラッシュ 404。React 型・E2E モックの話は読者層に対し細かすぎるため不採用
+- 検証: `yarn check:ts` 0 errors / `yarn build` 成功（draft のためページ数不変）
+
+学び・想定外
+- 導入の書き方で運営者と複数往復。確定した方針：抽象的な分類（「足りないものが2つ」等）でなく実際の出来事の順で具体的に語る / つまずかなかった箇所（Workers での受け取り処理）を問題として語らない / 他者の選択（mailto 等）を腐さない。文体知見は `docs/writing-style/profile.md` に反映済み
+- Cloudflare 自前のメール送信は「ドメインの DNS を Cloudflare 運用」が条件（公式 docs 確認済み、記事にリンク）。DNS が Xserver にある本サイトでは使えず Resend 採用——これが読者向けの実際の選定理由。Decision #26 に CF 自前送信の比較記録は無い（当時の比較対象は mailto/Google Form/SES、MailChannels 終了→Resend の流れ）
+
+残タスク
+- 運営者リライト → draft: false → §7 検証（ローカル/CF preview スクショ + CI green）→ Done 化
