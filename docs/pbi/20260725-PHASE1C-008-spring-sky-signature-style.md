@@ -71,3 +71,21 @@ Started: 2026-07-31
 - CF preview スクショ確認（push 後、branch alias）。あわせて Skills アイコンの実表示も確認する。
 - CI（UI Tests / Quality Checks）green 確認。
 - 記事公開後に、記事ページの見え方を branch alias で 1 回裏取り（現状 branch alias は公開記事 0 件。PHASE1C-006 と同じ申し送り）。
+
+### 2026-08-01
+
+やったこと
+- CI 確認：`scripts/ci-status.sh` で b9c83b0 の Quality Checks / UI Tests / CodeQL（javascript-typescript・actions）すべて success を確認。→ 残タスクの CI green 確認は消化。
+- CF preview 確認を実施したが、**branch alias が b9c83b0 より前のビルドを配信していた**ため、署名要素の確認はできていない（下記）。
+
+わかったこと：CF preview が古いビルドのまま
+- 配信 HTML（`curl` で取得）に `heading-sun` も `rounded-full` も 1 件も出てこない。ソース（`src/`）とローカル `dist/index.html` にはどちらもある。
+- CSS のファイル名が食い違う：CF = `BaseLayout.BYJQ0k_z.css` / ローカル dist = `BaseLayout.CZ56XjW4.css`。CF 側の CSS には角丸 14px（`0.875rem`）が入っていない。
+- スクショ（8 ページ × PC/スマホ、全 200）でも、カードは影ではなく罫線、ボタンはピルでなく角丸長方形、h2 に朝日ドット無し、Home の節区切り罫線も残ったまま＝ 008 適用前の見た目。
+- push 自体は済んでいる（`origin/feat/phase-1` == HEAD == b9c83b0）。GitHub Actions 側に deploy workflow は無く、デプロイは Cloudflare の Git 連携（Workers Builds）なのでコンテナからは状態を読めない。→ **運営者に CF ダッシュボードで feat/phase-1 の最新ビルドログを確認してもらう必要がある**（PHASE1B-006 では `node_modules/.astro` のキャッシュ汚染でビルドが赤くなり、Clear Cache で解消した前例あり）。
+- Skills アイコンが壊れて写る件は、コンテナから `cdn.jsdelivr.net` へ到達できないため（curl で HTTP コード 000）。サイト側の問題ではないが、裏返すと**アイコンの実表示はコンテナからは確認できない**（母艦での確認が要る）。
+
+残タスク（更新）
+- CF のビルド状況を運営者が確認 → 必要なら Clear Cache + 再ビルド。その後 branch alias で署名要素のスクショ確認をやり直す。
+- Skills アイコンの実表示は母艦から確認する。
+- 記事公開後に、記事ページの見え方を branch alias で 1 回裏取り（前記のまま）。
