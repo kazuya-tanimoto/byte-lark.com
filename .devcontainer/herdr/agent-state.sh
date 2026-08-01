@@ -32,6 +32,15 @@ case "$input" in
 *'"agent_id"'*) exit 0 ;;
 esac
 
+# Notification は承認待ちだけでなく「入力待ちのまま一定時間たった」ときにも飛ぶ
+# （notification_type が idle_prompt）。これで blocked にすると、返事を待っている
+# だけの idle が承認待ちに化けるので、種類を見て捨てる。
+if [ "$state" = blocked ]; then
+  case "$input" in
+  *'"notification_type":"idle_prompt"'* | *'"notification_type": "idle_prompt"'*) exit 0 ;;
+  esac
+fi
+
 dir="$CLAUDE_PROJECT_DIR/.herdr-state"
 file="$dir/$(printf '%s' "$HERDR_PANE_ID" | tr ':' '-').state"
 
