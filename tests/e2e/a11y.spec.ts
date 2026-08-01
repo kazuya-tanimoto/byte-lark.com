@@ -8,8 +8,8 @@ const targets: { path: string; expectedStatus: number }[] = [
   { path: "/career", expectedStatus: 200 },
   { path: "/skills", expectedStatus: 200 },
   { path: "/blog", expectedStatus: 200 },
-  // 記事詳細ページの a11y チェックは実記事投入後（008+）に再追加する。
-  // サンプル記事は PHASE1B-006 で削除済み（一覧は記事ゼロの空状態）。
+  // 記事詳細ページ（PHASE1B-008 で実記事投入、006/007 申し送りの再追加）
+  { path: "/blog/building-this-blog-with-claude-code", expectedStatus: 200 },
   { path: "/contact", expectedStatus: 200 },
   { path: "/privacy", expectedStatus: 200 },
   { path: "/this-page-does-not-exist", expectedStatus: 404 },
