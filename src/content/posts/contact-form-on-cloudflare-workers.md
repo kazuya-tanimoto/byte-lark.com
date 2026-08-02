@@ -216,7 +216,7 @@ const SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? TEST_SITE_KEY;
 
 1. Turnstile のウィジェットを作る（site key と、照合用の secret key をもらう）
 2. Resend に送信元ドメインを登録する（指示された DNS レコードを追加して認証 → API キーをもらう）
-3. もらった鍵のうち秘密の 2 つ（Turnstile の secret key と Resend の API キー）を Workers の secret として登録する（`wrangler secret put` かダッシュボードから。コードには書かない）。公開してよい site key はビルド用の環境変数に設定する
+3. もらった鍵のうち秘密の2つ（Turnstile の secret key と Resend の API キー）を Workers の secret として登録する（`wrangler secret put` かダッシュボードから。コードには書かない）。公開してよい site key はビルド用の環境変数に設定する
 
 手間なのは Resend のドメイン登録だけですが、画面の指示どおりにレコードを足せば通ります。  
 送信専用のサブドメイン（例: `send.example.com`）を切っておくと、本来のドメインのメール設定に触らずに済みます。
