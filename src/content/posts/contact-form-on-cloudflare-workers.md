@@ -1,5 +1,5 @@
 ---
-title: "静的サイトのまま、問い合わせフォームを足す"
+title: "Cloudflare Workers で、静的サイトのまま問い合わせフォームを作る"
 description: "静的サイトのまま、問い合わせフォームを自前実装した記録。Cloudflare Workers + Turnstile + Resend の構成と実装手順、secret を入れたのに反映されない等のハマりどころを書きます。"
 category: tech
 tags: ["cloudflare workers", "turnstile", "resend", "astro", "個人開発"]
@@ -57,7 +57,7 @@ Google フォームは実用的ですが、どうせサイトを作るのにフ�
 }
 ```
 
-この構成でのリクエストの振り分けは 3 段です。
+この構成でのリクエストの振り分けは3段です。
 
 1. リクエストはまず `dist/` の静的ファイルと照合され、一致すればそのまま配信されます。このとき Worker は動きません
 2. 一致しなかったリクエストだけが Worker に渡ってきます。`/api/contact` も、存在しない URL へのアクセスも、ここに来ます
@@ -183,13 +183,13 @@ const res = await fetch("https://api.resend.com/emails", {
 ## フォーム側：トークンを同梱して送る
 
 フォーム画面は React で作り、Astro のページに埋め込んでいます。  
-ウィジェットを描画すると、検証を通ったときに callback でトークンが渡ってくるので、送信時に入力値と一緒に body へ同梱して POST します。
+ウィジェットを描画すると、チェックを通ったときに callback でトークンが渡ってくるので、送信時に入力値と一緒に body へ同梱して POST します。
 
 ```typescript
 // src/components/ContactForm.tsx（抜粋・整理）
 turnstile.render(widgetRef.current, {
   sitekey: SITE_KEY,
-  callback: (t) => setToken(t), // 検証の証としてトークンを受け取る
+  callback: (t) => setToken(t), // チェック通過の証としてトークンを受け取る
 });
 
 // 送信時
@@ -216,7 +216,7 @@ const SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? TEST_SITE_KEY;
 
 1. Turnstile のウィジェットを作る（site key と、照合用の secret key をもらう）
 2. Resend に送信元ドメインを登録する（指示された DNS レコードを追加して認証 → API キーをもらう）
-3. もらった鍵を Workers の secret として登録する（`wrangler secret put` かダッシュボードから。コードには書かない）
+3. もらった鍵のうち秘密の 2 つ（Turnstile の secret key と Resend の API キー）を Workers の secret として登録する（`wrangler secret put` かダッシュボードから。コードには書かない）。公開してよい site key はビルド用の環境変数に設定する
 
 手間なのは Resend のドメイン登録だけですが、画面の指示どおりにレコードを足せば通ります。  
 送信専用のサブドメイン（例: `send.example.com`）を切っておくと、本来のドメインのメール設定に触らずに済みます。
@@ -225,7 +225,7 @@ const SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? TEST_SITE_KEY;
 
 実装そのものより、この2つで時間を使いました。
 
-### 鍵を設定したのに、まだ「未設定」の反応が返る
+### 鍵を設定したのに、まだ「未設定」のレスポンスが返る
 
 secret を登録したのに、送信すると 503（鍵が未設定のときのレスポンス）が返ってくる。  
 管理画面を見ると鍵は入っている。なぜ？
@@ -241,7 +241,7 @@ Workers はデプロイのたびに「バージョン」を作ります。バー
 
 `/api/contact/`（末尾スラッシュ付き）を開くと、API のレスポンスが戻るのではなくサイトの 404 ページが表示されてしまいました。
 
-原因は前述の振り分けの 3 段目です。  
+原因は前述の振り分けの3段目です。  
 `/api/contact/` に対応する静的ファイルは無いので、リクエスト自体は Worker まで届いています。ところが当時は `/api/contact` の完全一致で API 判定していたため、スラッシュ付きは API 扱いにならず、`ASSETS` に投げ返されて「該当ファイルなし → 404 ページ」になっていました。  
 対処は、入り口のコードのとおり末尾スラッシュを削ってから比較するだけです。
 
@@ -253,7 +253,7 @@ Workers はデプロイのたびに「バージョン」を作ります。バー
 
 - 部品は Cloudflare Workers + Turnstile + Resend の3つ。個人サイトの規模なら無料枠に収まりそうです
 - `/api/contact` だけ Worker で処理し、残りは静的配信のまま
-- ボット対策・連投制限・入力の無害化は、それぞれ数行〜数十行で入る
+- ボット対策・連投制限・HTML インジェクション対策は、それぞれ数行〜数十行で入る
 - ハマりどころは「鍵を設定したら再デプロイ」と「末尾スラッシュの流れ先」
 
 コード全体は[このサイトのリポジトリ](https://github.com/kazuya-tanimoto/byte-lark.com)で公開しています（`worker/` と `src/components/ContactForm.tsx`）。  

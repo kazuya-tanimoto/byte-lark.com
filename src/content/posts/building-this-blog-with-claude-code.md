@@ -1,5 +1,5 @@
 ---
-title: "AIに開発を任せるなら、仕組みがいる"
+title: "AIに開発を任せるなら、仕組みが要る"
 description: "数年かけても完成しなかった個人サイトを、Claude Code で約6週間で作り直した記録。AI に任せきりにせず品質を保つための仕組み——タスクを小さく刻む、設計メモと進捗管理、完了前の確認ゲート——を実体験ベースで書きます。"
 category: tech
 tags: ["claude code", "astro", "cloudflare workers", "ai駆動開発", "個人開発"]
