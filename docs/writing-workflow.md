@@ -75,6 +75,14 @@ Claude が以下を行う:
 - 公開後、その記事の文体特徴を `docs/writing-style/profile.md` に追記（任意）
 - 蓄積が進むと、次回以降のドラフト精度が向上する
 
+## 画像・添付ファイルの置き場所
+
+- 画像を使う記事はフォルダ形式にする: `src/content/posts/<slug>/index.md` + 画像を同じフォルダに同居（loader は `**/*.{md,mdx}` なのでフォルダ化しても収集される。URL は frontmatter の `slug` で決まるため変わらない）
+- 本文からは相対パスで参照する（`![説明](./figure.png)`）。Astro のビルド時最適化（圧縮・ハッシュ名・width/height 自動付与）が効く。`public/` 置きは最適化が効かないため記事画像には使わない
+- アイキャッチは frontmatter の `cover: ./cover.png`。ブログ一覧カード・記事ページ冒頭・og:image（1200×630 に自動変換）の 3 か所に自動反映される。元画像は縦横比 40:21（1200×630 以上）で作る
+- AI 生成イラストを使う場合は、確定パレット「春空」（docs/design-direction.md §2）とブランドトーン（ヒバリ意匠）に寄せ、記事間で作風を揃える
+- PDF など画像以外の添付は最適化対象外のため `public/files/<slug>/` に置き、絶対パスでリンクする（`[資料](/files/<slug>/xxx.pdf)`）
+
 ## 記事テンプレート
 
 `docs/templates/post-template.md` を参照。
