@@ -9,7 +9,7 @@ Status: NotStarted
 - 長く続けた個人事業を 2026 年に法人化（合同会社バイトラーク設立）した経緯・手続き・気づきを、エンジニア視点のリアルな体験として読める
 
 ## なんのために
-- PHASE1B-007 で確定した初期記事セット 6 本の看板 life 記事（L1）。About「byte-lark について」の事業文脈を物語として補強し、人柄と独立の歩みを伝える
+- PHASE1B-007 で確定した初期記事セットの看板 life 記事（L1）。初期セットは site-plan v3.11 Decision #29 で 3 本（T1 / T2 / L1）に縮小され、本記事は公開前に揃える唯一の life 記事。About「byte-lark について」の事業文脈を物語として補強し、人柄と独立の歩みを伝える
 - 関連: src/pages/about.astro（byte-lark について）/ Phase 1b / PHASE1B-007
 
 ## 受け入れ条件

@@ -1,4 +1,4 @@
-# PBI フォーマット規約 (v3.5)
+# PBI フォーマット規約 (v3.6)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
@@ -165,9 +165,12 @@ Claude Code 向けの実装ヒント。任意セクション。
 
 ```
 NotStarted ──(着手時)──> InProgress ──(全 受け入れ条件 check)──> Done
+     └──(スコープ変更で取り下げ)──> Dropped
 ```
 
 逆遷移（Done → InProgress 等）は原則しない。やり直しが必要なら新規 PBI を起票。
+
+**Dropped（取り下げ、v3.6 新設）**：スコープ変更で不要になった NotStarted の PBI に使う。適用条件：site-plan の Decision Log に取り下げ理由が記録されていること。PBI ファイルの Status 行に `Dropped` と Decision 番号を書き、INDEX.md も同期する。ファイルは削除しない（経緯の記録として残す）。InProgress / Done からの取り下げは不可（InProgress は中断手順 §5.4、Done のやり直しは新規起票）。
 
 ### 5.2 同期ルール
 
@@ -418,3 +421,4 @@ git push -u origin fix/<short-name>
 | 2026-07-12 | v3.3 | §9 に先行トラック例外を追加（site-plan v3.10 Decision #28 連動）：Decision Log で明示された先行トラック PBI（現行：Phase 1c 記事非依存デザイン項目 PHASE1C-001〜007）は前 Phase Gate 通過前でも起票・着手可。仕上げトラック + Gate は従来どおり前 Phase Gate 後に起票し、Gate の申し送りを反映する |
 | 2026-08-01 | v3.4 | §4.6 にルール 8（Gate PBI の申し送り棚卸し）を追加：Gate の受け入れ条件に「全実装ログの申し送りを項目単位で列挙し、PBI 化 / 持ち越し / 破棄のいずれかに判定」を必須化。前 Gate からの持ち越し項目も再判定対象。従来の「全ログを読む」だけでは項目単位の判定が強制されず黙って落ちる余地があり、Phase 非所属の項目（例：ダークモード実表示検証）に行き場がなかった穴を塞ぐ。PHASE1B-014 の受け入れ条件にも同項目を追記 |
 | 2026-08-02 | v3.5 | §9 に並行運用ルールを追加：記事 PBI と開発系 PBI は別名 clone の別作業ツリーなら並行可（従来の「セッション単位で切替」を置き換え）。1 ツリー 1 セッションを必須化（2026-08-01 に同一ツリー 2 セッションで INDEX.md が古い内容で黙って上書きされる実害が発生）。遵守事項：同一 PBI を 2 セッションで触らない / INDEX は pull→即コミット / push 競合は §10.7。§10.7 冒頭にも別 clone 前提を明記。CLAUDE.md の切替記述も連動更新 |
+| 2026-08-02 | v3.6 | §5.1 に Dropped（取り下げ）状態を新設：スコープ変更で不要になった NotStarted の PBI に適用。Decision Log の記録を必須とし、ファイルは削除せず INDEX と同期。初出の適用は初期記事セット縮小（site-plan v3.11 Decision #29）による PHASE1B-010 / 011 / 013 |

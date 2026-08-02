@@ -22,10 +22,13 @@ byte-lark.com ブログの「これから書く記事ネタ」のストック。
 
 ## バックログ一覧
 
-初期記事セット 6 本（PHASE1B-008〜013）を除いた、公開後に順次消化するネタ。出典: PHASE1B-007 ネタ出し（2026-06-28、運営者 + Claude）。
+初期記事セット 3 本（PHASE1B-008 / 009 / 012。site-plan v3.11 Decision #29 で 6 本から縮小）を除いた、公開後に順次消化するネタ。出典: PHASE1B-007 ネタ出し（2026-06-28、運営者 + Claude）。
 
 | ネタ | 暫定カテゴリ | メモ |
 |---|---|---|
+| T3 25年 PHP/Java 畑のエンジニアが TypeScript/React に移ってみて | tech | 旧 PHASE1B-010（Decision #29 で Dropped）。レガシーとモダン両方を知る視点の橋渡し記事 |
+| T5 参画案件で Claude Code / Claude Design を使い PO 業務を回す | tech | 旧 PHASE1B-011（Decision #29 で Dropped)。T1 と差別化し実案件・PO 業務軸で書く |
+| L2+L3 合う仕事・合わない仕事をストレングスファインダーで言語化する | life | 旧 PHASE1B-013（Decision #29 で Dropped）。L2 と L3 の統合ネタ |
 | T4 個人開発で AI に PBI/INDEX/Status を運用させる体制論 | tech | T1（サイト構築総括）と一部重複。実務軸の T5 と差別化し「個人開発の回し方」に絞る |
 | T6 Claude 新機能レビュー連載 | tech | 新機能が出る度に使った感想・解説を掲載。cron で情報収集を半自動化（R-01 月次 routine の発展形。運営者発案） |
 | T7 開発デスク環境（キーボード / モニター 等） | life（技術的に掘るなら tech） | ガジェットは原則 life。生産性・環境設計として技術的に書くなら tech に上げる |

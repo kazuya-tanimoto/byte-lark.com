@@ -1,6 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.10)
+# byte-lark.com サイト構築計画書 (v3.11)
 
-最終更新: 2026-07-12
+最終更新: 2026-08-02
+
+> v3.10 → v3.11 主な変更：**初期記事セットの縮小（6 本 → 3 本、公開優先）**。公開前に揃える記事を T1 サイト構築総括（PHASE1B-008、公開済み）+ T2 自前フォーム実装（PHASE1B-009）+ L1 法人化（PHASE1B-012）の 3 本に縮小し、残り 3 本（T3 レガシー移行 / T5 PO 業務 / L2+L3 ストレングス）は `docs/article-backlog.md` に移して公開後に月次 routine（R-01）で消化する。Decision #29 追加、§7 ロードマップ 1b 行・PHASE1B-014（Gate 完了条件）・INDEX.md・article-backlog.md・CLAUDE.md 連動。PHASE1B-010 / 011 / 013 は取り下げ（Dropped、README v3.6 で状態を新設）。
 
 > v3.9 → v3.10 主な変更：**Phase 1c 先行トラックの導入（1b 記事執筆との並行許可）**。1c（デザインブラッシュアップ）を二段構えに分割：**先行トラック**（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）は 1b Gate 通過前でも起票・着手可、**仕上げトラック**（B-3 CSS サイズ / 全記事での最終再検証 / 1c Gate）は従来どおり 1b Gate 通過後に起票。Decision #28 追加、§7 ロードマップ 1c 行・「PBI の起票タイミング」節を連動更新。README §9 例外（v3.3）/ INDEX.md / CLAUDE.md / draft-phase1c-design-polish.md / PHASE1B-014 も連動。先行トラック PBI（PHASE1C-001〜007）を同日起票。
 
@@ -391,7 +393,7 @@ Astro の標準機能で完全対応：
 | **1a** | サイト構成・各ページの機能実装。冒頭タスク：CI 整備 / 仮 HEX 確定 / コードハイライト選定 / 画像最適化方針確定。続いて全ページ実装 + Markdown ブログ + RSS / sitemap / OGP / JSON-LD / プライバシーポリシー / E2E | 全ページ動作、SSG ビルド成功、Lighthouse 全 90+、Core Web Vitals 目標達成、Playwright E2E グリーン | 5-7 日 |
 | **Gate 1a→1b** | Retrospective Gate（同上） | Gate PBI 完了 | 0.25 日 |
 | **1b 起票** | 別セッションで Phase 1b PBI 起票（`docs/pbi/draft-phase1b-content-launch-prep.md` を正式化） | INDEX.md 追加・レビュー完了 | 0.25-0.5 日 |
-| **1b** | コンテンツ整備：Skills / Career を現行実データに更新 + 代表案件追記（運営者インプット）、About / Privacy 文面の事実確認・承認、サンプル記事の処置、Contact フォーム化（FR-29）、記事ネタ出し → 初期記事セット実装（1 記事 1 PBI、本数はネタ出し PBI で確定） | 全ページの文面・データが運営者承認済み、初期記事セットがリポジトリ上で公開状態、フォーム E2E グリーン | 3-5 日 + 記事執筆 |
+| **1b** | コンテンツ整備：Skills / Career を現行実データに更新 + 代表案件追記（運営者インプット）、About / Privacy 文面の事実確認・承認、サンプル記事の処置、Contact フォーム化（FR-29）、記事ネタ出し → 初期記事セット実装（1 記事 1 PBI、本数はネタ出し PBI で確定 → v3.11 で 3 本に縮小、Decision #29） | 全ページの文面・データが運営者承認済み、初期記事セット 3 本がリポジトリ上で公開状態、フォーム E2E グリーン | 3-5 日 + 記事執筆 |
 | **1c** | デザインブラッシュアップ：ClaudeDesign で草案 → カラー / タイポ / ロゴ確定（**ロゴ反復上限 5 ラウンド**） → 実装反映。**1b の実コンテンツで検証**（旧 1b）。**二段構え（Decision #28）**：先行トラック（記事非依存、PHASE1C-001〜007）は 1b 記事執筆と並行可、仕上げトラック（B-3 / 全記事最終再検証 / 1c Gate）は 1b Gate 後に起票 | デザイン確定 + ロゴ刷新 + 視覚的一貫性 + 仮 HEX → 確定 HEX 置換 | 4-6 日 |
 | **1d** | 公開：再 QA（E2E / Lighthouse）→ NS 移管（Xserver → CF、MX / SPF 引き継ぎ設計込み）→ main マージ → Workers カスタムドメイン接続 → www 旧 Netlify サイト畳み → Web Analytics 有効化 → Search Console 登録 + sitemap 送信（`docs/pbi/draft-phase1d-domain-launch.md` を正式化） | `https://byte-lark.com` で全ページ表示 + メール送受信継続 + Analytics データ取得 | 1-2 日 + DNS 伝播 |
 | **1e** | カテゴリ別一覧追加（記事数到達時のみ）。PBI は到達時点で起票（旧 1c） | `/blog/tech`, `/blog/life` 公開、Lighthouse 維持 | 0.5 日 |
@@ -454,6 +456,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 | 26 | **Contact は自前フォームに置換**（Worker `/api/contact` + Cloudflare Turnstile + Resend、送信元は `send.byte-lark.com` サブドメイン認証、API キーは Workers secret、mailto 廃止）（FR-29） | アドレス平文公開は収集ボットに拾われ、CF のメール難読化は Workers 配信に不適用（公式 docs 明記）/ メーラー未設定環境では mailto が無反応で商談機会を取りこぼす / Turnstile・Resend とも無料枠で月数十件は余裕 / CSRF はセッション認証なしのため主論点でなく、対策の本命は Turnstile サーバー側検証 + レートリミット | mailto 維持 → スパム露出 + UX 劣化 / Google Form → 法人サイトの体裁劣化・Google 依存 / SES → サンドボックス解除等の手間が小規模用途に見合わない |
 | 27 | **E2E は CI（GitHub Actions）で検証**：`yarn test:e2e` は Bash サンドボックスで Chromium が起動できない（macOS Seatbelt が Mach port 登録を拒否、FATAL）。CI（`.github/workflows/ui-tests.yml`）を Playwright 公式コンテナ `mcr.microsoft.com/playwright:v<ver>-noble` 化し push で自動実行、Claude は `scripts/ci-status.sh`（無認証 REST API、public repo）で合否確認。スクショ確認は MCP Playwright で実施 | 旧 `--with-deps` は noble runner の apt で 60 分ハング→timeout でテスト未実行だった / 運営者手動実行は自走を妨げる / gh CLI は sandbox 内で TLS・keychain により不可、curl は可 | 運営者ターミナル手動実行（旧 PBI 019 前提）→ 毎回手作業で自走せず / sandbox で直接実行 → Chromium 起動不可 |
 | 28 | **Phase 1c 先行トラックの 1b 並行**（v3.10）：1c を「先行トラック（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）」と「仕上げトラック（B-3 CSS サイズ / 全記事最終再検証 / 1c Gate）」に二分し、先行トラックは 1b Gate 通過前に起票・着手可とする。運用はセッション単位の切替（push 競合は README §10.7） | 1b 残タスク（記事 PBI 008〜013）は運営者リライト・ヒアリング律速で待ち時間が発生する / Decision #25「実コンテンツで検証」の前提は、全ページ実データ承認済み（PHASE1B-001〜005）+ 実記事 1 本（008 ドラフト）で実質充足 / ロゴは反復上限 5 ラウンドでリードタイム最長、早期着手が R-06（1c 長期化）の緩和になる / Gate の学び反映（README §9）は仕上げトラック起票に残る | 厳格順守（1b 完了まで 1c 禁止）→ 運営者律速の待ち時間に開発が止まる / 1c 全量起票 → 1b Gate 申し送りの反映機会が消え、記事依存 PBI が長期 InProgress 化 |
+| 29 | **初期記事セットの縮小（6 本 → 3 本、公開優先）**（v3.11）：公開前に揃える記事を T1 サイト構築総括（008、公開済み）+ T2 自前フォーム実装（009）+ L1 法人化（012）の 3 本とし、T3 / T5 / L2+L3 は `article-backlog.md` へ移管して公開後に R-01 月次 routine で消化する。PHASE1B-010 / 011 / 013 は Dropped（README v3.6 で新設した取り下げ状態） | 記事執筆は運営者リライト律速で、6 本待つと公開が数週間単位で遅れる（Decision #28 と同じ構図）/ 公開を早めるほど検索エンジンのインデックス開始が早まり、Lighthouse の Performance / SEO 計測（本番ドメインでのみ確定可）にも早く到達する / 初期 6 本は SEO 的な閾値ではなくネタ出し時の区切りで、1e カテゴリ一覧の条件（10 本）にも 6 本では届かない / life を 1 本（L1 法人化）含めることで屋号サイトとして人となりを見せ、About の補強にもなる | 6 本維持 → 公開が記事執筆律速で遅延 / tech 3 本（T1+T2+T3）→ life 空のまま公開で人となりが見えない / 2 本公開 → ブログ一覧がさらに薄く、life も空になるため見送り |
 
 ## 9. リスク / 留意事項
 
@@ -526,7 +529,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 
 ## 12. 次アクション
 
-1. 本計画書 v3.10 のレビュー・確定（別セッション）
+1. 本計画書 v3.11 のレビュー・確定（別セッション）
 2. Phase 0 PBI 10 件のレビュー（別セッション、`docs/pbi/INDEX.md` 経由）
 3. Phase 0 実装着手：feat/phase-0 ブランチで Vite 削除 + Astro 初期化（別セッション、複数セッションに分かれる可能性あり）
 4. Phase 0 完了 → Retrospective Gate (PHASE0-010) 通過
@@ -621,3 +624,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | 2026-07-13 | デザイン方向性確定（PHASE1C-001 完了の事実反映、クラリフィケーション、v 番号据え置き）。運営者が草案 3 案（快晴 / 春空 / 野の羽色、モックは docs/design-drafts/phase1c-001/）から**案2「春空」を選定**（修正指示なし）。確定記録を docs/design-direction.md に新設（パレット HEX/oklch + AA 検証値 / タイポ方向性 / トーン・署名要素 / 002〜005 への引き継ぎ）。§6.5.2 に確定候補値の所在を追記、§6.5.3 見出し書体を Zen Kaku Gothic New に更新 |
 | 2026-08-01 | ロゴ反復上限の延長（Decision #15 更新、v 番号据え置き）。PHASE1C-004 で 5 ラウンド消化（1 ボツ + 2〜5 差し戻し）後も未確定。運営者判断で上限を延長し、ラウンド 6 以降は「鳥 = 旧案1（尾を短縮 + 残像ストローク）、円と数字の滝 = 旧案2」の合意構成を画像生成 AI（Gemini）の編集ベースで作成するルートに切替。経緯詳細は PBI 実装ログ |
 | 2026-07-31 | タイポグラフィ確定（PHASE1C-003、§6.5.3 を確定値に差し替え、v 番号据え置き）。見出し書体 Zen Kaku Gothic New（500 / 700）を導入し、欧文専用の Geist は廃止して本文を Noto Sans JP 一本に。サイズ / 行間を `--text-*` トークン化（本文 16px / 行間 1.95、見出し 42 / 32 / 24 / 17 / 14px）、ウェイトは 500・700 の 2 段。和文は palt +`text-wrap: balance` + `word-break: auto-phrase`、コード内の和文コメントは Noto Sans JP に固定。読み込みは見出し swap / 本文 optional（初回訪問でブランド書体が出ることと CLS 抑制の両立。実測は PBI 実装ログ）。docs/design-direction.md §3 に確定結果を追記 |
+| 2026-08-02 | v3.11：**初期記事セット縮小（6 本 → 3 本、公開優先）**。公開前は T1（008 公開済み）+ T2（009）+ L1 法人化（012）の 3 本、T3 / T5 / L2+L3 は article-backlog.md へ移管し公開後に R-01 routine で消化。Decision #29 追加、§7 1b 行・§12 の自己参照更新。PHASE1B-010 / 011 / 013 を Dropped 化（README v3.6 で状態新設）、PHASE1B-014 完了条件・INDEX.md・CLAUDE.md 連動 |

@@ -1,6 +1,6 @@
 # 訪問者は「25年 PHP/Java 畑のエンジニアが TypeScript/React に移ってみて」（tech）を読める
 
-Status: NotStarted
+Status: Dropped (2026-08-02、site-plan Decision #29 初期記事セット縮小 6→3 本。ネタ T3 は article-backlog.md へ移管、公開後に R-01 routine で消化)
 
 ## 誰が
 - 訪問者

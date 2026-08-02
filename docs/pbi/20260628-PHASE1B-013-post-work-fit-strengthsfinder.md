@@ -1,6 +1,6 @@
 # 訪問者は「合う仕事・合わない仕事をストレングスファインダーで言語化する」（life）を読める
 
-Status: NotStarted
+Status: Dropped (2026-08-02、site-plan Decision #29 初期記事セット縮小 6→3 本。ネタ L2+L3 は article-backlog.md へ移管、公開後に R-01 routine で消化)
 
 ## 誰が
 - 訪問者

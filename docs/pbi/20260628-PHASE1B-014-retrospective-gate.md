@@ -6,7 +6,7 @@ Status: NotStarted
 - 運営者 + Claude
 
 ## 何をできる
-- Phase 1b の全 PBI（001〜013、015。016 は Phase 非依存の環境整備のため対象外）が Done になったことを確認できる
+- Phase 1b の全 PBI（001〜009、012、015。010 / 011 / 013 は Decision #29 で Dropped、016 は Phase 非依存の環境整備のため対象外）が Done になったことを確認できる
 - Phase 1b で得た知見・想定外・つまずきを集約し、Phase 1c（デザインブラッシュアップ）PBI 起票時の参考資料として明文化できる
 
 ## なんのために
@@ -16,7 +16,8 @@ Status: NotStarted
 ## 受け入れ条件
 
 ### Phase 1b 完了確認
-- [ ] PHASE1B-001 〜 PHASE1B-013 および PHASE1B-015（CodeQL 二重構成解消、2026-07-13 追加起票）のすべてが Status: Done
+- [ ] PHASE1B-001 〜 PHASE1B-009、PHASE1B-012 および PHASE1B-015（CodeQL 二重構成解消、2026-07-13 追加起票）のすべてが Status: Done
+  - PHASE1B-010 / 011 / 013 は Dropped（site-plan v3.11 Decision #29 初期記事セット縮小 6→3 本、2026-08-02。ネタは article-backlog.md へ移管）のため完了確認対象外
   - PHASE1B-016（Claude Code devcontainer 環境整備、2026-07-17 起票）は Phase 非依存の開発環境整備のため**本 Gate の完了確認対象外**（未完でも Gate 通過可。docs/devcontainer-plan.md 参照）
 - [ ] `docs/pbi/INDEX.md` の Phase 1b セクションがすべて `[Done]` 表示
 - [ ] feat/phase-1 ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がすべて成功
@@ -25,7 +26,7 @@ Status: NotStarted
 - [ ] 本 PBI の `## Phase 1c への申し送り` セクションに記入: 確定した技術前提（実際に動いた構成）/ 発生した想定外と回避策 / 計画書と実態の差分 / Phase 1c 仕上げトラック起票時の注意 / Phase 1c で先に決めるべき事項
 - [ ] 申し送り棚卸し（README §4.6 ルール 8）：Phase 1b 全 PBI の実装ログにある申し送り・積み残しを項目単位で列挙し、各項目を **PBI 化（起票先を明記）/ 持ち越し（`## Phase 1c への申し送り` に記載）/ 破棄（理由を明記）** のいずれかに判定して表にする。前 Gate（PHASE1A-022）の申し送りで未消化の項目も同じ表で再判定する
 - [ ] `draft-phase1c-design-polish.md` の**仕上げトラック**（B-3 CSS サイズ / 全記事最終再検証 / 1c Gate）を Phase 1c PBI として正式化する指示を明記（先行トラック＝確定 HEX + color-contrast 再有効化、タイポ確定、ロゴ刷新、favicon、B-1 見出しレベル、B-2 フォント CLS は site-plan v3.10 Decision #28 により PHASE1C-001〜007 として 2026-07-12 起票済み）
-- [ ] 初期記事セット（PHASE1B-008〜013）の実装で判明したタイポ / カード設計 / 見出しレベルの課題を Phase 1c へ申し送り（該当する先行トラック PBI が未 Done なら受け入れ条件・技術メモに追記、Done 済みなら仕上げトラックの最終再検証 PBI に反映）
+- [ ] 初期記事セット（PHASE1B-008 / 009 / 012 の 3 本、Decision #29 で縮小）の実装で判明したタイポ / カード設計 / 見出しレベルの課題を Phase 1c へ申し送り（該当する先行トラック PBI が未 Done なら受け入れ条件・技術メモに追記、Done 済みなら仕上げトラックの最終再検証 PBI に反映）
 - [ ] R-01 月次ネタ出し routine（/schedule）を Phase 1d 公開後に点火する方針と、`docs/article-backlog.md`（記事ネタのストック）を起点にすることを申し送りに明記
 
 ### CLAUDE.md / site-plan.md の整合確認

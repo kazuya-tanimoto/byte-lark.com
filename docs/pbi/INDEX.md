@@ -23,7 +23,7 @@ PHASE0-005 完了後は `CLAUDE.md` の "How to start/end/draft" セクション
 - InProgress な PBI が存在すれば、その実装ログを読んで再開
 - なければ、現在 Phase の最初の NotStarted PBI を着手（推奨着手順序図に従う）
 - 前 Phase の Gate PBI が Done になっていない場合、次 Phase に進まない
-- **例外（先行トラック）**：site-plan §8 Decision #28 で定義された Phase 1c 先行トラック（PHASE1C-001〜007）は、Phase 1b Gate（PHASE1B-014）未通過でも着手可。記事 PBI（PHASE1B-008〜013）とはセッション単位で切り替えて進める（README §9 例外 / push 競合は §10.7）
+- **例外（先行トラック）**：site-plan §8 Decision #28 で定義された Phase 1c 先行トラック（PHASE1C-001〜007）は、Phase 1b Gate（PHASE1B-014）未通過でも着手可。記事 PBI とは並行可、ただし別名 clone の別作業ツリーに限る（1 ツリー 1 セッション。README §9 並行運用 / push 競合は §10.7）
 
 ### 着手後・中断時・完了時の手順
 [docs/pbi/README.md](README.md) §5 を参照（着手時の手順 §5.3、中断時の手順 §5.4、完了済み PBI の扱い §5.5、コミット規約 §6）。
@@ -188,10 +188,10 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 | PHASE1B-007 | [article-ideation-initial-set](20260615-PHASE1B-007-article-ideation-initial-set.md) | Done |
 | PHASE1B-008 | [post-building-blog-with-claude-code](20260628-PHASE1B-008-post-building-blog-with-claude-code.md) | Done |
 | PHASE1B-009 | [post-contact-form-on-workers](20260628-PHASE1B-009-post-contact-form-on-workers.md) | InProgress |
-| PHASE1B-010 | [post-legacy-to-modern](20260628-PHASE1B-010-post-legacy-to-modern.md) | NotStarted |
-| PHASE1B-011 | [post-claude-code-for-po-work](20260628-PHASE1B-011-post-claude-code-for-po-work.md) | NotStarted |
+| PHASE1B-010 | [post-legacy-to-modern](20260628-PHASE1B-010-post-legacy-to-modern.md) | Dropped（Decision #29） |
+| PHASE1B-011 | [post-claude-code-for-po-work](20260628-PHASE1B-011-post-claude-code-for-po-work.md) | Dropped（Decision #29） |
 | PHASE1B-012 | [post-incorporating-bytelark](20260628-PHASE1B-012-post-incorporating-bytelark.md) | NotStarted |
-| PHASE1B-013 | [post-work-fit-strengthsfinder](20260628-PHASE1B-013-post-work-fit-strengthsfinder.md) | NotStarted |
+| PHASE1B-013 | [post-work-fit-strengthsfinder](20260628-PHASE1B-013-post-work-fit-strengthsfinder.md) | Dropped（Decision #29） |
 | PHASE1B-015 | [codeql-dual-setup-fix](20260713-PHASE1B-015-codeql-dual-setup-fix.md) | Done |
 | PHASE1B-016 | [claude-devcontainer-setup](20260717-PHASE1B-016-claude-devcontainer-setup.md) | Done |
 | **PHASE1B-014** | [**retrospective-gate**](20260628-PHASE1B-014-retrospective-gate.md) **(Gate)** | **NotStarted** |
@@ -214,17 +214,15 @@ PHASE1B-006 (サンプル記事処置)  ← Done（2026-06-28。両サンプル 
 PHASE1B-007 (記事ネタ出し・初期記事セット確定)  ← Done（2026-06-28。初期セット 6 本確定 / 記事 PBI 008〜013 + Gate 014 起票 / バックログを docs/article-backlog.md に集約）
   ↓
 ┌─ PHASE1B-008 (T1 サイト構築総括・tech)
-├─ PHASE1B-009 (T2 自前フォーム実装・tech)
-├─ PHASE1B-010 (T3 レガシー→モダン移行・tech)        ← 記事実装グループ（1 記事 1 PBI、並列可）
-├─ PHASE1B-011 (T5 実案件で Claude 活用 PO 業務・tech)
-├─ PHASE1B-012 (L1 法人化・life)
-└─ PHASE1B-013 (L2+L3 合う仕事×ストレングス・life)
+├─ PHASE1B-009 (T2 自前フォーム実装・tech)            ← 記事実装グループ（1 記事 1 PBI、並列可）
+└─ PHASE1B-012 (L1 法人化・life)
+（010 T3 / 011 T5 / 013 L2+L3 は Decision #29 で Dropped、ネタは article-backlog.md へ移管）
 
 PHASE1B-015 (CodeQL 二重構成解消・CI 保守) ← Done（2026-07-15。案B: default setup 一本化、失敗 check-run 消滅。main 週次 cron の無効化のみ運営者作業として申し送り）
 
 PHASE1B-016 (Claude Code devcontainer 環境整備) ← Phase 非依存の横断タスク、依存なし・任意タイミング。**Gate 014 の対象外**（docs/devcontainer-plan.md が実施手順書）
   ↓
-PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008〜013 + 015 全 Done 後、1c 移行前の必須ゲート（016 は対象外）
+PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008 / 009 / 012 + 015 全 Done 後、1c 移行前の必須ゲート（016 は対象外、010 / 011 / 013 は Dropped）
 ```
 
 ---
@@ -322,3 +320,4 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 | 2026-07-28 | **PHASE1C-006 完了（Done）**：BlogCard に `headingLevel` prop を追加し `/blog/` のカードタイトルを h2 化（Home は既定 h3 のまま）。最後まで残っていた Lighthouse `heading-order` 実測は、記事公開を待たず「コミットしない一時記事 + ローカル preview」方式でコンテナ内 Lighthouse 12.8.2 を実行して充足（`/blog/` `/` とも heading-order pass / Accessibility 100 / 失格 audit なし）。副産物として **コンテナ内で Lighthouse が回る**ことを確認（Playwright の chromium 実体を `CHROME_PATH` 指定、母艦の Chrome 起動不可制約は非適用）→ PHASE1C-007 の CLS 計測で流用可。記事公開後に branch alias で 1 回裏取りする申し送りを PBI に記載 |
 | 2026-08-01 | **PHASE1C-008 完了（Done）**：design-direction §5 の署名要素（影カード・角丸 14px・チップ/ボタンのピル・朝日マーカー・Hero の `wash → bg` 縦グラデ・揚雲雀の軌跡）を全ページに適用。CF preview 検証の過程で、**Cloudflare が push を 1 回取りこぼしていた**ことが判明——b9c83b0 は GitHub Actions は走ったのに CF 側に build 行が無く、branch alias が ed39801 のビルドを配信し続けていた（CF 設定は正常、それ以前は毎 push ビルド済み）。新しいコミット（b2edc1c）の push で再点火し反映を確認。以後は check-runs の `Workers Builds: byte-lark` の有無でビルド実行を機械的に判別できる。予防策として CF の Deploy Hooks 未設定を申し送り。Skills アイコンの実表示は、コンテナから jsdelivr へ到達できずスクショでは壊れて写るため運営者が母艦のブラウザで確認（全て表示）——**外部 CDN 由来の画像はコンテナのスクショでは検証できない**という学び。申し送り：記事ページの裏取り（公開記事 0 件、PHASE1C-006 と同じ） |
 | 2026-07-25 | **PHASE1C-008 起票（署名要素の見た目適用）**：design-direction §5 のトーン・形・署名要素（影カード・角丸 14px・チップ/ボタンのピル・朝日マーカー・Hero の wash→bg 縦グラデ・揚雲雀の軌跡）を実装する PBI を NotStarted で起票（PHASE1C-002 実装ログ 2026-07-17 運営者判断＝002 から分離の受け皿）。h2 朝日ドットマーカーが design-direction §3（003 タイポ）と §5（008）で重複していた件を **008 が朝日マーカー全般（h2 ドット + リストマーカー）を持つ**と確定し、003・008 両 PBI 本文と design-direction §3/§6 に境界を明記。着手順序図・Phase 1c 表を同期 |
+| 2026-08-02 | **初期記事セット縮小（site-plan v3.11 Decision #29）**：公開前は T1（008 公開済み）+ T2（009）+ L1 法人化（012）の 3 本に縮小し、PHASE1B-010 / 011 / 013 を Dropped（README v3.6 新設状態）。ネタ T3 / T5 / L2+L3 は article-backlog.md へ移管し公開後に R-01 routine で消化。Phase 1b 表・着手順序図・Gate 前提を同期、先行トラック例外注記を並行運用（README v3.5）に更新 |
