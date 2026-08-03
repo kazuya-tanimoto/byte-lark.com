@@ -4,7 +4,7 @@ description: "静的サイトのまま、問い合わせフォームを自前実
 category: tech
 tags: ["cloudflare workers", "turnstile", "resend", "astro", "個人開発"]
 publishedAt: 2026-08-01
-draft: true
+draft: false
 cover: ./cover.png
 slug: contact-form-on-cloudflare-workers
 ---
