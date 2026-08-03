@@ -5,6 +5,7 @@ category: tech
 tags: ["claude code", "astro", "cloudflare workers", "ai駆動開発", "個人開発"]
 publishedAt: 2026-06-28
 draft: false
+cover: ./cover.png
 slug: building-this-blog-with-claude-code
 ---
 
