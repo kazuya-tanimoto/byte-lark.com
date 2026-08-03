@@ -5,6 +5,7 @@ category: tech
 tags: ["cloudflare workers", "turnstile", "resend", "astro", "個人開発"]
 publishedAt: 2026-08-01
 draft: true
+cover: ./cover.png
 slug: contact-form-on-cloudflare-workers
 ---
 
