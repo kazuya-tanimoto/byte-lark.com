@@ -69,3 +69,6 @@ docs/article-interviews/
 
 # herdr へ状態を渡すための受け渡しファイル（コンテナ内 Claude Code → 母艦の見張り）
 .herdr-state/
+.venv/
+tools/imagegen/out_*.png
+tools/imagegen/out/
