@@ -243,7 +243,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008 / 009 / 012 + 015 全 Done �
 | PHASE1C-006 | [blogcard-heading-level](20260712-PHASE1C-006-blogcard-heading-level.md) | Done |
 | PHASE1C-007 | [font-loading-cls](20260712-PHASE1C-007-font-loading-cls.md) | Done |
 | PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | Done |
-| PHASE1C-009 | [toc-sidebar-smooth-scroll](20260805-PHASE1C-009-toc-sidebar-smooth-scroll.md) | InProgress |
+| PHASE1C-009 | [toc-sidebar-smooth-scroll](20260805-PHASE1C-009-toc-sidebar-smooth-scroll.md) | Done |
 
 ### Phase 1c 先行トラック 推奨着手順序
 
@@ -287,6 +287,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-05 | **PHASE1C-009 完了（Done）**：記事目次を xl 以上で右カラム sticky 化（現在地ハイライト・末尾は最後の節を点灯）＋サイト全体に `scroll-behavior: smooth`（reduced-motion ガード付き）。d09d1f3 / ce15d72、CI・CF preview とも green。学び：IO だけの現在地判定は末尾の節が点灯しない edge case → rAF passive scroll 化、tools/imagegen 起点 sandbox はポート bind 不可で build/dev 不可（build は運営者スクリプト冒頭で実施） |
 | 2026-08-05 | **PHASE1C-009 起票（追従目次＋スムーススクロール）**：記事目次が冒頭静的配置でスクロールすると使えなくなる問題（運営者指摘）への UI 改善 PBI。xl 以上で右カラム sticky 目次＋現在地ハイライト（IntersectionObserver）、`scroll-behavior: smooth`（reduced-motion ガード付き）。仕上げトラック起票を待たない単発追加（運営者指示）、InProgress で着手 |
 | 2026-05-01 | 初版作成、Phase 0 PBI 9 件を登録 |
 | 2026-05-02 | レビュー反映：PHASE0-010 (readme-stub-update) 追加、着手ルールを CLAUDE.md SoT に集約、PHASE0-006 を lefthook-workflows-setup にリネーム |
