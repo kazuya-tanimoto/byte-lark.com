@@ -192,6 +192,14 @@
     @apply font-sans;
   }
 
+  /* ページ内リンク（記事目次等）の移動を滑らかにする（PHASE1C-009）。
+     酔いやすい人の OS 設定（視差効果を減らす）では即時ジャンプのままにする */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   /* 見出しは書体を切り替える（PHASE1C-003）。サイズ・ウェイトは各所の utility で指定。
      palt は和文の字送りを字形に合わせて詰める指定で、見出しの間延びを抑える。
      折り返しは balance（行の長さを均す）と auto-phrase（文節で折る）の併用が最良と実測。

@@ -1,0 +1,42 @@
+# 読者は広い画面で追従目次から現在地を把握しながら記事を読み、目次リンクで滑らかに移動できる
+
+Status: InProgress
+Started: 2026-08-05
+
+## 誰が
+- ブログ記事の読者
+
+## 何をできる
+- 広い画面（xl 以上）では記事の右側に目次が表示され、スクロールしても画面内に追従する
+- 追従目次では、いま読んでいる節がハイライトされる（現在地表示）
+- 目次リンクをクリックすると、瞬間移動でなく滑らかにスクロールして該当節へ移動する
+- 狭い画面（スマホ等）では従来どおり記事冒頭に目次が表示される
+
+## なんのために
+- 現状の目次は記事冒頭に静的配置のため、読み進めるとスクロールで消え、リンクにしている意味が薄い（運営者指摘 2026-08-05）。Zenn 等と同様の追従目次＋現在地表示で、長い記事の回遊性を上げる
+- 関連: docs/design-direction.md（「春空」の見た目規律に従う）/ PHASE1A-007（PostLayout）/ PHASE1C-008（影カード様式）
+
+## 受け入れ条件
+- [ ] xl（1280px）以上：記事本文の右に目次列が表示され、`position: sticky` でスクロールに追従する。本文列の幅は現行（max-w-3xl）を維持する
+- [ ] xl 未満：従来どおり記事冒頭に目次を表示（右列は出さない）。冒頭目次は xl 以上では表示しない
+- [ ] 現在地ハイライト：スクロール位置に応じて、追従目次のいま読んでいる節のリンクが視覚的に区別される（IntersectionObserver。文字色は AA を満たすトークンを使う）
+- [ ] スムーススクロール：目次リンククリックで滑らかにスクロールする。`prefers-reduced-motion: reduce` 環境では従来どおり即時ジャンプ（アニメーションを強制しない）
+- [ ] 追従目次が長い場合も画面内でスクロールでき、ヘッダーと重ならない
+- [ ] 装飾・状態表示が支援技術のノイズにならない（現在地は `aria-current` で表現し、目次 nav の landmark 構造を壊さない）
+- [ ] `yarn build` / `yarn check` / `yarn check:ts` エラーなし
+- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
+- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+
+## 技術メモ
+- 想定セッション数: 1
+- 変更対象: `src/layouts/PostLayout.astro`（2 カラム化・追従目次・現在地スクリプト）/ `src/styles/global.css`（`scroll-behavior: smooth` を reduced-motion ガード付きで追加）
+- 幅設計: 本文 768px（max-w-3xl 維持）＋ gap 40px ＋ 目次列 240px ＝ 1048px。外枠は xl で 1080px（px-4 込み）。lg（1024px）では本文が窮屈になるため出さない
+- 現在地判定: 見出し（h2/h3）の上端が viewport 上から一定オフセット（`scroll-margin-top: 5rem` と整合させる）を過ぎた最後の見出しを現在地とする。IntersectionObserver を境界通過のトリガーに使い、scroll イベント常時監視はしない
+- 冒頭目次と追従目次は同一データ（`headings`）から二重に描画し、表示は Tailwind の `xl:hidden` / `hidden xl:block` で排他にする。両方 `aria-label="目次"` でも同時に可視になることがないため axe の landmark-unique には抵触しない
+- 触ってはいけない領域: 記事本文のタイポスケール（PHASE1C-003）/ OGP・JSON-LD（PHASE1A-007）
+
+## 備考
+- Phase 1c の追加 PBI（運営者指示 2026-08-05）。仕上げトラック起票（1b Gate 後）を待たず、単発の UI 改善として先行実施
+
+## 実装ログ
