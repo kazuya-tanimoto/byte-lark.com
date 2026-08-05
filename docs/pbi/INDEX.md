@@ -194,7 +194,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 | PHASE1B-013 | [post-work-fit-strengthsfinder](20260628-PHASE1B-013-post-work-fit-strengthsfinder.md) | Dropped（Decision #29） |
 | PHASE1B-015 | [codeql-dual-setup-fix](20260713-PHASE1B-015-codeql-dual-setup-fix.md) | Done |
 | PHASE1B-016 | [claude-devcontainer-setup](20260717-PHASE1B-016-claude-devcontainer-setup.md) | Done |
-| **PHASE1B-014** | [**retrospective-gate**](20260628-PHASE1B-014-retrospective-gate.md) **(Gate)** | **NotStarted** |
+| **PHASE1B-014** | [**retrospective-gate**](20260628-PHASE1B-014-retrospective-gate.md) **(Gate)** | **Done** |
 
 ### Phase 1b 推奨着手順序
 
@@ -213,16 +213,16 @@ PHASE1B-006 (サンプル記事処置)  ← Done（2026-06-28。両サンプル 
   ↓
 PHASE1B-007 (記事ネタ出し・初期記事セット確定)  ← Done（2026-06-28。初期セット 6 本確定 / 記事 PBI 008〜013 + Gate 014 起票 / バックログを docs/article-backlog.md に集約）
   ↓
-┌─ PHASE1B-008 (T1 サイト構築総括・tech)
-├─ PHASE1B-009 (T2 自前フォーム実装・tech)            ← 記事実装グループ（1 記事 1 PBI、並列可）
-└─ PHASE1B-012 (L1 法人化・life)
+┌─ PHASE1B-008 (T1 サイト構築総括・tech)  ← Done（2026-08-01 公開）
+├─ PHASE1B-009 (T2 自前フォーム実装・tech)            ← 記事実装グループ（1 記事 1 PBI、並列可）Done（2026-08-05。公開は 08-03）
+└─ PHASE1B-012 (L1 法人化・life)  ← Done（2026-08-05 公開）
 （010 T3 / 011 T5 / 013 L2+L3 は Decision #29 で Dropped、ネタは article-backlog.md へ移管）
 
 PHASE1B-015 (CodeQL 二重構成解消・CI 保守) ← Done（2026-07-15。案B: default setup 一本化、失敗 check-run 消滅。main 週次 cron の無効化のみ運営者作業として申し送り）
 
 PHASE1B-016 (Claude Code devcontainer 環境整備) ← Phase 非依存の横断タスク、依存なし・任意タイミング。**Gate 014 の対象外**（docs/devcontainer-plan.md が実施手順書）
   ↓
-PHASE1B-014 (Phase 1b Retrospective Gate)  ← 008 / 009 / 012 + 015 全 Done 後、1c 移行前の必須ゲート（016 は対象外、010 / 011 / 013 は Dropped）
+PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完了・申し送り棚卸し済み。次: 1c 仕上げトラック起票）
 ```
 
 ---
@@ -287,6 +287,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-05 | **PHASE1B-014 完了（Done）＝ Phase 1b Gate 通過**：対象 12 PBI 全 Done 確認 + yarn build/check/check:ts/test:run 全成功 + HEAD ad18b46 CI 全 success。Phase 1b 全実装ログ + PHASE1A-022 申し送り + draft-phase1c を全件棚卸しし「Phase 1c への申し送り」を Gate PBI に記入（前 Gate 申し送りは全件消化済み、未消化は Phase 1d 待ち 5 件と仕上げトラック待ち 4 件に整理）。site-plan との差分は §13.1 現在地注記の古さのみ（記録対応）。次セッションは Phase 1c 仕上げトラック起票（B-3 / 全 3 記事最終再検証 / 1c Gate）から |
 | 2026-08-05 | **PHASE1B-009 完了（Done）**：T2 フォーム記事の公開作業（2026-08-03 draft:false 化 494828d、2026-08-05 カバー v2 差し替え 9cbc4c5）が別セッションで完了していたが実装ログ・ステータス未更新だったのを引き取り、§7 検証（ローカル + CF preview の desktop/mobile スクショ、OGP/JSON-LD 実 HTML、CI green head bf835d8）を実施して Done 化。学び：公開 commit と PBI Done 化は同一セッションで完結させる |
 | 2026-08-05 | **PHASE1B-012 完了（Done）**：L1 法人化記事を `draft: false` で公開（feat/phase-1 preview）。カバーは life 記事の差別化方針で設計図調を離れ「書類＋ロゴのヒバリ入り社印」フラットレイ（Flash・差分指示方式で反復）。§7 検証全通過（14d1464 / 6a999f9、CI green・CF preview 確認・OGP/JSON-LD 実 HTML 確認）。publishedAt は暫定 2026-08-03、Phase 1d で見直し。副産物：tools/imagegen/out を記事 slug 別サブディレクトリに整理しスキルへ恒久反映 |
 | 2026-08-05 | **PHASE1C-009 完了（Done）**：記事目次を xl 以上で右カラム sticky 化（現在地ハイライト・末尾は最後の節を点灯）＋サイト全体に `scroll-behavior: smooth`（reduced-motion ガード付き）。d09d1f3 / ce15d72、CI・CF preview とも green。学び：IO だけの現在地判定は末尾の節が点灯しない edge case → rAF passive scroll 化、tools/imagegen 起点 sandbox はポート bind 不可で build/dev 不可（build は運営者スクリプト冒頭で実施） |
