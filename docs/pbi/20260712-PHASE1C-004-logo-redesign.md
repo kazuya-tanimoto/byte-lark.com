@@ -217,3 +217,14 @@ PHASE1C-008 で Hero に実装した署名要素（`src/components/Hero.astro`�
 - push → CF preview スクショ確認 → `scripts/ci-status.sh` で UI Tests / Quality Checks green 確認（§7）
 - 申し送り（別 PBI 相当）：Hero の装飾ヒバリ（PHASE1C-008 で入れた簡略シルエット）とロゴの鳥で描き方が違う。同一ページに 2 種類の鳥が並ぶので、装飾側をロゴの鳥に寄せるか検討
 - 申し送り：favicon は Phase 1a の暫定（青地に "b"、旧 sky `#38bdf8`）のまま。PHASE1C-005 で `logo-bird.svg` に差し替える
+
+#### 事後追記（2026-08-05、小サイズ鳥の虫化対策 + Hero 統一）
+
+- 運営者指摘：バッジの鳥（Gemini7）が 26px でまだ虫に見える。原因は下方向へ垂れる長い尾 + 並走する細ストローク（ラウンド 7 対策後も残っていた）
+- Gemini 編集ベースで尾だけ差し替えた 2 案を生成し採用（原本は本フォルダに保存）：
+  - `bird-badge-b2.png`（短尾 B-2）→ `logo-bird.svg` / `logo-badge.svg`。切れ込み入り一枚くさび尾で、実物のヒバリの尾（浅い notch）に近く、縮小で切れ込みが埋まり塊が残るため小サイズ最強
+  - `bird-hero-a1.png`（残像尾 A-1）→ Hero 装飾。フルマークと同じ「短い実尾 + 残像ストローク」語彙を維持
+- バッジ配置はシルエットの画素質量中心をリング中心に一致、scale 1.18（尾先とリングの間に隙間を確保）。ベクター化は marching squares + RDP + Catmull-Rom の自前トレース（scratchpad、成果物は SVG のみ）
+- 申し送り「Hero とロゴの鳥の描き分け統一」はこれで解消。`logo.svg`（フルマーク、Gemini5 鳥）は大サイズ専用のため据え置き
+- 教訓：Hero 差し替え時、入れ子 `<svg>` の height 未指定で鳥が縦中央へズレるバグを一度混入させた（縮小スクショの目視だけで OK 判定し見逃し）。位置検証は crop 拡大 + getBoundingClientRect 実測で行う
+- favicon 一式は logo-badge.svg 確定版から `node scripts/generate-icons.mjs` で要再生成（サンドボックス外）
