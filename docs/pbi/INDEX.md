@@ -244,7 +244,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 | PHASE1C-007 | [font-loading-cls](20260712-PHASE1C-007-font-loading-cls.md) | Done |
 | PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | Done |
 | PHASE1C-009 | [toc-sidebar-smooth-scroll](20260805-PHASE1C-009-toc-sidebar-smooth-scroll.md) | Done |
-| PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | NotStarted |
+| PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | InProgress |
 | PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | NotStarted |
 | **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
