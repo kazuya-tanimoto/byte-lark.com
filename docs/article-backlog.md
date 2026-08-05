@@ -38,6 +38,7 @@ byte-lark.com ブログの「これから書く記事ネタ」のストック。
 | T8 alacritty + tmux から ghostty + herdr へ乗り換えた | tech | 開発環境 3 連作の 1 本目。乗り換えの動機、herdr の spaces / agents で何が変わったか |
 | T9 devcontainer で Claude Code を自走させる環境を作った | tech | 3 連作の 2 本目。設計と手順は `docs/devcontainer-plan.md`、PBI は PHASE1B-016。T1（サイト構築総括）で軽く触れた話の本編 |
 | T10 コンテナの中で動くエージェントを herdr のサイドバーに出す | tech | 3 連作の 3 本目。取材メモ完備: `docs/article-interviews/20260731-herdr-devcontainer-agent-bridge.md`（gitignore 対象）。切り口案 9 本入り |
+| T11 Google 日本語入力から azooKey on macOS へ移行して 2 週間評価 | tech | ニューラル変換 Zenzai / ローカル LLM を技術的に掘るため tech（ガジェット原則 life の例外条件）。取材メモ完備: `docs/article-interviews/` の引き継ぎ資料 + 評価ログ（gitignore 対象）。時短を誇張せず「主効果はストレス削減」の誠実な留保を書く方針 |
 
 開発環境 3 連作（T8 → T9 → T10）は、環境を移す → 隔離する → 隔離したものを部分的に繋ぐ、という 1 本の流れ。T10 は前 2 本の前提の上に立つので、公開順は崩さない。
 
