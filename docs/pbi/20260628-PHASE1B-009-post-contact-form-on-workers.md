@@ -1,7 +1,8 @@
 # 訪問者は「バックエンドなしのサイトに問い合わせフォームを足す」（tech）を読める
 
-Status: InProgress
+Status: Done
 Started: 2026-08-01
+Completed: 2026-08-05
 
 ## 誰が
 - 訪問者
@@ -14,14 +15,14 @@ Started: 2026-08-01
 - 関連: site-plan.md FR-29 / Decision #26 / PHASE1B-004 / PHASE1B-005 / PHASE1B-007
 
 ## 受け入れ条件
-- [ ] 運営者 + Claude でヒアリング（writing-workflow §3）→ Claude が Markdown ドラフト生成（`yarn new-post --slug contact-form-on-cloudflare-workers --category tech`、`draft: true`）
-- [ ] frontmatter 完備：title（`| byte-lark.com` サフィックス無し）/ description（80-120字・OGP 兼用）/ category: tech / tags / publishedAt / slug。本文冒頭に `# タイトル` を重複させない（PostLayout が title を h1 出力）
-- [ ] 運営者がリライトし `draft: false` に変更（最終承認を実装ログに記録）
-- [ ] OGP / Article JSON-LD が記事ページで正しく出力される（headline 汚染なし、`buildArticleJsonLd()`）
-- [ ] `yarn build` 成功 / `yarn check:ts` エラーなし
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] 運営者 + Claude でヒアリング（writing-workflow §3）→ Claude が Markdown ドラフト生成（`yarn new-post --slug contact-form-on-cloudflare-workers --category tech`、`draft: true`）
+- [x] frontmatter 完備：title（`| byte-lark.com` サフィックス無し）/ description（80-120字・OGP 兼用）/ category: tech / tags / publishedAt / slug。本文冒頭に `# タイトル` を重複させない（PostLayout が title を h1 出力）
+- [x] 運営者がリライトし `draft: false` に変更（最終承認を実装ログに記録）
+- [x] OGP / Article JSON-LD が記事ページで正しく出力される（headline 汚染なし、`buildArticleJsonLd()`。CF preview 実 HTML で og:image / headline を確認）
+- [x] `yarn build` 成功 / `yarn check:ts` エラーなし（2026-08-02 ログ + 以後の push 毎 CI Quality Checks / Workers Builds success）
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -63,3 +64,12 @@ Started: 2026-08-01
 
 残タスク
 - 運営者最終確認 → draft: false → §7 検証（ローカル/CF preview スクショ + CI green）→ Done 化
+
+### 2026-08-05 §7 検証・Done 化（別セッションの公開作業を引き取り）
+
+やったこと
+- 公開系の経緯（他セッション実施分）：運営者最終確認を経て 494828d で `draft: false` 化（2026-08-03）→ 9cbc4c5 でカバーを v2（フォーム主役＋小さな雲雀）へ差し替え（2026-08-05）。実装ログが 08-02 で止まりステータスも InProgress のままだったため、本セッション（PHASE1B-012 担当）が §7 検証を実施して Done 化
+- §7 検証：ローカル dev（desktop 1280 / mobile 375）と CF preview（branch alias、同 2 幅）で記事ページのスクショ確認——カバー v2・目次・本文とも正常。OGP og:image（cover webp）/ Article JSON-LD headline を CF preview 実 HTML で確認。CI は head bf835d8 で UI Tests / Quality Checks / Workers Builds / CodeQL すべて success
+
+学び・想定外
+- 公開作業とステータス更新が別セッションに割れ、INDEX が InProgress のまま残っていた（別 PBI の Done 化作業中に発見）。1 ツリー 1 セッション運用でも「公開 commit と PBI Done 化は同一セッションで完結させる」を徹底したい

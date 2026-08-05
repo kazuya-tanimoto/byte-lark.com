@@ -187,7 +187,7 @@ PHASE1A-022 (retrospective gate) ← Phase 1b 移行前の必須ゲート
 | PHASE1B-006 | [sample-posts-disposition](20260615-PHASE1B-006-sample-posts-disposition.md) | Done |
 | PHASE1B-007 | [article-ideation-initial-set](20260615-PHASE1B-007-article-ideation-initial-set.md) | Done |
 | PHASE1B-008 | [post-building-blog-with-claude-code](20260628-PHASE1B-008-post-building-blog-with-claude-code.md) | Done |
-| PHASE1B-009 | [post-contact-form-on-workers](20260628-PHASE1B-009-post-contact-form-on-workers.md) | InProgress |
+| PHASE1B-009 | [post-contact-form-on-workers](20260628-PHASE1B-009-post-contact-form-on-workers.md) | Done |
 | PHASE1B-010 | [post-legacy-to-modern](20260628-PHASE1B-010-post-legacy-to-modern.md) | Dropped（Decision #29） |
 | PHASE1B-011 | [post-claude-code-for-po-work](20260628-PHASE1B-011-post-claude-code-for-po-work.md) | Dropped（Decision #29） |
 | PHASE1B-012 | [post-incorporating-bytelark](20260628-PHASE1B-012-post-incorporating-bytelark.md) | Done |
@@ -287,6 +287,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-05 | **PHASE1B-009 完了（Done）**：T2 フォーム記事の公開作業（2026-08-03 draft:false 化 494828d、2026-08-05 カバー v2 差し替え 9cbc4c5）が別セッションで完了していたが実装ログ・ステータス未更新だったのを引き取り、§7 検証（ローカル + CF preview の desktop/mobile スクショ、OGP/JSON-LD 実 HTML、CI green head bf835d8）を実施して Done 化。学び：公開 commit と PBI Done 化は同一セッションで完結させる |
 | 2026-08-05 | **PHASE1B-012 完了（Done）**：L1 法人化記事を `draft: false` で公開（feat/phase-1 preview）。カバーは life 記事の差別化方針で設計図調を離れ「書類＋ロゴのヒバリ入り社印」フラットレイ（Flash・差分指示方式で反復）。§7 検証全通過（14d1464 / 6a999f9、CI green・CF preview 確認・OGP/JSON-LD 実 HTML 確認）。publishedAt は暫定 2026-08-03、Phase 1d で見直し。副産物：tools/imagegen/out を記事 slug 別サブディレクトリに整理しスキルへ恒久反映 |
 | 2026-08-05 | **PHASE1C-009 完了（Done）**：記事目次を xl 以上で右カラム sticky 化（現在地ハイライト・末尾は最後の節を点灯）＋サイト全体に `scroll-behavior: smooth`（reduced-motion ガード付き）。d09d1f3 / ce15d72、CI・CF preview とも green。学び：IO だけの現在地判定は末尾の節が点灯しない edge case → rAF passive scroll 化、tools/imagegen 起点 sandbox はポート bind 不可で build/dev 不可（build は運営者スクリプト冒頭で実施） |
 | 2026-08-05 | **PHASE1C-009 起票（追従目次＋スムーススクロール）**：記事目次が冒頭静的配置でスクロールすると使えなくなる問題（運営者指摘）への UI 改善 PBI。xl 以上で右カラム sticky 目次＋現在地ハイライト（IntersectionObserver）、`scroll-behavior: smooth`（reduced-motion ガード付き）。仕上げトラック起票を待たない単発追加（運営者指示）、InProgress で着手 |
