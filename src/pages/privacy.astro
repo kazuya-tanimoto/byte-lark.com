@@ -4,12 +4,12 @@ import PageLayout from "../layouts/PageLayout.astro";
 
 <PageLayout
   title="Privacy Policy | byte-lark.com"
-  description="byte-lark.com のプライバシーポリシー。個人情報の取扱い、アクセス解析（Cloudflare Web Analytics / Cookieless）、お問い合わせ先について説明します"
+  description="byte-lark.com のプライバシーポリシー。個人情報の取扱い、アクセス解析（Cloudflare Web Analytics / Cookieless）、掲載コンテンツの著作権について説明します"
 >
   <h1 class="text-3xl font-bold text-foreground">プライバシーポリシー</h1>
 
   <p class="mt-6 text-muted-foreground">
-    本ページでは、byte-lark.com（以下「本サイト」）における個人情報の取扱いについて説明します。
+    本ページでは、byte-lark.com（以下「本サイト」）における個人情報の取扱いと、掲載コンテンツの利用について説明します。
   </p>
 
   <!-- 基本方針 -->
@@ -51,6 +51,25 @@ import PageLayout from "../layouts/PageLayout.astro";
     </h2>
     <p class="mt-4 text-muted-foreground">
       本サイトは、アクセス状況の把握のために Cloudflare Web Analytics を使用しています。Cloudflare Web Analytics は Cookie を使用せず（Cookieless）、訪問者個人を特定する情報を収集しません。このため、本サイトでは Cookie の利用に関する同意の取得は行っていません。
+    </p>
+  </section>
+
+  <!-- 著作権について -->
+  <section class="mt-12" aria-labelledby="privacy-policy-copyright">
+    <h2
+      id="privacy-policy-copyright"
+      class="heading-sun text-2xl font-bold text-foreground"
+    >
+      著作権について
+    </h2>
+    <p class="mt-4 text-muted-foreground">
+      本サイトに掲載している記事・画像等のコンテンツの著作権は、当社または正当な権利者に帰属します。出典（本サイト名と該当記事へのリンク）を明記したうえでの引用は歓迎します。
+    </p>
+    <p class="mt-3 text-muted-foreground">
+      法令で認められる引用の範囲を超える転載（記事の全文転載など）や二次利用をご希望の場合は、<a
+        href="/contact"
+        class="text-hibari-sky underline">Contact</a
+      > ページよりご相談ください。
     </p>
   </section>
 
