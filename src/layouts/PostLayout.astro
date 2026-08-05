@@ -157,9 +157,12 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 
 <script>
   // 追従目次の現在地ハイライト（PHASE1C-009）。
-  // 「上端がオフセット線（sticky ヘッダー分）を過ぎた最後の見出し」を現在地とする。
-  // IntersectionObserver は見出しが境界を跨いだ瞬間の再計算トリガーとしてだけ使い、
-  // scroll イベントの常時監視はしない。オフセットは見出しの scroll-margin-top: 5rem と揃える。
+  // 「上端がオフセット線（sticky ヘッダー分。scroll-margin-top: 5rem と整合）を過ぎた
+  // 最後の見出し」を現在地とする。ページ末尾に達したときは最後の見出しを現在地にする
+  // ——末端の節は短いとオフセット線まで届かず、目次から移動したのに前の節が
+  // 光ったままになるため。この末尾判定は見出しの境界跨ぎと無関係に起きるので
+  // IntersectionObserver では拾えず、rAF で 1 フレーム 1 回に間引いた passive scroll で
+  // 再計算する（見出し十数個の rect 読みだけで軽量）。
   const OFFSET = 80;
   const sidebar = document.querySelector("[data-toc-sidebar]");
   const body = document.querySelector(".post-body");
@@ -178,15 +181,27 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
         if (h.getBoundingClientRect().top <= OFFSET + 1) current = h.id;
         else break;
       }
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom && headings.length > 0) current = headings[headings.length - 1].id;
       if (current === activeId) return;
       links.get(activeId)?.removeAttribute("aria-current");
       links.get(current)?.setAttribute("aria-current", "location");
       activeId = current;
     };
-    const observer = new IntersectionObserver(update, {
-      rootMargin: `-${OFFSET}px 0px 0px 0px`,
-    });
-    for (const h of headings) observer.observe(h);
+    let queued = false;
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          update();
+        });
+      },
+      { passive: true },
+    );
     update();
   }
 </script>
