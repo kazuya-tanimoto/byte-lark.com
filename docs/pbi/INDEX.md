@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-05
+最終更新: 2026-08-06
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -229,7 +229,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 
 ## Phase 1c：デザインブラッシュアップ（旧 1b）
 
-二段構え（site-plan v3.10 §8 Decision #28）：**先行トラック**（記事非依存、下表）は 2026-07-12 起票済みで Phase 1b 記事執筆と並行着手可。**仕上げトラック**（B-3 CSS サイズ見直し / 全初期記事セットでのデザイン最終再検証 / Phase 1c Gate）は **Phase 1b Gate（PHASE1B-014）通過後**に別セッションで起票する（[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) の残項目を正式化）。
+二段構え（site-plan v3.10 §8 Decision #28）：**先行トラック**（記事非依存、PHASE1C-001〜009）は 2026-07-12 起票済み（全 Done）。**仕上げトラック**（B-3 CSS サイズ見直し / 全初期記事セットでのデザイン最終再検証 / Phase 1c Gate）は Phase 1b Gate（PHASE1B-014、2026-08-05 通過）の申し送りを反映して **2026-08-06 に PHASE1C-010〜012 として正式化済み**（[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) §C の正式化）。
 
 表は推奨着手順序に従って並べる：
 
@@ -244,6 +244,9 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 | PHASE1C-007 | [font-loading-cls](20260712-PHASE1C-007-font-loading-cls.md) | Done |
 | PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | Done |
 | PHASE1C-009 | [toc-sidebar-smooth-scroll](20260805-PHASE1C-009-toc-sidebar-smooth-scroll.md) | Done |
+| PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | NotStarted |
+| PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | NotStarted |
+| **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
 ### Phase 1c 先行トラック 推奨着手順序
 
@@ -259,8 +262,16 @@ PHASE1C-005 (favicon 意匠 ← 002/004 依存)
 PHASE1C-008 (署名要素の見た目適用 ← 001/002 依存、003 の後が推奨。朝日マーカー全般を担当)
 PHASE1C-006 (BlogCard 見出しレベル) ← 依存なし、任意タイミング
 PHASE1C-007 (フォント読み込み CLS)  ← 依存なし、任意タイミング
+```
+
+### Phase 1c 仕上げトラック 推奨着手順序（2026-08-06 起票）
+
+```
+PHASE1C-010 (B-3 CSS サイズ・描画ブロック見直し) ← 最初。CSS 変更が表示に影響し得るため再検証より前
   ↓
-（仕上げトラック：1b Gate 通過後に起票 — B-3 CSS サイズ / 全記事最終再検証 / 1c Gate）
+PHASE1C-011 (全記事デザイン最終再検証 ← 1b Gate 申し送りの裏取り 4 件を含む)
+  ↓
+PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲート。CF Deploy Hooks 設定を含む)
 ```
 
 ---
@@ -287,6 +298,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-06 | **Phase 1c 仕上げトラック起票（3 件）**：PHASE1B-014（1b Gate、2026-08-05 通過）の申し送りを反映し、draft-phase1c-design-polish.md §C を正式化。PHASE1C-010（B-3 CSS サイズ・描画ブロック見直し。到達目標は運営者確定「未使用分の削減まで」、critical CSS 見送り）/ 011（全 3 記事デザイン最終再検証。申し送り素材 4 件＝text-wrap 全記事・別エンジン実機確認 / heading-order branch alias 裏取り / 署名要素裏取り / 雇用形態バッジ色確認を受け入れ条件化）/ 012（1c Gate。棚卸し表 + CF Deploy Hooks 設定（運営者確定「設定する」）+ README 改訂要否判断を含む）を NotStarted で起票。全 PBI に §7 検証ゲート常設。着手順序は 010 → 011 → 012 |
 | 2026-08-05 | **PHASE1B-014 完了（Done）＝ Phase 1b Gate 通過**：対象 12 PBI 全 Done 確認 + yarn build/check/check:ts/test:run 全成功 + HEAD ad18b46 CI 全 success。Phase 1b 全実装ログ + PHASE1A-022 申し送り + draft-phase1c を全件棚卸しし「Phase 1c への申し送り」を Gate PBI に記入（前 Gate 申し送りは全件消化済み、未消化は Phase 1d 待ち 5 件と仕上げトラック待ち 4 件に整理）。site-plan との差分は §13.1 現在地注記の古さのみ（記録対応）。次セッションは Phase 1c 仕上げトラック起票（B-3 / 全 3 記事最終再検証 / 1c Gate）から |
 | 2026-08-05 | **PHASE1B-009 完了（Done）**：T2 フォーム記事の公開作業（2026-08-03 draft:false 化 494828d、2026-08-05 カバー v2 差し替え 9cbc4c5）が別セッションで完了していたが実装ログ・ステータス未更新だったのを引き取り、§7 検証（ローカル + CF preview の desktop/mobile スクショ、OGP/JSON-LD 実 HTML、CI green head bf835d8）を実施して Done 化。学び：公開 commit と PBI Done 化は同一セッションで完結させる |
 | 2026-08-05 | **PHASE1B-012 完了（Done）**：L1 法人化記事を `draft: false` で公開（feat/phase-1 preview）。カバーは life 記事の差別化方針で設計図調を離れ「書類＋ロゴのヒバリ入り社印」フラットレイ（Flash・差分指示方式で反復）。§7 検証全通過（14d1464 / 6a999f9、CI green・CF preview 確認・OGP/JSON-LD 実 HTML 確認）。publishedAt は暫定 2026-08-03、Phase 1d で見直し。副産物：tools/imagegen/out を記事 slug 別サブディレクトリに整理しスキルへ恒久反映 |
