@@ -18,11 +18,13 @@ description: Use when generating, replacing, or evaluating a blog article cover/
 ```fish
 cd tools/imagegen
 .venv/bin/python generate_image.py -n 3 -p prompt_logo.txt \
-  -r ../../docs/design-drafts/covers/reference-logo.png
+  -r ../../docs/design-drafts/covers/reference-logo.png \
+  -o out/<記事slug>
 ```
 
+- 出力先は `-o out/<記事slug>` で必ず記事ごとのサブディレクトリを指定する（`out/` 直下にフラットに出さない。どの画像がどの記事か分からなくなるため）。slug は `src/content/posts/` のフォルダ名に合わせる
 - プロンプトは `prompt_logo.txt`（ロゴ参照つき・通常はこれ）/ `prompt.txt`（参照なし）。新調するときの鉄則：1案 = 1リクエスト（複数案を1枚にまとめない）、注記の文字は英数字のみ許可（全面禁止も日本語も破綻する）
-- 出力は `out/` に raw（16:9 2K）と `*_cover.png`（40:21 センタークロップ、2752×1444）が並ぶ
+- 出力は `out/<記事slug>/` に raw（16:9 2K）と `*_cover.png`（40:21 センタークロップ、2752×1444）が並ぶ
 
 ## 評価と選定
 
@@ -33,7 +35,7 @@ cd tools/imagegen
 ## 記事への配置
 
 - 記事をフォルダ形式にし（`src/content/posts/<slug>/index.md`）、選定画像を同フォルダに `cover.png` で配置、frontmatter に `cover: ./cover.png`（詳細: docs/writing-workflow.md §画像）
-- コミットする cover は 2000×1050 に縮小（Pillow LANCZOS）。2752 原本は `out/`（gitignored）に残す
+- コミットする cover は 2000×1050 に縮小（Pillow LANCZOS）。2752 原本と縮小版は `out/<記事slug>/`（gitignored）に残す
 
 ## 検証と既知の罠
 
