@@ -4,7 +4,8 @@ description: "2026年6月、個人事業を法人化して合同会社バイト�
 category: life
 tags: ["法人化", "合同会社", "フリーランス", "個人事業主", "独立"]
 publishedAt: 2026-08-03
-draft: true
+draft: false
+cover: ./cover.png
 slug: incorporating-bytelark
 ---
 
