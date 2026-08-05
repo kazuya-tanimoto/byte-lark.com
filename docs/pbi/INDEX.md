@@ -244,7 +244,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 | PHASE1C-007 | [font-loading-cls](20260712-PHASE1C-007-font-loading-cls.md) | Done |
 | PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | Done |
 | PHASE1C-009 | [toc-sidebar-smooth-scroll](20260805-PHASE1C-009-toc-sidebar-smooth-scroll.md) | Done |
-| PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | InProgress |
+| PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | Done |
 | PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | NotStarted |
 | **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
@@ -298,6 +298,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-06 | **PHASE1C-010 完了（Done）**：全ページ共通 CSS の未使用分削減。起票時記載の「生 131KB」は再計測で 37.6KB と判明（PHASE1C-003/007 のフォント方式変更で既に縮小済み）。tw-animate-css 削除（使用 0 件）+ Tailwind 走査を `source("../")` で src/ 限定（docs/ の英単語誤認 8 クラスを排除・出力の決定性向上）で生 37,586 → 32,955 B（−12.3%）/ brotli 6,218 → 5,698 B（−8.4%）。全 HTML 使用クラスと CSS 定義の機械照合 + 11 ページ × 2 幅スクショで副作用なし、CI・CF preview とも green（7020252）。`.dark` トークンは PHASE1C-002 確定値のため残置。申し送り：各ページ `<head>` の Astro Fonts インライン @font-face 約 283KB は確定方式のためスコープ外（Phase 1d 本番計測で問題時に調査） |
 | 2026-08-06 | **Phase 1c 仕上げトラック起票（3 件）**：PHASE1B-014（1b Gate、2026-08-05 通過）の申し送りを反映し、draft-phase1c-design-polish.md §C を正式化。PHASE1C-010（B-3 CSS サイズ・描画ブロック見直し。到達目標は運営者確定「未使用分の削減まで」、critical CSS 見送り）/ 011（全 3 記事デザイン最終再検証。申し送り素材 4 件＝text-wrap 全記事・別エンジン実機確認 / heading-order branch alias 裏取り / 署名要素裏取り / 雇用形態バッジ色確認を受け入れ条件化）/ 012（1c Gate。棚卸し表 + CF Deploy Hooks 設定（運営者確定「設定する」）+ README 改訂要否判断を含む）を NotStarted で起票。全 PBI に §7 検証ゲート常設。着手順序は 010 → 011 → 012 |
 | 2026-08-05 | **PHASE1B-014 完了（Done）＝ Phase 1b Gate 通過**：対象 12 PBI 全 Done 確認 + yarn build/check/check:ts/test:run 全成功 + HEAD ad18b46 CI 全 success。Phase 1b 全実装ログ + PHASE1A-022 申し送り + draft-phase1c を全件棚卸しし「Phase 1c への申し送り」を Gate PBI に記入（前 Gate 申し送りは全件消化済み、未消化は Phase 1d 待ち 5 件と仕上げトラック待ち 4 件に整理）。site-plan との差分は §13.1 現在地注記の古さのみ（記録対応）。次セッションは Phase 1c 仕上げトラック起票（B-3 / 全 3 記事最終再検証 / 1c Gate）から |
 | 2026-08-05 | **PHASE1B-009 完了（Done）**：T2 フォーム記事の公開作業（2026-08-03 draft:false 化 494828d、2026-08-05 カバー v2 差し替え 9cbc4c5）が別セッションで完了していたが実装ログ・ステータス未更新だったのを引き取り、§7 検証（ローカル + CF preview の desktop/mobile スクショ、OGP/JSON-LD 実 HTML、CI green head bf835d8）を実施して Done 化。学び：公開 commit と PBI Done 化は同一セッションで完結させる |

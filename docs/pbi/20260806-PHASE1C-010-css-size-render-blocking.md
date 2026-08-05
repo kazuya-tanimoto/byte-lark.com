@@ -1,7 +1,8 @@
 # 訪問者は未使用スタイルを含まない軽量な CSS でページを表示できる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-06
+Completed: 2026-08-06
 
 ## 誰が
 - 訪問者
@@ -20,8 +21,8 @@ Started: 2026-08-06
 - [x] 削減後、全 8 ページ + 公開記事 3 本で表示崩れがないことをスクショで確認（削減の副作用検出）
 - [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` エラーなし
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -68,3 +69,10 @@ Started: 2026-08-06
 - 観測事実（スコープ外・申し送り）：各ページ `<head>` に Astro Fonts API のインライン @font-face が約 283KB（366 ブロック、サブセット分割）あり、HTML が全ページ約 300KB。PHASE1C-003/007 の確定方式のため本 PBI では触らず。Phase 1d 本番計測で問題になった場合の調査候補
 
 残タスク：commit / push → CF preview スクショ確認 → CI green 確認 → Done 化
+
+### 2026-08-06 push 後検証 + Done 化
+
+- 7020252 を push、CI 全 green（Quality Checks / UI Tests(e2e) / Workers Builds: byte-lark / CodeQL いずれも success）
+- CF branch alias の配信 CSS がローカルビルドと同一（`BaseLayout.4U1bWvU2.css`、32,955 B、brotli 転送 6,702 B）であることを curl で実測
+- CF preview スクショ確認：Home（desktop / mobile）+ T2 記事（desktop）+ L1 記事（mobile）、崩れなし
+- 学び：起票時の「生 131KB」のような過去計測値は着手時に必ず再計測する（フォント方式変更で 3.5 分の 1 になっていた）。Tailwind v4 の既定ソース走査は repo 全体が対象で、docs のモックや文章中の英単語がクラスとして混入し得る → `source("../")` で恒久固定した
