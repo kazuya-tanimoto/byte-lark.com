@@ -19,7 +19,12 @@ set -u
 
 BASE="${1:-https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev}"
 CATEGORIES="${2:-accessibility}"
-PATHS=("/" "/about/" "/career/" "/skills/" "/blog/" "/contact/" "/privacy/" "/404")
+# 公開記事も監査対象に含める（PHASE1C-011）。記事ページは一覧と DOM 構造が違い、
+# 見出し階層・コントラストの当たり方も別物になるため、静的 8 ページだけでは裏取りにならない
+PATHS=("/" "/about/" "/career/" "/skills/" "/blog/" "/contact/" "/privacy/" "/404"
+  "/blog/building-this-blog-with-claude-code/"
+  "/blog/contact-form-on-cloudflare-workers/"
+  "/blog/incorporating-bytelark/")
 
 echo "[$(date +%H:%M:%S)] lighthouse@12 を一時ディレクトリへインストール中…"
 TOOL=$(mktemp -d)
