@@ -1,7 +1,8 @@
 # 運営者は公開記事 3 本を含む全ページで確定デザインが意図どおり表示されていることを確認できる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-06
+Completed: 2026-08-06
 
 ## 誰が
 - 運営者
@@ -15,15 +16,15 @@ Started: 2026-08-06
 
 ## 受け入れ条件
 - [x] 全 3 記事（PHASE1B-008 / 009 / 012）を branch alias の PC / スマホ幅で実表示確認：タイポスケール・影カード・朝日マーカー・カバー画像・追従目次（PHASE1C-009）が意図どおり
-- [ ] `text-wrap` 修正（bab886d、balance + auto-phrase の Chrome/Edge 限定化）の全 3 記事での見出し折り返し確認。Chromium 側は Claude がスクショで、iPhone Safari（別エンジン。素の右端折り返しになること）は運営者が実機で確認（PHASE1B-014 申し送り：PHASE1C-003 Done 後の修正のため全記事・別エンジン確認が必要）→ Chromium 側は完了（実装ログ 4。現状維持で確定）、iPhone 実機は運営者確認待ち
-- [ ] `bash scripts/lighthouse-audit.sh` を branch alias で実行し、`/blog/` と記事ページの heading-order pass を裏取り（PHASE1C-006 申し送り。当時は公開記事 0 件でローカル preview 計測のみだった）→ 静的 8 ページは取得済み（`/blog/` 含め heading-order 全 pass・accessibility 100）、記事 3 本を `PATHS` に追加したので再実行待ち
+- [x] `text-wrap` 修正（bab886d、balance + auto-phrase の Chrome/Edge 限定化）の全 3 記事での見出し折り返し確認。Chromium 側は Claude がスクショで、iPhone Safari（別エンジン。素の右端折り返しになること）は運営者が実機で確認（PHASE1B-014 申し送り：PHASE1C-003 Done 後の修正のため全記事・別エンジン確認が必要）→ Chromium 側は実装ログ 4（現状維持で確定）、iPhone 実機は運営者確認で問題なし（2026-08-06）
+- [x] `bash scripts/lighthouse-audit.sh` を branch alias で実行し、`/blog/` と記事ページの heading-order pass を裏取り（PHASE1C-006 申し送り。当時は公開記事 0 件でローカル preview 計測のみだった）→ 記事 3 本を `PATHS` に追加して再実行、11 ページすべて heading-order pass / accessibility 100 / color-contrast pass
 - [x] 記事ページの署名要素（h2 朝日ドット・影カード・ピル等）の見え方を branch alias で裏取り（PHASE1C-008 申し送り。同じく公開記事 0 件で未実施だった）
 - [x] `/career/` の雇用形態バッジ色（PHASE1B-002 の暫定色：フリーランス=hibari-sky / 会社員=neutral / 副業=hibari-amber）が確定トークン「春空」の下で意図どおりかを確認し、ずれていれば確定トークンに合わせて修正（PHASE1B-014 申し送り）→ 3 種とも AA 通過、修正不要
 - [x] 発見した崩れ・微調整は本 PBI 内で修正する。1 セッションに収まらない規模の場合は修正せず、別 PBI 起票を運営者に提案する → 表示崩れ 0 件。見出し折り返しは現状維持を運営者が判断（実装ログ 4）、コードハイライトのコントラスト不足は本 PBI 内で修正（実装ログ最終節）
 - [x] 修正が入った場合、`yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` エラーなし
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。修正が入らず検証のみの場合は branch alias 確認をもって `[x] …：N/A（理由）` 可）
 - [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。修正 push が無い場合は HEAD の CI green 確認で可）→ dc41792 時点で全 green 確認済み、本 PBI 更新 push 後に再確認
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。修正 push が無い場合は HEAD の CI green 確認で可）→ 148e30c / 56f1fe1 とも Quality Checks・UI Tests(e2e)・Workers Builds・CodeQL すべて success
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -91,3 +92,11 @@ Started: 2026-08-06
 - 候補比較：`min-light` / `vitesse-light` は AA 未達の色が複数（それぞれ 3 色 / 11 色）、`light-plus` は見た目が現行のトーンから離れるため不採用
 - 検証：再ビルド後の全記事 HTML から `pre.astro-code` 内の色を機械抽出し 8 色すべて AA 通過を確認（最小 4.55、旧 `#e36209` は消滅）。`yarn build` / `check` / `check:ts` / `test:run` 全 green
 - ローカル スクショ：記事 2 本（コードブロックを持つのは T1 / T2 の 2 本、T3 は 0 個）× desktop 1280px / mobile 375px で表示確認、崩れなし
+
+### 2026-08-06 Done 化
+
+- 56f1fe1 を push し CF 反映を待って branch alias で再確認：配信版のコード内の色 8 種すべて AA 通過（最小 4.55:1、旧 `#e36209` は消滅）を実測、desktop / mobile のスクショとも崩れなし
+- CI 全 green（148e30c / 56f1fe1 とも Quality Checks・UI Tests(e2e)・Workers Builds・CodeQL）
+- Lighthouse 再実行（運営者）：11 ページすべて accessibility 100 / color-contrast pass / heading-order pass。iPhone Safari 実機の見出し折り返しも問題なし
+- 学び：起票時の「記事 3 本を実表示で確認」は、Lighthouse の監査対象が静的 8 ページ固定だったため素通しになりかけた。監査スクリプトの対象範囲も検証対象に含める（PATHS に記事を追加して初めて `#e36209` の AA 未達が出た）
+- 次への申し送り（本 PBI スコープ外・別 PBI 起票予定）：Hero の署名要素「揚雲雀の軌跡」に 3 点の指摘（運営者 2026-08-06）。スマホ幅で鳥がお問い合わせボタンに重なる（320px で 16×16px 実測、390px では軌跡の点線がボタンの裏に隠れる）／`opacity-30`（sm 未満）と線自身の `opacity="0.55"` の二重掛けで軌跡の実効不透明度が 0.165 になり見えない／軌跡の終点が viewBox (250,60) で鳥の胴の真下に刺さっており、尾の先端 (227,67.8) から伸びていない

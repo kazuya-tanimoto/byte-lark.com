@@ -245,7 +245,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 | PHASE1C-008 | [spring-sky-signature-style](20260725-PHASE1C-008-spring-sky-signature-style.md) | Done |
 | PHASE1C-009 | [toc-sidebar-smooth-scroll](20260805-PHASE1C-009-toc-sidebar-smooth-scroll.md) | Done |
 | PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | Done |
-| PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | InProgress |
+| PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | Done |
 | **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **NotStarted** |
 
 ### Phase 1c 先行トラック 推奨着手順序
@@ -298,6 +298,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-06 | **PHASE1C-011 完了（Done）**：全 3 記事 × PC/スマホの実表示確認で崩れ 0 件。1b Gate 申し送り 4 件を全消化——雇用形態バッジは 3 種とも AA 通過（6.34 / 6.28 / 4.80、PHASE1C-002 で確定トークン反映済みだった）、署名要素は実記事上で意図どおり、heading-order は全 11 ページ pass、`text-wrap` は全ページ・3 幅の折り返しを実測比較して現状維持を運営者が判断（balance 有利 6 件 / 不利 6 件で互角、外すと語中割れが出る）。副産物：Lighthouse 監査スクリプトの `PATHS` が静的 8 ページ固定で記事が対象外だったため記事 3 本を追加 → Cloudflare 記事で color-contrast fail が出現し、Shiki テーマを `github-light`（variable 色 #e36209 が 3.49:1）から `github-light-default`（同 #953800 が 7.39:1、文字色 45 指定すべて AA）へ変更。再計測で 11 ページとも accessibility 100 / color-contrast pass（56f1fe1、CI・CF preview とも green）。申し送り：Hero 署名要素に 3 点の指摘（スマホでボタンと衝突 / 軌跡の実効不透明度 0.165 / 軌跡の終点が尾でなく胴の下）→ 別 PBI で対応 |
 | 2026-08-06 | **PHASE1C-010 完了（Done）**：全ページ共通 CSS の未使用分削減。起票時記載の「生 131KB」は再計測で 37.6KB と判明（PHASE1C-003/007 のフォント方式変更で既に縮小済み）。tw-animate-css 削除（使用 0 件）+ Tailwind 走査を `source("../")` で src/ 限定（docs/ の英単語誤認 8 クラスを排除・出力の決定性向上）で生 37,586 → 32,955 B（−12.3%）/ brotli 6,218 → 5,698 B（−8.4%）。全 HTML 使用クラスと CSS 定義の機械照合 + 11 ページ × 2 幅スクショで副作用なし、CI・CF preview とも green（7020252）。`.dark` トークンは PHASE1C-002 確定値のため残置。申し送り：各ページ `<head>` の Astro Fonts インライン @font-face 約 283KB は確定方式のためスコープ外（Phase 1d 本番計測で問題時に調査） |
 | 2026-08-06 | **Phase 1c 仕上げトラック起票（3 件）**：PHASE1B-014（1b Gate、2026-08-05 通過）の申し送りを反映し、draft-phase1c-design-polish.md §C を正式化。PHASE1C-010（B-3 CSS サイズ・描画ブロック見直し。到達目標は運営者確定「未使用分の削減まで」、critical CSS 見送り）/ 011（全 3 記事デザイン最終再検証。申し送り素材 4 件＝text-wrap 全記事・別エンジン実機確認 / heading-order branch alias 裏取り / 署名要素裏取り / 雇用形態バッジ色確認を受け入れ条件化）/ 012（1c Gate。棚卸し表 + CF Deploy Hooks 設定（運営者確定「設定する」）+ README 改訂要否判断を含む）を NotStarted で起票。全 PBI に §7 検証ゲート常設。着手順序は 010 → 011 → 012 |
 | 2026-08-05 | **PHASE1B-014 完了（Done）＝ Phase 1b Gate 通過**：対象 12 PBI 全 Done 確認 + yarn build/check/check:ts/test:run 全成功 + HEAD ad18b46 CI 全 success。Phase 1b 全実装ログ + PHASE1A-022 申し送り + draft-phase1c を全件棚卸しし「Phase 1c への申し送り」を Gate PBI に記入（前 Gate 申し送りは全件消化済み、未消化は Phase 1d 待ち 5 件と仕上げトラック待ち 4 件に整理）。site-plan との差分は §13.1 現在地注記の古さのみ（記録対応）。次セッションは Phase 1c 仕上げトラック起票（B-3 / 全 3 記事最終再検証 / 1c Gate）から |
