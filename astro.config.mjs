@@ -65,7 +65,9 @@ export default defineConfig({
 
   markdown: {
     shikiConfig: {
-      theme: "github-light",
+      // 旧 github-light は変数名に #e36209 を使い白地で 3.49:1 と AA 未達だった（PHASE1C-011）。
+      // GitHub 現行の light テーマは同じ位置が #953800（7.39:1）で、文字色の指定すべてが AA を通る
+      theme: "github-light-default",
     },
   },
 

@@ -19,9 +19,9 @@ Started: 2026-08-06
 - [ ] `bash scripts/lighthouse-audit.sh` を branch alias で実行し、`/blog/` と記事ページの heading-order pass を裏取り（PHASE1C-006 申し送り。当時は公開記事 0 件でローカル preview 計測のみだった）→ 静的 8 ページは取得済み（`/blog/` 含め heading-order 全 pass・accessibility 100）、記事 3 本を `PATHS` に追加したので再実行待ち
 - [x] 記事ページの署名要素（h2 朝日ドット・影カード・ピル等）の見え方を branch alias で裏取り（PHASE1C-008 申し送り。同じく公開記事 0 件で未実施だった）
 - [x] `/career/` の雇用形態バッジ色（PHASE1B-002 の暫定色：フリーランス=hibari-sky / 会社員=neutral / 副業=hibari-amber）が確定トークン「春空」の下で意図どおりかを確認し、ずれていれば確定トークンに合わせて修正（PHASE1B-014 申し送り）→ 3 種とも AA 通過、修正不要
-- [x] 発見した崩れ・微調整は本 PBI 内で修正する。1 セッションに収まらない規模の場合は修正せず、別 PBI 起票を運営者に提案する → 崩れ 0 件。見出し折り返しは現状維持を運営者が判断（実装ログ 4）
-- [x] 修正が入った場合、`yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` エラーなし：N/A（CSS / コンポーネントの変更 0 件）
-- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。修正が入らず検証のみの場合は branch alias 確認をもって `[x] …：N/A（理由）` 可）：N/A（変更 0 件のため branch alias 確認で代替）
+- [x] 発見した崩れ・微調整は本 PBI 内で修正する。1 セッションに収まらない規模の場合は修正せず、別 PBI 起票を運営者に提案する → 表示崩れ 0 件。見出し折り返しは現状維持を運営者が判断（実装ログ 4）、コードハイライトのコントラスト不足は本 PBI 内で修正（実装ログ最終節）
+- [x] 修正が入った場合、`yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` エラーなし
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。修正が入らず検証のみの場合は branch alias 確認をもって `[x] …：N/A（理由）` 可）
 - [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
 - [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。修正 push が無い場合は HEAD の CI green 確認で可）→ dc41792 時点で全 green 確認済み、本 PBI 更新 push 後に再確認
 
@@ -75,3 +75,19 @@ Started: 2026-08-06
 
 - 記事 3 本を追加した `scripts/lighthouse-audit.sh` を再実行し、記事ページの heading-order pass を裏取り（静的 8 ページ分は取得済み・全 pass）
 - iPhone Safari 実機で 3 記事の見出し折り返し確認（auto-phrase 非対応エンジンで素の右端折り返しになること）
+
+### 2026-08-06 記事ページ Lighthouse → コードハイライトのコントラスト不足を修正
+
+記事 3 本を `PATHS` に追加して再実行した結果、`heading-order` は 11 ページすべて pass（受け入れ条件クリア）。一方で Cloudflare 記事だけ accessibility 96 / color-contrast fail が出た。
+
+原因と根拠：
+
+- 失敗ノードは `pre.astro-code > code > span.line > span`、色は `#e36209`（関数引数 `request` / `env` / `t` の 5 か所）。白地で 3.49:1 と AA 未達（Lighthouse の explanation と、配信ページ上でキャンバス合成した実測値が一致）
+- `github-light`（Shiki 同梱の GitHub 旧世代パレット）の `variable` スコープの色。テーマ定義の文字色 45 指定を全件照合したところ AA 未達はこの 1 色のみ、ただしキーワード 4.57 / コメント 4.82 と他も余裕が薄い
+
+対応（運営者判断 2026-08-06「テーマを変える」）：
+
+- `astro.config.mjs` の `shikiConfig.theme` を `github-light` → `github-light-default`（GitHub 現行の light テーマ）に変更。同じ位置の色が `#953800`＝7.39:1 になり、文字色 45 指定すべてが AA を通る（最小はコメント `#6e7781` の 4.55:1）
+- 候補比較：`min-light` / `vitesse-light` は AA 未達の色が複数（それぞれ 3 色 / 11 色）、`light-plus` は見た目が現行のトーンから離れるため不採用
+- 検証：再ビルド後の全記事 HTML から `pre.astro-code` 内の色を機械抽出し 8 色すべて AA 通過を確認（最小 4.55、旧 `#e36209` は消滅）。`yarn build` / `check` / `check:ts` / `test:run` 全 green
+- ローカル スクショ：記事 2 本（コードブロックを持つのは T1 / T2 の 2 本、T3 は 0 個）× desktop 1280px / mobile 375px で表示確認、崩れなし
