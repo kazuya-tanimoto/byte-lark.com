@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hero 署名要素の配置検討</title><style>
+body{margin:0;background:#EFEDE8;color:#322E29;font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;line-height:1.8}
+.wrap{max-width:1340px;margin:0 auto;padding:24px}
+h1{font-size:22px;margin:0 0 6px}
+p.note{margin:0 0 14px;color:#5b564e;font-size:14px;max-width:86ch}
+#modes{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}
+#modes button{font:inherit;font-size:13px;padding:5px 14px;border-radius:99px;border:1px solid #ccc7be;
+  background:#fff;cursor:pointer}
+#modes button.on{background:#0273B0;color:#fff;border-color:#0273B0}
+.desc{font-size:13px;color:#5b564e;background:#fff;border:1px solid #ddd9d2;border-radius:8px;padding:10px 12px;margin-bottom:18px}
+.frames{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.f{background:#fff;border:1px solid #ddd9d2;border-radius:12px;overflow:hidden}
+.f .cap{font-size:12px;font-weight:700;padding:7px 10px;background:#F5F2EC;border-bottom:1px solid #ddd9d2}
+iframe{display:block;border:0}
+.sp iframe{width:390px;height:760px}
+.pcbox{width:768px;height:560px;overflow:hidden}
+.pcbox iframe{width:1280px;height:933px;transform:scale(.6);transform-origin:top left}
+</style></head>
+<body><div class="wrap">
+<h1>Hero 署名要素「揚雲雀の軌跡」配置検討</h1>
+<p class="note">下のボタンで方式を切り替えます。左のスマホ枠（390px）と右の PC 枠（1280px を 60% 表示）はそれぞれ中でスクロールできます。
+鳥のシルエットは <code>src/components/Hero.astro</code> の実パス、色・タイポ・影は確定トークン「春空」の実値。
+現状以外の案には、軌跡の付け根を尾の先へ直す修正と、線の不透明度アップを含みます。</p>
+<div id="modes"><button data-m="now">現状</button><button data-m="diveup">案1+Career引き上げ</button><button data-m="dive">調整案：裏へ抜ける</button><button data-m="divelong">調整案：カードの裏まで</button><button data-m="diveclip">調整案：Hero で切る</button><button data-m="band">帯（調整前）</button><button data-m="fixed">背景レイヤー</button><button data-m="fixedclear">背景レイヤー+Hero透明</button><button data-m="small">縮小(SP)</button></div>
+<div class="desc" id="desc"></div>
+<div class="frames">
+  <div class="f sp"><div class="cap">スマホ 390px（枠内でスクロール）</div><iframe id="fsp"></iframe></div>
+  <div class="f"><div class="cap">PC 1280px・60% 表示（枠内でスクロール）</div><div class="pcbox"><iframe id="fpc"></iframe></div></div>
+</div>
+<p class="note" style="margin-top:18px">単体で開きたいときは <a href="page.html?mode=band">page.html?mode=band</a> のように直接開けます（左下に切替バーが出ます）。</p>
+</div>
+<script>
+var DESCS = {"now":"いまの実装。装飾は Hero の右下に絶対配置。スマホでは実効不透明度 0.165 で軌跡がほぼ見えず、320px では鳥がお問い合わせボタンに重なる。","fixed":"装飾を画面に固定し、本文より下のレイヤーへ。スクロールしても装飾は動かず、コンテンツの隙間から覗く。Hero の面が不透明なので、最初の画面では装飾が隠れる。","fixedclear":"上と同じ固定レイヤーに加え、Hero の wash→bg グラデーションを body 側へ移して Hero を透明に。最初の画面から装飾が見える代わりに、面の設計（design-direction §5）を変更することになる。","band":"調整前の帯案。軌跡が約 9 度しか上がっておらず、鳥の上昇姿勢と食い違って停滞して見える。比較用に残してある。","dive":"鳥をお問い合わせボタンの 16px 下に寄せ、軌跡を約 34 度まで立てて左下へ降ろす。線は Hero を突き抜けて Career カードの裏で隠れる。Hero の余白が減るぶん Career が上がる。","diveup":"案 1 と同じ角度（34 度）・同じ鳥の位置のまま、Career 以降を現状と同じ高さまで引き上げる。軌跡の下半分は Career の余白と見出しの横を通り、カードに入ったところで隠れる。","divelong":"鳥の位置は同じ。軌跡をさらに長く・約 42 度まで立てて、Career カードの裏を通り抜けるところまで伸ばす。","diveclip":"鳥の位置と軌跡の角度は上と同じだが、線を Hero の下端で切り落とす。Career はさらに上がるが、線が短くなるぶん昇ってきた距離感は弱い。","small":"PC は現状のまま。スマホだけ現行構図を 190px に縮めて右下に置く。余白は足さない。320px では鳥がまだボタンに 14×24px 重なる。"};
+function set(m){
+  document.querySelectorAll('#modes button').forEach(function(b){ b.classList.toggle('on', b.dataset.m === m); });
+  document.getElementById('desc').textContent = DESCS[m];
+  document.getElementById('fsp').src = 'page.html?embed=1&mode=' + m;
+  document.getElementById('fpc').src = 'page.html?embed=1&mode=' + m;
+}
+document.querySelectorAll('#modes button').forEach(function(b){
+  b.addEventListener('click', function(){ set(b.dataset.m); });
+});
+set('now');
+</script>
+</body></html>
