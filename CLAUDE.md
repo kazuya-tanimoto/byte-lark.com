@@ -81,6 +81,8 @@
 Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブロックされた場合、そのフィードバックは次のターンの `<system-reminder>` に含まれる。
 次のターンでは、ユーザーの新しい質問に答える前に、まず Stop hook の指摘（未消化の検証工程）を解消すること。
 
+運営者向けの応答に hook の存在・文言・判定結果を書かない。未消化の工程があれば実施し、その結果を §7 の検証報告として出すだけにする（hook は内部の検証機構であって、運営者の判断材料ではない）。指摘が「解消すべき工程なし」だった場合は、そのターンで運営者に伝えるべき新しい事実が無いということなので、hook に言及した短い応答を返さず、いま何が終わっていて何を待っているかを自己完結した形で書く。
+
 ## Sandbox 制約
 - Phase 1a 以降の git 操作は統合ブランチ feat/phase-1 を直接チェックアウトして行う（sub-branch 不使用、worktree 不使用）。feat/phase-1 に直 commit / 直 push する（1a〜1c を集約、main マージは 1d。詳細: docs/pbi/README.md §10.4-10.6）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
@@ -102,7 +104,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.12)
-- docs/pbi/README.md          PBI format spec (v3.3) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.6) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）

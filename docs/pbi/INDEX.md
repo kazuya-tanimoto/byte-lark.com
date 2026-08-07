@@ -229,7 +229,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 
 ## Phase 1c：デザインブラッシュアップ（旧 1b）
 
-二段構え（site-plan v3.10 §8 Decision #28）：**先行トラック**（記事非依存、PHASE1C-001〜009）は 2026-07-12 起票済み（全 Done）。**仕上げトラック**（B-3 CSS サイズ見直し / 全初期記事セットでのデザイン最終再検証 / Phase 1c Gate）は Phase 1b Gate（PHASE1B-014、2026-08-05 通過）の申し送りを反映して **2026-08-06 に PHASE1C-010〜012 として正式化済み**（[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) §C の正式化）。
+二段構え（site-plan v3.10 §8 Decision #28）：**先行トラック**（記事非依存、PHASE1C-001〜007）は 2026-07-12 起票済み。PHASE1C-008（署名要素の見た目適用、2026-07-25）と PHASE1C-009（追従目次、2026-08-05）は期中の追加起票。**仕上げトラック**（B-3 CSS サイズ見直し / 全初期記事セットでのデザイン最終再検証 / Phase 1c Gate）は Phase 1b Gate（PHASE1B-014、2026-08-05 通過）の申し送りを反映して **2026-08-06 に PHASE1C-010〜012 として正式化済み**（[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) §C の正式化）。PHASE1C-013 は 011 の申し送りから 2026-08-07 に追加起票。
 
 表は推奨着手順序に従って並べる：
 
@@ -247,7 +247,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 | PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | Done |
 | PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | Done |
 | PHASE1C-013 | [hero-signature-mobile-layout](20260807-PHASE1C-013-hero-signature-mobile-layout.md) | Done |
-| **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **NotStarted** |
+| **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **InProgress** |
 
 ### Phase 1c 先行トラック 推奨着手順序
 
