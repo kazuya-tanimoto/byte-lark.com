@@ -33,7 +33,9 @@ const topSkills = skills
 >
   <Hero />
 
-  <main class="mx-auto max-w-5xl px-4">
+  <!-- relative は Hero からはみ出すスマホ用装飾（PHASE1C-013）を隠すため。
+       位置指定の要素どうしは DOM 順で重なるので、後ろにある main が装飾の上に来る -->
+  <main class="relative mx-auto max-w-5xl px-4">
     <!-- Career 抜粋（直近 N=4 件。全件は /career） -->
     <section class="py-12" aria-labelledby="home-career">
       <div class="flex items-baseline justify-between">
