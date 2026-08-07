@@ -1,7 +1,8 @@
 # 訪問者はスマホでも Hero の署名要素が飛翔として読める状態でトップページを見られる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-07
+Completed: 2026-08-07
 
 ## 誰が
 - 訪問者（スマホ）
@@ -30,8 +31,8 @@ Started: 2026-08-07
 - [x] 装飾は読み上げ対象外・クリック透過を維持する（`aria-hidden` / `pointer-events-none`）
 - [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` エラーなし
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -91,3 +92,13 @@ Started: 2026-08-07
 - モックの実測値をそのまま px で持ち込むと、可変幅では別の幅で破綻する。比率で効く指定（% マージン）に置き換えて全幅で確認する
 
 残タスク：commit / push → CF preview スクショ確認 → CI green 確認 → Done 化
+
+### 2026-08-07 push 後検証 + Done 化
+
+- 2e1810b を push、CI 全 green（Quality Checks / UI Tests(e2e) / Workers Builds: byte-lark / CodeQL）
+- CF branch alias の配信版で実測し、ローカルと一致することを確認
+  - `main` が `position: relative`、Hero が `overflow: visible`、装飾の下マージンが −161.09px（包含ブロック幅 358px の 45%）
+  - 鳥とボタンの重なりなし、軌跡の実効不透明度 0.44、Career の開始位置 465px（変更前と同じ）
+  - スクショ：スマホ 390px / PC 1280px、崩れなし
+- つまずき：CF 反映直後にブラウザが古いページをキャッシュしており、一度は変更前の表示を掴んだ。`curl` では新しい HTML（CSS ハッシュ `BioMI7vQ`）が返っていたため、DOM の実測値と突き合わせて食い違いに気づけた。クエリを付けて取り直して解消。**スクショだけで判断せず、配信物の実測値と照合すること**
+- 未検証：iPhone 実機での見え方（標準 CSS のみで別エンジン固有の懸念は薄いと判断。Phase 1d の本番確認に委ねる）
