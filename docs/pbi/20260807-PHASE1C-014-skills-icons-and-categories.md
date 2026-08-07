@@ -1,7 +1,8 @@
 # 訪問者は Skills ページで全項目のアイコンを見られ、各技術が実態に合ったカテゴリに並んでいる状態で読める
 
-Status: InProgress
+Status: Done
 Started: 2026-08-07
+Completed: 2026-08-07
 
 ## 誰が
 - 訪問者（PC / スマホ）
@@ -28,8 +29,8 @@ Started: 2026-08-07
 - [x] スマホ幅・PC 幅ともカードの高さと左端が揃っている
 - [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` エラーなし
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -104,7 +105,19 @@ Started: 2026-08-07
 - Vite の dev server は別オリジンからの画像取得を拒否する。比較用ページを別ポートで立てて dev server の SVG を参照したら全部壊れ画像になった → 検証用の素材はファイルごとコピーして同一オリジンに置く
 - dev server はサンドボックスでファイル変更を拾わないので編集後に再起動が要るが、`pkill` が効かず旧プロセスが 4321 を握ったままだった。新しい server は 4322 に退避して起動しており、4321 を見ている間は古い出力を検証し続けていた。**ポート番号を確認せずに「反映されない」と判断しないこと**（起動ログの `Local` 行を読む）
 
-残タスク：commit / push → CF preview スクショ確認 → CI green 確認 → Done 化
+### 2026-08-07 push 後検証 + Done 化
+
+- `3abc697` を push。CI 全 green（Quality Checks / UI Tests(e2e) / Workers Builds: byte-lark / CodeQL）
+- CF branch alias の配信版を DOM 実測し、ローカルと一致することを確認
+  - アイコン 34 件・読み込み失敗 0・表示サイズ全件 28×28
+  - カード高さは年数ありのカテゴリが 70px、AI 活用が 52px。390px 幅の左端は 16px / 203px の 2 列
+  - カテゴリの並びが意図どおり（Databases に Oracle / MySQL / PostgreSQL、Languages 末尾に GAS）
+  - `public/icons/` の 34 件すべてが同一オリジンから 200
+  - スクショ：PC 1280px / スマホ 390px、崩れなし
+- つまずき 2 件
+  - CF の `/skills` は `/skills/` へ 307 リダイレクトする。`curl` に `-L` を付けずに中身を見て「HTML が旧版のままだ」と誤判定しかけた。**リダイレクトを追わずに配信物を判定しない**
+  - デプロイ直後は一部のアイコンが 404 を返した（`linux.svg` → 直後 404、再取得で 200。`jetbrains.svg` も同様）。数秒後の再確認で全件 200 になったため伝播の遅れ。**デプロイ直後の 1 回の 404 で欠損と判断しない**
+- 未検証：iPhone 実機での見え方（標準の `<img>` のみで別エンジン固有の懸念は薄いと判断。Phase 1d の本番確認に委ねる）
 
 つまずき：
 

@@ -247,7 +247,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 | PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | Done |
 | PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | Done |
 | PHASE1C-013 | [hero-signature-mobile-layout](20260807-PHASE1C-013-hero-signature-mobile-layout.md) | Done |
-| PHASE1C-014 | [skills-icons-and-categories](20260807-PHASE1C-014-skills-icons-and-categories.md) | InProgress |
+| PHASE1C-014 | [skills-icons-and-categories](20260807-PHASE1C-014-skills-icons-and-categories.md) | Done |
 | **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **InProgress** |
 
 ### Phase 1c 先行トラック 推奨着手順序
@@ -304,6 +304,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-07 | **PHASE1C-014 完了（Done）**：Skills ページのアイコンなし 11 項目を解消し、全 34 項目にアイコンを付けた。Oracle を Databases へ、GAS を Languages へ移動。アイコンは外部 CDN 直リンクから `public/icons/` の自前ホストへ移行（外部参照 0 件、ライセンスは `public/icons/LICENSE.txt`）。実測でアイコンの表示サイズが 28×28 / 28×32 / 28×23 と不揃いなことが判明——`<img width height>` は Tailwind preflight の `height: auto` に負けるため、縦横比の違う SVG（struts 256×290 等）を足した時点で崩れる → `size-7 shrink-0 object-contain` を追加して全件 28×28 に統一。運営者判断で 2 件差し替え（Gemini はワードマーク→四芒星、linux は 194KB→11KB。`public/icons/` 全体 356KB→180KB）。3abc697、CI 全 green・CF preview 実測とも一致。学び 4 件：照合範囲を狭く取ったまま「無い」と断定していた（devicon だけ見て Iconify を見ていなかった）／dev server の再起動でポートが 4322 に退避していたのに 4321 を見続けた／CF の `/skills` は 307 リダイレクトで `curl -L` が要る／デプロイ直後の 404 は伝播の遅れ |
 | 2026-08-07 | **PHASE1C-014 起票（Skills アイコン欠け + カテゴリ修正）**：運営者指摘（アイコンなし 11 項目 / Oracle が OS・Middleware / GAS が Tools）を受けて追加起票、InProgress で着手。調査で、PHASE1B-001 当時の「devicon に無いものはアイコンなしで統一」という判断が照合範囲の狭さによるものと判明——Iconify（logos / tabler / simple-icons）まで広げると 11 項目すべてに該当アイコンがある。あわせてアイコンを外部 CDN 直リンクから `public/icons/` の自前ホストへ移す（PHASE1C-008 でコンテナから jsdelivr に到達できず §7 スクショ検証が運営者目視頼りになった件の解消）。配信は `<img src="/icons/*.svg">` を採用、astro-icon は Astro 6 対応不明 + Yarn 4 で未解決 issue のため不採用、`import.meta.glob` インライン化は SVG 計 356KB が HTML に乗るため不採用。番号は 014 だが Gate（012）より先に着手 |
 | 2026-08-07 | **PHASE1C-013 完了（Done）**：Hero 署名要素のスマホ配置を修正。スマホは viewBox 320×130 の横長構図を新設してお問い合わせボタンの 20px 下へ置き、軌跡を 34.3 度で左下へ降ろす（PC は 25.0 度）。負の下マージンを % 指定（−45%）にして装飾の高さ（幅比例）に追従させ、Career の位置は全幅で ±11px 以内に維持。320px の鳥とボタンの重なり 16×16 → 0、軌跡の実効不透明度 0.165 → 0.44、軌跡の終点を尾の先へ付け替え。PC は付け根修正のみで位置・大きさ・不透明度とも変化なし。`index.astro` の main に `relative` を追加し、はみ出した装飾がカードの裏に回るようにした（2e1810b、CI・CF preview とも green）。学び 2 件：モックの px 実測値をそのまま持ち込むと可変幅で破綻する／「線がカードの裏に隠れている」は見た目の思い込みで、実際は対策なしだと線が上に描かれていた |
 | 2026-08-07 | **PHASE1C-013 起票**：PHASE1C-011 の申し送り（Hero 署名要素のスマホ不具合 3 件）を正式化。モック `docs/design-drafts/phase1c-013/` で 7 方式を実ページ相当・スクロール可能な形で比較し、運営者が「案1+Career引き上げ」を採用（2026-08-07）。スマホは横長の別構図で鳥をボタンの 20px 下へ、軌跡は 34 度で左下へ降ろし Career カードの裏に隠す。Career の位置と Hero 高さは現状維持（427px）。PC は現状維持。不採用：背景レイヤー化（スマホでカードに覆われて見えない）／42 度案（PC の 24.6 度から 18 度ずれる）／縮小案（320px で 14×24px 重なりが残る）。番号は 013 だが Gate（012）より先に着手 |
