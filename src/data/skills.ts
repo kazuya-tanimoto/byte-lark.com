@@ -2,8 +2,8 @@ import type { SkillSet } from "@/types/skills";
 
 // 年数は運営者確認済みの実務経験年数（2026-06、PHASE1B-001）。
 // 出典: career-docs/master-career-data.md + 職歴タイムライン（2014 職務経歴書 + 2024-08 スキルシート）。
-// アイコンは devicon の実在を raw.githubusercontent.com/devicon.json で照合済み。
-// 不在（SQL / Struts / AI 系）はアイコンなしで統一。
+// アイコンは public/icons/ に自前ホストする（PHASE1C-014 で外部 CDN 直リンクから移行）。
+// 出典とライセンスは public/icons/LICENSE.txt を参照。
 export const skills: SkillSet[] = [
   {
     category_id: 1,
@@ -12,26 +12,20 @@ export const skills: SkillSet[] = [
       {
         id: 1,
         name: "Linux",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
+        icon: "/icons/linux.svg",
         years: 12,
       },
       {
         id: 2,
         name: "Apache",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache/apache-original.svg",
+        icon: "/icons/apache.svg",
         years: 12,
       },
       {
         id: 3,
         name: "Nginx",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg",
+        icon: "/icons/nginx.svg",
         years: 2,
-      },
-      {
-        id: 4,
-        name: "Oracle",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg",
-        years: 12,
       },
     ],
   },
@@ -40,57 +34,65 @@ export const skills: SkillSet[] = [
     category_name: "Languages",
     items: [
       {
-        id: 5,
+        id: 4,
         name: "PHP",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
+        icon: "/icons/php.svg",
         years: 11,
       },
       {
-        id: 6,
+        id: 5,
         name: "JavaScript",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+        icon: "/icons/javascript.svg",
         years: 10,
       },
       {
-        id: 7,
+        id: 6,
         name: "TypeScript",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        icon: "/icons/typescript.svg",
+        years: 3,
+      },
+      {
+        id: 7,
+        name: "Python",
+        icon: "/icons/python.svg",
         years: 3,
       },
       {
         id: 8,
-        name: "Python",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
-        years: 3,
+        name: "Java",
+        icon: "/icons/java.svg",
+        years: 6,
       },
       {
         id: 9,
-        name: "Java",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+        name: "C",
+        icon: "/icons/c.svg",
         years: 6,
       },
       {
         id: 10,
-        name: "C",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg",
+        name: "VB.Net",
+        icon: "/icons/visualbasic.svg",
         years: 6,
       },
       {
         id: 11,
-        name: "VB.Net",
-        years: 6,
-      },
-      {
-        id: 12,
         name: "ShellScript",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg",
+        icon: "/icons/bash.svg",
         years: 10,
       },
       {
-        id: 13,
+        id: 12,
         name: "SQL",
-        // devicon に汎用 sql アイコンは存在しない（VB.Net / Struts / GAS 同様アイコンなし）
+        // SQL は標準規格でロゴが存在しないため、唯一の汎用アイコン（tabler）
+        icon: "/icons/sql.svg",
         years: 12,
+      },
+      {
+        id: 13,
+        name: "GAS",
+        icon: "/icons/gas.svg",
+        years: 3,
       },
     ],
   },
@@ -101,37 +103,37 @@ export const skills: SkillSet[] = [
       {
         id: 14,
         name: "React",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+        icon: "/icons/react.svg",
         years: 3,
       },
       {
         id: 15,
         name: "TailwindCSS",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+        icon: "/icons/tailwindcss.svg",
         years: 3,
       },
       {
         id: 16,
         name: "Laravel",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg",
+        icon: "/icons/laravel.svg",
         years: 5,
       },
       {
         id: 17,
         name: "CodeIgniter",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/codeigniter/codeigniter-plain.svg",
+        icon: "/icons/codeigniter.svg",
         years: 6,
       },
       {
         id: 18,
         name: "Flask",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg",
+        icon: "/icons/flask.svg",
         years: 2,
       },
       {
         id: 19,
         name: "Struts",
-        // devicon に struts アイコンは存在しない（URL は 404）。VB.Net / SQL / GAS 同様アイコンなし
+        icon: "/icons/struts.svg",
         years: 6,
       },
     ],
@@ -142,14 +144,20 @@ export const skills: SkillSet[] = [
     items: [
       {
         id: 20,
-        name: "MySQL",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
-        years: 11,
+        name: "Oracle",
+        icon: "/icons/oracle.svg",
+        years: 12,
       },
       {
         id: 21,
+        name: "MySQL",
+        icon: "/icons/mysql.svg",
+        years: 11,
+      },
+      {
+        id: 22,
         name: "PostgreSQL",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+        icon: "/icons/postgresql.svg",
         years: 2,
       },
     ],
@@ -159,39 +167,33 @@ export const skills: SkillSet[] = [
     category_name: "Tools",
     items: [
       {
-        id: 22,
+        id: 23,
         name: "Git",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+        icon: "/icons/git.svg",
         years: 12,
       },
       {
-        id: 23,
+        id: 24,
         name: "JetBrains",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jetbrains/jetbrains-original.svg",
+        icon: "/icons/jetbrains.svg",
         years: 8,
       },
       {
-        id: 24,
-        name: "Neovim",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/neovim/neovim-original.svg",
-        years: 3,
-      },
-      {
         id: 25,
-        name: "Docker",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
-        years: 6,
+        name: "Neovim",
+        icon: "/icons/neovim.svg",
+        years: 3,
       },
       {
         id: 26,
-        name: "GAS",
-        // devicon に GAS（Google Apps Script）アイコンは存在しない
-        years: 3,
+        name: "Docker",
+        icon: "/icons/docker.svg",
+        years: 6,
       },
       {
         id: 27,
         name: "Selenium",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg",
+        icon: "/icons/selenium.svg",
         years: 5,
       },
     ],
@@ -199,15 +201,15 @@ export const skills: SkillSet[] = [
   {
     category_id: 6,
     category_name: "AI 活用",
-    // 年数表示に馴染まないため名前のみ。devicon に該当アイコンなし。
+    // 年数表示に馴染まないため名前のみ。
     items: [
-      { id: 28, name: "Claude" },
-      { id: 29, name: "Claude Code" },
-      { id: 30, name: "Cursor" },
-      { id: 31, name: "GitHub Copilot" },
-      { id: 32, name: "ChatGPT" },
-      { id: 33, name: "Gemini" },
-      { id: 34, name: "MCP" },
+      { id: 28, name: "Claude", icon: "/icons/claude.svg" },
+      { id: 29, name: "Claude Code", icon: "/icons/claude-code.svg" },
+      { id: 30, name: "Cursor", icon: "/icons/cursor.svg" },
+      { id: 31, name: "GitHub Copilot", icon: "/icons/copilot.svg" },
+      { id: 32, name: "ChatGPT", icon: "/icons/chatgpt.svg" },
+      { id: 33, name: "Gemini", icon: "/icons/gemini.svg" },
+      { id: 34, name: "MCP", icon: "/icons/mcp.svg" },
     ],
   },
 ];

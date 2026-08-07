@@ -7,7 +7,7 @@ Started: 2026-08-07
 - 運営者 + Claude
 
 ## 何をできる
-- Phase 1c の全 PBI（先行トラック 001〜007 + 期中追加 008 / 009 + 仕上げトラック 010 / 011 / 013）が Done になったことを確認できる
+- Phase 1c の全 PBI（先行トラック 001〜007 + 期中追加 008 / 009 + 仕上げトラック 010 / 011 / 013 / 014）が Done になったことを確認できる
 - Phase 1c で得た知見・想定外・つまずきを集約し、Phase 1d（公開）PBI 起票時の参考資料として明文化できる
 
 ## なんのために
@@ -17,7 +17,7 @@ Started: 2026-08-07
 ## 受け入れ条件
 
 ### Phase 1c 完了確認
-- [x] PHASE1C-001 〜 PHASE1C-011 + PHASE1C-013 のすべてが Status: Done
+- [ ] PHASE1C-001 〜 PHASE1C-011 + PHASE1C-013 / 014 のすべてが Status: Done（014 は 2026-08-07 追加起票。本 Gate の起票後に差し込まれたため再確認が必要）
 - [x] `docs/pbi/INDEX.md` の Phase 1c セクションがすべて `[Done]` 表示（012 は本 Gate）
 - [x] feat/phase-1 ブランチで `yarn dev` / `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がすべて成功
 
@@ -135,6 +135,7 @@ Phase 1c 全 PBI（001〜011 / 013）の実装ログと、前 Gate（PHASE1B-014
 
 1. Phase 1c 完了確認
    - PHASE1C-001〜011 + 013 の全 12 件が Status: Done（各ファイルの Status 行を機械照合）。INDEX.md の Phase 1c 表とも一致
+   - ※ この確認の後、2026-08-07 に PHASE1C-014（Skills アイコン欠け + カテゴリ修正）が追加起票された。014 の Done 化後に完了確認をやり直す
    - `yarn check`（Biome 38 ファイル）/ `yarn check:ts`（0 errors）/ `yarn test:run`（30 passed）/ `yarn build`（11 ページ）すべて成功。`yarn dev` は PHASE1C-013 のローカル検証で稼働確認済み
 2. 申し送り棚卸し：Phase 1c 全 PBI の実装ログと PHASE1B-014 の持ち越し 11 件を項目単位で判定し、`## Phase 1d への申し送り` に表として記載（持ち越し 14 / 本 Gate 消化 2 / 破棄 11）
 3. `## Phase 1d への申し送り` 執筆（確定した技術前提 / 想定外と回避策 / 計画書と実態の差分 / 1d 起票時の注意 / 先に決めるべき事項）

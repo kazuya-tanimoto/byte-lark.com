@@ -229,7 +229,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 
 ## Phase 1c：デザインブラッシュアップ（旧 1b）
 
-二段構え（site-plan v3.10 §8 Decision #28）：**先行トラック**（記事非依存、PHASE1C-001〜007）は 2026-07-12 起票済み。PHASE1C-008（署名要素の見た目適用、2026-07-25）と PHASE1C-009（追従目次、2026-08-05）は期中の追加起票。**仕上げトラック**（B-3 CSS サイズ見直し / 全初期記事セットでのデザイン最終再検証 / Phase 1c Gate）は Phase 1b Gate（PHASE1B-014、2026-08-05 通過）の申し送りを反映して **2026-08-06 に PHASE1C-010〜012 として正式化済み**（[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) §C の正式化）。PHASE1C-013 は 011 の申し送りから 2026-08-07 に追加起票。
+二段構え（site-plan v3.10 §8 Decision #28）：**先行トラック**（記事非依存、PHASE1C-001〜007）は 2026-07-12 起票済み。PHASE1C-008（署名要素の見た目適用、2026-07-25）と PHASE1C-009（追従目次、2026-08-05）は期中の追加起票。**仕上げトラック**（B-3 CSS サイズ見直し / 全初期記事セットでのデザイン最終再検証 / Phase 1c Gate）は Phase 1b Gate（PHASE1B-014、2026-08-05 通過）の申し送りを反映して **2026-08-06 に PHASE1C-010〜012 として正式化済み**（[draft-phase1c-design-polish.md](draft-phase1c-design-polish.md) §C の正式化）。PHASE1C-013 は 011 の申し送りから 2026-08-07 に追加起票。PHASE1C-014 は運営者指摘（Skills ページのアイコン欠けとカテゴリ誤り）から 2026-08-07 に追加起票。
 
 表は推奨着手順序に従って並べる：
 
@@ -247,6 +247,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 | PHASE1C-010 | [css-size-render-blocking](20260806-PHASE1C-010-css-size-render-blocking.md) | Done |
 | PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | Done |
 | PHASE1C-013 | [hero-signature-mobile-layout](20260807-PHASE1C-013-hero-signature-mobile-layout.md) | Done |
+| PHASE1C-014 | [skills-icons-and-categories](20260807-PHASE1C-014-skills-icons-and-categories.md) | InProgress |
 | **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **InProgress** |
 
 ### Phase 1c 先行トラック 推奨着手順序
@@ -273,6 +274,8 @@ PHASE1C-010 (B-3 CSS サイズ・描画ブロック見直し) ← 最初。CSS �
 PHASE1C-011 (全記事デザイン最終再検証 ← 1b Gate 申し送りの裏取り 4 件を含む)
   ↓
 PHASE1C-013 (Hero 署名要素のスマホ配置 ← 011 の申し送り。番号は後ろだが Gate より先)
+  ↓
+PHASE1C-014 (Skills アイコン欠け + カテゴリ修正 ← 運営者指摘。同じく Gate より先)
   ↓
 PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲート。CF Deploy Hooks 設定を含む)
 ```
@@ -301,6 +304,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-07 | **PHASE1C-014 起票（Skills アイコン欠け + カテゴリ修正）**：運営者指摘（アイコンなし 11 項目 / Oracle が OS・Middleware / GAS が Tools）を受けて追加起票、InProgress で着手。調査で、PHASE1B-001 当時の「devicon に無いものはアイコンなしで統一」という判断が照合範囲の狭さによるものと判明——Iconify（logos / tabler / simple-icons）まで広げると 11 項目すべてに該当アイコンがある。あわせてアイコンを外部 CDN 直リンクから `public/icons/` の自前ホストへ移す（PHASE1C-008 でコンテナから jsdelivr に到達できず §7 スクショ検証が運営者目視頼りになった件の解消）。配信は `<img src="/icons/*.svg">` を採用、astro-icon は Astro 6 対応不明 + Yarn 4 で未解決 issue のため不採用、`import.meta.glob` インライン化は SVG 計 356KB が HTML に乗るため不採用。番号は 014 だが Gate（012）より先に着手 |
 | 2026-08-07 | **PHASE1C-013 完了（Done）**：Hero 署名要素のスマホ配置を修正。スマホは viewBox 320×130 の横長構図を新設してお問い合わせボタンの 20px 下へ置き、軌跡を 34.3 度で左下へ降ろす（PC は 25.0 度）。負の下マージンを % 指定（−45%）にして装飾の高さ（幅比例）に追従させ、Career の位置は全幅で ±11px 以内に維持。320px の鳥とボタンの重なり 16×16 → 0、軌跡の実効不透明度 0.165 → 0.44、軌跡の終点を尾の先へ付け替え。PC は付け根修正のみで位置・大きさ・不透明度とも変化なし。`index.astro` の main に `relative` を追加し、はみ出した装飾がカードの裏に回るようにした（2e1810b、CI・CF preview とも green）。学び 2 件：モックの px 実測値をそのまま持ち込むと可変幅で破綻する／「線がカードの裏に隠れている」は見た目の思い込みで、実際は対策なしだと線が上に描かれていた |
 | 2026-08-07 | **PHASE1C-013 起票**：PHASE1C-011 の申し送り（Hero 署名要素のスマホ不具合 3 件）を正式化。モック `docs/design-drafts/phase1c-013/` で 7 方式を実ページ相当・スクロール可能な形で比較し、運営者が「案1+Career引き上げ」を採用（2026-08-07）。スマホは横長の別構図で鳥をボタンの 20px 下へ、軌跡は 34 度で左下へ降ろし Career カードの裏に隠す。Career の位置と Hero 高さは現状維持（427px）。PC は現状維持。不採用：背景レイヤー化（スマホでカードに覆われて見えない）／42 度案（PC の 24.6 度から 18 度ずれる）／縮小案（320px で 14×24px 重なりが残る）。番号は 013 だが Gate（012）より先に着手 |
 | 2026-08-06 | **PHASE1C-011 完了（Done）**：全 3 記事 × PC/スマホの実表示確認で崩れ 0 件。1b Gate 申し送り 4 件を全消化——雇用形態バッジは 3 種とも AA 通過（6.34 / 6.28 / 4.80、PHASE1C-002 で確定トークン反映済みだった）、署名要素は実記事上で意図どおり、heading-order は全 11 ページ pass、`text-wrap` は全ページ・3 幅の折り返しを実測比較して現状維持を運営者が判断（balance 有利 6 件 / 不利 6 件で互角、外すと語中割れが出る）。副産物：Lighthouse 監査スクリプトの `PATHS` が静的 8 ページ固定で記事が対象外だったため記事 3 本を追加 → Cloudflare 記事で color-contrast fail が出現し、Shiki テーマを `github-light`（variable 色 #e36209 が 3.49:1）から `github-light-default`（同 #953800 が 7.39:1、文字色 45 指定すべて AA）へ変更。再計測で 11 ページとも accessibility 100 / color-contrast pass（56f1fe1、CI・CF preview とも green）。申し送り：Hero 署名要素に 3 点の指摘（スマホでボタンと衝突 / 軌跡の実効不透明度 0.165 / 軌跡の終点が尾でなく胴の下）→ 別 PBI で対応 |

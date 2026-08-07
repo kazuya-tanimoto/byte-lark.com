@@ -17,7 +17,16 @@ const headingId = `skills-category-${set.category_id}`;
     {
       set.items.map((skill) => (
         <li class="flex items-center gap-3 rounded-lg bg-card p-3 shadow-card">
-          {skill.icon && <img src={skill.icon} alt="" width="28" height="28" loading="lazy" />}
+          {skill.icon && (
+            <img
+              src={skill.icon}
+              alt=""
+              width="28"
+              height="28"
+              loading="lazy"
+              class="size-7 shrink-0 object-contain"
+            />
+          )}
           <div>
             <p class="text-sm font-medium text-foreground">{skill.name}</p>
             {skill.years != null && <p class="text-xs text-muted-foreground">{skill.years} 年</p>}
