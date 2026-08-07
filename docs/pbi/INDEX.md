@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-06
+最終更新: 2026-08-08
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -248,7 +248,7 @@ PHASE1B-014 (Phase 1b Retrospective Gate)  ← Done（2026-08-05。Phase 1b 完�
 | PHASE1C-011 | [design-final-verification](20260806-PHASE1C-011-design-final-verification.md) | Done |
 | PHASE1C-013 | [hero-signature-mobile-layout](20260807-PHASE1C-013-hero-signature-mobile-layout.md) | Done |
 | PHASE1C-014 | [skills-icons-and-categories](20260807-PHASE1C-014-skills-icons-and-categories.md) | Done |
-| **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **InProgress** |
+| **PHASE1C-012** | [**retrospective-gate**](20260806-PHASE1C-012-retrospective-gate.md) **(Gate)** | **Done** |
 
 ### Phase 1c 先行トラック 推奨着手順序
 
@@ -304,6 +304,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-08 | **PHASE1C-012 完了（Done）＝ Phase 1c Gate 通過**：非 Gate PBI 13 件（001〜011 / 013 / 014）全 Done 確認 + build / check / check:ts / test:run 全成功 + CI green。Phase 1c 全実装ログと PHASE1B-014 の持ち越し 11 件を棚卸しし（持ち越し 16 / 本 Gate 消化 2 / 破棄 12）、「Phase 1d への申し送り」を Gate PBI に記入（確定した技術前提 / 想定外と回避策 / 計画書との差分 / 1d 起票時の注意 / 先に決めるべき事項）。運営者作業の CF Deploy Hooks を設定（`feat/phase-1` 向け 1 本、`curl -X POST` でビルド増加を実地確認）。計画書との差分 5 件を修正（site-plan §13 現在地マーカーを移行期へ / §12 自己参照 v3.11→v3.12 / site-plan・CLAUDE.md の README 参照 v3.3→v3.6 / INDEX 先行トラック範囲の事実誤り）。README を v3.7 に改訂（§5.4 に「外形が変わるコミットを打ったセッションは Done 化まで終える」）。副産物：Stop hook が出力契約を破って散文を返し内部機構の話が運営者向け応答に混入したため、settings.json で出力を JSON のみに制限し CLAUDE.md に非言及ルールを追加。想定外：Gate 実施中に同一ツリーの別セッションが PHASE1C-014 を起票・着手（README §9 の 1 ツリー 1 セッション違反）→ 014 を先に閉じてから完了確認をやり直した。次セッションは Phase 1d PBI 起票（draft-phase1d-domain-launch.md の正式化）から |
 | 2026-08-07 | **PHASE1C-014 完了（Done）**：Skills ページのアイコンなし 11 項目を解消し、全 34 項目にアイコンを付けた。Oracle を Databases へ、GAS を Languages へ移動。アイコンは外部 CDN 直リンクから `public/icons/` の自前ホストへ移行（外部参照 0 件、ライセンスは `public/icons/LICENSE.txt`）。実測でアイコンの表示サイズが 28×28 / 28×32 / 28×23 と不揃いなことが判明——`<img width height>` は Tailwind preflight の `height: auto` に負けるため、縦横比の違う SVG（struts 256×290 等）を足した時点で崩れる → `size-7 shrink-0 object-contain` を追加して全件 28×28 に統一。運営者判断で 2 件差し替え（Gemini はワードマーク→四芒星、linux は 194KB→11KB。`public/icons/` 全体 356KB→180KB）。3abc697、CI 全 green・CF preview 実測とも一致。学び 4 件：照合範囲を狭く取ったまま「無い」と断定していた（devicon だけ見て Iconify を見ていなかった）／dev server の再起動でポートが 4322 に退避していたのに 4321 を見続けた／CF の `/skills` は 307 リダイレクトで `curl -L` が要る／デプロイ直後の 404 は伝播の遅れ |
 | 2026-08-07 | **PHASE1C-014 起票（Skills アイコン欠け + カテゴリ修正）**：運営者指摘（アイコンなし 11 項目 / Oracle が OS・Middleware / GAS が Tools）を受けて追加起票、InProgress で着手。調査で、PHASE1B-001 当時の「devicon に無いものはアイコンなしで統一」という判断が照合範囲の狭さによるものと判明——Iconify（logos / tabler / simple-icons）まで広げると 11 項目すべてに該当アイコンがある。あわせてアイコンを外部 CDN 直リンクから `public/icons/` の自前ホストへ移す（PHASE1C-008 でコンテナから jsdelivr に到達できず §7 スクショ検証が運営者目視頼りになった件の解消）。配信は `<img src="/icons/*.svg">` を採用、astro-icon は Astro 6 対応不明 + Yarn 4 で未解決 issue のため不採用、`import.meta.glob` インライン化は SVG 計 356KB が HTML に乗るため不採用。番号は 014 だが Gate（012）より先に着手 |
 | 2026-08-07 | **PHASE1C-013 完了（Done）**：Hero 署名要素のスマホ配置を修正。スマホは viewBox 320×130 の横長構図を新設してお問い合わせボタンの 20px 下へ置き、軌跡を 34.3 度で左下へ降ろす（PC は 25.0 度）。負の下マージンを % 指定（−45%）にして装飾の高さ（幅比例）に追従させ、Career の位置は全幅で ±11px 以内に維持。320px の鳥とボタンの重なり 16×16 → 0、軌跡の実効不透明度 0.165 → 0.44、軌跡の終点を尾の先へ付け替え。PC は付け根修正のみで位置・大きさ・不透明度とも変化なし。`index.astro` の main に `relative` を追加し、はみ出した装飾がカードの裏に回るようにした（2e1810b、CI・CF preview とも green）。学び 2 件：モックの px 実測値をそのまま持ち込むと可変幅で破綻する／「線がカードの裏に隠れている」は見た目の思い込みで、実際は対策なしだと線が上に描かれていた |
