@@ -291,11 +291,12 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-001 | [prelaunch-qa](20260808-PHASE1D-001-prelaunch-qa.md) | Done |
 | PHASE1D-002 | [corporate-identity-update](20260808-PHASE1D-002-corporate-identity-update.md) | Done |
 | PHASE1D-003 | [ns-migration](20260808-PHASE1D-003-ns-migration.md) | Done |
-| PHASE1D-004 | [main-merge-custom-domain](20260808-PHASE1D-004-main-merge-custom-domain.md) | InProgress |
+| PHASE1D-004 | [main-merge-custom-domain](20260808-PHASE1D-004-main-merge-custom-domain.md) | Done |
 | PHASE1D-005 | [www-redirect](20260808-PHASE1D-005-www-redirect.md) | NotStarted |
 | PHASE1D-006 | [analytics-search-console](20260808-PHASE1D-006-analytics-search-console.md) | NotStarted |
 | PHASE1D-007 | [monitoring-ignition](20260808-PHASE1D-007-monitoring-ignition.md) | NotStarted |
 | PHASE1D-008 | [postlaunch-checks-routines](20260808-PHASE1D-008-postlaunch-checks-routines.md) | NotStarted |
+| PHASE1D-010 | [font-subsetting](20260808-PHASE1D-010-font-subsetting.md) | NotStarted |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
 ### Phase 1d 推奨着手順序
@@ -310,7 +311,8 @@ PHASE1D-004 (main マージ + カスタムドメイン接続 + 本番 Lighthouse
   ↓
 ┌─ PHASE1D-005 (www 畳み)
 ├─ PHASE1D-006 (Web Analytics + Search Console + OGP)
-└─ PHASE1D-007 (監視点火) ← 004 後、相互に並行可
+├─ PHASE1D-007 (監視点火) ← 004 後、相互に並行可
+└─ PHASE1D-010 (フォントサブセット化 ← 004 の本番計測で Perf 未達 9 ページ、実施時期は運営者判断)
   ↓
 PHASE1D-008 (公開後実機確認 + R-01 routine 点火)
   ↓
@@ -335,6 +337,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-08 | **PHASE1D-004 完了（Done）＝サイト公開 + PHASE1D-010 起票**：記事 3 本の publishedAt を 2026-08-08 へ更新し、feat/phase-1 を main へマージ（01239b9。sandbox で merge 不可のため `git commit-tree` による 2 親マージ + `push <sha>:main`）、main CI 全 green・本番 Worker デプロイ成功。運営者作業で main 向け Deploy Hook「main manual rebuild」作成、旧 apex A 削除のうえ byte-lark.com を Workers カスタムドメインとして接続（正規ホストは www なしの apex に運営者が確定、www 畳みは 005）。https://byte-lark.com で全 10 ページ表示・noindex なし・HTTPS 有効を確認し**サイト公開**。本番 Lighthouse は SEO 全 11 ページ 100 / CLS ≈0（実記事の測り直し込み）、Performance は 2/11 のみ 90+（59〜82、ページあたりフォント 0.35〜1.1MB が原因。実測 FCP 0.3〜2.6s をシミュレーションが 5〜7s に外挿）→ 受け入れ条件の判定に従い **PHASE1D-010（font-subsetting）を起票**（実施時期は運営者判断）。想定外：NS 移管直後のルーターの旧委任キャッシュで旧サイトが見え続けた（テザリングで回避、最大 48h で自然解消）。申し送り：並行セッションのプライバシーポリシー改定（224a4a4）が main 未反映 → 次回 main マージで反映 |
 | 2026-08-08 | **PHASE1D-003 完了（Done）**：byte-lark.com の DNS 管理を Xserver から Cloudflare へ NS 移管（Free / Worker と同一アカウント、全 12 レコード DNS only）。切替前に MX を `sv16806.xserver.jp` 直指しへ変更・SPF から `+a:byte-lark.com` 削除・`_dmarc`（p=none）新設、DKIM 2 本は 1 文字単位照合。DNSSEC 無効を確認して切替、伝播は約 10 分で完了。メール 3 経路（tanimoto@ / info@ 送受信、Contact フォーム→Resend→info@）の生存確認済み。切り戻しは Xserver ネームサーバー設定を戻すだけ（Xserver 側ゾーンは温存） |
 | 2026-08-08 | **Phase 1d PBI 起票（PHASE1D-001〜009、NotStarted）**：draft-phase1d-domain-launch.md を正式化（対応表はドラフト冒頭に記載）し、PHASE1C-012 の持ち越し項目を各 PBI に配置。起票前に運営者決定 3 件を確定：① ダークモードは 001 で実表示（`.dark` 強制付与）を見て採用可否判断 ② 法人化対応は登記完了済み（合同会社バイトラーク、法人番号指定 2026-06-05）のため 002 として Phase 1d に含める ③ インボイス登録番号はサイト掲載なし（エージェント経由取引で掲載メリットなし、直案件開始時に再検討）。NS 移管の要否は CF 公式 docs で再確認（Workers カスタムドメインは自アカウントの Active ゾーン前提・Free プランはフルセットアップ一択のため必須。DNS 管理のみ移り、メールサーバーは Xserver のまま） |
 | 2026-08-08 | **PHASE1C-012 完了（Done）＝ Phase 1c Gate 通過**：非 Gate PBI 13 件（001〜011 / 013 / 014）全 Done 確認 + build / check / check:ts / test:run 全成功 + CI green。Phase 1c 全実装ログと PHASE1B-014 の持ち越し 11 件を棚卸しし（持ち越し 16 / 本 Gate 消化 2 / 破棄 12）、「Phase 1d への申し送り」を Gate PBI に記入（確定した技術前提 / 想定外と回避策 / 計画書との差分 / 1d 起票時の注意 / 先に決めるべき事項）。運営者作業の CF Deploy Hooks を設定（`feat/phase-1` 向け 1 本、`curl -X POST` でビルド増加を実地確認）。計画書との差分 5 件を修正（site-plan §13 現在地マーカーを移行期へ / §12 自己参照 v3.11→v3.12 / site-plan・CLAUDE.md の README 参照 v3.3→v3.6 / INDEX 先行トラック範囲の事実誤り）。README を v3.7 に改訂（§5.4 に「外形が変わるコミットを打ったセッションは Done 化まで終える」）。副産物：Stop hook が出力契約を破って散文を返し内部機構の話が運営者向け応答に混入したため、settings.json で出力を JSON のみに制限し CLAUDE.md に非言及ルールを追加。想定外：Gate 実施中に同一ツリーの別セッションが PHASE1C-014 を起票・着手（README §9 の 1 ツリー 1 セッション違反）→ 014 を先に閉じてから完了確認をやり直した。次セッションは Phase 1d PBI 起票（draft-phase1d-domain-launch.md の正式化）から |
