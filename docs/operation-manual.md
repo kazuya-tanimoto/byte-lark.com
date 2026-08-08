@@ -100,7 +100,78 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 - PAT は fine-grained（この repo 限定 / Contents read+write / 無期限運用）。GitHub の fine-grained PAT 一覧で last used を時々確認し、使わなくなったら失効させる
 - コンテナから母艦の設定（`~/dotfiles`、`~/.claude` 等）への書き戻しは禁止。グローバル CLAUDE.md は read-only mount からのコピー持ち込みのみ、コンテナ内の Claude 設定は volume 内に閉じる
 
-## 6. 関連ドキュメント
+## 6. サイト監視（health-check.sh）の設置と運用
+
+本番サイトが落ちていないか・書き換えられていないかを Xserver の cron から定期的に見に行き、**異常のときだけ**メールと Slack に通知する仕組み（PHASE1D-007 で導入。なぜこの形なのかは `docs/incident-response.md` §2）。スクリプトの実体はリポジトリの `scripts/health-check.sh`。
+
+見ているのは 4 つです。
+
+- HTTP ステータスが 200 か（落ちていないか）
+- 決めた文字列がページに残っているか（書き換えられていないか。既定は `<title>byte-lark.com</title>` と `合同会社バイトラーク`）
+- 配信ヘッダが想定どおりか（公開後に `noindex` が付いていないこと等）
+- TLS 証明書の残日数（既定は 14 日を切ったら異常）
+
+1 回の失敗では鳴らしません。**2 回続けて異常**になったときだけ通知します（一時的な回線の揺れで起こされないため）。直ったときは「復旧」の通知が 1 回だけ飛びます。
+
+### 設置手順（Xserver、初回だけ）
+
+1. SSH でログインし、置き場所を作ってスクリプトを取ってくる：
+
+```bash
+mkdir -p ~/monitor
+curl -sSfL -o ~/monitor/health-check.sh \
+  https://raw.githubusercontent.com/kazuya-tanimoto/byte-lark.com/feat/phase-1/scripts/health-check.sh
+chmod +x ~/monitor/health-check.sh
+```
+
+2. 設定ファイルを作る。Slack の Webhook URL は秘密情報なので、ここにだけ書きます（リポジトリには絶対に入れない）：
+
+```bash
+cat > ~/.byte-lark-monitor.env <<'EOF'
+MONITOR_URL="https://byte-lark.com"
+SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXX/YYY/ZZZ"
+EOF
+chmod 600 ~/.byte-lark-monitor.env
+```
+
+3. 手で 1 回動かして、観測値が想定どおりか見る（この `--inspect` は状態も通知も触らない、ただの確認モード）：
+
+```bash
+bash ~/monitor/health-check.sh --inspect
+```
+
+4. 通知の配線を確認する（メールと Slack にテストが 1 通ずつ飛ぶ）：
+
+```bash
+bash ~/monitor/health-check.sh --test-notify
+```
+
+5. サーバーパネルの「Cron設定」で登録する。
+   - 実行コマンド：`/bin/bash /home/<アカウント名>/monitor/health-check.sh`
+   - 実行間隔：10 分ごと（分の欄に `*/10`、他は `*`）
+   - 通知先メールアドレス：受け取りたいアドレス（cron は**出力があったときだけ**メールを送る。このスクリプトは正常時に何も出力しないので、平常時のメールはゼロ）
+
+### 普段の運用
+
+- 平常時は何も届きません。届いたら異常です。読み方と初動は `docs/incident-response.md` §3 以降。
+- スクリプトや cron を触ったら、**必ず一度手で実行**して壊れていないことを確認します（この構成では監視自身の死活を別サービスで見張らない代わりに、これだけは守る。理由は incident-response.md §2）。
+- サイトの文言を大きく変えてカナリア文字列が消える場合は、`~/.byte-lark-monitor.env` に `CANARIES=("新しい文字列")` を書いて更新します。書き換えないと誤報が出ます。
+- 実行の履歴は `~/.byte-lark-monitor/health-check.log` に 1 行ずつ残ります。
+
+### 主な設定項目
+
+設定ファイル `~/.byte-lark-monitor.env` に書けるもの（すべて任意、書かなければ既定値）。
+
+- `MONITOR_URL`：監視先。既定 `https://byte-lark.com`
+- `PATHS`：確認するパス。既定 `("/")`。リダイレクトは追わないので末尾スラッシュまで正確に書く
+- `CANARIES`：残っているべき文字列の配列
+- `REQUIRE_HEADERS` / `FORBID_HEADERS`：`("ヘッダ名=部分文字列")` の配列。既定は `content-type=text/html` を必須、`x-robots-tag=noindex` を禁止
+- `TLS_MIN_DAYS`：証明書の残日数のしきい値。既定 14
+- `FAIL_THRESHOLD`：何回連続の異常で通知するか。既定 2
+- `SLACK_WEBHOOK_URL`：Slack の Incoming Webhook。空なら Slack へは送らない
+- `MAIL_TO`：`mail` コマンドで直接送りたいときだけ設定。空なら cron のメール設定に任せる（Xserver ではこちらが基本）
+
+## 7. 関連ドキュメント
 
 | ドキュメント | 役割 | 主な読者 |
 |---|---|---|
@@ -110,10 +181,11 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 | `docs/pbi/*.md` | 個別 PBI | Claude |
 | `docs/writing-workflow.md` | 記事執筆ワークフロー（Phase 1a 冒頭で作成予定） | 運営者 |
 | `docs/devcontainer-plan.md` | devcontainer 環境の設計・実施手順（PHASE1B-016） | Claude / 運営者 |
+| `docs/incident-response.md` | 監視の方針・インシデント初動フロー・ケース別手順 | 運営者 |
 | **本ファイル** | **運営者向け運用マニュアル** | **運営者** |
 | `CLAUDE.md` | プロジェクト規約 + 多セッション運用プロトコル（PHASE0-005 で全面書き換え） | Claude |
 
-## 7. 改訂履歴
+## 8. 改訂履歴
 
 | 日付 | 変更内容 |
 |---|---|
@@ -125,3 +197,4 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 | 2026-07-19 | §5 devcontainer 運用を新設（PHASE1B-016 連動）：起動手順（ccd / 手動）、firewall 有効確認、PAT の扱い、書き戻し禁止。旧 §5 関連ドキュメント → §6（devcontainer-plan.md 行追加）、旧 §6 改訂履歴 → §7 に繰り下げ |
 | 2026-07-19 | §5 更新（PHASE1B-016 ステップ 8 完了）：ccd / ccda / ccd-init を dotfiles に実装済みとなったため暫定の直接実行手順を削除。`ccd --rebuild` と他 repo 導入（ccd-init + dotfiles 型紙 README）を追記 |
 | 2026-08-02 | 並行運用ルール連動（README v3.5）：シーン別表の「並行 PBI 開始」を別名 clone の別作業ツリー前提に更新（同一ツリー 2 セッション禁止、初回 `gh auth login` + `yarn install`）。Q6 の原因記述も別 clone 運用に修正 |
+| 2026-08-09 | §6 サイト監視（health-check.sh）の設置と運用を新設（PHASE1D-007 連動）：Xserver への設置手順、設定ファイルと Slack Webhook の置き方、cron 登録、普段の運用、主な設定項目。関連ドキュメント表に incident-response.md を追加。旧 §6 関連ドキュメント → §7、旧 §7 改訂履歴 → §8 に繰り下げ |

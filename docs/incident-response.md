@@ -63,7 +63,9 @@
 - **無料・既契約**：追加コストなし。Xserver の cron は shell・PHP の両方を実行でき、外向き curl も使える前提（運営者確認済み）。
 - **確定的**：死活・文字列照合（改ざんカナリア）・証明書期限は決め打ちのスクリプトで十分。AI 判断は不要で、誤検知も少ない。
 
-監視スクリプトがやること（実装は Phase 1d）：本番 URL を curl で叩き、(1) HTTP 200 か、(2) 想定の文字列（例：`<title>byte-lark.com</title>` や `byte-lark`）が残っているか＝改ざんカナリア、(3) セキュリティ/配信ヘッダが想定通りか、(4) TLS 証明書の残日数、を確認し、**異常時だけ通知**する。1 回の失敗で鳴らさず「2 回連続失敗で通知」等のしきい値を入れて誤報を抑える。これらの取得は実機（branch alias）で動作確認済み。
+監視スクリプトがやること：本番 URL を curl で叩き、(1) HTTP 200 か、(2) 想定の文字列（`<title>byte-lark.com</title>` と `合同会社バイトラーク`）が残っているか＝改ざんカナリア、(3) セキュリティ/配信ヘッダが想定通りか（公開後に `noindex` が付いていないこと）、(4) TLS 証明書の残日数、を確認し、**異常時だけ通知**する。1 回の失敗で鳴らさず「2 回連続失敗で通知」のしきい値を入れて誤報を抑える。
+
+実体は `scripts/health-check.sh`（PHASE1D-007 で実装）。Xserver への設置・cron 登録・設定ファイルの書き方は `docs/operation-manual.md` §6。
 
 通知は **メール + Slack（Incoming Webhook）の二重**にする（メール＝証跡が残る／ Slack ＝スマホへ即時）。運用上の決めごと：
 
@@ -71,7 +73,7 @@
 - 異常時のみ・しきい値付きで鳴らす（アラート疲れ防止）。
 - **「監視自身の死活を別サービスで見張る（dead man's switch）」は本構成では不要**と判断する。監視スクリプト・cron が止まる原因は実質 (a) 自分でスクリプト/cron を壊す、(b) Xserver 自体の障害・契約停止、の 2 つ。(a) は変更後に一度手で実行して確認すれば防げる。(b) は Xserver 側がインフラを監視・復旧しており、かつ**業務メール（@byte-lark.com）も同じ Xserver に同居**（MX が `sv16806.xserver.jp` 直指し）しているため、サーバー/契約が完全に止まればメール不通で嫌でも気づく。外部監視を増やすより構成をシンプルに保つ方を採る。
 
-> 補足：本格的な監視は本番ドメインを対象にしてこそ意味があるため、Xserver cron / UptimeRobot の点火は**カスタムドメイン公開（Phase 1d）に合わせる**。それまで（branch alias / noindex 段階）に今すぐ入れるのは、下の GitHub 設定だけでよい。実装は Phase 1d の監視 PBI（`draft-phase1d-domain-launch.md` の「公開後の監視セットアップ」）で行う。
+> 補足：本格的な監視は本番ドメインを対象にしてこそ意味があるため、Xserver cron / UptimeRobot の点火は**カスタムドメイン公開（Phase 1d）に合わせる**とした。公開（2026-08-08）を受けて PHASE1D-007 で実装・点火する。
 
 ### 今すぐやること（無料・5分・サービス純正の push）
 
@@ -190,7 +192,7 @@ GitHub の **Settings → Code security and analysis** で次を有効化する�
 ### 自動で飛んでくる（運営者の操作不要）
 
 - 依存の脆弱性・秘密情報の混入 → GitHub からメール（要・初期設定。§2「今すぐやること」）
-- サイト停止・改ざん・証明書期限 → Xserver cron の監視スクリプトからメール / webhook（Phase 1d で点火）
+- サイト停止・改ざん・証明書期限 → Xserver cron の監視スクリプト（`scripts/health-check.sh`）からメール + Slack。設置手順は `docs/operation-manual.md` §6
 
 → これらは**通知が来たときだけ動く**。来なければ正常、が原則。
 
@@ -207,8 +209,8 @@ GitHub の **Settings → Code security and analysis** で次を有効化する�
 ## 8. 関連ドキュメント
 
 - `docs/site-plan.md` R-11（本手順書の根拠）/ R-13（バックアップ）/ §13（法人化に伴う改訂）
-- `docs/operation-manual.md`（運営者向け運用マニュアル全般）
-- `docs/pbi/draft-phase1d-domain-launch.md`（§2 の自動監視の実装先：「公開後の監視セットアップ」）
+- `docs/operation-manual.md`（運営者向け運用マニュアル全般。§6 が監視スクリプトの設置・運用手順）
+- `scripts/health-check.sh`（§2 の監視スクリプト本体）
 - `wrangler.jsonc`（配信設定：Worker 名・配信ディレクトリ）
 
 ---
@@ -218,4 +220,5 @@ GitHub の **Settings → Code security and analysis** で次を有効化する�
 | 日付 | 変更内容 |
 |---|---|
 | 2026-06-14 | 初版作成（PHASE1A-021）。現構成（Cloudflare Workers SSG / Git 正本 / mailto Contact / バックエンド無し / 法人化前）を前提に、監視・初動フロー・ケース別手順・Cloudflare 確認手順を記載 |
+| 2026-08-09 | §2 の監視スクリプトを実装（PHASE1D-007）。前方参照（「実装は Phase 1d」「draft-phase1d の実装先」）を実体 `scripts/health-check.sh` と設置手順 `operation-manual.md` §6 への参照に置き換え、カナリア文字列とヘッダ判定の実装内容を反映。§7・§8 の該当行も連動更新 |
 | 2026-06-14 | §2 を「人力 pull 前提」から「push 型・自動検知ファースト」へ全面改稿。Cloudflare 無料プランは push 通知が実質 SSL のみ（公式 docs 確認）と判明したため、死活・改ざん・証明書監視は Xserver cron + 監視スクリプト（独立インフラ・無料・確定的）を主役に据え、実装は Phase 1d へ。§7 を自動 push 前提に整理（人手は Cloudflare 監査の年数回のみ） |

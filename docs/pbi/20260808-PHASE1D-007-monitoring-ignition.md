@@ -1,6 +1,7 @@
 # 運営者はサイトのダウン・改ざん・証明書失効を自動通知で検知できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-08
 
 ## 誰が
 - 運営者
@@ -13,7 +14,7 @@ Status: NotStarted
 - 関連: Phase 1d / R-11 / draft-phase1d-domain-launch.md「公開後の監視セットアップ」
 
 ## 受け入れ条件
-- [ ] `scripts/health-check.sh`（curl ベース）を作成：https://byte-lark.com に対し (1) HTTP 200 (2) 改ざんカナリア（想定文字列の存在）(3) セキュリティ / 配信ヘッダが想定どおり（公開後は noindex が付かないこと）(4) TLS 証明書の残日数、を確認し異常時のみ非 0 終了 + 通知。2 回連続失敗で通知のしきい値で誤報を抑制
+- [x] `scripts/health-check.sh`（curl ベース）を作成：https://byte-lark.com に対し (1) HTTP 200 (2) 改ざんカナリア（想定文字列の存在）(3) セキュリティ / 配信ヘッダが想定どおり（公開後は noindex が付かないこと）(4) TLS 証明書の残日数、を確認し異常時のみ非 0 終了 + 通知。2 回連続失敗で通知のしきい値で誤報を抑制
 - [ ] Xserver の cron に health-check.sh を登録（運営者。shell 対応・外向き curl 可は確認済み）。監視する側 = Xserver / 監視される側 = Cloudflare の独立インフラ構成
 - [ ] 異常時通知はメール + Slack（Incoming Webhook）の二重。Webhook URL は秘密情報なので Xserver 側の環境変数 / 権限を絞ったファイルに置き、リポジトリに commit しない（Secret scanning と整合）
 - [ ] GitHub セキュリティ通知（Dependabot / Secret scanning / Push protection）の有効化を確認、未設定なら ON（incident-response.md §2）
@@ -28,4 +29,29 @@ Status: NotStarted
 - Claude を cron で回す案（claude.ai routine）は主役にしない（Claude 契約依存で、監視自身が止まると無通知）。使うなら週次レビュー等の補助のみ
 
 ## 実装ログ（着手後に追記、中断時は必須）
-（未着手）
+
+### 2026-08-09 監視スクリプト実装 + 運用手順の文書化
+
+やったこと：
+
+- `scripts/health-check.sh` を新規作成。HTTP ステータス / 改ざんカナリア / 配信ヘッダ / TLS 残日数の 4 点を確認し、異常時のみ終了コード 1。通知は「2 回連続で異常」のしきい値を超えたときだけ出し、復旧時に 1 回だけ復旧通知を出す。設定は `~/.byte-lark-monitor.env`（bash として読み込む）で上書きでき、Slack Webhook URL はそこにだけ置く（リポジトリには入れない）
+- 動作モードを 3 つ用意：通常実行（cron 用・正常時は無出力）/ `--inspect`（観測値の表示だけ、状態も通知も触らない）/ `--test-notify`（通知の配線確認）
+- `docs/operation-manual.md` §6 を新設（Xserver への設置・設定ファイル・cron 登録・普段の運用・設定項目一覧）。旧 §6→§7、旧 §7→§8 に繰り下げ
+- `docs/incident-response.md` §2 の前方参照（「実装は Phase 1d」「draft-phase1d が実装先」）を実体への参照に置き換え、§7・§8 も連動更新
+- `.devcontainer/allowed-domains.conf` に `byte-lark.com` を追加（コンテナから本番 URL を直接実測できるようにする。反映は次回コンテナ起動から）
+
+コンテナ内で実施した動作確認（すべて実測）：
+
+- 正常系：本番 Worker（`byte-lark.tanimoto-a49.workers.dev`）に対し HTTP 200 / カナリア 2 種 OK / TLS 残 56 日
+- ヘッダ異常：branch alias は `x-robots-tag: noindex` が付くのでこれを異常系の実物として使用。1 回目は無出力・終了コード 1（しきい値未満）、2 回目で通知内容を出力＝しきい値が効いている
+- 復旧通知：alerting 状態から正常に戻したとき「復旧」通知が 1 回だけ出て、その次の正常実行では無出力
+- カナリア消失・404・接続失敗（到達不能ホスト）：それぞれ異常として検出し、内訳を報告に列挙
+- Slack ペイロード：ローカルの受け口サーバーで実際に POST を受け、JSON として解析できること・日本語と改行と `"` を含む本文が壊れないことを確認
+- メール送信コマンドが無い環境での挙動：`MAIL_TO` 指定時は警告を出して標準出力の経路は維持（cron のメール設定に載る）
+
+判明した事実：
+
+- GitHub の Dependabot alerts は有効（`repos/.../dependabot/alerts` が実データを返す）。Secret scanning / Push protection は fine-grained PAT の権限では読めず（403）、運営者のダッシュボード確認が必要
+- 本番 apex（`byte-lark.com`）はコンテナの default-deny firewall で未許可だったため、実装中の実測は許可済みの workers.dev 本番エイリアス（同一デプロイ）で代替した
+
+残タスク（運営者作業）：Xserver への設置と cron 登録 / Slack Incoming Webhook の発行 / 実通知の確認 / GitHub の Secret scanning・Push protection の有効確認 / UptimeRobot の要否判断
