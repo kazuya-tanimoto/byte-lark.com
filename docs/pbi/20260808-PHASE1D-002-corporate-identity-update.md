@@ -1,6 +1,7 @@
 # 訪問者はサイトの運営主体が合同会社バイトラークであることを確認できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-08
 
 ## 誰が
 - 訪問者
