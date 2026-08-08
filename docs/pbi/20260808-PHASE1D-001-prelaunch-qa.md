@@ -1,7 +1,8 @@
 # 運営者は公開直前の品質状態を確認し、未決事項（ダークモード・ライセンス表記）を確定できる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-08
+Completed: 2026-08-08
 
 ## 誰が
 - 運営者
@@ -15,14 +16,14 @@ Started: 2026-08-08
 
 ## 受け入れ条件
 - [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がすべて成功（build: 11 ページ / check: 38 ファイル修正なし / check:ts: 52 ファイル 0 errors 0 warnings 0 hints / test:run: 5 ファイル 30 テスト）
-- [ ] E2E スイートが現行 HEAD で green（CI `ui-tests.yml`。`scripts/ci-status.sh` で確認）
+- [x] E2E スイートが現行 HEAD で green（CI `ui-tests.yml`。`scripts/ci-status.sh` で確認）（HEAD 85edb0b で `UI Tests: completed/success`）
 - [x] ダークモード実表示確認：全主要ページ（トップ / 経歴 / スキル / About / Contact / ブログ一覧 / 記事）に `.dark` クラスを強制付与し、デスクトップ + モバイル幅でスクショ取得 → 運営者が採用可否を判断（`/privacy/` と 404 を足した全 11 ページ × 2 幅 × ライト/ダークで 44 枚。運営者判断は「見送り」）
 - [x] ダークモード判断の後続処理を記録：採用なら切り替え UI 等の対応 PBI を起票、見送りなら関連申し送り 3 件（`.dark` トークン実表示 / currentColor アセット / favicon の sky 固定）を次 Phase への申し送りとして整理（見送り確定。3 件は「次 Phase への申し送り」節に整理し、PHASE1C-012 に事後追記で扱いを訂正）
 - [x] アイコンライセンス表記（`public/icons/LICENSE.txt`。現状ページから辿れない）のサイト掲示要否を運営者判断。掲示するなら対応（軽微なら本 PBI 内で実装、大きければ起票）（掲示する判断。Footer の Links 列に 1 行追加して本 PBI 内で実装）
 - [x] `astro.config.mjs` の `site` 設定と robots.txt / sitemap の出力が本番ドメイン（https://byte-lark.com）前提で正しいことを確認（公開直後のクロール品質がインデックス初期評価になる）（`site` = `https://byte-lark.com` / robots.txt の Sitemap 行・sitemap の 10 URL・canonical すべて本番オリジン / `dist` 配下に `workers.dev` 混入なし）
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。ダークモード検証と併せて実施）（1280 幅と 390 幅。Footer の新リンクも両幅で確認）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。本 PBI でコード変更が無ければ `[x] N/A（確認のみ）` に更新）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。本 PBI でコード変更が無ければ `[x] N/A（確認のみ）` に更新）（Footer 変更があるため実検証。desktop / mobile とも 200、「アイコン出典」リンクの href が `/icons/LICENSE.txt`、リンク先も 200 text/plain 2562B）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）（HEAD 85edb0b で UI Tests / Quality Checks / Workers Builds / CodeQL すべて success）
 
 ## 決定事項（2026-08-08）
 
