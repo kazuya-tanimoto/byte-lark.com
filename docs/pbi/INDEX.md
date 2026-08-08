@@ -291,7 +291,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-001 | [prelaunch-qa](20260808-PHASE1D-001-prelaunch-qa.md) | Done |
 | PHASE1D-002 | [corporate-identity-update](20260808-PHASE1D-002-corporate-identity-update.md) | Done |
 | PHASE1D-003 | [ns-migration](20260808-PHASE1D-003-ns-migration.md) | Done |
-| PHASE1D-004 | [main-merge-custom-domain](20260808-PHASE1D-004-main-merge-custom-domain.md) | NotStarted |
+| PHASE1D-004 | [main-merge-custom-domain](20260808-PHASE1D-004-main-merge-custom-domain.md) | InProgress |
 | PHASE1D-005 | [www-redirect](20260808-PHASE1D-005-www-redirect.md) | NotStarted |
 | PHASE1D-006 | [analytics-search-console](20260808-PHASE1D-006-analytics-search-console.md) | NotStarted |
 | PHASE1D-007 | [monitoring-ignition](20260808-PHASE1D-007-monitoring-ignition.md) | NotStarted |

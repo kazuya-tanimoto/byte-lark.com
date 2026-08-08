@@ -1,6 +1,7 @@
 # 訪問者は https://byte-lark.com で公開サイトを閲覧できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-08
 
 ## 誰が
 - 訪問者

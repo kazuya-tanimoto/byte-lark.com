@@ -3,7 +3,7 @@ title: "Cloudflare Workers で、静的サイトのまま問い合わせフォ�
 description: "静的サイトのまま、問い合わせフォームを自前実装した記録。Cloudflare Workers + Turnstile + Resend の構成と実装手順、secret を入れたのに反映されない等のハマりどころを書きます。"
 category: tech
 tags: ["cloudflare workers", "turnstile", "resend", "astro", "個人開発"]
-publishedAt: 2026-08-01
+publishedAt: 2026-08-08
 draft: false
 cover: ./cover.png
 slug: contact-form-on-cloudflare-workers

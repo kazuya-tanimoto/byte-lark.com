@@ -3,7 +3,7 @@ title: "個人事業を法人化した話（合同会社バイトラーク設立
 description: "2026年6月、個人事業を法人化して合同会社バイトラークを設立しました。法人化を決めた理由、株式会社ではなく合同会社を選んだ判断、手続きの実際、法人化して変わったことを体験ベースで書きます。"
 category: life
 tags: ["法人化", "合同会社", "フリーランス", "個人事業主", "独立"]
-publishedAt: 2026-08-03
+publishedAt: 2026-08-08
 draft: false
 cover: ./cover.png
 slug: incorporating-bytelark
