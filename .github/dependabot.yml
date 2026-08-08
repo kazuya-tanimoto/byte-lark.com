@@ -8,15 +8,18 @@ updates:
       prefix: "chore"
       include: "scope"
     open-pull-requests-limit: 10
+    # セキュリティ更新は常に既定ブランチ（main）を見るため、この指定はバージョン更新にだけ効く
     target-branch: "main"
     labels:
       - "dependencies"
       - "security"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
-    # セキュリティ更新のみを自動化
-    security-updates-only: true
-    # PRを作成する前にテストを実行
-    auto-merge: false
-    require-tests: true
+    # 個別に PR が乱立しないよう、通常のバージョン更新は 1 本にまとめる。
+    # メジャーは影響が大きいので、まとめずに個別の PR で受ける
+    groups:
+      npm-minor-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

@@ -2,7 +2,12 @@
    既定の自動検出は repo 全体を走査し、docs/ のモック HTML や記事本文の英単語
    （table / static 等）をクラス候補と誤認して未使用スタイルを出力してしまう */
 @import "tailwindcss" source("../");
-@import "shadcn/tailwind.css";
+/* shadcn のスタイルシート（@import "shadcn/tailwind.css"）は取り込まない。
+   提供物は accordion キーフレーム・data-open 等の変種・shimmer / scroll-fade の
+   ユーティリティで、現在の唯一の shadcn 部品 button.tsx はどれも使っていない
+   （出力への寄与は 0 バイトを実測）。一方 shimmer / scroll-fade は @property 宣言と
+   .shimmer の reduced-motion 分が常に出力され、未使用のまま 899 バイト載る。
+   shadcn CLI で新しい部品を足すときは、その部品が上記を使うか確認して戻すこと */
 
 @custom-variant dark (&:is(.dark *));
 

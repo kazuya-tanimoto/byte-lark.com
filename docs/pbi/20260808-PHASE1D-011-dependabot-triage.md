@@ -1,6 +1,7 @@
 # 運営者は依存ライブラリの脆弱性アラートを仕分けし、実害のあるものを解消できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-08
 
 ## 誰が
 - 運営者
