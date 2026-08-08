@@ -1,0 +1,19 @@
+---
+import CareerTimeline from "../components/CareerTimeline.astro";
+import { Career, CareerDetails } from "../data/career";
+import PageLayout from "../layouts/PageLayout.astro";
+---
+
+<PageLayout
+  title="Career | byte-lark.com"
+  description="谷本和也（PM / PO・フルスタックエンジニア）の職務経歴。参画プロジェクトをタイムライン形式で紹介"
+>
+  <h1 class="text-3xl font-bold text-foreground">Career</h1>
+  <p class="mt-4 text-muted-foreground">
+    これまでに参画したプロジェクトを時系列（新しい順）で掲載しています。各案件の「詳細を見る」から担当業務や成果をご覧いただけます。
+  </p>
+
+  <div class="mt-10">
+    <CareerTimeline items={Career} details={CareerDetails} />
+  </div>
+</PageLayout>

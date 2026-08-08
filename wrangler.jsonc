@@ -1,7 +1,24 @@
 {
   "name": "byte-lark",
   "compatibility_date": "2026-05-08",
+  // Contact フォーム API（/api/contact）を処理する Worker。
+  // assets がデフォルトで先に評価され（assets-first）、静的ファイルに一致しない
+  // リクエストだけがこのスクリプトに渡るため、既存の静的配信は壊れない。
+  "main": "worker/index.ts",
   "assets": {
-    "directory": "./dist"
-  }
+    "directory": "./dist",
+    // Worker から静的アセットへ委譲するための binding（worker/index.ts の env.ASSETS）
+    "binding": "ASSETS",
+    // SSG の 404.html を 404 Not Found レスポンスとして配信する（未設定だと null body の 404 になる）
+    "not_found_handling": "404-page"
+  },
+  "ratelimits": [
+    {
+      // 同一 IP からの Contact 連投を抑制（60 秒あたり 5 件）。
+      // namespace_id はアカウント内で一意な任意の識別子（ダッシュボードでの事前作成は不要）。
+      "name": "CONTACT_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 5, "period": 60 }
+    }
+  ]
 }

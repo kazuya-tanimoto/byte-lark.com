@@ -21,6 +21,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /test-results/
+e2e.txt
 
 # Production
 /dist
@@ -37,6 +38,10 @@ node_modules/
 
 # Cloudflare
 .wrangler/
+# wrangler dev のローカル secret（Turnstile / Resend キー）。値はコミットしない
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
 
 # Misc
 *.local
@@ -49,3 +54,21 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 .idea
+
+# Claude Code local settings（権限など機密が混入しうるため tracked にしない）
+.claude/settings.local.json
+
+# Claude Code worktrees（セッション作業用、誤コミット防止）
+.claude/worktrees/
+
+# Playwright MCP artifacts
+.playwright-mcp/
+
+# 記事の取材メモ（運営者の生回答・下書き素材。完成記事だけ公開する）
+docs/article-interviews/
+
+# herdr へ状態を渡すための受け渡しファイル（コンテナ内 Claude Code → 母艦の見張り）
+.herdr-state/
+.venv/
+tools/imagegen/out_*.png
+tools/imagegen/out/

@@ -1,0 +1,84 @@
+---
+import Logo from "../assets/logo-badge.svg";
+
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/career", label: "Career" },
+  { href: "/skills", label: "Skills" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
+  <nav class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+    <a href="/" class="inline-flex items-center gap-2">
+      <Logo width={26} height={26} class="shrink-0" aria-hidden="true" />
+      <span class="font-heading text-lg font-bold text-foreground">byte-lark</span>
+    </a>
+
+    <ul class="hidden gap-1 md:flex">
+      {navItems.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={[
+              "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
+              currentPath === href || (href !== "/" && currentPath.startsWith(href))
+                ? "bg-primary/10 text-hibari-sky-deep"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+            ]}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <button
+      type="button"
+      class="inline-flex items-center justify-center rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+      aria-label="メニューを開く"
+      aria-expanded="false"
+      data-menu-toggle
+    >
+      <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
+  </nav>
+
+  <div class="hidden border-t border-border md:hidden" data-mobile-menu>
+    <ul class="space-y-1 px-4 py-3">
+      {navItems.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={[
+              "block rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
+              currentPath === href || (href !== "/" && currentPath.startsWith(href))
+                ? "bg-primary/10 text-hibari-sky-deep"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+            ]}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-mobile-menu]");
+
+  toggle?.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    menu?.classList.toggle("hidden");
+  });
+</script>

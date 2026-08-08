@@ -1,0 +1,65 @@
+---
+import "../styles/global.css";
+import { Font } from "astro:assets";
+import { buildOgMeta, type OgMeta } from "../lib/og";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonical?: string;
+  type?: OgMeta["type"];
+}
+
+const { title, description, ogImage, canonical, type } = Astro.props;
+
+const siteUrl = Astro.site?.origin ?? "https://byte-lark.com";
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage
+  ? new URL(ogImage, siteUrl).href
+  : new URL("/og-default.png", siteUrl).href;
+
+const ogMeta = buildOgMeta({
+  title,
+  description,
+  url: canonicalUrl,
+  image: ogImageUrl,
+  type,
+});
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* アイコン一式は PHASE1C-005 で確定（sky タイル + 白抜きバッジ）。
+        原本は src/assets/logo-badge.svg、生成は scripts/generate-icons.mjs。
+        ico は rel を見ない RSS リーダー等が root を直接取りに来るための後方互換 */}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {/* 見出し Zen Kaku Gothic New（PHASE1C-003）・本文 Noto Sans JP（PHASE1C-007）。
+        どちらも文字範囲ごとに分割された多数の woff2 になるため preload しない */}
+    <Font cssVariable="--font-zen-kaku" />
+    <Font cssVariable="--font-noto-sans-jp" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {Object.entries(ogMeta).map(([property, content]) => (
+      property.startsWith("twitter:")
+        ? <meta name={property} content={content} />
+        : <meta property={property} content={content} />
+    ))}
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <Header />
+    <div class="flex-1">
+      <slot />
+    </div>
+    <Footer />
+  </body>
+</html>

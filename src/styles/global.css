@@ -1,13 +1,62 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+/* source("../") でクラス走査を src/ 配下に限定する。
+   既定の自動検出は repo 全体を走査し、docs/ のモック HTML や記事本文の英単語
+   （table / static 等）をクラス候補と誤認して未使用スタイルを出力してしまう */
+@import "tailwindcss" source("../");
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: "Geist Variable", sans-serif;
+  /* 実体は Astro Fonts API が定義（astro.config.mjs / BaseLayout の <Font>）。
+     見出し = Zen Kaku Gothic New / 本文 = Noto Sans JP（docs/design-direction.md §3、PHASE1C-003）。
+     欧文専用の Geist は廃止し、和文・欧文を 1 ファミリで揃えて縦方向の寸法差をなくした */
+  --font-heading: var(--font-zen-kaku), var(--font-noto-sans-jp);
+  --font-sans: var(--font-noto-sans-jp);
+  /* コード内の和文コメント用に、等幅ファミリの後ろへ本文和文を足す。
+     足さないと和文だけ端末任せの書体になり、記事の中で書体がばらつく。
+     ファミリ名は Astro がハッシュ付きに書き換えるので、必ず変数で参照する */
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace, var(--font-noto-sans-jp);
+
+  /* タイポスケール（PHASE1C-003。docs/design-direction.md §3 の確定値）。
+     本文 16px / 行間 1.95、見出しは 42 → 32 → 24 → 17px。
+     行間は文字サイズが上がるほど詰める（見出しは行が離れると締まりがなくなる） */
+  --text-xs: 0.75rem; /* 12px 最小の補助表記 */
+  --text-xs--line-height: 1.7;
+  --text-sm: 0.875rem; /* 14px 補助テキスト・キャプション */
+  --text-sm--line-height: 1.8;
+  --text-base: 1rem; /* 16px 本文 */
+  --text-base--line-height: 1.95;
+  --text-lg: 1.0625rem; /* 17px h3・カード見出し */
+  --text-lg--line-height: 1.6;
+  --text-xl: 1.25rem; /* 20px 経歴の職種見出し等 */
+  --text-xl--line-height: 1.55;
+  --text-2xl: 1.5rem; /* 24px h2 */
+  --text-2xl--line-height: 1.5;
+  --text-3xl: 2rem; /* 32px ページ h1・記事タイトル */
+  --text-3xl--line-height: 1.45;
+  --text-4xl: 2.625rem; /* 42px Hero の h1 */
+  --text-4xl--line-height: 1.3;
+
+  /* 確定パレット「春空」（docs/design-direction.md §2、PHASE1C-002）。
+     sun / wash / チップ面は装飾・面専用で文字に使わない（同 §2 運用規律） */
+  --color-hibari-sky: oklch(0.533 0.128 242.8); /* #0273B0 */
+  --color-hibari-sky-deep: oklch(
+    0.443 0.1 240.8
+  ); /* #075985 hover・淡い sky 面上の文字 */
+  --color-hibari-wash: oklch(0.97 0.013 233.7); /* #EDF7FD 空の面 */
+  --color-hibari-sun: oklch(0.773 0.154 72.5); /* #F0A32A 朝日・装飾専用 */
+  --color-hibari-sun-light: oklch(
+    0.843 0.133 82.7
+  ); /* #F6C35C 朝日ドットの光側（装飾専用） */
+  --color-hibari-amber: oklch(0.518 0.115 62.6); /* #96570A accent 文字 */
+  --color-hibari-amber-chip: oklch(0.953 0.033 82); /* #FBEED7 */
+  --color-hibari-amber-chip-text: oklch(0.458 0.099 65.4); /* #7C4A08 */
+  --color-hibari-green-chip: oklch(0.95 0.029 145.3); /* #E3F4E3 */
+  --color-hibari-green-chip-text: oklch(0.448 0.108 151.3); /* #166534 */
+  --color-hibari-earth: oklch(0.444 0.01 73.6); /* #57534E */
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -21,6 +70,8 @@
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+  --color-earth-foreground: var(--earth-foreground);
+  --color-earth: var(--earth);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -39,6 +90,11 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  /* カードの柔らかい影（PHASE1C-008。docs/design-direction.md §5 の確定値）。
+     近い影で面を持ち上げ、遠い影で空気感を出す 2 枚重ね。罫線の代わりに面の輪郭をつくる */
+  --shadow-card:
+    0 1px 3px rgba(70, 55, 30, 0.06), 0 6px 20px rgba(70, 55, 30, 0.06);
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -48,73 +104,83 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* セマンティックトークン確定値（PHASE1C-002）。文字/面の全組合せを oklch → sRGB 実測で
+   WCAG AA 検証済み（検証値は PBI 実装ログ）。muted は面=wash / 文字=#605A50 の対で使う */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.988 0.004 91.4); /* #FCFBF8 暖白 */
+  --foreground: oklch(0.304 0.011 73.5); /* #322E29 暖黒 13.0:1 */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.304 0.011 73.5);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.304 0.011 73.5);
+  --primary: oklch(0.533 0.128 242.8); /* sky 5.0:1 on bg */
+  --primary-foreground: oklch(1 0 0); /* 5.1:1 on sky */
+  --secondary: oklch(0.95 0.029 145.3); /* green-chip */
+  --secondary-foreground: oklch(0.448 0.108 151.3); /* 6.2:1 */
+  --muted: oklch(0.97 0.013 233.7); /* wash */
+  --muted-foreground: oklch(
+    0.47 0.018 80.6
+  ); /* #605A50 6.6:1 on bg, 6.3:1 on wash */
+  --accent: oklch(0.953 0.033 82); /* amber-chip */
+  --accent-foreground: oklch(0.458 0.099 65.4); /* 6.5:1 */
+  --earth: oklch(0.444 0.01 73.6);
+  --earth-foreground: oklch(1 0 0); /* 7.6:1 */
+  --destructive: oklch(0.577 0.245 27.325); /* 4.6:1 on bg */
+  --border: oklch(0.935 0.009 84.6); /* #ECE9E3 */
+  --input: oklch(0.935 0.009 84.6);
+  --ring: oklch(0.533 0.128 242.8);
+  --chart-1: oklch(0.533 0.128 242.8);
+  --chart-2: oklch(0.773 0.154 72.5);
+  --chart-3: oklch(0.448 0.108 151.3);
+  --chart-4: oklch(0.444 0.01 73.6);
+  --chart-5: oklch(0.47 0.018 80.6);
+  --radius: 0.875rem; /* 14px（PHASE1C-008。チップ・ボタンだけは別途ピル形） */
+  --sidebar: oklch(0.988 0.004 91.4);
+  --sidebar-foreground: oklch(0.304 0.011 73.5);
+  --sidebar-primary: oklch(0.533 0.128 242.8);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.97 0.013 233.7);
+  --sidebar-accent-foreground: oklch(0.304 0.011 73.5);
+  --sidebar-border: oklch(0.935 0.009 84.6);
+  --sidebar-ring: oklch(0.533 0.128 242.8);
 }
 
+/* ダーク確定値（PHASE1C-002 で確定パレットの明度反転から導出、AA 実測済み）。
+   現状 .dark を付与する仕組みがなく画面到達不能のため、実表示での検証は未実施 */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: oklch(0.22 0.008 73.5); /* #1D1A17 暖黒 */
+  --foreground: oklch(0.96 0.004 91.4); /* #F3F2EF 15.5:1 */
+  --card: oklch(0.26 0.008 73.5);
+  --card-foreground: oklch(0.96 0.004 91.4);
+  --popover: oklch(0.26 0.008 73.5);
+  --popover-foreground: oklch(0.96 0.004 91.4);
+  --primary: oklch(0.72 0.11 242.8); /* #62ACE4 7.0:1 on bg */
+  --primary-foreground: oklch(0.22 0.008 73.5); /* 7.0:1 on primary */
+  --secondary: oklch(0.32 0.035 151.3);
+  --secondary-foreground: oklch(0.85 0.075 151.3); /* 8.1:1 */
+  --muted: oklch(0.3 0.015 233.7); /* 夜空の面 */
+  --muted-foreground: oklch(0.76 0.015 80.6); /* 8.1:1 on bg, 6.3:1 on muted */
+  --accent: oklch(0.33 0.045 72.5);
+  --accent-foreground: oklch(0.85 0.075 80); /* 7.7:1 */
+  --earth: oklch(0.7 0.012 73.6); /* 6.5:1 on bg */
+  --earth-foreground: oklch(0.22 0.008 73.5);
+  --destructive: oklch(0.704 0.191 22.216); /* 6.0:1 on bg */
+  --border: oklch(0.32 0.008 84.6);
+  --input: oklch(0.36 0.008 84.6);
+  --ring: oklch(0.72 0.11 242.8);
+  --chart-1: oklch(0.72 0.11 242.8);
+  --chart-2: oklch(0.78 0.12 72.5);
+  --chart-3: oklch(0.85 0.075 151.3);
+  --chart-4: oklch(0.7 0.012 73.6);
+  --chart-5: oklch(0.76 0.015 80.6);
+  --sidebar: oklch(0.26 0.008 73.5);
+  --sidebar-foreground: oklch(0.96 0.004 91.4);
+  --sidebar-primary: oklch(0.72 0.11 242.8);
+  --sidebar-primary-foreground: oklch(0.22 0.008 73.5);
+  --sidebar-accent: oklch(0.3 0.015 233.7);
+  --sidebar-accent-foreground: oklch(0.96 0.004 91.4);
+  --sidebar-border: oklch(0.32 0.008 84.6);
+  --sidebar-ring: oklch(0.72 0.11 242.8);
 }
 
 @layer base {
@@ -126,5 +192,75 @@
   }
   html {
     @apply font-sans;
+  }
+
+  /* ページ内リンク（記事目次等）の移動を滑らかにする（PHASE1C-009）。
+     酔いやすい人の OS 設定（視差効果を減らす）では即時ジャンプのままにする */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* 見出しは書体を切り替える（PHASE1C-003）。サイズ・ウェイトは各所の utility で指定。
+     palt は和文の字送りを字形に合わせて詰める指定で、見出しの間延びを抑える。
+     折り返しは balance（行の長さを均す）と auto-phrase（文節で折る）の併用が最良と実測。
+     例:「大規模決済プラットフォームの横断PM」→ balance 単独では
+     「大規模決済プラット / フォームの横断PM」と語中で切れるが、併用なら
+     「大規模決済プラットフォームの / 横断PM」になる */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-feature-settings: "palt" 1;
+  }
+
+  /* balance は文節折りが効くブラウザ（Chrome/Edge）限定で併用する。
+     auto-phrase 未対応の Safari 等で balance 単独になると、右端に余裕があるのに
+     行長を均すため語中の中途半端な位置で折れて見える（iPhone 実機で確認）。
+     未対応環境は素の右端折り返しに落とす方が自然 */
+  @supports (word-break: auto-phrase) {
+    h1,
+    h2,
+    h3,
+    h4 {
+      text-wrap: balance;
+      word-break: auto-phrase;
+    }
+  }
+
+  /* 箇条書きの点を朝日にする（PHASE1C-008 署名要素の「日常使い」）。
+     番号付き（ol）は数字そのものが色づいて文字に見えるので対象外 */
+  ul > li::marker {
+    color: var(--color-hibari-sun);
+  }
+}
+
+@layer components {
+  /* h2 の朝日ドットマーカー（PHASE1C-008。docs/design-direction.md §5）。
+     円は ::before で描いて絶対配置する——見出しの文字送りに影響せず、
+     text-wrap: balance の折り返し計算にも入らない。content が空なので読み上げにも乗らない。
+     縦位置は「1 行分の高さ（1.5em）の中央 − 円の半径」で 1 行目の中心に合わせる。
+     .post-body h2 は Markdown 生成でクラスを付けられないため、ここで一緒に受ける */
+  .heading-sun,
+  .post-body h2 {
+    position: relative;
+    padding-left: 1.3rem;
+  }
+  .heading-sun::before,
+  .post-body h2::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc((1.5em - 0.7rem) / 2);
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+    background-image: radial-gradient(
+      circle at 35% 35%,
+      var(--color-hibari-sun-light),
+      var(--color-hibari-sun)
+    );
   }
 }

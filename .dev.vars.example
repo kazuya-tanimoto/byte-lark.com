@@ -1,0 +1,14 @@
+# `wrangler dev` 用のローカル secret サンプル。
+# このファイルを `.dev.vars` にコピーして実値を入れる（.dev.vars は gitignore 済み）。
+# 本番（CF）は `wrangler secret put <NAME>` かダッシュボードで設定し、リポジトリに値を置かない。
+
+# Cloudflare Turnstile の secret key。
+# 下記はローカル検証用の公式テストキー（常に成功）。本番は実 secret に差し替える。
+TURNSTILE_SECRET_KEY="1x0000000000000000000000000000000AA"
+
+# Resend の API キー（re_ で始まる）。本番値はダッシュボードで発行する。
+RESEND_API_KEY="re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# 任意: 通知メールの宛先 / 送信元を上書きする場合のみ設定（未設定なら worker のデフォルト）。
+# CONTACT_RECIPIENT="info@byte-lark.com"
+# CONTACT_SENDER="byte-lark Contact <contact@send.byte-lark.com>"

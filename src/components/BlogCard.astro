@@ -1,0 +1,58 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"posts">;
+  /** カードタイトルの見出しレベル。既定は h3（Home の h2 セクション配下）。
+      h1 直下の一覧（/blog/）では h2 を渡して見出し階層を保つ */
+  headingLevel?: "h2" | "h3";
+}
+
+const { post, headingLevel = "h3" } = Astro.props;
+const { title, description, category, publishedAt, cover, slug } = post.data;
+const href = `/blog/${slug ?? post.id}/`;
+// 見た目のサイズはタグと独立（クラス側で吸収）。タグだけ切り替える
+const Heading = headingLevel;
+
+const categoryLabel = category === "tech" ? "Tech" : "Life";
+// カテゴリチップの色分け（PHASE1C-008）。Tech = 空の面 + sky 文字（4.7:1）、
+// Life = 草原の面 + green 文字（6.2:1）。どちらも AA を満たす組合せに限る
+const categoryChipClass =
+  category === "tech"
+    ? "bg-muted text-hibari-sky"
+    : "bg-secondary text-secondary-foreground";
+const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<article class="overflow-hidden rounded-lg bg-card shadow-card transition-transform motion-safe:hover:-translate-y-0.5">
+  <a href={href} class="flex h-full flex-col">
+    {
+      cover && (
+        <Image
+          src={cover}
+          alt=""
+          width={640}
+          height={336}
+          class="aspect-[40/21] w-full object-cover"
+        />
+      )
+    }
+    <div class="flex flex-1 flex-col gap-2 p-4">
+      <div class="flex items-center gap-2 text-xs text-muted-foreground">
+        <span class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}>
+          {categoryLabel}
+        </span>
+        <time datetime={publishedAt.toISOString().slice(0, 10)}>
+          {dateFormatter.format(publishedAt)}
+        </time>
+      </div>
+      <Heading class="text-lg font-bold text-foreground">{title}</Heading>
+      <p class="line-clamp-2 text-sm text-muted-foreground">{description}</p>
+    </div>
+  </a>
+</article>

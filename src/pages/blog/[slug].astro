@@ -1,0 +1,52 @@
+---
+import { getImage, Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import PostLayout from "../../layouts/PostLayout.astro";
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+  return posts.map((post) => ({
+    params: { slug: post.data.slug ?? post.id },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { post } = Astro.props as Props;
+const { Content, headings } = await render(post);
+const { title, description, publishedAt, updatedAt, category, tags, cover } =
+  post.data;
+
+// og:image は最適化済み cover を絶対 URL 化して使う（PostLayout 側で絶対 URL に解決）
+const ogImage = cover
+  ? (await getImage({ src: cover, width: 1200, height: 630, format: "webp" }))
+      .src
+  : undefined;
+---
+
+<PostLayout
+  title={title}
+  description={description}
+  publishedAt={publishedAt}
+  updatedAt={updatedAt}
+  category={category}
+  tags={tags}
+  ogImage={ogImage}
+  headings={headings}
+>
+  {
+    cover && (
+      <Image
+        slot="cover"
+        src={cover}
+        alt=""
+        width={1280}
+        height={672}
+        class="mb-8 aspect-[40/21] w-full rounded-lg object-cover"
+      />
+    )
+  }
+  <Content />
+</PostLayout>

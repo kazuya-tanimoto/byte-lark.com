@@ -1,0 +1,49 @@
+# 記事ネタ・バックログ
+
+byte-lark.com ブログの「これから書く記事ネタ」のストック。**生きたリスト**として運用する（Done PBI の実装ログに埋めると死蔵されるため、ここを正本にする）。
+
+## 使い方
+
+- 新しくネタを思いついたら、このファイルの一覧に追記する
+- 記事を書くと決めたら、記事実装 PBI を起票して着手する（1 記事 1 PBI）
+- 公開（`draft: false` + Phase 1d 以降の本番反映）まで済んだら、その行をこのファイルから削除する
+- 月次ネタ出し routine（R-01 / `/schedule`、Phase 1d 公開後に点火）は、毎回このファイルと直近の公開記事を読んでから提案する
+
+## カテゴリの分け方
+
+カテゴリは `tech` / `life` の 2 つだけ（`src/content.config.ts` の enum、`docs/writing-workflow.md` の定義）。2 分しかないため **life が「技術ネタ以外すべて」を引き受ける広い箱**になる。
+
+- tech＝技術そのもの（言語・ツール・設計・AI・インフラ・開発手法）
+- life＝それ以外（仕事術・キャリア・事業・働き方・暮らし・趣味）
+- ガジェット・製品レビューは原則 life（暮らし・消費の話）。「開発環境を生産性の観点で技術的に掘る」内容のときだけ tech に振る
+- 事業・ブランド・キャリアの話は「事業だから tech」ではなく「技術の話ではないから life」
+
+確定は執筆時に中身を見て決める（下表のカテゴリは暫定）。
+
+## バックログ一覧
+
+初期記事セット 3 本（PHASE1B-008 / 009 / 012。site-plan v3.11 Decision #29 で 6 本から縮小）を除いた、公開後に順次消化するネタ。出典: PHASE1B-007 ネタ出し（2026-06-28、運営者 + Claude）。
+
+| ネタ | 暫定カテゴリ | メモ |
+|---|---|---|
+| T3 25年 PHP/Java 畑のエンジニアが TypeScript/React に移ってみて | tech | 旧 PHASE1B-010（Decision #29 で Dropped）。レガシーとモダン両方を知る視点の橋渡し記事 |
+| T5 参画案件で Claude Code / Claude Design を使い PO 業務を回す | tech | 旧 PHASE1B-011（Decision #29 で Dropped)。T1 と差別化し実案件・PO 業務軸で書く |
+| L2+L3 合う仕事・合わない仕事をストレングスファインダーで言語化する | life | 旧 PHASE1B-013（Decision #29 で Dropped）。L2 と L3 の統合ネタ |
+| T4 個人開発で AI に PBI/INDEX/Status を運用させる体制論 | tech | T1（サイト構築総括）と一部重複。実務軸の T5 と差別化し「個人開発の回し方」に絞る |
+| T6 Claude 新機能レビュー連載 | tech | 新機能が出る度に使った感想・解説を掲載。cron で情報収集を半自動化（R-01 月次 routine の発展形。運営者発案） |
+| T7 開発デスク環境（キーボード / モニター 等） | life（技術的に掘るなら tech） | ガジェットは原則 life。生産性・環境設計として技術的に書くなら tech に上げる |
+| L4 バイク・猫・アウトドアと考える時間 | life | 人柄を見せるゆるネタ。SEO 狙いは薄い |
+| L5 屋号 byte-lark の由来（深掘り） | life | 事業 / ブランドの話。About 既出（byte / lark / Beitrag）の深掘り。技術ではないので life |
+| L6 iPhone Air を買った（生活ガジェット） | life | 購入後に執筆。暮らしの道具としてのレビュー |
+| T8 alacritty + tmux から ghostty + herdr へ乗り換えた | tech | 開発環境 3 連作の 1 本目。乗り換えの動機、herdr の spaces / agents で何が変わったか |
+| T9 devcontainer で Claude Code を自走させる環境を作った | tech | 3 連作の 2 本目。設計と手順は `docs/devcontainer-plan.md`、PBI は PHASE1B-016。T1（サイト構築総括）で軽く触れた話の本編 |
+| T10 コンテナの中で動くエージェントを herdr のサイドバーに出す | tech | 3 連作の 3 本目。取材メモ完備: `docs/article-interviews/20260731-herdr-devcontainer-agent-bridge.md`（gitignore 対象）。切り口案 9 本入り |
+| T11 Google 日本語入力から azooKey on macOS へ移行して 2 週間評価 | tech | ニューラル変換 Zenzai / ローカル LLM を技術的に掘るため tech（ガジェット原則 life の例外条件）。取材メモ完備: `docs/article-interviews/` の引き継ぎ資料 + 評価ログ（gitignore 対象）。時短を誇張せず「主効果はストレス削減」の誠実な留保を書く方針 |
+
+開発環境 3 連作（T8 → T9 → T10）は、環境を移す → 隔離する → 隔離したものを部分的に繋ぐ、という 1 本の流れ。T10 は前 2 本の前提の上に立つので、公開順は崩さない。
+
+## 月次ネタ出し routine（R-01）プロンプト例
+
+Phase 1d 公開後に `/schedule` で点火する想定。プロンプト例:
+
+> `docs/article-backlog.md` と直近の公開記事（`src/content/posts/`）を読み、今月の記事ネタを 3 案提案して。各案にカテゴリ（上記 tech / life の基準に従う）と一言の狙いを添える。新しく出たネタはバックログ一覧に追記し、すでに公開済みのものは削除する。Claude 関連の新機能リリース（T6）があればそれも拾う。

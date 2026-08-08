@@ -1,0 +1,168 @@
+---
+import type { CareerDetail, CareerItem } from "../types/career";
+
+interface Props {
+  items: CareerItem[];
+  details: CareerDetail[];
+}
+
+const { items, details } = Astro.props;
+
+// 新しい順に表示（from は YYYY/MM 形式のため文字列比較で時系列順になる）
+const sortedItems = [...items].sort((a, b) => b.from.localeCompare(a.from));
+const detailMap = new Map(details.map((d) => [d.id, d]));
+
+// 雇用形態バッジの色。淡い sky 面上の sky 文字は 4.3:1 と AA 未達のため sky-deep を使う
+const employmentClass: Record<string, string> = {
+  フリーランス: "border-hibari-sky/40 bg-hibari-sky/10 text-hibari-sky-deep",
+  会社員: "border-border bg-muted text-muted-foreground",
+  副業: "border-hibari-amber/40 bg-hibari-amber/10 text-hibari-amber",
+};
+---
+
+<ol class="relative border-l border-border pl-6 sm:pl-8">
+  {
+    sortedItems.map((item) => {
+      const detail = detailMap.get(item.id);
+      const dialogId = `career-detail-${item.id}`;
+      const titleId = `${dialogId}-title`;
+      const period = `${item.from} 〜 ${item.to ?? "現在"}`;
+      return (
+        <li class="relative pb-10 last:pb-0">
+          <span
+            class="absolute -left-[30px] top-1.5 h-3 w-3 rounded-full border-2 border-hibari-sky bg-background sm:-left-[38px]"
+            aria-hidden="true"
+          />
+          <div class="flex items-center gap-3">
+            <p class="text-sm text-muted-foreground">{period}</p>
+            <span
+              class={`inline-block rounded-full border px-2 py-0.5 text-xs font-medium ${employmentClass[item.employment]}`}
+            >
+              {item.employment}
+            </span>
+          </div>
+          <h2 class="mt-1 text-xl font-bold text-foreground">{item.title}</h2>
+          {item.role && (
+            <p class="mt-1 text-sm font-medium text-hibari-sky">{item.role}</p>
+          )}
+          <p class="mt-2 text-muted-foreground">{item.summary}</p>
+          <p class="mt-3 text-sm text-muted-foreground">{item.keywords}</p>
+
+          {detail && (
+            <>
+              <button
+                type="button"
+                class="mt-3 inline-flex items-center text-sm font-medium text-hibari-sky hover:underline"
+                data-open-dialog={dialogId}
+              >
+                詳細を見る →
+              </button>
+
+              <dialog
+                id={dialogId}
+                aria-labelledby={titleId}
+                class="m-auto w-[calc(100%-2rem)] max-w-2xl rounded-lg border border-border bg-background p-0 text-foreground shadow-xl backdrop:bg-black/50"
+              >
+                <article class="max-h-[85vh] overflow-y-auto p-6">
+                  <div class="flex items-start justify-between gap-4">
+                    <div>
+                      <h3
+                        id={titleId}
+                        class="text-lg font-bold text-foreground"
+                      >
+                        {item.title}
+                      </h3>
+                      <p class="mt-1 text-sm text-muted-foreground">{period}</p>
+                    </div>
+                    <button
+                      type="button"
+                      class="shrink-0 rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                      data-close-dialog
+                      aria-label="閉じる"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+                    <dt class="font-medium text-foreground">役割</dt>
+                    <dd class="text-muted-foreground">{detail.role}</dd>
+                    <dt class="font-medium text-foreground">規模</dt>
+                    <dd class="text-muted-foreground">{detail.scale}</dd>
+                    <dt class="font-medium text-foreground">雇用形態</dt>
+                    <dd class="text-muted-foreground">{item.employment}</dd>
+                  </dl>
+
+                  {detail.technology.length > 0 && (
+                    <section class="mt-4">
+                      <h4 class="text-sm font-bold text-foreground">
+                        利用技術・ツール
+                      </h4>
+                      <ul class="mt-1 list-disc space-y-0.5 pl-5 text-sm text-muted-foreground">
+                        {detail.technology.map((t) => (
+                          <li>{t}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+
+                  <section class="mt-4">
+                    <h4 class="text-sm font-bold text-foreground">担当業務</h4>
+                    <ul class="mt-1 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                      {detail.responsibilities.map((r) => (
+                        <li>{r}</li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section class="mt-4">
+                    <h4 class="text-sm font-bold text-foreground">
+                      成果・ポイント
+                    </h4>
+                    <ul class="mt-1 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                      {detail.achievements.map((a) => (
+                        <li>{a}</li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <div class="mt-6 text-right">
+                    <button
+                      type="button"
+                      class="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
+                      data-close-dialog
+                    >
+                      閉じる
+                    </button>
+                  </div>
+                </article>
+              </dialog>
+            </>
+          )}
+        </li>
+      );
+    })
+  }
+</ol>
+
+<script>
+  // ネイティブ <dialog> の開閉。詳細テキストは SSG 済み DOM に存在するため、
+  // ここでは表示の開閉だけを担う（クライアント JS 非依存でも内容はクロール可能）。
+  for (const btn of document.querySelectorAll<HTMLElement>("[data-open-dialog]")) {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.openDialog;
+      const dialog = id ? document.getElementById(id) : null;
+      if (dialog instanceof HTMLDialogElement) dialog.showModal();
+    });
+  }
+
+  for (const dialog of document.querySelectorAll("dialog")) {
+    for (const btn of dialog.querySelectorAll("[data-close-dialog]")) {
+      btn.addEventListener("click", () => dialog.close());
+    }
+    // 背景（dialog 自身）クリックで閉じる
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>

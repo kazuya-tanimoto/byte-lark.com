@@ -1,0 +1,33 @@
+name: Quality Checks
+on:
+  push:
+    branches: [main, "feat/*"]
+  pull_request:
+    branches: [main, "feat/*"]
+
+# GITHUB_TOKEN を読み取り専用に固定
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Lint (Biome)
+        run: yarn check
+      - name: Typecheck (Astro)
+        run: yarn check:ts
+      - name: Unit tests (Vitest)
+        run: yarn test:run
+      - name: Build
+        run: yarn build

@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v2.8)
+# PBI フォーマット規約 (v3.7)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-05-07
+最終更新: 2026-08-07
 
 ---
 
@@ -57,6 +57,9 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 - [ ] 観測可能な条件 2
 - [ ] エラー / エッジケース条件
 - [ ] テスト・Lint・型チェック等の自動検証条件
+- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 
 ## 技術メモ（任意）
 - 関連ファイル / 配置先パス
@@ -116,7 +119,9 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 3. **失敗ケース・エッジケース**も含める
 4. **自動検証可能な条件**は明示する（`yarn check:ts` がエラーなし、Lighthouse Accessibility 90+ 等）
 5. ユーザー操作可能な機能は Playwright で検証可能な粒度に書く
-6. 1 PBI で 5-15 項目が目安。20+ になる場合は **PBI 分割を検討**
+6. 受け入れ条件の項目数は**網羅性の目安**（観測条件・エッジケース・自動検証を漏らさないための確認用）であって、PBI のサイズ基準ではない。サイズ判定は §7 のスコープ基準（触るファイル群 × 外部依存・概ね 1 セッション）で行う。項目が 20+ に膨らむ場合は分割を検討する合図
+7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する
+8. **Gate PBI の申し送り棚卸し（必須）**：Retrospective Gate PBI の受け入れ条件には「当該 Phase 全 PBI の実装ログにある申し送り・積み残しを項目単位で列挙し、各項目を **PBI 化（起票先を明記）/ 持ち越し（本 Gate の申し送りセクションに記載）/ 破棄（理由を明記）** のいずれかに判定する」を必ず置く。前 Gate から持ち越された未消化項目も同じ表に含めて再判定する（どの Phase にも属さない項目——例：ダークモード実表示検証——が Gate の網から漏れる経路を塞ぐ）。これにより次 Phase の起票者は全実装ログを再走査せず、直前 Gate の棚卸し表を一次資料にできる。「全ログを読む」だけでは項目が黙って落ちる余地があった（2026-08-01 の棚卸しで、実装ログ内にのみ存在する申し送り 7 件が grep で初めて可視化された経験を規約化）
 
 ### 4.7 技術メモ
 
@@ -160,9 +165,12 @@ Claude Code 向けの実装ヒント。任意セクション。
 
 ```
 NotStarted ──(着手時)──> InProgress ──(全 受け入れ条件 check)──> Done
+     └──(スコープ変更で取り下げ)──> Dropped
 ```
 
 逆遷移（Done → InProgress 等）は原則しない。やり直しが必要なら新規 PBI を起票。
+
+**Dropped（取り下げ、v3.6 新設）**：スコープ変更で不要になった NotStarted の PBI に使う。適用条件：site-plan の Decision Log に取り下げ理由が記録されていること。PBI ファイルの Status 行に `Dropped` と Decision 番号を書き、INDEX.md も同期する。ファイルは削除しない（経緯の記録として残す）。InProgress / Done からの取り下げは不可（InProgress は中断手順 §5.4、Done のやり直しは新規起票）。
 
 ### 5.2 同期ルール
 
@@ -192,6 +200,8 @@ PBI を更新する時は、必ず以下を**同一コミット内**で同期：
 3. INDEX.md の該当エントリは InProgress のまま
 
 次セッションは実装ログを読めば再開可能。
+
+**例外：外形が変わるコミットを打った場合（v3.7）**。記事の公開（`draft: false`）、main へのマージ、DNS / ドメインの切替など、**サイトの外から見える状態を変えるコミット**を打ったセッションは、その PBI の Done 化（Status + INDEX 同期 + コミット）まで同一セッションで終える。終えられる見通しが無いなら、そのコミット自体を次セッションに回す。Phase 1b で公開コミットと Done 化が別セッションに割れ、記事が公開済みなのに PBI が InProgress のまま残った（PHASE1B-009、PHASE1B-014 で検出）。「公開されているのに未完了に見える」履歴は、次に読む人が状態を誤読する。
 
 ### 5.5 完了済み PBI の扱い
 
@@ -243,12 +253,14 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 
 ## 7. PBI 分割の判断
 
-以下に該当する場合は分割：
+**サイズ判定の主基準は実装スコープ**：触るファイル群 × 外部依存（API / 第三者アカウント準備 / DNS 等）から想定セッション数を見積もり、**各 PBI の技術メモに想定セッション数を明記する。2 セッション以上に見積もられるものは必ず分割**する。受け入れ条件の項目数は実装規模の代理にならない（例: PHASE1A-020 は受け入れ条件 13 項目だが実体は最重量級 143 行、Contact フォーム化は項目数小でも複数日）。
 
-- 受け入れ条件が 20 項目以上
+加えて以下に該当する場合も分割：
+
+- 受け入れ条件が 20 項目以上（網羅性の観点で肥大）
 - 複数のロール（訪問者 + 運営者等）が混在
 - 異なる Phase にまたがる
-- 概ね 1 営業日（人間換算）を超える
+- 概ね 1 営業日（人間換算 / 1 セッション）を超える
 
 ## 8. PBI を書かない場合
 
@@ -268,31 +280,38 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 
 全 PBI を着手前に書き切る方式は採らない（学びの反映機会が消えるため）。
 
+**例外：先行トラック（site-plan §8 Decision #28）**。site-plan の Decision Log で明示的に「先行トラック」と定義された PBI 群は、前 Phase の Gate 通過前でも起票・着手できる（現行の適用対象：Phase 1c 先行トラック＝記事非依存のデザイン項目、PHASE1C-001〜007）。前 Phase の学びを反映すべき残り（仕上げトラック + 次 Phase の Gate）は従来どおり前 Phase Gate 通過後に起票する。先行・仕上げの区分は該当 Phase のドラフトファイル（例：`draft-phase1c-design-polish.md`）に明記する。並行作業の push 競合は §10.7 で対処。
+
+**並行運用（2026-08-02 改定）**：記事 PBI と開発系 PBI は、**別名でローカルに clone した別作業ツリーであれば並行して進めてよい**（従来の「セッション単位で切替」を置き換え）。同一作業ツリーで 2 セッションを同時に走らせるのは禁止（**1 ツリー 1 セッション**。2026-08-01 に INDEX.md が古い内容で黙って上書きされる実害が発生したため）。並行時の遵守事項：
+
+1. 同じ PBI を 2 セッションで触らない（どのセッションがどの PBI を進めるかは運営者指示で分ける）
+2. INDEX.md の更新は「pull → 書き込み → 即コミット」で滞留させない（競合の窓を狭める）
+3. push 競合は §10.7 で対処
+
+devcontainer はボリューム名が devcontainerId（clone パス由来）で分離されるため、別 clone なら設定・認証・node_modules が衝突せず同時起動できる。新 clone の初回のみ `gh auth login`（PAT はボリュームに永続化）と `yarn install` が必要。
+
 ## 10. ブランチ運用
 
 ### 10.1 ブランチ階層
 
 ```
-main                         保護対象、Phase 完了時のみマージで更新
-├── feat/phase-0/            Phase 0 ブランチ（main から切る）
-│   ├── feat/phase-0-pbi-001 PBI ごと sub-branch（Phase ブランチから切る、常時）
-│   ├── feat/phase-0-pbi-002 並行 session が必要なら worktree で複数同時展開可
-│   └── ...
-├── feat/phase-1a/           Phase 1a ブランチ
-│   └── ...
-└── archive/vite-react-chakra  旧版退避（Phase 0 開始時に切った）
+main                          保護対象。公開フェーズ（1d）で feat/phase-1 を一度だけマージ（Decision #25）
+├── feat/phase-0              Phase 0 ブランチ（完了・main マージ済み）
+├── feat/phase-1              Phase 1a〜1c の作業を集約（直 commit/push、1d まで未マージ）
+└── archive/vite-react-chakra 旧版退避（Phase 0 開始時に切った）
 ```
 
 ### 10.2 命名規則
 
 | ブランチ | 命名 | 例 |
 |---|---|---|
-| Phase ブランチ | `feat/phase-<phase>` | `feat/phase-0`, `feat/phase-1a` |
-| PBI sub-branch | `feat/phase-<phase>-pbi-<NNN>` | `feat/phase-0-pbi-001` |
+| Phase ブランチ | `feat/phase-<phase>` | `feat/phase-0`, `feat/phase-1`（1a〜1c を集約） |
 | Archive | `archive/<context>` | `archive/vite-react-chakra` |
 | Hotfix | `fix/<short>` | `fix/typo-readme` |
 
-### 10.3 Phase 開始時
+### 10.3 Phase 開始時（main から分岐する場合）
+
+main から新しい Phase ブランチを分岐するのは、**新規 Phase 系列の開始時のみ**（Phase 0、および公開後の 1e 以降）。
 
 ```bash
 git checkout main
@@ -301,103 +320,64 @@ git checkout -b feat/phase-<phase>
 git push -u origin feat/phase-<phase>
 ```
 
-### 10.4 PBI 着手時（**常時 sub-branch + worktree**）
+**公開前の Phase 1a〜1c は分岐しない**：未完成サイト（仮デザイン・サンプル記事・未承認文面）を main に載せない方針（site-plan §8 Decision #25）のため、1a〜1c は統合ブランチ `feat/phase-1` に集約して直 commit/push し、main へのマージは公開フェーズ（1d）まで遅延する（§10.6）。1b / 1c 開始時に新ブランチを切らず、`feat/phase-1` をそのまま継続する（ブランチ名は sub-phase でなく Phase 1 全体を表す。PBI ID は PHASE1B-NNN 等 sub-phase 単位で振る）。
 
-PBI 着手時は、並行 session の有無に関わらず **常に worktree で sub-branch を展開する**（既定動作）。Claude が独自判断で省略してはならない。
+### 10.4 PBI 着手時（直 commit/push）
 
-理由：
-- 並行 session を後から追加する際の追加コストがゼロ
-- Phase ブランチの作業ディレクトリが PBI 実装で汚れない
-- セッション中に「worktree を切るか」を判断する必要がない（判断対象を増やさない）
+Phase 1a 以降は sub-branch・worktree を使わず、統合ブランチ feat/phase-1 を直接チェックアウトして作業し commit / push する。
 
 ```bash
-# Phase ブランチを最新化
-cd <main repo>
-git checkout feat/phase-<phase>
-git pull origin feat/phase-<phase>
-
-# worktree をプロジェクト配下 .claude/worktrees/ に展開
-# （Claude Code sandbox がプロジェクト配下のみ書込許可するため、追加 sandbox 設定不要）
-git worktree add .claude/worktrees/phase-<phase>-pbi-<NNN> -b feat/phase-<phase>-pbi-<NNN>
-
-# 作業ディレクトリへ移動
-cd .claude/worktrees/phase-<phase>-pbi-<NNN>
-# Claude セッションは tool 経由が推奨：
-#   EnterWorktree({ path: ".claude/worktrees/phase-<phase>-pbi-<NNN>" })
+# セッション開始: feat/phase-1 がチェックアウトされた状態で Claude Code を起動
+git add <files>
+git commit -m "feat(pbi): PHASE1A-NNN <desc>"
+git push origin feat/phase-1
 ```
 
-**sandbox 制約：EnterWorktree 後の git 書き込み**
+**PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md 等）は本節対象外。Phase ブランチに直 commit してよい。
 
-`EnterWorktree` でセッションの作業ディレクトリを worktree に移すと、sandbox の `allowWrite: [".git"]` が worktree 側の `.git`（ポインタファイル）に解決される。git が実際に書き込む先は本体リポジトリの `.git/worktrees/` 配下なので、`git add` / `git commit` が sandbox にブロックされる。
+### 10.5 PBI 完了時
 
-対処：**ファイル編集は worktree 内で行い、git 操作（add / commit / push）は ExitWorktree で本体に戻ってから `-C` オプションで実行する**。§10.5 の手順を参照。
-
-**worktree 省略が許される唯一の条件**：運営者が明示的に「worktree 不要」と指示した時のみ。Claude 側で「並行不要そうだから省略」と判断するのは禁止。
-
-**PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md、operation-manual.md、pbi/README.md 等）は本節 10.4 の対象外。Phase ブランチに直 commit してよい（本ルールは PBI 実装作業に限定）。
-
-### 10.5 PBI 完了時（sub-branch を Phase ブランチへマージ）
+§10.4 と同じブランチで commit / push する。マージ工程は不要（feat/phase-1 が統合ブランチ兼作業ブランチ）。
 
 ```bash
-# ExitWorktree で本体リポジトリに戻る（sandbox 制約のため、git 操作は本体側で行う）
-# Claude セッションは tool 経由：ExitWorktree({ action: "keep" })
-cd <main repo>
-
-# worktree 内の変更を -C オプションで commit / push
-git -C .claude/worktrees/phase-<phase>-pbi-<NNN> add <files>
-git -C .claude/worktrees/phase-<phase>-pbi-<NNN> commit -m "feat(pbi): ..."
-git -C .claude/worktrees/phase-<phase>-pbi-<NNN> push -u origin feat/phase-<phase>-pbi-<NNN>
-
-# Phase ブランチを最新化してマージ
-git checkout feat/phase-<phase>
-git pull origin feat/phase-<phase>  # 他並行 PBI の進捗を取り込む
-
-# merge commit 強制（squash しない、PBI 名を log に残す）
-git merge --no-ff feat/phase-<phase>-pbi-<NNN>
-# INDEX.md などに conflict があれば手動 resolve
-
-git push origin feat/phase-<phase>
-
-# worktree 削除（ローカルディレクトリ整理）
-# sandbox が .vscode/ 等の削除をブロックする場合は運営者ターミナルで実行（Q6 参照）
-git worktree remove .claude/worktrees/phase-<phase>-pbi-<NNN>
-
-# remote の sub-branch は削除しない（log + 個別 PBI 状態の checkout 用に保持）
+# PBI 完了: 受け入れ条件確認 → STATUS: Done → INDEX.md 同期 → commit → push
+git add docs/pbi/PHASE1A-NNN-xxx.md docs/pbi/INDEX.md <実装ファイル群>
+git commit -m "feat(pbi): PHASE1A-NNN <desc>"
+git push origin feat/phase-1
 ```
 
-**sub-branch は削除しない**：マージ後も remote に残し、`git checkout feat/phase-<phase>-pbi-<NNN>` で過去 PBI の独立状態に戻れるようにする。CF Pages の preview 大量生成は §10.8 の filter 設定で抑制。
+### 10.6 main へのマージ（公開フェーズに集約）
 
-### 10.6 Phase 完了時（Phase ブランチを main へマージ）
-
-Retrospective Gate PBI（PHASE0-010 等）の受け入れ条件として実施：
+main へのマージは**公開フェーズ（Phase 1d）で一度だけ**実施する（site-plan §8 Decision #25）。公開前の Gate（1a / 1b / 1c）ではマージせず、`feat/phase-1` に作業を積み上げる。未完成サイトを main 経由で本番公開・クロールさせないため。マージ手順は Phase 1d PBI（`draft-phase1d-domain-launch.md`）の受け入れ条件として実施：
 
 ```bash
+# Phase 1d（公開）でのみ実行：
 git checkout main
 git pull origin main
-git merge --no-ff feat/phase-<phase>
+git merge --no-ff feat/phase-1
 git push origin main
 
-# Phase ブランチも remote に保持（後で全体構造を見られる）
+# feat/phase-1 も remote に保持（後で全体構造を見られる）
 ```
+
+- **Phase 0 は本モデル制定前**に完了したため `feat/phase-0` を main へマージ済み（PHASE0-010、`6a38240`）。これは歴史的経緯で、現行の遅延マージ方針とは別。
+- 公開後の 1e 以降は §10.3 の通常フロー（main から分岐 → 完了時マージ）に復帰する。
 
 ### 10.7 並行作業の競合対処
 
-**INDEX.md は表構造で PBI 行が隣接しているため、並行直接編集は git auto-merge できず必ず conflict する**（実証済）。sub-branch 戦略により conflict をマージタイミング 1 回に集約する。
-
-push 競合（後発の `git push` が non-fast-forward で fail）：
+並行作業は別 clone の別作業ツリーで行う（§9 並行運用。同一作業ツリーの 2 セッション同時作業は、push 以前にファイルの黙った上書きが起きるため禁止）。複数セッションが同時に feat/phase-1 に push すると non-fast-forward で後発が fail する：
 
 ```bash
-git pull --rebase origin feat/phase-<phase>
-# conflict あれば手動 resolve、git rebase --continue
-git push origin feat/phase-<phase>
+git pull --rebase origin feat/phase-1
+# conflict（INDEX.md 等）あれば手動 resolve → git rebase --continue
+git push origin feat/phase-1
 ```
 
 ### 10.8 Cloudflare Pages の Preview Branch Filter（必須設定）
 
-sub-branch を保持する運用では、Cloudflare Pages のデフォルト設定（全非本番 branch に preview deployment 自動生成）が大量の不要 preview を生む。**運営者は CF Pages のダッシュボードで Custom branches 設定を必ず行う**：
+Phase ブランチのみ preview deployment が生成される（sub-branch なし）。**運営者は CF Pages のダッシュボードで Custom branches 設定を行う**：
 
 - **Include Preview branches**：`feat/phase-*`（Phase ブランチのみ preview）
-- **Exclude Preview branches**：`feat/phase-*-pbi-*`（PBI sub-branch は preview しない）
 
 または **Disable all preview deployments** 一択。
 
@@ -408,7 +388,7 @@ sub-branch を保持する運用では、Cloudflare Pages のデフォルト設�
 GitHub UI の Branch protection rules で main を保護：
 
 - 直接 push 禁止（PR 経由のみ、または管理者のみ許可）
-- Phase ブランチ（`feat/phase-*`）と sub-branch は保護なし、直接 push OK
+- Phase ブランチ（`feat/phase-*`）は保護なし、直接 push OK（sub-branch は v3.0 で廃止）
 
 ### 10.10 Hotfix（main に直接修正したい場合）
 
@@ -436,3 +416,12 @@ git push -u origin fix/<short-name>
 | 2026-05-06 | v2.6 | §10.4-10.5 worktree 配置を sibling（`../<repo>-pbi-<NNN>`）からプロジェクト配下（`.claude/worktrees/phase-<phase>-pbi-<NNN>`）に変更。Claude Code sandbox がプロジェクト配下のみ書込許可するため、追加 sandbox 設定なしで運用可能に。Claude セッションは EnterWorktree / ExitWorktree tool で切替。 |
 | 2026-05-06 | v2.7 | §5.3 着手時の手順に「PBI 本文の前提を一次情報で確認」step を追加（Step 2、後続 renumber）。Don't Guess の PBI 着手時版。PHASE0-002 で PBI 本文の `--typescript strict` flag / Yarn 4 維持前提が事実と乖離していた経験から、各 PBI 着手時に empirical 確認するルールを明文化。 |
 | 2026-05-07 | v2.8 | §5.3 step 2 の verify 範囲を「コマンド・version・flag・URL」から **scaffold / migration / setup の approach 自体**まで拡張。PHASE0-002 セッション 1 で `yarn create astro@latest .` が既存 repo 後付けに非対応で、approach そのものを Astro Manual Setup 節に切替える必要があった経験を規約化。Phase 0 PBI 全体 audit（PHASE0-005 / 006 / 008 の drift 補正）と同セッションで反映。 |
+| 2026-06-07 | v2.9 | §10 ブランチ運用を Phase 1a 実績フローに刷新：sub-branch 廃止・常設 worktree `.claude/worktrees/phase-1a` への直 commit/push に変更（PHASE1A-008 完了時に同梱）。§10.1 階層図、§10.2 命名表（sub-branch 行削除）、§10.4 着手手順、§10.5 完了手順、§10.7 競合対処、§10.8 CF Pages filter を更新。CLAUDE.md Sandbox 制約行も同期。 |
+| 2026-06-10 | v3.0 | §10 worktree 廃止：feat/phase-1a を直接チェックアウトして作業するフローに変更。§10.1 階層図・§10.4 着手手順・§10.5 完了手順から worktree / EnterWorktree 参照を削除。CLAUDE.md Sandbox 制約行も同期。 |
+| 2026-06-14 | v3.1 | §10 ブランチ運用を deferred-merge に是正：公開前の 1a〜1c は feat/phase-1a に集約し、main マージは公開フェーズ 1d に集約（site-plan §8 Decision #25 整合）。§10.1 図 / §10.3（main 分岐は新規 Phase 系列のみ）/ §10.6（マージは 1d 集約、Phase 0 は制定前の歴史的マージと明記）を更新。CLAUDE.md line 69（次 Phase を main から分岐）と operation-manual.md（毎 Phase マージ承認 + v3.0 で廃止済みの worktree / sub-branch 記述）も連動是正。あわせて §4.6 ルール6 の項目数基準を網羅性の目安に降格し、§7 にサイズ判定の主基準（想定セッション数を技術メモに明記・2 セッション以上は必ず分割）を新設。タイトル version（旧 v2.8）と外部参照（CLAUDE.md / site-plan §12 の旧 v2.9）の版数ドリフトを v3.1 に統一（前 Gate が v2.9 と誤修正していたのを訂正、過去事実の改訂履歴行は不変のまま）。 |
+| 2026-06-14 | v3.2 | 統合ブランチを `feat/phase-1a` → `feat/phase-1` にリネーム（名前と中身のズレ解消：1a〜1c を集約する統合ブランチを sub-phase 名で呼んでいた問題。deferred-merge 構造は不変）。§10.1 図 / §10.2 命名例 / §10.3〜§10.7 のコマンド例の現行参照を feat/phase-1 に更新。CLAUDE.md（プレビュー URL + フロー）/ operation-manual.md / draft-phase1d（前方マージ参照）/ メモリも連動更新。ブランチは `feat/phase-*` パターン内なので CF preview filter / main 保護は無変更（プレビュー URL は `feat-phase-1-...` に変わる）。Done PBI 本体・v3.0/v3.1 改訂履歴行など過去事実は不変。 |
+| 2026-07-12 | v3.3 | §9 に先行トラック例外を追加（site-plan v3.10 Decision #28 連動）：Decision Log で明示された先行トラック PBI（現行：Phase 1c 記事非依存デザイン項目 PHASE1C-001〜007）は前 Phase Gate 通過前でも起票・着手可。仕上げトラック + Gate は従来どおり前 Phase Gate 後に起票し、Gate の申し送りを反映する |
+| 2026-08-01 | v3.4 | §4.6 にルール 8（Gate PBI の申し送り棚卸し）を追加：Gate の受け入れ条件に「全実装ログの申し送りを項目単位で列挙し、PBI 化 / 持ち越し / 破棄のいずれかに判定」を必須化。前 Gate からの持ち越し項目も再判定対象。従来の「全ログを読む」だけでは項目単位の判定が強制されず黙って落ちる余地があり、Phase 非所属の項目（例：ダークモード実表示検証）に行き場がなかった穴を塞ぐ。PHASE1B-014 の受け入れ条件にも同項目を追記 |
+| 2026-08-02 | v3.5 | §9 に並行運用ルールを追加：記事 PBI と開発系 PBI は別名 clone の別作業ツリーなら並行可（従来の「セッション単位で切替」を置き換え）。1 ツリー 1 セッションを必須化（2026-08-01 に同一ツリー 2 セッションで INDEX.md が古い内容で黙って上書きされる実害が発生）。遵守事項：同一 PBI を 2 セッションで触らない / INDEX は pull→即コミット / push 競合は §10.7。§10.7 冒頭にも別 clone 前提を明記。CLAUDE.md の切替記述も連動更新 |
+| 2026-08-02 | v3.6 | §5.1 に Dropped（取り下げ）状態を新設：スコープ変更で不要になった NotStarted の PBI に適用。Decision Log の記録を必須とし、ファイルは削除せず INDEX と同期。初出の適用は初期記事セット縮小（site-plan v3.11 Decision #29）による PHASE1B-010 / 011 / 013 |
+| 2026-08-07 | v3.7 | §5.4 に例外を追加（Phase 1c Gate = PHASE1C-012 での判断）：記事の公開・main マージ・DNS / ドメイン切替など**外から見える状態を変えるコミット**を打ったセッションは、その PBI の Done 化まで同一セッションで終える。終えられないならコミット自体を次セッションへ回す。§5.2（Status と INDEX の同一コミット同期）の守備範囲外で、§5.4 が正規に認める「InProgress のまま終える」の中で事故が起きていた（PHASE1B-009：記事は公開済みなのに PBI が InProgress のまま残存）。Phase 1d は該当コミットが並ぶため先行して規約化 |

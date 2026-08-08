@@ -1,0 +1,19 @@
+---
+import SkillSet from "../components/SkillSet.astro";
+import { skills } from "../data/skills";
+import PageLayout from "../layouts/PageLayout.astro";
+---
+
+<PageLayout
+  title="Skills | byte-lark.com"
+  description="谷本和也（PM / PO・フルスタックエンジニア）の技術スキル一覧。言語・フレームワーク・ミドルウェア・DB・ツールをカテゴリ別に紹介"
+>
+  <h1 class="text-3xl font-bold text-foreground">Skills</h1>
+  <p class="mt-4 text-muted-foreground">
+    業務で使用してきた技術をカテゴリ別に掲載しています。年数は実務での経験年数です。
+  </p>
+
+  <div class="mt-10 space-y-12">
+    {skills.map((set) => <SkillSet set={set} />)}
+  </div>
+</PageLayout>

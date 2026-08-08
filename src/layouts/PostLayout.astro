@@ -1,0 +1,281 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { buildArticleJsonLd } from "../lib/jsonld";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  publishedAt: Date;
+  updatedAt?: Date;
+  category: "tech" | "life";
+  tags: string[];
+  /** cover 画像の解決済み src。未指定時は BaseLayout がデフォルト OGP 画像へフォールバック */
+  ogImage?: string;
+  canonical?: string;
+  /** render() が返す headings。指定時のみ目次を表示（depth 2-3 を対象） */
+  headings?: Heading[];
+}
+
+const {
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  category,
+  tags,
+  ogImage,
+  canonical,
+  headings,
+} = Astro.props;
+
+const siteUrl = Astro.site?.origin ?? "https://byte-lark.com";
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = ogImage
+  ? new URL(ogImage, siteUrl).href
+  : new URL("/og-default.png", siteUrl).href;
+
+const jsonLd = buildArticleJsonLd({
+  title,
+  description,
+  url: canonicalUrl,
+  image: ogImageUrl,
+  datePublished: publishedAt,
+  dateModified: updatedAt,
+});
+
+const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+const categoryLabel = category === "tech" ? "Tech" : "Life";
+// カテゴリチップの色分けは BlogCard と揃える（PHASE1C-008）
+const categoryChipClass =
+  category === "tech"
+    ? "bg-muted text-hibari-sky"
+    : "bg-secondary text-secondary-foreground";
+
+const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
+const isoDate = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  canonical={canonical}
+  type="article"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+  <main class="mx-auto max-w-3xl px-4 py-8 xl:flex xl:max-w-[1080px] xl:gap-10">
+    <article class="min-w-0 xl:max-w-3xl xl:flex-1">
+      <slot name="cover" />
+      <header class="mb-8 border-b border-border pb-6">
+        <div class="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span
+            class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}
+          >{categoryLabel}</span>
+          <time datetime={isoDate(publishedAt)}>{dateFormatter.format(publishedAt)} 公開</time>
+          {
+            updatedAt && (
+              <time datetime={isoDate(updatedAt)}>
+                （{dateFormatter.format(updatedAt)} 更新）
+              </time>
+            )
+          }
+        </div>
+        <h1 class="text-2xl font-bold text-foreground sm:text-3xl">{title}</h1>
+        {
+          tags.length > 0 && (
+            <ul class="mt-4 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <li class="text-sm text-muted-foreground">#{tag}</li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+
+      {
+        toc.length > 0 && (
+          <nav aria-label="目次" class="mb-8 rounded-lg bg-card p-4 shadow-card xl:hidden">
+            <h2 class="mb-2 text-sm font-bold text-foreground">目次</h2>
+            <ul class="space-y-1 text-sm">
+              {toc.map((h) => (
+                <li class={h.depth === 3 ? "ml-4" : ""}>
+                  <a
+                    href={`#${h.slug}`}
+                    class="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+
+      <div class="post-body">
+        <slot />
+      </div>
+    </article>
+
+    {
+      toc.length > 0 && (
+        <aside class="hidden xl:block xl:w-60 xl:shrink-0">
+          <nav
+            aria-label="目次"
+            data-toc-sidebar
+            class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg bg-card p-4 shadow-card"
+          >
+            <h2 class="mb-2 text-sm font-bold text-foreground">目次</h2>
+            <ul class="space-y-1 text-sm">
+              {toc.map((h) => (
+                <li class={h.depth === 3 ? "ml-4" : ""}>
+                  <a
+                    href={`#${h.slug}`}
+                    class="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+      )
+    }
+  </main>
+</BaseLayout>
+
+<script>
+  // 追従目次の現在地ハイライト（PHASE1C-009）。
+  // 「上端がオフセット線（sticky ヘッダー分。scroll-margin-top: 5rem と整合）を過ぎた
+  // 最後の見出し」を現在地とする。ページ末尾に達したときは最後の見出しを現在地にする
+  // ——末端の節は短いとオフセット線まで届かず、目次から移動したのに前の節が
+  // 光ったままになるため。この末尾判定は見出しの境界跨ぎと無関係に起きるので
+  // IntersectionObserver では拾えず、rAF で 1 フレーム 1 回に間引いた passive scroll で
+  // 再計算する（見出し十数個の rect 読みだけで軽量）。
+  const OFFSET = 80;
+  const sidebar = document.querySelector("[data-toc-sidebar]");
+  const body = document.querySelector(".post-body");
+  if (sidebar && body) {
+    const links = new Map<string, HTMLAnchorElement>();
+    for (const a of sidebar.querySelectorAll<HTMLAnchorElement>("a[href^='#']")) {
+      links.set(decodeURIComponent(a.hash).slice(1), a);
+    }
+    const headings = [...body.querySelectorAll<HTMLElement>("h2[id], h3[id]")].filter((h) =>
+      links.has(h.id),
+    );
+    let activeId = "";
+    const update = () => {
+      let current = "";
+      for (const h of headings) {
+        if (h.getBoundingClientRect().top <= OFFSET + 1) current = h.id;
+        else break;
+      }
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom && headings.length > 0) current = headings[headings.length - 1].id;
+      if (current === activeId) return;
+      links.get(activeId)?.removeAttribute("aria-current");
+      links.get(current)?.setAttribute("aria-current", "location");
+      activeId = current;
+    };
+    let queued = false;
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          update();
+        });
+      },
+      { passive: true },
+    );
+    update();
+  }
+</script>
+
+<style>
+  /* 追従目次の現在地リンク（PHASE1C-009）。sky-deep は AA を満たす文字用トークン */
+  [data-toc-sidebar] a[aria-current="location"] {
+    color: var(--color-hibari-sky-deep);
+    font-weight: 700;
+  }
+
+  /* 記事本文のタイポグラフィ（PHASE1C-003 で確定。docs/design-direction.md §3）。
+     節見出し h2 は 24px / 500 — ページの節見出し（700）より軽くして、読み進める流れを切らない */
+  .post-body :global(h2) {
+    margin-top: 2.75rem;
+    margin-bottom: 0.75rem;
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
+    font-weight: 700;
+    scroll-margin-top: 5rem;
+  }
+  .post-body :global(h3) {
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+    font-size: var(--text-lg);
+    line-height: var(--text-lg--line-height);
+    font-weight: 700;
+    scroll-margin-top: 5rem;
+  }
+  .post-body :global(p),
+  .post-body :global(ul),
+  .post-body :global(ol),
+  .post-body :global(blockquote) {
+    margin-bottom: 1.2rem;
+  }
+  .post-body :global(li) {
+    margin-top: 0.45rem;
+  }
+  .post-body :global(ul),
+  .post-body :global(ol) {
+    padding-left: 1.5rem;
+  }
+  .post-body :global(ul) {
+    list-style: disc;
+  }
+  .post-body :global(ol) {
+    list-style: decimal;
+  }
+  .post-body :global(a) {
+    color: var(--color-hibari-sky);
+    text-decoration: underline;
+  }
+  .post-body :global(blockquote) {
+    border-left: 4px solid var(--color-border);
+    padding-left: 1rem;
+    color: var(--color-muted-foreground);
+  }
+  .post-body :global(pre) {
+    margin-bottom: 1.2rem;
+    overflow-x: auto;
+    border-radius: var(--radius);
+    padding: 1rem;
+    /* コードは本文より一段小さく、行間も詰める（本文の 1.95 のままだと間延びする） */
+    font-size: 0.8125rem;
+    line-height: 1.7;
+  }
+  .post-body :global(:not(pre) > code) {
+    border-radius: 0.25rem;
+    background: var(--color-muted);
+    padding: 0.125rem 0.375rem;
+    font-size: 0.875em;
+  }
+  .post-body :global(img) {
+    margin-block: 1.5rem;
+    border-radius: 0.5rem;
+  }
+</style>
