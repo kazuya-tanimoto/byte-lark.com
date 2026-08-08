@@ -2,6 +2,7 @@
   "model": "opus[1m]",
   "effortLevel": "xhigh",
   "tui": "fullscreen",
+  "remoteControlAtStartup": true,
   "statusLine": {
     "type": "command",
     "command": "/home/node/.claude/statusline.sh"
