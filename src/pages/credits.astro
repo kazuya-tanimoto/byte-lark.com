@@ -1,0 +1,108 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+
+// Skills ページのアイコン出典。MIT の許諾文同梱義務を、サイトの体裁のまま辿れる形で満たす
+// （PHASE1D-001 で Footer に導線を追加した際は public/icons/LICENSE.txt へ直リンクしていた）
+const sources = [
+  {
+    name: "Devicon",
+    license: "MIT License",
+    url: "https://github.com/devicons/devicon",
+    copyright: "Copyright (c) 2015 konpa",
+    icons:
+      "linux, apache, nginx, oracle, php, javascript, typescript, python, java, c, bash, react, tailwindcss, laravel, codeigniter, flask, mysql, postgresql, git, jetbrains, neovim, docker, selenium, visualbasic",
+  },
+  {
+    name: "Tabler Icons",
+    license: "MIT License",
+    url: "https://github.com/tabler/tabler-icons",
+    copyright: "Copyright (c) 2020-2024 Paweł Kuna",
+    icons: "sql",
+  },
+  {
+    name: "SVG Logos",
+    license: "CC0 1.0 Universal（パブリックドメイン）",
+    url: "https://github.com/gilbarbara/logos",
+    copyright: null,
+    icons: "struts, claude, copilot, chatgpt, gemini, mcp",
+  },
+  {
+    name: "Simple Icons",
+    license: "CC0 1.0 Universal（パブリックドメイン）",
+    url: "https://github.com/simple-icons/simple-icons",
+    copyright: null,
+    icons: "gas, claude-code, cursor",
+  },
+];
+
+const mitLicense = `Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`;
+---
+
+<PageLayout
+  title="アイコン出典 | byte-lark.com"
+  description="byte-lark.com の Skills ページで使用しているアイコンの出典とライセンス（Devicon / Tabler Icons / SVG Logos / Simple Icons）"
+>
+  <h1 class="text-3xl font-bold text-foreground">アイコン出典</h1>
+
+  <p class="mt-6 text-muted-foreground">
+    <a href="/skills" class="text-hibari-sky underline">Skills</a>
+    ページで使用しているアイコンの出典とライセンスです。いずれも配布元の許諾に従って自前ホストで配信しています。
+  </p>
+
+  <!-- 出典一覧 -->
+  <section class="mt-10" aria-labelledby="credits-sources">
+    <h2 id="credits-sources" class="heading-sun text-2xl font-bold text-foreground">
+      出典一覧
+    </h2>
+
+    {
+      sources.map((source) => (
+        <div class="mt-8">
+          <h3 class="text-lg font-bold text-foreground">
+            {source.name}
+            <span class="ml-2 inline-block text-sm font-normal text-muted-foreground">
+              {source.license}
+            </span>
+          </h3>
+          <p class="mt-2 text-muted-foreground">
+            <a
+              href={source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-hibari-sky underline"
+            >
+              {source.url}
+            </a>
+          </p>
+          {source.copyright && <p class="mt-1 text-muted-foreground">{source.copyright}</p>}
+          <p class="mt-2 text-sm text-muted-foreground">使用アイコン：{source.icons}</p>
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- MIT ライセンス全文 -->
+  <section class="mt-12" aria-labelledby="credits-mit">
+    <h2 id="credits-mit" class="heading-sun text-2xl font-bold text-foreground">
+      MIT License 全文
+    </h2>
+    <p class="mt-4 text-muted-foreground">
+      Devicon および Tabler Icons に適用されます。著作権表示は上記の各項目に記載しています。
+    </p>
+    <p class="mt-4 whitespace-pre-line text-sm text-muted-foreground">{mitLicense}</p>
+  </section>
+
+  <!-- 商標について -->
+  <section class="mt-12" aria-labelledby="credits-trademark">
+    <h2 id="credits-trademark" class="heading-sun text-2xl font-bold text-foreground">
+      商標について
+    </h2>
+    <p class="mt-4 text-muted-foreground">
+      各ロゴの意匠は各権利者の商標です。本サイトでは経歴上の使用技術を示す目的でのみ表示しており、各社との提携・推奨関係を示すものではありません。
+    </p>
+  </section>
+</PageLayout>

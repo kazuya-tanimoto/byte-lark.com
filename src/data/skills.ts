@@ -3,7 +3,7 @@ import type { SkillSet } from "@/types/skills";
 // 年数は運営者確認済みの実務経験年数（2026-06、PHASE1B-001）。
 // 出典: career-docs/master-career-data.md + 職歴タイムライン（2014 職務経歴書 + 2024-08 スキルシート）。
 // アイコンは public/icons/ に自前ホストする（PHASE1C-014 で外部 CDN 直リンクから移行）。
-// 出典とライセンスは public/icons/LICENSE.txt を参照。
+// 出典とライセンスは /credits（src/pages/credits.astro）を参照。原文は public/icons/LICENSE.txt。
 export const skills: SkillSet[] = [
   {
     category_id: 1,
