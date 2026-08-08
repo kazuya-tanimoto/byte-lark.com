@@ -297,6 +297,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-007 | [monitoring-ignition](20260808-PHASE1D-007-monitoring-ignition.md) | NotStarted |
 | PHASE1D-008 | [postlaunch-checks-routines](20260808-PHASE1D-008-postlaunch-checks-routines.md) | NotStarted |
 | PHASE1D-010 | [font-subsetting](20260808-PHASE1D-010-font-subsetting.md) | NotStarted |
+| PHASE1D-011 | [dependabot-triage](20260808-PHASE1D-011-dependabot-triage.md) | NotStarted |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
 ### Phase 1d 推奨着手順序
@@ -312,7 +313,8 @@ PHASE1D-004 (main マージ + カスタムドメイン接続 + 本番 Lighthouse
 ┌─ PHASE1D-005 (www 畳み)
 ├─ PHASE1D-006 (Web Analytics + Search Console + OGP)
 ├─ PHASE1D-007 (監視点火) ← 004 後、相互に並行可
-└─ PHASE1D-010 (フォントサブセット化 ← 004 の本番計測で Perf 未達 9 ページ、実施時期は運営者判断)
+├─ PHASE1D-010 (フォントサブセット化 ← 004 の本番計測で Perf 未達 9 ページ、実施時期は運営者判断)
+└─ PHASE1D-011 (Dependabot アラート仕分け ← 005 の push 時に判明した 61 件。006 と並行可)
   ↓
 PHASE1D-008 (公開後実機確認 + R-01 routine 点火)
   ↓
@@ -337,6 +339,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-08 | **PHASE1D-011 起票（Dependabot アラート仕分け）**：PHASE1D-005 の push 時に判明した Dependabot アラート 61 件（critical 1 / high 16）の全件仕分け・解消を独立 PBI 化。PHASE1D-007 が持つのは通知の有効化確認で、既存アラートの処置は本 PBI が担当（相互参照を PBI 本文に明記）。SSG + Workers 構成での露出区分（runtime / build / dev）を付けて記録し、依存更新は devcontainer または運営者ターミナルで実施（母艦 sandbox はレジストリ DNS 不可）。006 と並行可 |
 | 2026-08-08 | **PHASE1D-005 完了（Done）**：www.byte-lark.com を apex へ 301 一本化。CF の www CNAME（→ Netlify）を撤去し AAAA `100::` Proxied + Redirect Rule（テンプレート「Redirect from WWW to root」+ Preserve query string、301）。curl 実測 5 通り合格（http は Always Use HTTPS との 2 段 301、クエリ保持確認）。旧 Netlify サイトは運営者決定により削除（byte-lark.netlify.app が 404 化を確認、アカウント自体も削除予定）。あわせて運営者が feat/phase-1 を main へマージ（2fee28f、check-runs 全 success）し、プライバシーポリシー改定が本番反映＝ 004 の申し送り解消。push 時に判明した Dependabot アラート 61 件（critical 1 / high 16、main に lockfile が乗って初走査）は要仕分け・未対応 |
 | 2026-08-08 | **PHASE1D-004 完了（Done）＝サイト公開 + PHASE1D-010 起票**：記事 3 本の publishedAt を 2026-08-08 へ更新し、feat/phase-1 を main へマージ（01239b9。sandbox で merge 不可のため `git commit-tree` による 2 親マージ + `push <sha>:main`）、main CI 全 green・本番 Worker デプロイ成功。運営者作業で main 向け Deploy Hook「main manual rebuild」作成、旧 apex A 削除のうえ byte-lark.com を Workers カスタムドメインとして接続（正規ホストは www なしの apex に運営者が確定、www 畳みは 005）。https://byte-lark.com で全 10 ページ表示・noindex なし・HTTPS 有効を確認し**サイト公開**。本番 Lighthouse は SEO 全 11 ページ 100 / CLS ≈0（実記事の測り直し込み）、Performance は 2/11 のみ 90+（59〜82、ページあたりフォント 0.35〜1.1MB が原因。実測 FCP 0.3〜2.6s をシミュレーションが 5〜7s に外挿）→ 受け入れ条件の判定に従い **PHASE1D-010（font-subsetting）を起票**（実施時期は運営者判断）。想定外：NS 移管直後のルーターの旧委任キャッシュで旧サイトが見え続けた（テザリングで回避、最大 48h で自然解消）。申し送り：並行セッションのプライバシーポリシー改定（224a4a4）が main 未反映 → 次回 main マージで反映 |
 | 2026-08-08 | **PHASE1D-003 完了（Done）**：byte-lark.com の DNS 管理を Xserver から Cloudflare へ NS 移管（Free / Worker と同一アカウント、全 12 レコード DNS only）。切替前に MX を `sv16806.xserver.jp` 直指しへ変更・SPF から `+a:byte-lark.com` 削除・`_dmarc`（p=none）新設、DKIM 2 本は 1 文字単位照合。DNSSEC 無効を確認して切替、伝播は約 10 分で完了。メール 3 経路（tanimoto@ / info@ 送受信、Contact フォーム→Resend→info@）の生存確認済み。切り戻しは Xserver ネームサーバー設定を戻すだけ（Xserver 側ゾーンは温存） |
