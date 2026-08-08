@@ -47,3 +47,24 @@ Completed: 2026-08-08
   - 受け入れ条件 1 の「個人事業主 → 法人表記」置換は PHASE1B-003 で対応済みだった（PBI 起票時の前提が古かった）。実作業は代表社員・所在地の追加と Privacy 補強が中心
   - devcontainer 内では Playwright を node ワンライナー（`/workspace/node_modules/playwright` を dynamic import）で直接叩いてスクショ確認できる（MCP Playwright 不要）
   - push 時に GitHub から main ブランチの Dependabot 警告 62 件（critical 1 / high 20）の通知あり。本 PBI 対象外のため未対応、公開前に要確認
+
+### 事後追記（2026-08-08、運営者指摘によるプライバシーポリシー再改定）
+
+運営者から「利用目的が『返信のためにのみ』では AI での傾向分析が目的外になるのでは。返信文の作成に AI を使うのもグレーではないか」と指摘があり、文面を再検討した。
+
+調査で分かったこと（AI 以前に実態とずれていた）：
+- `worker/contact.ts` の実装上、問い合わせデータは Cloudflare Turnstile（`challenges.cloudflare.com`）と Resend（`api.resend.com`）を経由する。どちらも国外事業者だが、改定前のポリシーには委託の記載が一切なく「第三者に提供しません」とだけ書いていた
+- 個人情報保護委員会 [生成 AI サービスの利用に関する注意喚起](https://www.ppc.go.jp/files/pdf/230602_alert_generative_AI_service.pdf)（令和 5 年 6 月 2 日）：個人情報を含むプロンプト入力は特定した利用目的の範囲内である必要がある
+- 同 [FAQ 1-12-1](https://www.ppc.go.jp/all_faq_index/faq1-q12-1/)：委託でも委託先が外国にあれば法 28 条の枠組みが必要
+- 同 [Q&A 7-53](https://www.ppc.go.jp/all_faq_index/faq1-q7-53/)：外部事業者が個人データを取り扱わないこととなっており適切なアクセス制御がある場合は「提供」に当たらない（クラウド例外）
+
+対応（commit `224a4a4`）：
+- 利用目的を「返信のためにのみ」から列挙形式へ（回答・ご連絡／記録と対応品質改善のための分析）
+- 「外部サービスの利用」節を新設。フォーム送信・メール配信の委託と海外所在、AI 利用時は学習に使われない設定で扱う旨を平易な日本語で記載（条文番号・専門用語は出さない）
+- 「第三者に提供しません」は維持（委託は法 27 条 5 項 1 号で第三者提供に当たらず両立するため）
+
+運営者決定：会社名（Cloudflare / Resend）は本文に出さない。海外委託は同意取得ではなくポリシー記載で対応し、フォーム側（`ContactForm.tsx`）は変更しない。
+
+学び：
+- devcontainer の firewall（`.devcontainer/allowed-domains.conf`）は e-Gov・個人情報保護委員会サイトを遮断する。法令の一次確認は WebSearch 経由になった。今後この種の調査が続くなら許可先の追加を検討
+- `pgrep -f "astro.mjs dev"` は自分のシェルのコマンド文字列にもマッチして kill してしまう（exit 144）。`astro[.]mjs dev` のように自己マッチを避ける書き方が必要

@@ -34,10 +34,30 @@ import PageLayout from "../layouts/PageLayout.astro";
       個人情報の取得と利用目的
     </h2>
     <p class="mt-4 text-muted-foreground">
-      本サイトが個人情報を取得するのは、メールでのお問い合わせをいただいた場合のみです。その際に取得する情報（メールアドレス、氏名、お問い合わせ内容）は、お問い合わせへの返信のためにのみ利用します。
+      本サイトが個人情報を取得するのは、お問い合わせをいただいた場合のみです。その際に取得する情報（お名前、メールアドレス、お問い合わせ内容）は、次の目的で利用します。
     </p>
+    <ul class="mt-3 list-disc space-y-2 pl-6 text-muted-foreground">
+      <li>お問い合わせへの回答、ご連絡</li>
+      <li>お問い合わせ内容の記録と、対応の品質を改善するための分析</li>
+    </ul>
     <p class="mt-3 text-muted-foreground">
       取得した個人情報は、ご本人の同意がある場合または法令に基づく場合を除き、第三者に提供しません。
+    </p>
+  </section>
+
+  <!-- 外部サービスの利用 -->
+  <section class="mt-12" aria-labelledby="privacy-policy-external">
+    <h2
+      id="privacy-policy-external"
+      class="heading-sun text-2xl font-bold text-foreground"
+    >
+      外部サービスの利用
+    </h2>
+    <p class="mt-4 text-muted-foreground">
+      お問い合わせフォームの送信には、いたずら送信を防ぐしくみと、メールを届けるためのサービスを利用しています。お問い合わせの内容は、当社に届けるために必要な範囲でこれらを経由します。これらは海外の事業者が提供していますが、当社の委託先として、当社の指示した範囲でのみ情報を取り扱います。
+    </p>
+    <p class="mt-3 text-muted-foreground">
+      また、お問い合わせへの回答を作成する際に AI サービスを利用することがあります。その場合も、入力した内容がそのサービスの学習に使われない設定のもとで取り扱います。
     </p>
   </section>
 
