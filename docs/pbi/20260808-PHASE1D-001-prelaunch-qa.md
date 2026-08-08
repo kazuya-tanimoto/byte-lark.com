@@ -57,6 +57,8 @@ Completed: 2026-08-08
 
 `public/icons/LICENSE.txt` は Devicon 24 件・Tabler 1 件が MIT で、著作権表示と許諾文の同梱義務がある。ファイル自体は配信されているがサイト内から辿れなかったため、Footer の Links 列に「アイコン出典」を 1 行追加して `/icons/LICENSE.txt` へリンクした（`Footer.astro`）。既存リンクと同じクラスを使い、新規スタイルは追加していない。
 
+事後修正（2026-08-08、運営者指摘）：リンク先が装飾なしの生テキストで、作り込んだ他ページから遷移した時の体裁が悪いため、`/credits`（`src/pages/credits.astro`）を新設して Footer のリンク先を差し替えた。出典 4 件・MIT 全文・商標注記を PageLayout に載せた構成で、同梱義務は維持。`public/icons/LICENSE.txt` は原文として配信を継続（`src/data/skills.ts` のコメント参照先も更新）。commit `4ce3f15`
+
 ## 技術メモ
 - 想定セッション数: 1
 - `.dark` 付与は MCP Playwright の evaluate で `document.documentElement.classList.add('dark')`。トークンは PHASE1C-002、アイコン・ロゴの色設計は PHASE1C-004 / 005
