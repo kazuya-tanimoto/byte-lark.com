@@ -1,7 +1,18 @@
 # 【ドラフト】Phase 1d 公開（NS 移管 + カスタムドメイン + Web Analytics + Search Console）
 
-Status: Draft（番号なし。Phase 1c（デザイン）完了後の 1d 起票セッションで番号付き PBI として正式化する）
+Status: Formalized（2026-08-08 に正式化済み。本ファイルは分割案・DNS 調査結果の根拠として歴史的に保持）
 作成: 2026-06-13（PHASE1A-018 を Status: Moved でクローズし、調査結果ごと本ドラフトへ移管。site-plan v3.9 Decision #25）
+
+> **正式化済み（2026-08-08）**：本ドラフトを PHASE1D-001〜009 として起票した。対応表：
+> - 公開前 QA → PHASE1D-001（prelaunch-qa。ダークモード採用可否・アイコンライセンス表記の判断を含む）
+> - （追加）法人表記更新 → PHASE1D-002（corporate-identity-update。PHASE1C-012「先に決めるべき事項」の法人化対応。登記完了済みのため 1d に編入）
+> - NS 移管 → PHASE1D-003（ns-migration）
+> - マージ・ドメイン接続 → PHASE1D-004（main-merge-custom-domain。publishedAt 実公開日化・本番 Lighthouse・実記事 CLS・main CodeQL cron 根治確認を含む）
+> - www / 旧サイトの畳み → PHASE1D-005（www-redirect）
+> - 解析・検索エンジン → PHASE1D-006（analytics-search-console）
+> - 公開後の監視セットアップ → PHASE1D-007（monitoring-ignition）
+> - （追加）公開後実機確認 + 運用点火 → PHASE1D-008（postlaunch-checks-routines。PHASE1C-012 棚卸し表の実機待ち・公開後項目の引き受け先）
+> - Gate → PHASE1D-009（retrospective-gate）
 
 ## 着手条件（公開の門）
 
