@@ -22,7 +22,7 @@ Started: 2026-08-08
 - [ ] 動作確認：わざと異常な URL（noindex が付く branch alias）を叩き、2 回連続でメール通知が実際に飛ぶことを確認（誤報しきい値含む）
 - [x] ローカル スクショ確認：N/A（監視スクリプト追加のみ、サイト出力に変更なし）（CLAUDE.md §7）
 - [x] CF preview スクショ確認：N/A（同上）（CLAUDE.md §7）
-- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`。スクリプト追加でも Quality Checks が走るため実確認する）（CLAUDE.md §7）：43ecef6 で UI Tests / Quality Checks / Workers Builds とも success
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`。スクリプト追加でも Quality Checks が走るため実確認する）（CLAUDE.md §7）：43ecef6 / 37299ce / 58d30d5 で UI Tests・Quality Checks・Workers Builds とも success（0a56b50 の UI Tests は並行セッションの push に concurrency で打ち切られたため、これを含む 58d30d5 で確認）
 
 ## 技術メモ
 - heartbeat / dead man's switch は本構成では不要と判断済み（PHASE1A-021。監視・cron・業務メールが Xserver 同居で、停止時はメール不通で気づく）。スクリプト / cron を変更したら一度手で実行して確認することだけ守る
