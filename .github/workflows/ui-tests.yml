@@ -53,7 +53,10 @@ jobs:
       # （PHASE1D-012。取り寄せは gh run download <run-id> -n screenshots）
       - name: Capture screenshots
         run: |
-          yarn preview --host 127.0.0.1 --port 4321 &
+          # --force は必須。Astro 7 は preview サーバーの情報を .astro/ のロックに書き、
+          # 直前の e2e（Playwright の webServer が preview を起動）が残したロックを
+          # 生きているサーバーとみなして起動を拒否する
+          yarn preview --force --host 127.0.0.1 --port 4321 &
           node -e '
             const deadline = Date.now() + 60000;
             (async () => {
