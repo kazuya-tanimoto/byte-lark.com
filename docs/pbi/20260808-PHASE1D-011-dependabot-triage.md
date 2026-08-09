@@ -18,13 +18,14 @@ Started: 2026-08-08
 - [x] critical 1 件を最優先で内容確認し、露出経路（runtime / build 時のみ / devDependencies のみ）と対応方針を確定
 - [x] 残る全アラートを仕分け：パッケージ / severity / 露出区分（runtime・build・dev）/ 処置（更新 or dismiss）の一覧を実装ログに記録
 - [x] 実害あり（または更新コストが低い）ものは依存更新で解消：`yarn up` 等のレジストリアクセスは devcontainer 内セッションまたは運営者ターミナルで実行（母艦 sandbox は registry.npmjs.org へ DNS 不可）
-- [ ] 実害なしと判断したものは GitHub 上で理由付き dismiss（判断根拠は実装ログにも残す）
-- [ ] 対応後、open アラートが「対応不要と判断済みのもの 0 件」になっていることを Security タブで確認
+- [x] 実害なしと判断したものは GitHub 上で理由付き dismiss（判断根拠は実装ログにも残す）
+- [x] 対応後、open アラートが「対応不要と判断済みのもの 0 件」になっていることを Security タブで確認
 - [x] 依存更新を行った場合：`yarn build` / `yarn check` / `yarn test:run` がローカル（devcontainer）で成功
 - [x] ローカル スクショ確認：依存更新がサイト出力に影響し得るため主要ページで表示回帰がないことを確認（更新が devDependencies のみで build 出力不変なら N/A 化可）（CLAUDE.md §7）
 - [x] CF preview スクショ確認：同上（CLAUDE.md §7）
 - [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`。lockfile 変更で Quality Checks / UI Tests が走るため実確認する）（CLAUDE.md §7）
-- [ ] 再発防止：CI に依存の脆弱性チェックを追加（本番依存の high 以上をゲート）。GitHub の Dependabot は既定ブランチしか走査せず、feat/* に積み上げた依存を誰も見ていなかったため（2026-08-08 運営者決定）
+- [x] 再発防止：CI に依存の脆弱性チェックを追加（本番依存の high 以上をゲート）。GitHub の Dependabot は既定ブランチしか走査せず、feat/* に積み上げた依存を誰も見ていなかったため（2026-08-08 運営者決定）
+- [ ] 旧スタック時代の Dependabot PR 9 本をクローズ（2026-08-08 運営者決定で本 PBI に追加）
 
 ## 技術メモ
 - アラートの閲覧・dismiss は GitHub → Security → Dependabot alerts（ブラウザ。母艦の gh CLI は sandbox で不可、curl は api.github.com 可）
@@ -100,3 +101,18 @@ Astro 6 → 7 のメジャー更新（上記 astro 3 件の根本解消）は運
 - `yarn up -R <pkg>` は「その範囲を全部再解決する」モードで、transitive の脆弱性はこれでほぼ片付く。外れるのは ① 親が厳密指定しているもの（`yaml-language-server` の yaml）② 修正版が親の範囲の外にあるもの（sharp / esbuild）だけ。この 2 つだけ `resolutions` で拾えばよい
 - 「発生源のパッケージを外す」より先に「更新で届くか」を測る。当初は shadcn を外して 23 件消す案だったが、実測すると 21 件は更新だけで消え、外す必要がなかった
 - 依存だけを変えた回の回帰確認は、変更前の `dist/` を保存して `diff -rq` するのが一番強い。今回は全ファイルバイト単位で一致し、スクショ確認より確実な証拠になった
+- コンテナから本番ドメイン `byte-lark.com` へは到達できない（DNS は解決するが接続拒否＝firewall の許可リスト外）。本番の確認は Workers のエイリアス `byte-lark.tanimoto-a49.workers.dev` で代替できる
+
+#### 検証結果
+
+- ローカル：`yarn build` / `check` / `check:ts` / `test:run` 全成功。更新前の `dist/` と `diff -rq` して全ファイルバイト一致。主要 7 ページ × デスクトップ / モバイルのスクショで崩れ 0
+- CF preview（`feat-phase-1-byte-lark.tanimoto-a49.workers.dev`）：同 7 ページ × 2 幅を確認、配信 CSS ハッシュ `BaseLayout.Du6DNnFp.css` がローカル build と一致
+- CI：`feat/phase-1` の HEAD `13d61c0` で Quality Checks / UI Tests / Workers Builds すべて success。新設の `Audit dependencies` 工程も success。`.github/dependabot.yml` の設定検証 check-run も success（不正キー解消の裏取り）
+- main マージ（`7f31b94`）後：quality / e2e / Workers Builds / CodeQL 3 種すべて success。本番 Worker で全 11 ページ 200、配信 CSS ハッシュもローカル build と一致
+- Dependabot アラート：**open 0 件**（fixed 194 / dismissed 4）。マージ前は open 57 だったものが依存グラフの更新で fixed に落ちた
+
+#### 次 Phase / 他 PBI への申し送り
+
+- Astro 6 → 7 のメジャー更新。dismiss した astro 3 件（#165 / #167 / #169）の根本解消。全ページの表示回帰確認を伴うため独立 PBI が妥当
+- README §10.9 は「main は直接 push 禁止（PR 経由のみ）」と書いているが、実際には保護が掛かっていない（API で `protected: false`）。本 PBI のマージは直接 push で通した。保護を掛けるなら bypass を空にする必要がある（コンテナの PAT は運営者本人として動くため、管理者を例外に含めると PAT もすり抜ける）。掛けた場合は README §10.6 の `git push origin main` 手順も PR 経由へ書き換えが必要。Phase 1d Gate（PHASE1D-009）で棚卸し
+- devcontainer の PAT に本 PBI で 2 つ権限を追加した（Dependabot alerts: Read / Workflows: Read and write）。Pull requests は Read のみで、PR のクローズには Read and write が必要
