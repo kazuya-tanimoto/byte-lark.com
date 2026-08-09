@@ -1,7 +1,8 @@
 # 訪問者はトップを開いた瞬間に「何をしてくれる人か」を最初に読み取れる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-09
+Completed: 2026-08-09
 
 ## 誰が
 - 訪問者（PC / スマホ）
@@ -24,8 +25,8 @@ Started: 2026-08-09
 - [x] `tests/e2e/navigation.spec.ts` の Home の h1 検証（テキスト指定なし）が通ること
 - [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `bash scripts/ci-status.sh` で UI Tests / Quality Checks が success）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `bash scripts/ci-status.sh` で UI Tests / Quality Checks が success）（CLAUDE.md §7）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -67,3 +68,10 @@ Started: 2026-08-09
 想定外
 
 - 案A（キャッチ 42px 太字）は選定を経て push まで行った後に差し戻しになった。スクショ比較で「いちばん良い」は選べても「実物の圧」までは伝わらない。大きさ・強さに関わる変更は、選定後も本実装の preview で運営者確認を挟んでから Done に進める
+
+検証報告（830da45）
+
+- ローカル確認：dev server で desktop / mobile スクショ確認。build / check / check:ts / test:run 30 件 / e2e 33 件すべて緑
+- CF preview 確認：branch alias URL で 2 回連続同一の実測値（desktop h1 87px・名前 32px・キャッチ 20px・説明文 1 行、mobile h1 74px・説明文 2 行で半端な折り返しなし）
+- E2E/CI 確認：`scripts/ci-status.sh` で UI Tests（e2e）/ Quality Checks / Workers Builds いずれも success
+- 運営者 preview 確認：OK（2026-08-09「問題ないです！」）
