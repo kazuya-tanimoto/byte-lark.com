@@ -1,7 +1,8 @@
 # 運営者は依存ライブラリの脆弱性アラートを仕分けし、実害のあるものを解消できる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-08
+Completed: 2026-08-08
 
 ## 誰が
 - 運営者
@@ -25,7 +26,7 @@ Started: 2026-08-08
 - [x] CF preview スクショ確認：同上（CLAUDE.md §7）
 - [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`。lockfile 変更で Quality Checks / UI Tests が走るため実確認する）（CLAUDE.md §7）
 - [x] 再発防止：CI に依存の脆弱性チェックを追加（本番依存の high 以上をゲート）。GitHub の Dependabot は既定ブランチしか走査せず、feat/* に積み上げた依存を誰も見ていなかったため（2026-08-08 運営者決定）
-- [ ] 旧スタック時代の Dependabot PR 9 本をクローズ（2026-08-08 運営者決定で本 PBI に追加）
+- [x] 旧スタック時代の Dependabot PR 9 本をクローズ（2026-08-08 運営者決定で本 PBI に追加）
 
 ## 技術メモ
 - アラートの閲覧・dismiss は GitHub → Security → Dependabot alerts（ブラウザ。母艦の gh CLI は sandbox で不可、curl は api.github.com 可）
@@ -111,8 +112,21 @@ Astro 6 → 7 のメジャー更新（上記 astro 3 件の根本解消）は運
 - main マージ（`7f31b94`）後：quality / e2e / Workers Builds / CodeQL 3 種すべて success。本番 Worker で全 11 ページ 200、配信 CSS ハッシュもローカル build と一致
 - Dependabot アラート：**open 0 件**（fixed 194 / dismissed 4）。マージ前は open 57 だったものが依存グラフの更新で fixed に落ちた
 
+#### 旧 Dependabot PR の整理と、その直後に起きたこと
+
+旧スタック（Vite / React / Chakra）時代の PR 9 本（#16 form-data / #19 tar-fs / #20 playwright / #21 vite 6.4 / #22 js-yaml 3.14 / #23 storybook / #24 tar 6.2 / #25 lodash / #26 axios）を理由コメント付きでクローズし、ブランチも削除した。対象パッケージは axios / lodash / storybook / tar-fs / form-data が現 lockfile に 0 件、残る 4 本は現在より古いバージョンへの更新だった。
+
+クローズ直後に Dependabot が**新しいバージョン更新 PR を 5 本作成**した。不正キーによる設定エラーを解消したことで、通常のバージョン更新が初めて機能した形（設定修正の効果がそのまま観測できた）：
+
+- #29 `npm-minor-patch group with 17 updates` — 追加した `groups` が働き 17 件が 1 本にまとまった
+- #30 `@astrojs/react` 6.0.2 / #31 `@astrojs/mdx` 7.0.5 / #32 `jsdom` 30.0.1 — メジャーは意図どおり個別
+- #33 `astro` 7.1.6 — 本 PBI で dismiss した astro 3 件の根本解消にあたる
+
+これら 5 本の処置は本 PBI の対象外（脆弱性ではなくバージョン更新）。#33 は下記の申し送りで扱う。
+
 #### 次 Phase / 他 PBI への申し送り
 
-- Astro 6 → 7 のメジャー更新。dismiss した astro 3 件（#165 / #167 / #169）の根本解消。全ページの表示回帰確認を伴うため独立 PBI が妥当
+- Astro 6 → 7 のメジャー更新。dismiss した astro 3 件（#165 / #167 / #169）の根本解消。全ページの表示回帰確認を伴うため独立 PBI が妥当。Dependabot PR #33（astro 7.1.6）が受け皿として使える
+- Dependabot のバージョン更新 PR 5 本（#29〜#33）の処置方針。設定修正で今後は毎週 minor+patch がまとまった 1 本 + メジャー個別で届くため、受け方（マージ判断の基準・誰がいつ見るか）を決める必要がある
 - README §10.9 は「main は直接 push 禁止（PR 経由のみ）」と書いているが、実際には保護が掛かっていない（API で `protected: false`）。本 PBI のマージは直接 push で通した。保護を掛けるなら bypass を空にする必要がある（コンテナの PAT は運営者本人として動くため、管理者を例外に含めると PAT もすり抜ける）。掛けた場合は README §10.6 の `git push origin main` 手順も PR 経由へ書き換えが必要。Phase 1d Gate（PHASE1D-009）で棚卸し
 - devcontainer の PAT に本 PBI で 2 つ権限を追加した（Dependabot alerts: Read / Workflows: Read and write）。Pull requests は Read のみで、PR のクローズには Read and write が必要
