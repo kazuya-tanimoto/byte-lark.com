@@ -1,6 +1,7 @@
 # 訪問者はトップを開いた瞬間に「何をしてくれる人か」を最初に読み取れる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-09
 
 ## 誰が
 - 訪問者（PC / スマホ）
