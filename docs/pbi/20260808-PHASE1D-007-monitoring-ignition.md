@@ -90,4 +90,4 @@ UptimeRobot を入れるか運営者と検討し、**入れない**で確定し�
 
 `secret_scanning_non_provider_patterns`（提携外パターン）と `secret_scanning_validity_checks`（検出したキーの有効性確認）は無効のまま据え置いた。前者は誤検知が増えるわりに本構成で守れる範囲が広がらず、後者は使う場面が現時点で無いため。
 
-Dependabot alerts / security updates は既に有効。CodeQL は default setup で稼働中（PHASE1B-015 の一本化がそのまま効いている）。Dependabot rules が 1 件有効で、PHASE1D-011 で見た `auto_dismissed` はこれによるもの。
+Dependabot alerts / security updates は既に有効。CodeQL は default setup で稼働中（PHASE1B-015 の一本化がそのまま効いている）。Dependabot rules が 1 件有効で、PHASE1D-011 で見た `auto_dismissed` はこれによるもの。有効化直後に `secret-scanning/alerts` を確認し **0 件**（既存の混入なし）。
