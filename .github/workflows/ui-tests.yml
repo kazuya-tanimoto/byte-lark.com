@@ -53,10 +53,12 @@ jobs:
       # （PHASE1D-012。取り寄せは gh run download <run-id> -n screenshots）
       - name: Capture screenshots
         run: |
-          # --force は必須。Astro 7 は preview サーバーの情報を .astro/ のロックに書き、
-          # 直前の e2e（Playwright の webServer が preview を起動）が残したロックを
-          # 生きているサーバーとみなして起動を拒否する
-          yarn preview --force --host 127.0.0.1 --port 4321 &
+          # Astro 7 は preview サーバーの情報を .astro/preview.json に書き、直前の e2e
+          # （Playwright の webServer が preview を起動）が残したロックを生きたサーバーと
+          # みなして起動を拒否する。--force は案内文にあるだけで実装されていない
+          # （astro/dist/cli/preview/index.js は無条件に checkExistingServer を見る）
+          rm -f .astro/preview.json
+          yarn preview --host 127.0.0.1 --port 4321 &
           node -e '
             const deadline = Date.now() + 60000;
             (async () => {
