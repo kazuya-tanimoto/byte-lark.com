@@ -144,14 +144,21 @@ bash ~/monitor/health-check.sh --inspect
    - 実行間隔：10 分ごと（分の欄に `*/10`、他は `*`）
    - 通知先メールアドレス：受け取りたいアドレス（cron は**出力があったときだけ**メールを送る。このスクリプトは正常時に何も出力しないので、平常時のメールはゼロ）
 
-5. 通知が本当に届くか、わざと異常を起こして確かめる。branch alias は `noindex` が付くので、これを異常系の実物として使えます。2 回連続で異常になったときに通知が出るので、続けて 2 回叩きます：
+5. 通知が本当にメールで届くか確かめる。メールを送るのは cron（出力があったときだけ送る）なので、**cron に一時的な項目を足して確かめます**。SSH から手で叩いてもメールは飛びません。
 
-```bash
-STATE_DIR=~/monitor-test bash ~/monitor/health-check.sh --url https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev
-STATE_DIR=~/monitor-test bash ~/monitor/health-check.sh --url https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev
+   異常系の実物には branch alias を使います（`noindex` が付くので必ず異常判定になる）。サーバーパネルの「Cron設定」に、本番用とは別にもう 1 つ登録します。
+
+   - 実行コマンド（1 行）：
+
+```
+STATE_DIR=/home/<アカウント名>/monitor-test /bin/bash /home/<アカウント名>/monitor/health-check.sh --url https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev
 ```
 
-1 回目は何も出ず、2 回目に異常の内訳が表示されれば正しい動きです（cron 経由ならこの出力がメールで届きます）。確認したら `rm -rf ~/monitor-test` で後始末します。
+   - 実行間隔：5 分ごと（分の欄に `*/5`）
+
+   1 回目は無出力なのでメールは来ません。**2 回目（約 10 分後）に異常の内訳がメールで届けば正常**です。しきい値が効いていることも同時に確認できます。届いたらこの cron 項目を削除し、`rm -rf ~/monitor-test` で後始末します。
+
+   手元で出力の形だけ先に見たいときは、SSH から同じコマンドを 2 回叩けば同じ内容が画面に出ます。
 
 ### UptimeRobot（外部の死活監視）
 
