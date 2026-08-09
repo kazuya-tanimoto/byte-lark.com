@@ -128,5 +128,16 @@ Astro 6 → 7 のメジャー更新（上記 astro 3 件の根本解消）は運
 
 - Astro 6 → 7 のメジャー更新。dismiss した astro 3 件（#165 / #167 / #169）の根本解消。全ページの表示回帰確認を伴うため独立 PBI が妥当。Dependabot PR #33（astro 7.1.6）が受け皿として使える
 - Dependabot のバージョン更新 PR 5 本（#29〜#33）の処置方針。設定修正で今後は毎週 minor+patch がまとまった 1 本 + メジャー個別で届くため、受け方（マージ判断の基準・誰がいつ見るか）を決める必要がある
-- README §10.9 は「main は直接 push 禁止（PR 経由のみ）」と書いているが、実際には保護が掛かっていない（API で `protected: false`）。本 PBI のマージは直接 push で通した。保護を掛けるなら bypass を空にする必要がある（コンテナの PAT は運営者本人として動くため、管理者を例外に含めると PAT もすり抜ける）。掛けた場合は README §10.6 の `git push origin main` 手順も PR 経由へ書き換えが必要。Phase 1d Gate（PHASE1D-009）で棚卸し
-- devcontainer の PAT に本 PBI で 2 つ権限を追加した（Dependabot alerts: Read / Workflows: Read and write）。Pull requests は Read のみで、PR のクローズには Read and write が必要
+- README §10.9 は「main は直接 push 禁止（PR 経由のみ）」と書いているが、実際には保護が掛かっていない（API で `protected: false`）。本 PBI のマージは直接 push で通した。保護を掛けるなら bypass を空にする必要がある（コンテナの PAT は運営者本人として動くため、管理者を例外に含めると PAT もすり抜ける）。掛けた場合は README §10.6 の `git push origin main` 手順も PR 経由へ書き換えが必要 → **同日中に解消（下記 事後追記）**
+- devcontainer の PAT に本 PBI で 3 つ権限を追加した（Dependabot alerts: Read / Workflows: Read and write / Pull requests: Read and write）。Administration は**意図的に付与していない**（ruleset を書き換えられる権限を自走環境に渡すと main 保護の歯止めが意味を失うため）
+
+### 2026-08-08 事後追記：main 保護の申し送りを解消
+
+上記申し送りのうち README §10.9 のずれは同日中に解消した。
+
+- 運営者が GitHub の ruleset「main protection」を作成（対象は既定ブランチのみ / Enforcement Active / bypass list 空 / PR 必須（承認 0）/ 必須チェック `quality`・`e2e` / force push 禁止・削除禁止・作成制限）。`Workers Builds: byte-lark` は必須チェックに入れていない（Cloudflare 側の取りこぼしでマージが止まるため。PHASE1C-008 実装ログ参照）
+- 空コミットで main への直接 push を試し、`push declined due to repository rule violations` で拒否されることを実測（検証コミットは push されず破棄）
+- README を v3.8 に改訂し §10.9 を実際の設定内容に、§10.6 の main マージ手順を PR 経由（`gh pr create` → CI green 確認 → `gh pr merge`）に書き換え。CLAUDE.md / site-plan の README 参照も同期（`f67d772`）
+- ruleset の作成は API では 403（Administration 権限が必要）。この権限は上記の理由で PAT に付与しない方針とし、運営者の画面操作で実施した
+
+残る申し送りは Astro 6 → 7 のメジャー更新と、Dependabot バージョン更新 PR 5 本（#29〜#33）の受け方の 2 件。
