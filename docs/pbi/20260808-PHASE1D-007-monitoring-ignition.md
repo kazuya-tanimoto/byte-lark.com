@@ -1,7 +1,8 @@
 # 運営者はサイトのダウン・改ざん・証明書失効を自動通知で検知できる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-08
+Completed: 2026-08-09
 
 ## 誰が
 - 運営者
@@ -17,12 +18,12 @@ Started: 2026-08-08
 - [x] `scripts/health-check.sh`（curl ベース）を作成：https://byte-lark.com に対し (1) HTTP 200 (2) 改ざんカナリア（想定文字列の存在）(3) セキュリティ / 配信ヘッダが想定どおり（公開後は noindex が付かないこと）(4) TLS 証明書の残日数、を確認し異常時のみ非 0 終了 + 通知。2 回連続失敗で通知のしきい値で誤報を抑制
 - [x] Xserver の cron に health-check.sh を登録（運営者。shell 対応・外向き curl 可は確認済み）。監視する側 = Xserver / 監視される側 = Cloudflare の独立インフラ構成：`~/monitor/health-check.sh` を設置し 10 分間隔で登録。設置直後に `--inspect` を本番 apex に対して実行し 4 項目とも通過
 - [x] 異常時通知はメール単線（cron のメール送信）。Slack 等のチャット通知も外部の外形監視も入れない（2026-08-09 運営者決定、理由は incident-response.md §2）。Webhook 通知はスクリプトの任意機能として残し、使う場合の URL は Xserver 側の権限を絞ったファイルに置いてリポジトリに commit しない（Secret scanning と整合）
-- [ ] GitHub セキュリティ通知（Dependabot / Secret scanning / Push protection）の有効化を確認、未設定なら ON（incident-response.md §2）
+- [x] GitHub セキュリティ通知（Dependabot / Secret scanning / Push protection）の有効化を確認、未設定なら ON（incident-response.md §2）：Dependabot alerts / security updates は有効済み、Secret scanning と Push protection は**無効だったため ON にした**（設定画面にトグルが出ないため REST API の `security_and_analysis` 経由）
 - [x] UptimeRobot の外部死活監視：**N/A（2026-08-09 運営者決定で不採用）**。スクリプトの消失・破損は cron のエラーメールで露見し静かには止まらず、静かに止まるのは cron 項目を人が消した場合だけ、という整理による。人為以外の唯一の経路（Xserver のサーバー移行）は incident-response.md §7 の人手チェックで受ける
 - [x] 動作確認：わざと異常な URL（noindex が付く branch alias）を叩き、2 回連続でメール通知が実際に飛ぶことを確認（誤報しきい値含む）：一時 cron（5 分間隔）で実測、1 回目は無発報・2 回目にメール着信。本文に異常 2 件（HSTS 無し・noindex あり）と観測値全項目が正しく載ることを確認
 - [x] ローカル スクショ確認：N/A（監視スクリプト追加のみ、サイト出力に変更なし）（CLAUDE.md §7）
 - [x] CF preview スクショ確認：N/A（同上）（CLAUDE.md §7）
-- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`。スクリプト追加でも Quality Checks が走るため実確認する）（CLAUDE.md §7）：43ecef6 / 37299ce / 58d30d5 / 98ddf93 で UI Tests・Quality Checks・Workers Builds とも success（0a56b50 の UI Tests は並行セッションの push に concurrency で打ち切られたため、これを含む 58d30d5 で確認）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`。スクリプト追加でも Quality Checks が走るため実確認する）（CLAUDE.md §7）：43ecef6 / 37299ce / 58d30d5 / 98ddf93 / 40cd2ea で UI Tests・Quality Checks・Workers Builds とも success（0a56b50 の UI Tests は並行セッションの push に concurrency で打ち切られたため、これを含む 58d30d5 で確認）
 
 ## 技術メモ
 - heartbeat / dead man's switch は本構成では不要と判断済み（PHASE1A-021。監視・cron・業務メールが Xserver 同居で、停止時はメール不通で気づく）。スクリプト / cron を変更したら一度手で実行して確認することだけ守る
@@ -83,4 +84,10 @@ UptimeRobot を入れるか運営者と検討し、**入れない**で確定し�
 - 通知は**メール単独**とする。PBI 起票時の「メール + Slack の二重」から変更。Webhook 通知の実装自体はスクリプトに残す（`SLACK_WEBHOOK_URL` を設定すれば有効。将来チャット通知を足したくなったときに実装し直さずに済む）
 - UptimeRobot は当初「設定する」としたが、同日中に不採用へ変更（経緯は上記「監視の冗長性についての決定」）
 
-残タスク（運営者作業）：GitHub の Secret scanning・Push protection の有効確認
+### 2026-08-09 GitHub のセキュリティ通知
+
+設定画面（Settings → Advanced Security）には Secret scanning / Push protection のトグルが表示されず、「Secret Protection」の見出しと提携パターンの注記だけでページが終わっていた。public リポジトリでは常時有効でトグルが出ないのかと推測したが、`gh api repos/.../  --jq .security_and_analysis` で実際の設定値を取ったところ**両方 disabled** で、推測は誤りだった。REST API の `security_and_analysis` を PATCH して両方 enabled に変更し、再取得して確認。
+
+`secret_scanning_non_provider_patterns`（提携外パターン）と `secret_scanning_validity_checks`（検出したキーの有効性確認）は無効のまま据え置いた。前者は誤検知が増えるわりに本構成で守れる範囲が広がらず、後者は使う場面が現時点で無いため。
+
+Dependabot alerts / security updates は既に有効。CodeQL は default setup で稼働中（PHASE1B-015 の一本化がそのまま効いている）。Dependabot rules が 1 件有効で、PHASE1D-011 で見た `auto_dismissed` はこれによるもの。
