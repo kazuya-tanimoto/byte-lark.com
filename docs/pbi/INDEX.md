@@ -284,7 +284,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 
 ## Phase 1d：公開（site-plan v3.9 で新設）
 
-2026-08-08 起票（[draft-phase1d-domain-launch.md](draft-phase1d-domain-launch.md) の正式化 + PHASE1C-012 申し送りの引き受け + 法人化対応の追加。対応表はドラフト冒頭）：
+2026-08-08 起票（[draft-phase1d-domain-launch.md](draft-phase1d-domain-launch.md) の正式化 + PHASE1C-012 申し送りの引き受け + 法人化対応の追加。対応表はドラフト冒頭）。期中の追加起票：PHASE1D-011（公開時に判明した Dependabot アラート 61 件、2026-08-08）、PHASE1D-012（011 の設定修正で届いた更新 PR 5 本、2026-08-09）、PHASE1D-013〜016（運営者の公開後実機確認 PC + スマホで挙がった指摘 8 件、2026-08-09）：
 
 | ID | タイトル | Status |
 |---|---|---|
@@ -298,7 +298,11 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-008 | [postlaunch-checks-routines](20260808-PHASE1D-008-postlaunch-checks-routines.md) | NotStarted |
 | PHASE1D-010 | [font-subsetting](20260808-PHASE1D-010-font-subsetting.md) | NotStarted |
 | PHASE1D-011 | [dependabot-triage](20260808-PHASE1D-011-dependabot-triage.md) | Done |
-| PHASE1D-012 | [dependency-update-policy](20260809-PHASE1D-012-dependency-update-policy.md) | InProgress |
+| PHASE1D-012 | [dependency-update-policy](20260809-PHASE1D-012-dependency-update-policy.md) | Done |
+| PHASE1D-013 | [postlaunch-small-fixes](20260809-PHASE1D-013-postlaunch-small-fixes.md) | NotStarted |
+| PHASE1D-014 | [hero-message-hierarchy](20260809-PHASE1D-014-hero-message-hierarchy.md) | NotStarted |
+| PHASE1D-015 | [post-navigation-usability](20260809-PHASE1D-015-post-navigation-usability.md) | NotStarted |
+| PHASE1D-016 | [contact-confirm-step](20260809-PHASE1D-016-contact-confirm-step.md) | NotStarted |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
 ### Phase 1d 推奨着手順序
@@ -319,10 +323,17 @@ PHASE1D-004 (main マージ + カスタムドメイン接続 + 本番 Lighthouse
      ↓
    PHASE1D-012 (依存更新 PR の処置と受け方の決定 ← 011 の設定修正で届いた #29〜#33。Gate より先)
   ↓
+┌─ PHASE1D-013 (公開後実機確認で出た小さい不具合 4 件 ← 原因特定済み、方針判断が要らない分)
+├─ PHASE1D-014 (Hero の見せ方 ← 案を出して運営者が選ぶ)
+├─ PHASE1D-015 (記事の回遊性: 前後リンク / 上へ戻る / 目次の履歴)   ← 相互に並行可、Gate より先
+└─ PHASE1D-016 (お問い合わせフォームの確認画面)
+  ↓
 PHASE1D-008 (公開後実機確認 + R-01 routine 点火)
   ↓
 PHASE1D-009 (Phase 1d Retrospective Gate)
 ```
+
+013〜016 は 2026-08-09 の運営者による公開後実機確認（PC + スマホ）で挙がった指摘の受け皿。008 の着手前に運営者が先行して見たものなので、008 の対象からは外してよい。
 
 ---
 

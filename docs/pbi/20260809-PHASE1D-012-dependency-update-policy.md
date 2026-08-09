@@ -1,7 +1,8 @@
 # 運営者は届いた依存更新 PR を判断基準に沿って処置し、以後の受け方を決めた状態にできる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-09
+Completed: 2026-08-09
 
 ## 誰が
 - 運営者
@@ -21,9 +22,9 @@ Started: 2026-08-09
 - [x] #30（@astrojs/react 6）/ #31（@astrojs/mdx 7）/ #32（jsdom 30）をそれぞれ評価し処置。#30 / #31 は Astro 7 と同時に上げる必要があるかを確認：#30 / #31 は astro 7 と不可分（mdx 7 が astro ^7.0.0 を peer 必須、react 6 の破壊的変更は Vite 8 移行）と確認し 3 本まとめて適用。#32 は独立で先に適用しテスト 30 件通過
 - [x] astro を 7 系へ更新した場合：PHASE1D-011 で dismiss した #165 / #167 / #169 が不要になったことを確認（GitHub 上の dismiss は残るが、次回走査で該当バージョンから外れる）：3 件の影響範囲は `< 7.0.6` / `>= 3.10.0, < 7.0.4` / `>= 2.9.0, <= 7.0.9` で、採用した 7.2.0 はいずれの範囲にも入らない。GitHub の走査対象は既定ブランチなので、状態が dismissed から外れるのは feat/phase-1 が main に入った後。open は現在 0 件
 - [x] 以後の受け方を決めてドキュメント化：週次で届く「minor+patch のまとめ 1 本」と「メジャー個別」をそれぞれ誰がいつ見て何を基準にマージするか。`docs/operation-manual.md` に節を追加するか、`docs/pbi/README.md` §10 に足すかを判断して記載：`docs/operation-manual.md` §7 に新設（運営者主語の運用手順であり、ブランチ規約ではないため README §10 ではなくこちら）
-- [ ] 処置後、open な Dependabot PR が「判断済みのもの 0 件」になっていること
-- [ ] ローカル スクショ確認（desktop + mobile）：依存更新が出力に影響し得るため主要ページで表示回帰がないことを確認（更新が devDependencies のみで `dist/` がバイト一致なら `[x] …：N/A（dist 差分 0 を確認）` 化可）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）：同上（CLAUDE.md §7）
+- [x] 処置後、open な Dependabot PR が「判断済みのもの 0 件」になっていること：#29〜#33 の 5 本を「同じ内容を feat/phase-1 に適用済み」のコメント付きでクローズ。`gh pr list --state open` は 0 件
+- [x] ローカル スクショ確認（desktop + mobile）：依存更新が出力に影響し得るため主要ページで表示回帰がないことを確認（更新が devDependencies のみで `dist/` がバイト一致なら `[x] …：N/A（dist 差分 0 を確認）` 化可）（CLAUDE.md §7）→ CI で 7 ページ × 2 幅を撮影済み（run 31291367840 の成果物 `screenshots`）。コンテナからは成果物置き場（Azure ストレージ）へ到達できず取り寄せられないため、運営者が PC 幅とスマホ実機で全ページを目視し「Astro 7 にした影響の崩れはなさそう」と確認（2026-08-09）
+- [x] CF preview スクショ確認（branch alias URL）：同上（CLAUDE.md §7）→ ブランチ用 URL の配信物が手元の `dist/` とバイト一致であることを実測済み（11 ページ中 9 ページ完全一致、残り 2 ページの差は astro-island の 1 回きりの識別子と Turnstile のサイトキーのみ。CSS と client JS もバイト一致）。表示は上記の運営者目視で確認済み
 - [x] E2E / CI green 確認（push 後 `bash scripts/ci-status.sh` で UI Tests / Quality Checks が success）（CLAUDE.md §7）：ab1f5af で UI Tests・Quality Checks・Workers Builds とも success
 
 ## 技術メモ
@@ -80,3 +81,25 @@ astro は PR の 7.1.6 ではなく解決時点の最新 7.2.0 になった。CH
 ### 2026-08-09 成果物が取り寄せられない（未解決）
 
 CI でのスクショ取得は成功したが、コンテナへ持ち込めない。GitHub Actions の成果物は Azure のストレージ（`*.blob.core.windows.net`）に置かれ、firewall がそこを通さない（`no route to host`）。`gh api` 経由でも最終的に同じ URL へ飛ぶため回避できない。
+
+置き場のホスト名は run ごとに変わる（今回は `productionresultssa12`）ので、firewall に 1 件足しても次の run では通らない。運営者判断で、見た目の確認は運営者自身がブラウザと実機で行う形にした。**CI で撮る仕組み自体は残す**——母艦のセッションからは `gh run download <run-id> -n screenshots` で取り寄せられるため、コンテナ側でブラウザが使えない回の逃げ道として機能する。
+
+### 2026-08-09 CF preview の配信物をバイト比較
+
+ブラウザが使えないぶん、ブランチ用 URL が配信しているものが手元の `dist/` と同一かを機械で確かめた。11 ページを取得して突き合わせた結果、9 ページがバイト一致。残る 2 ページの差は次の 2 つだけで、どちらも表示に関係しない。
+
+- `/blog/`：astro-island の `uid`（島ごとに 1 回きりで振られる識別子）
+- `/contact/`：上記に加えて ContactForm のチャンク。差分を 1 文字ずつ追ったところ Turnstile のサイトキーだけで、本番は `0x4AAAAAADrGT0xgf25FIhKU`、手元はテストキー `1x00000000000000000000AA`
+
+`BaseLayout.*.css` と `client.*.js` はバイト一致。つまり配信されている HTML・CSS・JS は手元のビルドと同じもので、あとは見た目を人が見るだけ、という状態まで詰められた。
+
+### 2026-08-09 Dependabot PR の処置と完了
+
+#29〜#33 の 5 本を、いずれも「同じ内容を `feat/phase-1` に適用済み」の説明コメントを付けてクローズした。マージしなかったのは、これらの PR が main を基点に作られていてロックファイルが統合ブランチと食い違うため（operation-manual §7 に恒久ルールとして記載）。`gh pr list --state open` は 0 件。
+
+見た目の確認は運営者が PC 幅とスマホ実機で全ページを回り、Astro 7 由来の崩れなしと確認して完了。あわせて Astro 7 とは無関係の改善点が 8 件挙がったので、PHASE1D-013〜016 として別に起票した（表記の誤り / ブログカードの高さ / フォームのボタンと送信後の位置 / Hero の見せ方 / 記事の回遊性 / フォームの確認画面）。
+
+学び：
+
+- ワークフローが固定している外部コンテナのタグは、Dependabot の守備範囲外。`package.json` 側だけ上がってタグが取り残されると e2e が全件落ちる形で表面化する
+- ブラウザが無くても、配信物のバイト比較 + 可視テキストの機械比較まで詰めれば、人が見る範囲は「崩れていないか」だけに絞れる
