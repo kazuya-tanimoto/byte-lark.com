@@ -53,18 +53,22 @@ const larkPath =
     >
       {title}
     </p>
-    <!-- 最初に目に入るのを「何をしてくれる人か」にするため、キャッチを最大・名前をその下に置く
-         （PHASE1D-014。以前は名前が 42px でキャッチが 24px だった）。
-         名前を h1 の中に残すのは、指名で検索したときの受け皿と、記事の構造化データが
+    <!-- 名前が主役のまま、声量だけ落とす（PHASE1D-014。従来の 42px 太字は「主張しすぎ」、
+         キャッチを最大にする案も試作したが、汎用的な約束の文を大きく張ると空虚に見えて不採用）。
+         チップ=役割 / 名前=誰 / キャッチ=約束 / 説明文=根拠、の 1 要素 1 情報を保つ。
+         名前を h1 に残すのは、指名で検索したときの受け皿と、記事の構造化データが
          著者を個人としていることに合わせるため -->
     <h1 class="mt-4">
-      <span class="block text-3xl font-bold text-foreground sm:text-4xl">{copy}</span>
-      <span class="mt-3 block text-xl font-medium text-muted-foreground">
+      <span class="block text-2xl font-bold text-foreground sm:text-3xl">
         {name}
-        <span class="ml-1.5 font-sans text-base">{nameEn}</span>
+        <span class="ml-1.5 font-sans text-base font-medium text-muted-foreground">{nameEn}</span>
       </span>
+      <span class="mt-2 block text-lg font-medium text-foreground sm:text-xl">{copy}</span>
     </h1>
-    <p class="mt-4 max-w-2xl text-muted-foreground">{summary}</p>
+    <!-- max-w-3xl: この文は 1 行 673px で、2xl（672px）だと 1px 超えて「す。」だけが落ちる。
+         文節折り（auto-phrase）は幅が足りないとき（窓幅 約 705px 未満）に文節で折る保険。
+         見出し用の折り返し調整（global.css）は h1〜h4 だけで p には効いていない。未対応ブラウザは現状どおり -->
+    <p class="mt-4 max-w-3xl [word-break:auto-phrase] text-muted-foreground">{summary}</p>
     <div class="mt-8 flex flex-wrap gap-3">
       <a
         href="/career"
