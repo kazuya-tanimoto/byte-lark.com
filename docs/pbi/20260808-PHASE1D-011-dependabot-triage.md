@@ -144,7 +144,7 @@ Astro 6 → 7 のメジャー更新（上記 astro 3 件の根本解消）は運
 
 ### 2026-08-09 事後追記：他セッションの変更を巻き込んだ件と再発防止
 
-本 PBI の仕分け完了コミット `0d2d64c` に、母艦セッションが作業ツリーに置いていた `docs/article-backlog.md` の未コミット変更（T9 の追記）が入ってしまった。原因は `git add -A` を使ったこと。母艦（`/Users/kazuya/src/byte-lark.com`）とコンテナ（`/workspace`）は bind mount で同じ作業ツリーを共有しているため、sweep 系のステージ操作は相手の編集をそのまま拾う。内容は失われていないが変更の帰属がずれた。共有履歴を書き換える価値はないと判断し `0d2d64c` はそのまま残す。
+本 PBI の仕分け完了コミット `0d2d64c` に、母艦セッションが作業ツリーに置いていた `docs/article-backlog.md` の未コミット変更（T9 の追記）が入ってしまった。原因は `git add -A` を使ったこと。母艦（`/Users/kazuya/src/byte-lark.com`）とコンテナ（`/workspace`）は bind mount で同じ作業ツリーを共有しているため、変更を全部まとめてステージする操作は相手の編集をそのまま拾う。内容は失われていないが変更の帰属がずれた。共有履歴を書き換える価値はないと判断し `0d2d64c` はそのまま残す。
 
 再発防止は `.claude/settings.json` の `permissions.deny` で行う。`git add` / `git stage` の `-A` / `-u` / `--all` / `--update` / `.` / `./` / `:/`、`git commit` の `-a` / `--all` を並べた。当初は PreToolUse フックをスクリプトに切り出す案で作りかけたが、公式ドキュメントを読み直して deny に切り替えた。
 
