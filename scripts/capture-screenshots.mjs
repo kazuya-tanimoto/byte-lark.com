@@ -43,13 +43,16 @@ for (const [label, contextOptions] of VIEWPORTS) {
 
   for (const [name, path] of PAGES) {
     const url = `${BASE_URL}${path}`;
-    const response = await page.goto(url, { waitUntil: "networkidle" });
+    const response = await page.goto(url, { waitUntil: "load" });
     const status = response?.status() ?? 0;
     if (status !== 200) {
       console.error(`NG  ${label.padEnd(7)} ${path} -> HTTP ${status}`);
       failed++;
       continue;
     }
+    // 通信が静まるまで待つのは「できれば」に留める。/contact は Turnstile を
+    // 読み込み続けるので networkidle を必須にすると永久に来ない
+    await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
     // フォントの差し替えが終わってから撮る（display: optional / swap の揺れを避ける）
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({
