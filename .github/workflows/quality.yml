@@ -31,3 +31,11 @@ jobs:
         run: yarn test:run
       - name: Build
         run: yarn build
+      # 依存の脆弱性を push 時点で検知する（PHASE1D-011）。
+      # GitHub の Dependabot は既定ブランチ（main）しか走査しないため、
+      # feat/* に積み上げた依存は main マージまで誰も見ない状態だった。
+      # ゲートは本番に入る依存の high 以上に絞る（dev 専用の勧告で赤くしない）。
+      # 更新で直せない勧告が high で出た場合だけ --ignore に勧告 ID を理由付きで並べ、
+      # GitHub 側で dismiss した内容と 1 対 1 に保つ（現時点では該当なし）。
+      - name: Audit dependencies
+        run: yarn npm audit --all --recursive --severity high --environment production

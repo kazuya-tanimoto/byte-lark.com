@@ -1,0 +1,102 @@
+# 運営者は依存ライブラリの脆弱性アラートを仕分けし、実害のあるものを解消できる
+
+Status: InProgress
+Started: 2026-08-08
+
+## 誰が
+- 運営者
+
+## 何をできる
+- リポジトリの Dependabot アラート 61 件（critical 1 / high 16 を含む。2026-08-08、main に lockfile が乗って初走査された時点の値）を全件仕分けし、本サイトの構成で実害があるものは依存更新で解消、実害がないものは根拠付きで dismiss した状態にできる
+
+## なんのために
+- PHASE1D-005 の push 時に判明した未対応アラートを放置せず、公開直後のうちに危険度を確定させるため
+- 本サイトは SSG + Workers（静的配信 + Contact API のみ）であり、build 時にしか使わない依存の脆弱性と runtime に露出する脆弱性では危険度が大きく異なる。この区別を付けて記録し、以後のアラート対応の基準にするため
+- 関連: PHASE1D-007（GitHub セキュリティ通知の有効化確認を持つ。既存アラートの仕分けは本 PBI が担当）/ docs/incident-response.md §2
+
+## 受け入れ条件
+- [x] critical 1 件を最優先で内容確認し、露出経路（runtime / build 時のみ / devDependencies のみ）と対応方針を確定
+- [x] 残る全アラートを仕分け：パッケージ / severity / 露出区分（runtime・build・dev）/ 処置（更新 or dismiss）の一覧を実装ログに記録
+- [x] 実害あり（または更新コストが低い）ものは依存更新で解消：`yarn up` 等のレジストリアクセスは devcontainer 内セッションまたは運営者ターミナルで実行（母艦 sandbox は registry.npmjs.org へ DNS 不可）
+- [ ] 実害なしと判断したものは GitHub 上で理由付き dismiss（判断根拠は実装ログにも残す）
+- [ ] 対応後、open アラートが「対応不要と判断済みのもの 0 件」になっていることを Security タブで確認
+- [x] 依存更新を行った場合：`yarn build` / `yarn check` / `yarn test:run` がローカル（devcontainer）で成功
+- [x] ローカル スクショ確認：依存更新がサイト出力に影響し得るため主要ページで表示回帰がないことを確認（更新が devDependencies のみで build 出力不変なら N/A 化可）（CLAUDE.md §7）
+- [x] CF preview スクショ確認：同上（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`。lockfile 変更で Quality Checks / UI Tests が走るため実確認する）（CLAUDE.md §7）
+- [ ] 再発防止：CI に依存の脆弱性チェックを追加（本番依存の high 以上をゲート）。GitHub の Dependabot は既定ブランチしか走査せず、feat/* に積み上げた依存を誰も見ていなかったため（2026-08-08 運営者決定）
+
+## 技術メモ
+- アラートの閲覧・dismiss は GitHub → Security → Dependabot alerts（ブラウザ。母艦の gh CLI は sandbox で不可、curl は api.github.com 可）
+- 仕分けの観点：本番 runtime は「Workers が静的アセットを配信 + /api/contact」だけ。Astro / Vite / Tailwind 等のビルドチェーンは build 時のみ実行され、悪意ある入力を処理しない（入力は自リポジトリのソースのみ）ため、多くの transitive 脆弱性は実害なしになる見込み。ただし critical と、Contact API の runtime 依存に掛かるものは個別精査
+- 依存更新は minor / patch の範囲を基本とし、major が必要な場合は影響を確認のうえ運営者に判断を仰ぐ
+- PHASE1D-006 と並行可（本 PBI は Security タブ + 依存ファイルのみ、006 はダッシュボード設定のみで衝突しない。INDEX.md のみ共有 → pull → 記入 → 即コミットで運用。README §9）
+- 想定セッション数: 1（更新対象が多く major を跨ぐ場合は 2 セッション目で更新分を分離）
+
+## 実装ログ（着手後に追記、中断時は必須）
+
+### 2026-08-08
+
+#### なぜ開発中に気付けなかったか（起票時に分かっていなかった前提）
+
+3 つ重なっていた。
+
+1. GitHub 側の走査対象は既定ブランチ（main）だけ。公式リファレンスは `target-branch` の項で「セキュリティ更新は常にリポジトリの既定ブランチを使う」と明記しており、PR に付く dependency review も既定ブランチ向けの PR が対象
+2. その main の中身が 2026-08-08 まで旧スタック（Vite / React / Chakra）の lockfile だった。作業は `feat/phase-1` に集約する方針（README §10.3）のため、Astro 構成の依存は一度も走査されていない。旧スタック向けの Dependabot PR が 9 本 open のまま残っていたのがその証拠
+3. 手元にも検知工程が無い。`quality.yml` も `lefthook.yml` も lint / 型 / テスト / build だけ
+
+→ 3 を埋めるため、運営者決定のうえ `quality.yml` に audit 工程を追加した（後述）。
+
+#### 仕分け結果
+
+GitHub の open アラート 61 件（critical 1 / high 16 / medium 36 / low 8。runtime 24 / development 37）を `gh api` で全件取得し、`yarn npm audit --all --recursive`（手元 71 件。GitHub とは重複統合の単位が違う）と突き合わせた。判定は yarn.lock の実解決バージョンを各アラートの脆弱バージョン範囲に semver で当てる方式（機械照合）。
+
+更新で解消：57 件。
+
+| 件数 | パッケージ | 区分 | severity | 解決先 |
+|---|---|---|---|---|
+| 18 | undici | dev | high 4 / medium 10 / low 4 | 6.28.0・7.29.0 |
+| 15 | hono | dev | high 1 / medium 13 / low 1 | 4.13.1 |
+| 6 | tar | runtime | **critical 1** / high 1 / medium 4 | 7.5.22 |
+| 3 | js-yaml | runtime | high 2 / medium 1 | 4.3.1 |
+| 3 | fast-uri | dev | high 3 | 3.1.5 |
+| 3 | ip-address | dev | high 1 / medium 2 | 10.4.0 |
+| 2 | postcss | dev | high 1 / medium 1 | 8.5.26 |
+| 1 | sharp | runtime | high 1 | 0.35.3 |
+| 1 | svgo | runtime | high 1 | 4.0.2 |
+| 1 | @astrojs/rss | runtime | medium 1 | 4.0.19 |
+| 1 | brace-expansion | dev | high 1 | 5.0.9 |
+| 1 | @babel/core | runtime | low 1 | 7.29.7 |
+| 1 | esbuild | runtime | low 1 | 0.28.1 |
+| 1 | qs | dev | medium 1 | 6.15.3 |
+
+critical（node-tar の解凍 DoS）の露出経路：`fsevents`（macOS 専用の optional 依存）→ `node-gyp` → `tar`。ネイティブビルド時にしか動かず本番 runtime に載らない。ただし範囲内に 7.5.22 があったため dismiss せず更新で消した。
+
+残り 4 件（理由付き dismiss、いずれも「Vulnerable code is not actually used」）：
+
+- #165 astro / medium — Reflected XSS via View Transition animation properties。View Transitions 未使用（`ClientRouter` / `transition:*` の使用箇所は src/ 全体で 0 件）。修正版 7.1.0
+- #167 astro / low — XSS via `transition:*` on hydrated islands。同じ理由で到達しない。修正版 7.0.4
+- #169 astro / medium — XSS via unescaped spread attribute names。`.astro` 内のスプレッド属性が 0 件、かつ SSG でビルド時の入力は自リポジトリのソースのみ。修正版 7.0.6
+- #172 @hono/node-server / medium — Windows の serve-static のパストラバーサル。開発用 CLI shadcn の依存（shadcn → MCP SDK → @hono/node-server）で本番 Worker に含まれず、SDK の指定が `^1.19.9` なので修正版 2.0.5 はメジャー更新となり到達不可。かつ当該サーバーを起動していない
+
+Astro 6 → 7 のメジャー更新（上記 astro 3 件の根本解消）は運営者判断で本 PBI 対象外とし、申し送りにした。
+
+#### やったこと
+
+- 範囲内の更新：`yarn up shadcn @astrojs/rss` + `yarn up -R hono @hono/node-server ip-address qs body-parser tar undici brace-expansion fast-uri js-yaml nanoid postcss svgo yaml @babel/core`
+- 範囲外は `resolutions` で解消（既存の `devalue` / `vite` と同じ手法）：`sharp` 0.35.3（astro の指定は `^0.34.0`。libvips CVE 4 本）/ `esbuild` 0.28.1（vite 7.3.6 が `^0.27.0 || ^0.28.0` を受ける）/ `yaml-language-server/yaml` 2.9.0（`yaml-language-server` が 2.7.1 を厳密指定していて `-R` では動かない）
+- `.github/dependabot.yml`：公式リファレンスに存在しないキー 3 つ（`security-updates-only` / `auto-merge` / `require-tests`）を削除。通常のバージョン更新が乱立しないよう minor+patch を 1 本にまとめる `groups` を追加。push 後 GitHub の設定検証 check-run が success になったことを確認
+- `.github/workflows/quality.yml`：`yarn npm audit --all --recursive --severity high --environment production` を build の後に追加
+
+#### 想定外
+
+- **shadcn は開発用 CLI ではなく本番 CSS にも入っていた**。`src/styles/global.css` が `@import "shadcn/tailwind.css"` で取り込んでおり、4.16.2 で追加された shimmer / scroll-fade の土台（`@property` 宣言と reduced-motion 用の `.shimmer`）が常に出力されて未使用 CSS が 899 B（brotli 131 B）増えた。PHASE1C-010 で削った brotli 520 B の 4 分の 1 に当たる。取り込みを外して測ると 33,303 B / brotli 5,763 B でハッシュまで更新前と完全一致、つまり**旧 4.7.0 のスタイルシートは 1 バイトも寄与していなかった**。唯一の shadcn 部品 `button.tsx` も提供物（accordion キーフレーム・`data-open` 等の変種・shimmer / scroll-fade）を 1 つも使っていない → 運営者判断で `@import` を削除し、戻す条件を global.css にコメントで残した
+- **PAT の権限が 2 回足りなかった**。Dependabot alerts API は 403（→ 運営者が Read-only を付与）、`.github/workflows/` の push も `without workflow scope` で拒否（→ Workflows: Read and write が必要）。後者は付与待ちのため、CI 工程だけ別コミットに分離して依存更新分を先に push した
+- **push 競合**：並行セッションの PHASE1D-006 完了コミットが先に入っていたため rebase して取り込んだ（README §9 の想定どおり、共有は INDEX.md のみで衝突なし）
+- **アラートは main マージまで閉じない**。`feat/phase-1` に修正を積んでも既定ブランチの依存グラフは変わらないため、57 件は open のまま。実際に閉じるのは main マージ後
+
+#### 学び
+
+- `yarn up -R <pkg>` は「その範囲を全部再解決する」モードで、transitive の脆弱性はこれでほぼ片付く。外れるのは ① 親が厳密指定しているもの（`yaml-language-server` の yaml）② 修正版が親の範囲の外にあるもの（sharp / esbuild）だけ。この 2 つだけ `resolutions` で拾えばよい
+- 「発生源のパッケージを外す」より先に「更新で届くか」を測る。当初は shadcn を外して 23 件消す案だったが、実測すると 21 件は更新だけで消え、外す必要がなかった
+- 依存だけを変えた回の回帰確認は、変更前の `dist/` を保存して `diff -rq` するのが一番強い。今回は全ファイルバイト単位で一致し、スクショ確認より確実な証拠になった

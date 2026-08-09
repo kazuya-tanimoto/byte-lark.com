@@ -35,10 +35,11 @@ byte-lark.com ブログの「これから書く記事ネタ」のストック。
 | L4 バイク・猫・アウトドアと考える時間 | life | 人柄を見せるゆるネタ。SEO 狙いは薄い |
 | L5 屋号 byte-lark の由来（深掘り） | life | 事業 / ブランドの話。About 既出（byte / lark / Beitrag）の深掘り。技術ではないので life |
 | L6 iPhone Air を買った（生活ガジェット） | life | 購入後に執筆。暮らしの道具としてのレビュー |
-| T8 alacritty + tmux から ghostty + herdr へ乗り換えた | tech | 開発環境 3 連作の 1 本目。乗り換えの動機、herdr の spaces / agents で何が変わったか |
+| T8 alacritty + tmux から ghostty + herdr へ乗り換えた | tech | 開発環境 3 連作の 1 本目。乗り換えの動機、herdr の spaces / agents で何が変わったか。ハマりどころとして T12 に触れる（詳細は T12 側が持つ） |
 | T9 devcontainer で Claude Code を自走させる環境を作った | tech | 3 連作の 2 本目。設計と手順は `docs/devcontainer-plan.md`、PBI は PHASE1B-016。T1（サイト構築総括）で軽く触れた話の本編 |
 | T10 コンテナの中で動くエージェントを herdr のサイドバーに出す | tech | 3 連作の 3 本目。取材メモ完備: `docs/article-interviews/20260731-herdr-devcontainer-agent-bridge.md`（gitignore 対象）。切り口案 9 本入り |
 | T11 Google 日本語入力から azooKey on macOS へ移行して 2 週間評価 | tech | ニューラル変換 Zenzai / ローカル LLM を技術的に掘るため tech（ガジェット原則 life の例外条件）。取材メモ完備: `docs/article-interviews/` の引き継ぎ資料 + 評価ログ（gitignore 対象）。時短を誇張せず「主効果はストレス削減」の誠実な留保を書く方針 |
+| T12 ターミナルで日本語が打てなくなる原因を切り分けた（ghostty + herdr） | tech | 症状: IME を日本語にしても直接入力のまま、他アプリで日本語入力すると復帰。IME を替えても再現（azooKey / Google 日本語入力）。真犯人は herdr の `[experimental] switch_ascii_input_source_in_prefix`（prefix 中だけ入力ソースを ASCII にし、戻し損ねる。herdr #1221、0.7.3 時点で未修正）。有力な容疑者だった ghostty の Secure Input は `ioreg -l -w 0 \| grep kCGSSessionSecureInputPID` で白と確認（この確認手順自体が再利用価値あり）。対処は当該設定を false（2026-08-08 実施）、引き換えに日本語入力中の prefix 誤爆が戻る、というトレードオフまで書く。調査の型（有名な容疑者を先に潰す → 構成要素で入力ソースを触るのは誰か）を軸にすると読み物になる |
 
 開発環境 3 連作（T8 → T9 → T10）は、環境を移す → 隔離する → 隔離したものを部分的に繋ぐ、という 1 本の流れ。T10 は前 2 本の前提の上に立つので、公開順は崩さない。
 
