@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-08
+最終更新: 2026-08-09
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -298,6 +298,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-008 | [postlaunch-checks-routines](20260808-PHASE1D-008-postlaunch-checks-routines.md) | NotStarted |
 | PHASE1D-010 | [font-subsetting](20260808-PHASE1D-010-font-subsetting.md) | NotStarted |
 | PHASE1D-011 | [dependabot-triage](20260808-PHASE1D-011-dependabot-triage.md) | Done |
+| PHASE1D-012 | [dependency-update-policy](20260809-PHASE1D-012-dependency-update-policy.md) | NotStarted |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
 ### Phase 1d 推奨着手順序
@@ -315,6 +316,8 @@ PHASE1D-004 (main マージ + カスタムドメイン接続 + 本番 Lighthouse
 ├─ PHASE1D-007 (監視点火) ← 004 後、相互に並行可
 ├─ PHASE1D-010 (フォントサブセット化 ← 004 の本番計測で Perf 未達 9 ページ、実施時期は運営者判断)
 └─ PHASE1D-011 (Dependabot アラート仕分け ← 005 の push 時に判明した 61 件。006 と並行可)
+     ↓
+   PHASE1D-012 (依存更新 PR の処置と受け方の決定 ← 011 の設定修正で届いた #29〜#33。Gate より先)
   ↓
 PHASE1D-008 (公開後実機確認 + R-01 routine 点火)
   ↓
@@ -339,7 +342,8 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
-| 2026-08-08 | **PHASE1D-011 完了（Done）**：Dependabot アラート 61 件を全件仕分けし **open 0 件**（fixed 194 / dismissed 4）に到達。57 件は範囲内の更新で解消（`yarn up -R` で hono 4.13.1 / ip-address 10.4.0 / qs 6.15.3 / tar 7.5.22 / undici 7.29.0・6.28.0 / js-yaml 4.3.1 ほか、直接依存は @astrojs/rss 4.0.19 / shadcn 4.16.2）、範囲外の 3 件は `resolutions` で解消（sharp 0.35.3 / esbuild 0.28.1 / yaml-language-server の yaml 2.9.0）。critical（node-tar の DoS）は macOS 専用 `fsevents` → `node-gyp` 経由で runtime 非露出だったが範囲内に修正版があり更新で消した。残り 4 件は `not_used` で理由付き dismiss（astro 3 件は View Transitions 未使用・spread 属性 0 件で到達不能、@hono/node-server は Windows 限定かつ修正版が親の範囲外）。**根本原因を特定**：GitHub の走査対象は既定ブランチのみで、main には 2026-08-08 まで旧スタックの lockfile が乗っていたため Astro 構成の依存が一度も走査されていなかった + 手元の CI にも audit 工程が無かった → `quality.yml` に `yarn npm audit --severity high --environment production` を追加（運営者決定）。`.github/dependabot.yml` の不正キー 3 つ（`security-updates-only` / `auto-merge` / `require-tests`）を削除し `groups` を追加、旧スタック時代の Dependabot PR 9 本をクローズ。想定外：**shadcn は開発用 CLI でなく `@import "shadcn/tailwind.css"` 経由で本番 CSS にも入っていた**（4.16.2 の shimmer / scroll-fade の土台で未使用 CSS が 899B 増 → 寄与 0B を実測し運営者判断で import を削除）／PAT の権限が 3 回不足（Dependabot alerts / Workflows / Pull requests）／設定修正の直後に Dependabot がバージョン更新 PR 5 本（#29〜#33）を作成し `groups` が 17 件を 1 本にまとめることを実地確認。出力は更新前と全ファイルバイト単位で一致（`diff -rq` で 0 差分）、main マージ（7f31b94）後の本番 11 ページ 200 / CI 全 green。申し送り：Astro 6→7 メジャー更新（PR #33 が受け皿）／PR #29〜#33 の受け方の方針／README §10.9 の main 保護が実際には未設定（`protected: false`）で記述とずれている |
+| 2026-08-09 | **PHASE1D-012 起票（依存更新 PR の処置と受け方の決定）**：PHASE1D-011 で `.github/dependabot.yml` の不正キーを取り除いた結果、通常のバージョン更新が初めて機能し PR 5 本（#29 minor+patch 17 件まとめ / #30 @astrojs/react 6 / #31 @astrojs/mdx 7 / #32 jsdom 30 / #33 astro 7.1.6）が一度に届いた。011 の申し送り 2 件（Astro 6→7 メジャー更新 / 更新 PR の受け方）の受け皿として起票。#33 は 011 で「到達不能」として dismiss した astro 3 件の根本解消にあたる。あわせて旧スタック時代の Cloudflare 自動設定 PR #27（2026-05-08 起票、`vite.config.ts` 対象で現構成に非適用）をクローズ |
+| 2026-08-09 | **PHASE1D-011 完了（Done）**：Dependabot アラート 61 件を全件仕分けし **open 0 件**（fixed 194 / dismissed 4）に到達。57 件は範囲内の更新で解消（`yarn up -R` で hono 4.13.1 / ip-address 10.4.0 / qs 6.15.3 / tar 7.5.22 / undici 7.29.0・6.28.0 / js-yaml 4.3.1 ほか、直接依存は @astrojs/rss 4.0.19 / shadcn 4.16.2）、範囲外の 3 件は `resolutions` で解消（sharp 0.35.3 / esbuild 0.28.1 / yaml-language-server の yaml 2.9.0）。critical（node-tar の DoS）は macOS 専用 `fsevents` → `node-gyp` 経由で runtime 非露出だったが範囲内に修正版があり更新で消した。残り 4 件は `not_used` で理由付き dismiss（astro 3 件は View Transitions 未使用・spread 属性 0 件で到達不能、@hono/node-server は Windows 限定かつ修正版が親の範囲外）。**根本原因を特定**：GitHub の走査対象は既定ブランチのみで、main には 2026-08-08 まで旧スタックの lockfile が乗っていたため Astro 構成の依存が一度も走査されていなかった + 手元の CI にも audit 工程が無かった → `quality.yml` に `yarn npm audit --severity high --environment production` を追加（運営者決定）。`.github/dependabot.yml` の不正キー 3 つ（`security-updates-only` / `auto-merge` / `require-tests`）を削除し `groups` を追加、旧スタック時代の Dependabot PR 9 本をクローズ。想定外：**shadcn は開発用 CLI でなく `@import "shadcn/tailwind.css"` 経由で本番 CSS にも入っていた**（4.16.2 の shimmer / scroll-fade の土台で未使用 CSS が 899B 増 → 寄与 0B を実測し運営者判断で import を削除）／PAT の権限が 3 回不足（Dependabot alerts / Workflows / Pull requests）／設定修正の直後に Dependabot がバージョン更新 PR 5 本（#29〜#33）を作成し `groups` が 17 件を 1 本にまとめることを実地確認。出力は更新前と全ファイルバイト単位で一致（`diff -rq` で 0 差分）、main マージ（7f31b94）後の本番 11 ページ 200 / CI 全 green。申し送り：Astro 6→7 メジャー更新（PR #33 が受け皿）／PR #29〜#33 の受け方の方針／README §10.9 の main 保護が実際には未設定（`protected: false`）で記述とずれている |
 | 2026-08-08 | **PHASE1D-011 起票（Dependabot アラート仕分け）**：PHASE1D-005 の push 時に判明した Dependabot アラート 61 件（critical 1 / high 16）の全件仕分け・解消を独立 PBI 化。PHASE1D-007 が持つのは通知の有効化確認で、既存アラートの処置は本 PBI が担当（相互参照を PBI 本文に明記）。SSG + Workers 構成での露出区分（runtime / build / dev）を付けて記録し、依存更新は devcontainer または運営者ターミナルで実施（母艦 sandbox はレジストリ DNS 不可）。006 と並行可 |
 | 2026-08-08 | **PHASE1D-006 完了（Done）**：アクセス解析と検索登録を開通。CF Web Analytics はアカウント直下（`?to=/:account/web-analytics`）に `byte-lark.com` を登録して数字が出る状態に（Visits 44 / PV 52、beacon 識別子は登録前後で同一＝コード変更・再デプロイ不要。ドメイン内の Analytics → Web analytics は Observatory の RUM 欄で別物）。Search Console はドメイン プロパティを DNS 認証で登録：Google が出す Cloudflare 自動連携は使わず（メール系レコードを抱える DNS に外部の書き込み権限を常設しないため）手動 TXT を追加、公開 DNS 2 系統で反映と SPF 無傷を実測。サイトマップは URL 全体で送信し「成功しました」。OGP はタグ・画像を実測（既定画像 1200×630、記事は個別カバー webp 200）、X の公式 validator は廃止済みのため実施不可・Facebook デバッガーは運営者判断でスキップ → **受け取り側の描画確認は 009 Gate へ申し送り**。実ユーザー計測は LCP P75 620ms・CWV 3 指標 Good で、004 の Lighthouse 判定（Perf 59〜82）と食い違い → PHASE1D-010 の実施判断材料に追加 |
 | 2026-08-08 | **PHASE1D-005 完了（Done）**：www.byte-lark.com を apex へ 301 一本化。CF の www CNAME（→ Netlify）を撤去し AAAA `100::` Proxied + Redirect Rule（テンプレート「Redirect from WWW to root」+ Preserve query string、301）。curl 実測 5 通り合格（http は Always Use HTTPS との 2 段 301、クエリ保持確認）。旧 Netlify サイトは運営者決定により削除（byte-lark.netlify.app が 404 化を確認、アカウント自体も削除予定）。あわせて運営者が feat/phase-1 を main へマージ（2fee28f、check-runs 全 success）し、プライバシーポリシー改定が本番反映＝ 004 の申し送り解消。push 時に判明した Dependabot アラート 61 件（critical 1 / high 16、main に lockfile が乗って初走査）は要仕分け・未対応 |

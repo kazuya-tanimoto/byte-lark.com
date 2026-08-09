@@ -1,8 +1,8 @@
 # 運営者は依存ライブラリの脆弱性アラートを仕分けし、実害のあるものを解消できる
 
 Status: Done
-Started: 2026-08-08
-Completed: 2026-08-08
+Started: 2026-08-09
+Completed: 2026-08-09
 
 ## 誰が
 - 運営者
@@ -25,8 +25,8 @@ Completed: 2026-08-08
 - [x] ローカル スクショ確認：依存更新がサイト出力に影響し得るため主要ページで表示回帰がないことを確認（更新が devDependencies のみで build 出力不変なら N/A 化可）（CLAUDE.md §7）
 - [x] CF preview スクショ確認：同上（CLAUDE.md §7）
 - [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`。lockfile 変更で Quality Checks / UI Tests が走るため実確認する）（CLAUDE.md §7）
-- [x] 再発防止：CI に依存の脆弱性チェックを追加（本番依存の high 以上をゲート）。GitHub の Dependabot は既定ブランチしか走査せず、feat/* に積み上げた依存を誰も見ていなかったため（2026-08-08 運営者決定）
-- [x] 旧スタック時代の Dependabot PR 9 本をクローズ（2026-08-08 運営者決定で本 PBI に追加）
+- [x] 再発防止：CI に依存の脆弱性チェックを追加（本番依存の high 以上をゲート）。GitHub の Dependabot は既定ブランチしか走査せず、feat/* に積み上げた依存を誰も見ていなかったため（2026-08-09 運営者決定）
+- [x] 旧スタック時代の Dependabot PR 9 本をクローズ（2026-08-09 運営者決定で本 PBI に追加）
 
 ## 技術メモ
 - アラートの閲覧・dismiss は GitHub → Security → Dependabot alerts（ブラウザ。母艦の gh CLI は sandbox で不可、curl は api.github.com 可）
@@ -37,7 +37,7 @@ Completed: 2026-08-08
 
 ## 実装ログ（着手後に追記、中断時は必須）
 
-### 2026-08-08
+### 2026-08-09
 
 #### なぜ開発中に気付けなかったか（起票時に分かっていなかった前提）
 
@@ -93,7 +93,7 @@ Astro 6 → 7 のメジャー更新（上記 astro 3 件の根本解消）は運
 #### 想定外
 
 - **shadcn は開発用 CLI ではなく本番 CSS にも入っていた**。`src/styles/global.css` が `@import "shadcn/tailwind.css"` で取り込んでおり、4.16.2 で追加された shimmer / scroll-fade の土台（`@property` 宣言と reduced-motion 用の `.shimmer`）が常に出力されて未使用 CSS が 899 B（brotli 131 B）増えた。PHASE1C-010 で削った brotli 520 B の 4 分の 1 に当たる。取り込みを外して測ると 33,303 B / brotli 5,763 B でハッシュまで更新前と完全一致、つまり**旧 4.7.0 のスタイルシートは 1 バイトも寄与していなかった**。唯一の shadcn 部品 `button.tsx` も提供物（accordion キーフレーム・`data-open` 等の変種・shimmer / scroll-fade）を 1 つも使っていない → 運営者判断で `@import` を削除し、戻す条件を global.css にコメントで残した
-- **PAT の権限が 2 回足りなかった**。Dependabot alerts API は 403（→ 運営者が Read-only を付与）、`.github/workflows/` の push も `without workflow scope` で拒否（→ Workflows: Read and write が必要）。後者は付与待ちのため、CI 工程だけ別コミットに分離して依存更新分を先に push した
+- **PAT の権限が 3 回足りなかった**。① Dependabot alerts API が 403（→ Read を付与）② `.github/workflows/` の push が `without workflow scope` で拒否（→ Workflows: Read and write を付与。付与待ちの間は CI 工程だけ別コミットに分離して依存更新分を先に push した）③ 旧 PR のクローズが 403（→ Pull requests: Read and write を付与）。いずれも都度運営者に画面操作を依頼した
 - **push 競合**：並行セッションの PHASE1D-006 完了コミットが先に入っていたため rebase して取り込んだ（README §9 の想定どおり、共有は INDEX.md のみで衝突なし）
 - **アラートは main マージまで閉じない**。`feat/phase-1` に修正を積んでも既定ブランチの依存グラフは変わらないため、57 件は open のまま。実際に閉じるのは main マージ後
 
@@ -131,9 +131,9 @@ Astro 6 → 7 のメジャー更新（上記 astro 3 件の根本解消）は運
 - README §10.9 は「main は直接 push 禁止（PR 経由のみ）」と書いているが、実際には保護が掛かっていない（API で `protected: false`）。本 PBI のマージは直接 push で通した。保護を掛けるなら bypass を空にする必要がある（コンテナの PAT は運営者本人として動くため、管理者を例外に含めると PAT もすり抜ける）。掛けた場合は README §10.6 の `git push origin main` 手順も PR 経由へ書き換えが必要 → **同日中に解消（下記 事後追記）**
 - devcontainer の PAT に本 PBI で 3 つ権限を追加した（Dependabot alerts: Read / Workflows: Read and write / Pull requests: Read and write）。Administration は**意図的に付与していない**（ruleset を書き換えられる権限を自走環境に渡すと main 保護の歯止めが意味を失うため）
 
-### 2026-08-08 事後追記：main 保護の申し送りを解消
+### 2026-08-09 事後追記：main 保護の申し送りを解消
 
-上記申し送りのうち README §10.9 のずれは同日中に解消した。
+上記申し送りのうち README §10.9 のずれは同日中に解消した（起票は 2026-08-08、着手・完了は 2026-08-09）。
 
 - 運営者が GitHub の ruleset「main protection」を作成（対象は既定ブランチのみ / Enforcement Active / bypass list 空 / PR 必須（承認 0）/ 必須チェック `quality`・`e2e` / force push 禁止・削除禁止・作成制限）。`Workers Builds: byte-lark` は必須チェックに入れていない（Cloudflare 側の取りこぼしでマージが止まるため。PHASE1C-008 実装ログ参照）
 - 空コミットで main への直接 push を試し、`push declined due to repository rule violations` で拒否されることを実測（検証コミットは push されず破棄）
