@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v3.7)
+# PBI フォーマット規約 (v3.8)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-08-07
+最終更新: 2026-08-08
 
 ---
 
@@ -350,15 +350,22 @@ git push origin feat/phase-1
 
 main へのマージは**公開フェーズ（Phase 1d）で一度だけ**実施する（site-plan §8 Decision #25）。公開前の Gate（1a / 1b / 1c）ではマージせず、`feat/phase-1` に作業を積み上げる。未完成サイトを main 経由で本番公開・クロールさせないため。マージ手順は Phase 1d PBI（`draft-phase1d-domain-launch.md`）の受け入れ条件として実施：
 
+main は ruleset で保護されており **直接 push できない**（§10.9）。PR 経由でマージする：
+
 ```bash
-# Phase 1d（公開）でのみ実行：
-git checkout main
-git pull origin main
-git merge --no-ff feat/phase-1
-git push origin main
+# 作業ブランチを最新にして push（必須チェック quality / e2e を通すため）
+git checkout feat/phase-1
+git push origin feat/phase-1
+
+# PR を作成 → CI green を確認 → マージ
+gh pr create --base main --head feat/phase-1 --title "<title>" --body "<body>"
+gh pr merge --merge   # merge commit を残す（--no-ff 相当）
 
 # feat/phase-1 も remote に保持（後で全体構造を見られる）
 ```
+
+- `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash scripts/ci-status.sh` で確認してから実行する
+- コンテナから実行する場合、PAT に Pull requests: Read and write が必要（PHASE1D-011 で付与済み）
 
 - **Phase 0 は本モデル制定前**に完了したため `feat/phase-0` を main へマージ済み（PHASE0-010、`6a38240`）。これは歴史的経緯で、現行の遅延マージ方針とは別。
 - 公開後の 1e 以降は §10.3 の通常フロー（main から分岐 → 完了時マージ）に復帰する。
@@ -385,10 +392,16 @@ Phase ブランチのみ preview deployment が生成される（sub-branch な�
 
 ### 10.9 main の保護
 
-GitHub UI の Branch protection rules で main を保護：
+main は GitHub の ruleset「main protection」で保護している（2026-08-08 設定、PHASE1D-011）。実際の設定内容：
 
-- 直接 push 禁止（PR 経由のみ、または管理者のみ許可）
+- 対象は既定ブランチ（main）のみ、Enforcement は Active
+- **Bypass list は空**。運営者本人の端末からも devcontainer からも直接 push できない。コンテナの PAT は運営者本人として動くため、管理者を例外に含めると PAT も一緒にすり抜けてしまう。放置自走セッションが本番へ直接デプロイする経路を塞ぐのが目的（main への push = byte-lark.com への公開）
+- Require a pull request before merging（Required approvals は 0。一人体制のため自分の PR を自分でマージする）
+- Require status checks to pass：`quality` と `e2e`。`Workers Builds: byte-lark` は入れない（Cloudflare 側の取りこぼしでマージが止まるため。PHASE1C-008 実装ログ参照）
+- Block force pushes / Restrict deletions / Restrict creations
 - Phase ブランチ（`feat/phase-*`）は保護なし、直接 push OK（sub-branch は v3.0 で廃止）
+
+緊急時に保護を外す必要が出たら、Settings → Rules → Rulesets → main protection の Enforcement status を Disabled にする（運営者操作。ruleset 自体の変更には Administration 権限が必要で、コンテナの PAT には**意図的に付与していない**——保護を書き換えられる権限を自走環境に渡すと歯止めが意味を失うため）。
 
 ### 10.10 Hotfix（main に直接修正したい場合）
 
@@ -425,3 +438,4 @@ git push -u origin fix/<short-name>
 | 2026-08-02 | v3.5 | §9 に並行運用ルールを追加：記事 PBI と開発系 PBI は別名 clone の別作業ツリーなら並行可（従来の「セッション単位で切替」を置き換え）。1 ツリー 1 セッションを必須化（2026-08-01 に同一ツリー 2 セッションで INDEX.md が古い内容で黙って上書きされる実害が発生）。遵守事項：同一 PBI を 2 セッションで触らない / INDEX は pull→即コミット / push 競合は §10.7。§10.7 冒頭にも別 clone 前提を明記。CLAUDE.md の切替記述も連動更新 |
 | 2026-08-02 | v3.6 | §5.1 に Dropped（取り下げ）状態を新設：スコープ変更で不要になった NotStarted の PBI に適用。Decision Log の記録を必須とし、ファイルは削除せず INDEX と同期。初出の適用は初期記事セット縮小（site-plan v3.11 Decision #29）による PHASE1B-010 / 011 / 013 |
 | 2026-08-07 | v3.7 | §5.4 に例外を追加（Phase 1c Gate = PHASE1C-012 での判断）：記事の公開・main マージ・DNS / ドメイン切替など**外から見える状態を変えるコミット**を打ったセッションは、その PBI の Done 化まで同一セッションで終える。終えられないならコミット自体を次セッションへ回す。§5.2（Status と INDEX の同一コミット同期）の守備範囲外で、§5.4 が正規に認める「InProgress のまま終える」の中で事故が起きていた（PHASE1B-009：記事は公開済みなのに PBI が InProgress のまま残存）。Phase 1d は該当コミットが並ぶため先行して規約化 |
+| 2026-08-08 | v3.8 | §10.9 main の保護を実態に更新（PHASE1D-011）：ruleset「main protection」を設定し、bypass list を空にして運営者本人の端末からも devcontainer からも直接 push を禁止（コンテナの PAT は本人として動くため、管理者を例外に含めると PAT もすり抜ける。放置自走セッションが本番へ直接デプロイする経路を塞ぐのが目的）。必須チェックは `quality` / `e2e` のみで `Workers Builds` は含めない。ruleset 変更に必要な Administration 権限は PAT に意図的に付与しない旨と、緊急時に Enforcement を Disabled にする逃げ道も明記。連動して §10.6 の main マージ手順を直接 push から PR 経由（`gh pr create` → CI green 確認 → `gh pr merge`）へ書き換え。従来 §10.9 は「直接 push 禁止」と書いていたが実際には未設定（`protected: false`）で、記述と現実がずれていた |

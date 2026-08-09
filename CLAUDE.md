@@ -104,7 +104,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.12)
-- docs/pbi/README.md          PBI format spec (v3.6) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.8) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）

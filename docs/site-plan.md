@@ -540,7 +540,7 @@ Gate 1a→1b → Phase 1b PBI 起票 → ...（繰返し）
 6. Phase 1a レビュー → Phase 1a 実装
 7. 以降、Phase 1b（コンテンツ整備）/ 1c（デザイン）/ 1d（公開）/ 1e（カテゴリ別一覧）/ 2 を同様のサイクルで進行
 
-PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.6 を参照。
+PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.8 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
 **運営者向け運用マニュアル**（シーン別フレーズ / リカバリー / トラブルシューティング）は `docs/operation-manual.md` を参照。
 
