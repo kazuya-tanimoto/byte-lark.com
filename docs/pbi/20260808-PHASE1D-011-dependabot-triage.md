@@ -141,3 +141,28 @@ Astro 6 → 7 のメジャー更新（上記 astro 3 件の根本解消）は運
 - ruleset の作成は API では 403（Administration 権限が必要）。この権限は上記の理由で PAT に付与しない方針とし、運営者の画面操作で実施した
 
 残る申し送りは Astro 6 → 7 のメジャー更新と、Dependabot バージョン更新 PR 5 本（#29〜#33）の受け方の 2 件。
+
+### 2026-08-09 事後追記：他セッションの変更を巻き込んだ件と再発防止
+
+本 PBI の仕分け完了コミット `0d2d64c` に、母艦セッションが作業ツリーに置いていた `docs/article-backlog.md` の未コミット変更（T9 の追記）が入ってしまった。原因は `git add -A` を使ったこと。母艦（`/Users/kazuya/src/byte-lark.com`）とコンテナ（`/workspace`）は bind mount で同じ作業ツリーを共有しているため、sweep 系のステージ操作は相手の編集をそのまま拾う。内容は失われていないが変更の帰属がずれた。共有履歴を書き換える価値はないと判断し `0d2d64c` はそのまま残す。
+
+再発防止は `.claude/settings.json` の `permissions.deny` で行う。`git add` / `git stage` の `-A` / `-u` / `--all` / `--update` / `.` / `./` / `:/`、`git commit` の `-a` / `--all` を並べた。当初は PreToolUse フックをスクリプトに切り出す案で作りかけたが、公式ドキュメントを読み直して deny に切り替えた。
+
+deny を選んだ根拠（すべて公式ドキュメントで確認）：
+
+- 評価順は deny → ask → allow。スコープをまたいで deny が勝つ
+- `bypassPermissions` モードでも効く。「These controls apply in every mode, including `bypassPermissions`: deny rules and explicit ask rules」。コンテナは `--dangerously-skip-permissions` で動くのでここが要点
+- 複合コマンドはサブコマンドごとに独立照合される。「The recognized command separators are `&&`, `||`, `;`, `|`, `|&`, `&`, and newlines. A rule must match each subcommand independently」。`cd /workspace && git add -A` も捕まる
+- 照合の記号は `*` のみ。`.` は文字通りなので `Bash(git add .)` は完全一致になる
+- スクリプトファイルが不要。リポジトリ設定に置けば別名 clone は pull だけで入り、母艦セッションにもコンテナセッションにも効く
+
+置き場所を 2 段に分けた。このサイトの repo 系はリポジトリ設定（git 配布）、それ以外の repo は母艦の dotfiles の user 設定。コンテナの `~/.claude` は devcontainer ごとに独立した volume なので、そこに置くとコンテナごとの作業になり採用しなかった。
+
+残る限界：
+
+- 前方一致なので「引数のどこかに `-a` がある」を完全には表現できない。`git commit -a` / `-am` / `-a -m` と末尾の `-a` は塞いだが、途中に挟まる形は通る
+- `git add *` は `*` が照合の記号なので文字通りには書けない
+- `git add docs/` のようにディレクトリ単位で他セッションの変更を拾う経路は止められない
+- deny は Claude の Bash ツールにしか効かない。ターミナルでの手打ちは対象外（git に `add` 用フックが無いため、git 側では止められない）
+
+`-u` / `--update` / `git stage` は運営者の指示リストには無かったが、追跡済みファイルの変更を一括で拾う点で `-a` と同じ性質なので同時に塞いだ。

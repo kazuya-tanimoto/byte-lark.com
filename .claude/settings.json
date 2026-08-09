@@ -101,6 +101,21 @@
       "WebFetch(domain:developers.cloudflare.com)",
       "WebFetch(domain:www.cloudflare.com)",
       "WebFetch(domain:plausible.io)"
+    ],
+    "deny": [
+      "Bash(git add -A*)",
+      "Bash(git add --all*)",
+      "Bash(git add -u*)",
+      "Bash(git add --update*)",
+      "Bash(git add .)",
+      "Bash(git add ./)",
+      "Bash(git add :/*)",
+      "Bash(git stage -A*)",
+      "Bash(git stage --all*)",
+      "Bash(git stage -u*)",
+      "Bash(git commit -a*)",
+      "Bash(git commit --all*)",
+      "Bash(git commit *-a)"
     ]
   },
   "worktree": {
