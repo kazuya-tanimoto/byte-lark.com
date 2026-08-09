@@ -1,6 +1,7 @@
 # 運営者は届いた依存更新 PR を判断基準に沿って処置し、以後の受け方を決めた状態にできる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-09
 
 ## 誰が
 - 運営者

@@ -298,7 +298,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-008 | [postlaunch-checks-routines](20260808-PHASE1D-008-postlaunch-checks-routines.md) | NotStarted |
 | PHASE1D-010 | [font-subsetting](20260808-PHASE1D-010-font-subsetting.md) | NotStarted |
 | PHASE1D-011 | [dependabot-triage](20260808-PHASE1D-011-dependabot-triage.md) | Done |
-| PHASE1D-012 | [dependency-update-policy](20260809-PHASE1D-012-dependency-update-policy.md) | NotStarted |
+| PHASE1D-012 | [dependency-update-policy](20260809-PHASE1D-012-dependency-update-policy.md) | InProgress |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
 ### Phase 1d 推奨着手順序
