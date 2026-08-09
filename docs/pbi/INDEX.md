@@ -301,7 +301,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-012 | [dependency-update-policy](20260809-PHASE1D-012-dependency-update-policy.md) | Done |
 | PHASE1D-013 | [postlaunch-small-fixes](20260809-PHASE1D-013-postlaunch-small-fixes.md) | Done |
 | PHASE1D-014 | [hero-message-hierarchy](20260809-PHASE1D-014-hero-message-hierarchy.md) | Done |
-| PHASE1D-015 | [post-navigation-usability](20260809-PHASE1D-015-post-navigation-usability.md) | NotStarted |
+| PHASE1D-015 | [post-navigation-usability](20260809-PHASE1D-015-post-navigation-usability.md) | InProgress |
 | PHASE1D-016 | [contact-confirm-step](20260809-PHASE1D-016-contact-confirm-step.md) | NotStarted |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
@@ -325,7 +325,7 @@ PHASE1D-004 (main マージ + カスタムドメイン接続 + 本番 Lighthouse
   ↓
 ┌─ PHASE1D-013 (公開後実機確認で出た小さい不具合 4 件 ← 原因特定済み、方針判断が要らない分)
 ├─ PHASE1D-014 (Hero の見せ方 ← 案を出して運営者が選ぶ)
-├─ PHASE1D-015 (記事の回遊性: 前後リンク / 上へ戻る / 目次の履歴)   ← 相互に並行可、Gate より先
+├─ PHASE1D-015 (記事の回遊性: 上へ戻る / 目次の履歴。前後リンクは 1e へ)   ← 相互に並行可、Gate より先
 └─ PHASE1D-016 (お問い合わせフォームの確認画面)
   ↓
 PHASE1D-008 (公開後実機確認 + R-01 routine 点火)
@@ -341,6 +341,8 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 
 PBI は **記事数到達時**（FR-19: 合計 10 件以上）に起票する。
 
+起票時に含めるもの：記事末尾の前後記事リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、`/blog/tech` `/blog/life` が実 URL になる 1e なら仕掛けなしで成立する。
+
 ---
 
 ## Phase 2：広告収益化
@@ -353,6 +355,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-09 | **PHASE1D-015 スコープ変更（前後記事リンクを Phase 1e へ移管）**：着手時の運営者判断。前後リンクは訪問者が見ている一覧の並びと一致していないと使いづらいだけになるが、今の絞り込みは `CategoryFilter.tsx` の `useState` のみで URL にも保存領域にも残らず、追従させるには一覧の絞り込みを URL に持たせ・カードのリンクに印を付け・記事側で 3 通りの前後を出し分ける仕掛けが要る。Phase 1e（FR-19）で `/blog/tech` `/blog/life` が実 URL になれば同じことが仕掛けなしで成立し、公開記事 3 本（tech 2 / life 1）では出るリンクもほとんどない → 今回は作らず 1e 起票時に含める。015 は「上へ戻る」「目次の履歴」の 2 件に縮小 |
 | 2026-08-09 | **PHASE1D-014 完了（Done）**：Hero の情報の順番を整理（830da45）。3 巡の案出し（並べ方 3 案 → キャッチの強さ 4 段階 → 名前主役 2 案、比較は実画面スクショ埋め込みの 1 ページに集約）を経て、当初方針の「キャッチを最大に」は不採用——案A（キャッチ 42px 太字）を一度 push した後、汎用的な約束の文を最大サイズで張ると空虚に見えると運営者確認で差し戻し。名前主役のまま声量だけ落とす E1 に確定（名前 42 → 32px 太字 + 英字名、キャッチ 20px を直下に。h1 高さ desktop 55 → 87px / mobile 46 → 74px）。期中追加で説明文の「す。」だけが 2 行目に落ちる折り返しを修正（実測 1 行 673px に対し `max-w-2xl` = 672px と 1px 不足 → `max-w-3xl` + 狭幅の保険に文節折り `word-break: auto-phrase`）。学び：案出しは効く軸を先に見立てて振る／コピーの強度と表示サイズは釣り合わせる／大きさ・強さに関わる変更は選定後も本実装 preview の運営者確認を挟んでから Done に進める |
 | 2026-08-09 | **PHASE1D-013 完了（Done）**：公開後実機確認で挙がった小さい不具合 4 件を修正（6b66252）。About の見出し「屋号の由来」→「名前の由来」（会社概要の商号表記との食い違い解消。法人化記事の「屋号」は過去の事実として据え置き）／`BlogCard.astro` の `<article>` に `h-full` を足して `/blog/` 1 行目のカード高さを 339・366px → 366・366px に揃えた（トップは格子の直接の子なので前後で変化なし）／送信ボタンを 78×32 → 106×45px にして Hero（132×45px）と高さを一致／送信完了時に完了パネルへ焦点を移してページ先頭へ戻す（スマホ scrollY 497 → 0）。想定外なし・既存 E2E 33 件は無改修で全通過。学び：Hero のボタンは起票時記載の「約 40px」でなく実測 45px（タイポスケールで `text-sm` の行間が既定より大きい）→ 高さを px 固定せず Hero と同じ余白指定で追従させ、shadcn Button の透明 1px 枠ぶんを縦余白から相殺／素の `focus()` は直後の `scrollTo` と引っぱり合ってスマホで 91px 残る（`preventScroll: true` で解消）／CF は反映直後に同じ URL で古い版を返すことがあり、1 回の確認で断定できない |
 | 2026-08-09 | **PHASE1D-007 完了（Done）＝監視の点火**：`scripts/health-check.sh` を新規実装（HTTP 200 / 改ざんカナリア 2 種 / 配信ヘッダ / TLS 残日数の 4 点、2 回連続の異常で通知・復旧通知あり、`--inspect` と `--test-notify` の確認モード付き）。Xserver に設置して 10 分間隔の cron を登録し、本番 apex で 4 項目とも通過（TLS 残 89 日）。メール到達は一時 cron（branch alias 対象）で実測し、1 回目無発報・2 回目着信としきい値の効きまで確認。**本番ヘッダの実測でセキュリティヘッダが 1 つも無いと判明**（計画書に要件の記載なし＝未検討項目）→ 運営者判断で HSTS のみ即時有効化（`max-age=15552000` / includeSubDomains なし / preload なし）し、監視の必須ヘッダにも追加。**GitHub の Secret scanning / Push protection が両方 disabled だったため ON にした**（設定画面にトグルが出ず、`gh api` の `security_and_analysis` で実状を確認 → PATCH で有効化。「public なら常時有効」という私の推測は誤りだった）。通知は**メール単線**で確定し Slack も UptimeRobot も不採用——スクリプトの消失・破損は cron のエラーメールで露見して静かには止まらず、静かに止まるのは cron 項目を人が消した場合だけ、という整理（冗長性なしを承知の選択、運営者指摘で「Slack は配送の二重化であって検知の二重化ではない」と訂正した経緯を PBI に記録）。人為以外の唯一の経路としてサーバー移行時の cron 確認を incident-response.md §7 に追加。operation-manual.md §6 を新設（旧 §6→§7、§7→§8） |

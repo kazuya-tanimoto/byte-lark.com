@@ -76,7 +76,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
   <main class="mx-auto max-w-3xl px-4 py-8 xl:flex xl:max-w-[1080px] xl:gap-10">
     <article class="min-w-0 xl:max-w-3xl xl:flex-1">
       <slot name="cover" />
-      <header class="mb-8 border-b border-border pb-6">
+      <header data-post-header class="mb-8 border-b border-border pb-6">
         <div class="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span
             class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}
@@ -104,7 +104,12 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 
       {
         toc.length > 0 && (
-          <nav aria-label="目次" class="mb-8 rounded-lg bg-card p-4 shadow-card xl:hidden">
+          <nav
+            aria-label="目次"
+            data-toc
+            data-toc-mobile
+            class="mb-8 scroll-mt-20 rounded-lg bg-card p-4 shadow-card xl:hidden"
+          >
             <h2 class="mb-2 text-sm font-bold text-foreground">目次</h2>
             <ul class="space-y-1 text-sm">
               {toc.map((h) => (
@@ -132,6 +137,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
         <aside class="hidden xl:block xl:w-60 xl:shrink-0">
           <nav
             aria-label="目次"
+            data-toc
             data-toc-sidebar
             class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg bg-card p-4 shadow-card"
           >
@@ -153,6 +159,29 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
       )
     }
   </main>
+
+  {/* 記事先頭（目次の位置）へ戻るボタン。追従目次のない xl 未満だけに出す（PHASE1D-015）。
+      表示・非表示は下のスクリプトが hidden / flex を掛け替えて制御する */}
+  <button
+    type="button"
+    data-back-to-top
+    aria-label="記事の先頭へ戻る"
+    class="fixed right-4 bottom-5 z-40 hidden size-11 items-center justify-center rounded-full bg-card text-hibari-sky-deep ring-1 ring-border shadow-card transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-hibari-sky xl:hidden"
+  >
+    <svg
+      class="size-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 19V5" />
+      <path d="m5 12 7-7 7 7" />
+    </svg>
+  </button>
 </BaseLayout>
 
 <script>
@@ -203,6 +232,91 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
       { passive: true },
     );
     update();
+  }
+</script>
+
+<script>
+  // 記事内の移動まわり（PHASE1D-015）。
+  // (1) 目次のリンクは素のページ内リンクだと 1 クリックごとに履歴が 1 件積まれ、
+  //     何度か使ったあと一覧へ戻るのに戻るを連打することになる。クリックを横取りして
+  //     自分で移動し、履歴は replaceState で差し替える（URL のハッシュは更新されるので
+  //     その状態のリンクを共有すれば同じ位置が開く）。引き換えに戻るで記事内の移動は
+  //     巻き戻せなくなるが、それが狙い。
+  // (2) 追従目次のない幅（xl 未満）では、読み進むと先頭の目次に戻る手段が無くなるので
+  //     「先頭へ戻る」ボタンを出す。フッターのリンクに重ならないよう、フッターが
+  //     視界に入っている間は引っ込める。
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  // global.css の scroll-behavior は no-preference で囲ってあるが、scrollIntoView に
+  // behavior を明示するとその指定が勝つため、こちらでも同じ配慮をする
+  const scrollBehavior = () => (reduceMotion.matches ? "auto" : "smooth");
+
+  for (const nav of document.querySelectorAll("[data-toc]")) {
+    nav.addEventListener("click", (event) => {
+      const mouseEvent = event as MouseEvent;
+      if (
+        mouseEvent.button !== 0 ||
+        mouseEvent.metaKey ||
+        mouseEvent.ctrlKey ||
+        mouseEvent.shiftKey ||
+        mouseEvent.altKey
+      )
+        return;
+      const link = (event.target as HTMLElement).closest<HTMLAnchorElement>(
+        "a[href^='#']",
+      );
+      if (!link) return;
+      const href = link.getAttribute("href");
+      if (!href) return;
+      const target = document.getElementById(decodeURIComponent(href.slice(1)));
+      if (!target) return;
+      event.preventDefault();
+      // キーボード・読み上げの現在地も移動先へ運ぶ。素の focus() は直後の
+      // スクロールと引っぱり合うので preventScroll を付ける（PHASE1D-013 の学び）
+      target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+      history.replaceState(null, "", href);
+    });
+  }
+
+  const backToTop = document.querySelector<HTMLButtonElement>("[data-back-to-top]");
+  // 目次があれば目次の位置、無ければページ先頭へ戻す
+  const tocMobile = document.querySelector<HTMLElement>("[data-toc-mobile]");
+  const postHeader = document.querySelector<HTMLElement>("[data-post-header]");
+  const anchor = tocMobile ?? postHeader;
+  const footer = document.querySelector("footer");
+  if (backToTop && anchor) {
+    let scrolledPast = false;
+    let footerInView = false;
+    const sync = () => {
+      const show = scrolledPast && !footerInView;
+      backToTop.classList.toggle("hidden", !show);
+      backToTop.classList.toggle("flex", show);
+    };
+    new IntersectionObserver(([entry]) => {
+      // 戻り先が画面より上へ抜けたときだけ出す（読み始めの位置では出さない）
+      scrolledPast = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      sync();
+    }).observe(anchor);
+    if (footer) {
+      // 画面下端から見て、ボタンが占める高さ（bottom-5 の 20px + size-11 の 44px）ぶん
+      // だけ判定を切り上げる。フッターが画面に入った瞬間ではなく、実際にボタンと
+      // 重なりはじめる位置で引っ込める
+      new IntersectionObserver(
+        ([entry]) => {
+          footerInView = entry.isIntersecting;
+          sync();
+        },
+        { rootMargin: "0px 0px -64px 0px" },
+      ).observe(footer);
+    }
+    backToTop.addEventListener("click", () => {
+      if (tocMobile) {
+        tocMobile.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+      } else {
+        window.scrollTo({ top: 0, behavior: scrollBehavior() });
+      }
+    });
   }
 </script>
 
