@@ -51,8 +51,8 @@
 | 何を検知 | push の手段 | 種別 | 有効化 |
 |---|---|---|---|
 | 依存ライブラリの脆弱性・秘密情報の commit 混入（＝改ざんの入口） | GitHub の Dependabot / Secret scanning / Push protection → メール通知 | サービス純正 | **今すぐ可**（設定するだけ） |
-| サイト停止・改ざん（表示書き換え）・TLS 証明書の期限 | 監視スクリプトを **Xserver の cron** で定期実行 → 異常時のみ**メール + Slack** に通知 | 自作・独立インフラ | Phase 1d（公開時に本番 URL へ向けて点火） |
-| 死活監視の二重化（補完） | UptimeRobot 等の外形監視 → メール / Slack | 外部サービス | Phase 1d（任意・推奨） |
+| サイト停止・改ざん（表示書き換え）・TLS 証明書の期限 | 監視スクリプトを **Xserver の cron** で定期実行 → 異常時のみ**メール**に通知 | 自作・独立インフラ | Phase 1d（PHASE1D-007 で点火） |
+| 死活監視の二重化（補完） | UptimeRobot の外形監視 → メール | 外部サービス | Phase 1d（PHASE1D-007 で設定） |
 | Cloudflare アカウントの不正ログイン・設定変更 | 無料の push 手段なし → 2FA 必須化 + Audit Log を年数回だけ目視（§5） | 人手が残る唯一の点 | 今すぐ + 随時 |
 
 ### なぜ Xserver の cron を監視の主役にするか
@@ -67,9 +67,9 @@
 
 実体は `scripts/health-check.sh`（PHASE1D-007 で実装）。Xserver への設置・cron 登録・設定ファイルの書き方は `docs/operation-manual.md` §6。
 
-通知は **メール + Slack（Incoming Webhook）の二重**にする（メール＝証跡が残る／ Slack ＝スマホへ即時）。運用上の決めごと：
+通知は**メール**で出す（証跡が残る）。経路の二重化は、チャットではなく **UptimeRobot（別インフラの外形監視）を併用する**ことで確保する。運用上の決めごと：
 
-- **Slack の Webhook URL は秘密情報**。漏れると第三者が同チャンネルに投稿できる。スクリプトに直書きせず Xserver 側の環境変数か権限を絞ったファイルに置き、**リポジトリには commit しない**（GitHub の Secret scanning とも整合）。
+- スクリプトは Slack / Discord 等の Webhook 通知にも対応している（`SLACK_WEBHOOK_URL` を設定すれば有効）。使う場合、**Webhook URL は秘密情報**なので、スクリプトに直書きせず Xserver 側の権限を絞ったファイルに置き、**リポジトリには commit しない**（GitHub の Secret scanning とも整合）。
 - 異常時のみ・しきい値付きで鳴らす（アラート疲れ防止）。
 - **「監視自身の死活を別サービスで見張る（dead man's switch）」は本構成では不要**と判断する。監視スクリプト・cron が止まる原因は実質 (a) 自分でスクリプト/cron を壊す、(b) Xserver 自体の障害・契約停止、の 2 つ。(a) は変更後に一度手で実行して確認すれば防げる。(b) は Xserver 側がインフラを監視・復旧しており、かつ**業務メール（@byte-lark.com）も同じ Xserver に同居**（MX が `sv16806.xserver.jp` 直指し）しているため、サーバー/契約が完全に止まればメール不通で嫌でも気づく。外部監視を増やすより構成をシンプルに保つ方を採る。
 
@@ -192,7 +192,8 @@ GitHub の **Settings → Code security and analysis** で次を有効化する�
 ### 自動で飛んでくる（運営者の操作不要）
 
 - 依存の脆弱性・秘密情報の混入 → GitHub からメール（要・初期設定。§2「今すぐやること」）
-- サイト停止・改ざん・証明書期限 → Xserver cron の監視スクリプト（`scripts/health-check.sh`）からメール + Slack。設置手順は `docs/operation-manual.md` §6
+- サイト停止・改ざん・証明書期限 → Xserver cron の監視スクリプト（`scripts/health-check.sh`）からメール。設置手順は `docs/operation-manual.md` §6
+- サイトの死活（二重化）→ UptimeRobot からメール
 
 → これらは**通知が来たときだけ動く**。来なければ正常、が原則。
 
@@ -220,5 +221,5 @@ GitHub の **Settings → Code security and analysis** で次を有効化する�
 | 日付 | 変更内容 |
 |---|---|
 | 2026-06-14 | 初版作成（PHASE1A-021）。現構成（Cloudflare Workers SSG / Git 正本 / mailto Contact / バックエンド無し / 法人化前）を前提に、監視・初動フロー・ケース別手順・Cloudflare 確認手順を記載 |
-| 2026-08-09 | §2 の監視スクリプトを実装（PHASE1D-007）。前方参照（「実装は Phase 1d」「draft-phase1d の実装先」）を実体 `scripts/health-check.sh` と設置手順 `operation-manual.md` §6 への参照に置き換え、カナリア文字列とヘッダ判定の実装内容を反映。§7・§8 の該当行も連動更新 |
+| 2026-08-09 | §2 の監視スクリプトを実装（PHASE1D-007）。前方参照（「実装は Phase 1d」「draft-phase1d の実装先」）を実体 `scripts/health-check.sh` と設置手順 `operation-manual.md` §6 への参照に置き換え、カナリア文字列とヘッダ判定の実装内容を反映。運営者決定により通知は**メール単独**とし、経路の二重化は Slack ではなく **UptimeRobot の併用**で確保する形に変更（Webhook 通知はスクリプト側の任意機能として残置）。§7・§8 の該当行も連動更新 |
 | 2026-06-14 | §2 を「人力 pull 前提」から「push 型・自動検知ファースト」へ全面改稿。Cloudflare 無料プランは push 通知が実質 SSL のみ（公式 docs 確認）と判明したため、死活・改ざん・証明書監視は Xserver cron + 監視スクリプト（独立インフラ・無料・確定的）を主役に据え、実装は Phase 1d へ。§7 を自動 push 前提に整理（人手は Cloudflare 監査の年数回のみ） |

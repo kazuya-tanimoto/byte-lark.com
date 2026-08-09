@@ -102,7 +102,7 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 
 ## 6. サイト監視（health-check.sh）の設置と運用
 
-本番サイトが落ちていないか・書き換えられていないかを Xserver の cron から定期的に見に行き、**異常のときだけ**メールと Slack に通知する仕組み（PHASE1D-007 で導入。なぜこの形なのかは `docs/incident-response.md` §2）。スクリプトの実体はリポジトリの `scripts/health-check.sh`。
+本番サイトが落ちていないか・書き換えられていないかを Xserver の cron から定期的に見に行き、**異常のときだけ**メールで知らせる仕組み（PHASE1D-007 で導入。なぜこの形なのかは `docs/incident-response.md` §2）。スクリプトの実体はリポジトリの `scripts/health-check.sh`。経路の二重化は、別インフラの外形監視 UptimeRobot を併用して確保します（下記）。
 
 見ているのは 4 つです。
 
@@ -124,12 +124,11 @@ curl -sSfL -o ~/monitor/health-check.sh \
 chmod +x ~/monitor/health-check.sh
 ```
 
-2. 設定ファイルを作る。Slack の Webhook URL は秘密情報なので、ここにだけ書きます（リポジトリには絶対に入れない）：
+2. 設定ファイルを作る（監視先を明示しておくだけ。既定値と同じなので省いても動きます）：
 
 ```bash
 cat > ~/.byte-lark-monitor.env <<'EOF'
 MONITOR_URL="https://byte-lark.com"
-SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXX/YYY/ZZZ"
 EOF
 chmod 600 ~/.byte-lark-monitor.env
 ```
@@ -140,16 +139,30 @@ chmod 600 ~/.byte-lark-monitor.env
 bash ~/monitor/health-check.sh --inspect
 ```
 
-4. 通知の配線を確認する（メールと Slack にテストが 1 通ずつ飛ぶ）：
-
-```bash
-bash ~/monitor/health-check.sh --test-notify
-```
-
-5. サーバーパネルの「Cron設定」で登録する。
+4. サーバーパネルの「Cron設定」で登録する。
    - 実行コマンド：`/bin/bash /home/<アカウント名>/monitor/health-check.sh`
    - 実行間隔：10 分ごと（分の欄に `*/10`、他は `*`）
    - 通知先メールアドレス：受け取りたいアドレス（cron は**出力があったときだけ**メールを送る。このスクリプトは正常時に何も出力しないので、平常時のメールはゼロ）
+
+5. 通知が本当に届くか、わざと異常を起こして確かめる。branch alias は `noindex` が付くので、これを異常系の実物として使えます。2 回連続で異常になったときに通知が出るので、続けて 2 回叩きます：
+
+```bash
+STATE_DIR=~/monitor-test bash ~/monitor/health-check.sh --url https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev
+STATE_DIR=~/monitor-test bash ~/monitor/health-check.sh --url https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev
+```
+
+1 回目は何も出ず、2 回目に異常の内訳が表示されれば正しい動きです（cron 経由ならこの出力がメールで届きます）。確認したら `rm -rf ~/monitor-test` で後始末します。
+
+### UptimeRobot（外部の死活監視）
+
+Xserver 自体が止まったときに気づけるよう、別インフラからも死活を見ます。無料枠で足ります。
+
+- 監視の種類：HTTP(s)
+- URL：`https://byte-lark.com`
+- 間隔：5 分
+- 通知先：受け取りたいメールアドレス（Xserver 以外で受けられるアドレスにすると、Xserver 障害時も届く）
+
+こちらは死活だけを見ます。改ざん・ヘッダ・証明書の確認は health-check.sh 側の担当です。
 
 ### 普段の運用
 
@@ -168,8 +181,8 @@ bash ~/monitor/health-check.sh --test-notify
 - `REQUIRE_HEADERS` / `FORBID_HEADERS`：`("ヘッダ名=部分文字列")` の配列。既定は `content-type=text/html` を必須、`x-robots-tag=noindex` を禁止
 - `TLS_MIN_DAYS`：証明書の残日数のしきい値。既定 14
 - `FAIL_THRESHOLD`：何回連続の異常で通知するか。既定 2
-- `SLACK_WEBHOOK_URL`：Slack の Incoming Webhook。空なら Slack へは送らない
 - `MAIL_TO`：`mail` コマンドで直接送りたいときだけ設定。空なら cron のメール設定に任せる（Xserver ではこちらが基本）
+- `SLACK_WEBHOOK_URL`：Slack 等の Incoming Webhook。現在は未使用（空）。将来チャット通知を足したくなったらここに URL を書く。**URL は秘密情報**なのでこのファイルの外には出さない
 
 ## 7. 関連ドキュメント
 
@@ -197,4 +210,4 @@ bash ~/monitor/health-check.sh --test-notify
 | 2026-07-19 | §5 devcontainer 運用を新設（PHASE1B-016 連動）：起動手順（ccd / 手動）、firewall 有効確認、PAT の扱い、書き戻し禁止。旧 §5 関連ドキュメント → §6（devcontainer-plan.md 行追加）、旧 §6 改訂履歴 → §7 に繰り下げ |
 | 2026-07-19 | §5 更新（PHASE1B-016 ステップ 8 完了）：ccd / ccda / ccd-init を dotfiles に実装済みとなったため暫定の直接実行手順を削除。`ccd --rebuild` と他 repo 導入（ccd-init + dotfiles 型紙 README）を追記 |
 | 2026-08-02 | 並行運用ルール連動（README v3.5）：シーン別表の「並行 PBI 開始」を別名 clone の別作業ツリー前提に更新（同一ツリー 2 セッション禁止、初回 `gh auth login` + `yarn install`）。Q6 の原因記述も別 clone 運用に修正 |
-| 2026-08-09 | §6 サイト監視（health-check.sh）の設置と運用を新設（PHASE1D-007 連動）：Xserver への設置手順、設定ファイルと Slack Webhook の置き方、cron 登録、普段の運用、主な設定項目。関連ドキュメント表に incident-response.md を追加。旧 §6 関連ドキュメント → §7、旧 §7 改訂履歴 → §8 に繰り下げ |
+| 2026-08-09 | §6 サイト監視（health-check.sh）の設置と運用を新設（PHASE1D-007 連動）：Xserver への設置手順、cron 登録、通知が届くかの確かめ方、UptimeRobot の設定、普段の運用、主な設定項目。通知はメール単独（運営者決定）、経路の二重化は UptimeRobot が担う。関連ドキュメント表に incident-response.md を追加。旧 §6 関連ドキュメント → §7、旧 §7 改訂履歴 → §8 に繰り下げ |
