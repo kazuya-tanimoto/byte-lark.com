@@ -52,7 +52,9 @@ for (const [label, contextOptions] of VIEWPORTS) {
     }
     // 通信が静まるまで待つのは「できれば」に留める。/contact は Turnstile を
     // 読み込み続けるので networkidle を必須にすると永久に来ない
-    await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
+    await page
+      .waitForLoadState("networkidle", { timeout: 5000 })
+      .catch(() => {});
     // フォントの差し替えが終わってから撮る（display: optional / swap の揺れを避ける）
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({
