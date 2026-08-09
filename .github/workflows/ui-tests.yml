@@ -48,3 +48,28 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+      # 見た目の確認用。devcontainer 内のセッションは firewall の都合で
+      # ブラウザを取得できないことがあり、そのときの唯一の実ブラウザ確認手段になる
+      # （PHASE1D-012。取り寄せは gh run download <run-id> -n screenshots）
+      - name: Capture screenshots
+        run: |
+          yarn preview --host 127.0.0.1 --port 4321 &
+          node -e '
+            const deadline = Date.now() + 60000;
+            (async () => {
+              while (Date.now() < deadline) {
+                try { if ((await fetch("http://127.0.0.1:4321/")).ok) process.exit(0); } catch {}
+                await new Promise((r) => setTimeout(r, 500));
+              }
+              console.error("preview サーバーが 60 秒以内に立ち上がらなかった");
+              process.exit(1);
+            })();
+          '
+          BASE_URL=http://127.0.0.1:4321 node scripts/capture-screenshots.mjs
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: screenshots/
+          retention-days: 30
