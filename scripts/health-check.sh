@@ -23,7 +23,6 @@
 #   SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXX/YYY/ZZZ"
 #   MONITOR_URL="https://byte-lark.com"
 #   PATHS=("/" "/blog/")
-#   REQUIRE_HEADERS=("content-type=text/html" "strict-transport-security=max-age")
 
 set -uo pipefail
 
@@ -40,8 +39,9 @@ declare -a PATHS=("/")
 # 改ざんカナリア。text/html のページに、この文字列がすべて残っていることを確認する
 declare -a CANARIES=("<title>byte-lark.com</title>" "合同会社バイトラーク")
 
-# 「name=部分文字列」形式。ヘッダ値にその文字列が含まれていることを要求する
-declare -a REQUIRE_HEADERS=("content-type=text/html")
+# 「name=部分文字列」形式。ヘッダ値にその文字列が含まれていることを要求する。
+# HSTS は Cloudflare のゾーン設定で付けているので、外れたら異常として拾う
+declare -a REQUIRE_HEADERS=("content-type=text/html" "strict-transport-security=max-age")
 
 # 同じ形式で、含まれていてはいけないもの。公開後の noindex 混入検知が本命
 declare -a FORBID_HEADERS=("x-robots-tag=noindex")

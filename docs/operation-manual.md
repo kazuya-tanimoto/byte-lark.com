@@ -108,7 +108,7 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 
 - HTTP ステータスが 200 か（落ちていないか）
 - 決めた文字列がページに残っているか（書き換えられていないか。既定は `<title>byte-lark.com</title>` と `合同会社バイトラーク`）
-- 配信ヘッダが想定どおりか（公開後に `noindex` が付いていないこと等）
+- 配信ヘッダが想定どおりか（`noindex` が付いていないこと、HSTS が外れていないこと）
 - TLS 証明書の残日数（既定は 14 日を切ったら異常）
 
 1 回の失敗では鳴らしません。**2 回続けて異常**になったときだけ通知します（一時的な回線の揺れで起こされないため）。直ったときは「復旧」の通知が 1 回だけ飛びます。
@@ -185,7 +185,7 @@ Xserver 自体が止まったときに気づけるよう、別インフラから
 - `MONITOR_URL`：監視先。既定 `https://byte-lark.com`
 - `PATHS`：確認するパス。既定 `("/")`。リダイレクトは追わないので末尾スラッシュまで正確に書く
 - `CANARIES`：残っているべき文字列の配列
-- `REQUIRE_HEADERS` / `FORBID_HEADERS`：`("ヘッダ名=部分文字列")` の配列。既定は `content-type=text/html` を必須、`x-robots-tag=noindex` を禁止
+- `REQUIRE_HEADERS` / `FORBID_HEADERS`：`("ヘッダ名=部分文字列")` の配列。既定は `content-type=text/html` と `strict-transport-security=max-age` を必須、`x-robots-tag=noindex` を禁止
 - `TLS_MIN_DAYS`：証明書の残日数のしきい値。既定 14
 - `FAIL_THRESHOLD`：何回連続の異常で通知するか。既定 2
 - `MAIL_TO`：`mail` コマンドで直接送りたいときだけ設定。空なら cron のメール設定に任せる（Xserver ではこちらが基本）

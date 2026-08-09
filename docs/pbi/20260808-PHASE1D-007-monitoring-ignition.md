@@ -54,7 +54,15 @@ Started: 2026-08-08
 - GitHub の Dependabot alerts は有効（`repos/.../dependabot/alerts` が実データを返す）。Secret scanning / Push protection は fine-grained PAT の権限では読めず（403）、運営者のダッシュボード確認が必要
 - 本番 apex（`byte-lark.com`）はコンテナの default-deny firewall で未許可だったため、実装中の実測は許可済みの workers.dev 本番エイリアス（同一デプロイ）で代替した
 
-運営者決定（2026-08-09、選択肢を提示して確認）：
+### 2026-08-09 本番ヘッダの実測 → HSTS 有効化
+
+運営者に本番 apex のヘッダを実測してもらったところ（コンテナの firewall で apex に到達できないため運営者ターミナルで実行）、`x-robots-tag` は無く `content-type: text/html` はある＝監視の既定判定と一致することを確認。同時に**セキュリティヘッダが 1 つも付いていない**ことが判明した（HSTS / X-Content-Type-Options / X-Frame-Options / Referrer-Policy / CSP のすべて無し）。計画書を grep しても要件の記載は無く、意図的な見送りではなく未検討の項目だった。
+
+運営者判断で HSTS のみ即時対応（Cloudflare の SSL/TLS → Edge Certificates で有効化、`max-age=15552000`＝6 か月 / includeSubDomains なし / preload なし）。実測で `strict-transport-security: max-age=15552000` を確認し、監視スクリプトの `REQUIRE_HEADERS` 既定にも `strict-transport-security=max-age` を追加した。preload を外したのは、付けるとブラウザ側に焼き込まれて取り消しが効かなくなるため。
+
+追加した判定はローカルの受け口サーバーで両方向を実測（HSTS を返す設定では正常、返さない設定では「必須ヘッダ不一致」を検出）。残る X-Content-Type-Options / Referrer-Policy / CSP は今回の対象外（選択肢として提示済み、必要になったら別途起票）。
+
+### 運営者決定（2026-08-09、選択肢を提示して確認）
 
 - 通知は**メール単独**とする。PBI 起票時の「メール + Slack の二重」から変更。二重化の目的（片方が死んでも気づく）は、同じ Xserver 上の Slack 通知を足すより、別インフラの UptimeRobot を併用する方が素直に満たせるため、受け入れ条件をそう書き換えた。Webhook 通知の実装自体はスクリプトに残す（`SLACK_WEBHOOK_URL` を設定すれば有効。将来チャット通知を足したくなったときに実装し直さずに済む）
 - UptimeRobot は**設定する**
