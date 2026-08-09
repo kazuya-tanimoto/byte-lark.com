@@ -29,7 +29,9 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
 });
 ---
 
-<article class="overflow-hidden rounded-lg bg-card shadow-card transition-transform motion-safe:hover:-translate-y-0.5">
+<!-- h-full: 格子の子（/blog/ の <li>）は伸びるが中の <article> は中身ぶんで止まるため、
+     明示しないと同じ行のカードで高さが揃わない。Home はカードが格子の直接の子なので影響なし -->
+<article class="h-full overflow-hidden rounded-lg bg-card shadow-card transition-transform motion-safe:hover:-translate-y-0.5">
   <a href={href} class="flex h-full flex-col">
     {
       cover && (

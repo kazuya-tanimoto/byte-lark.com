@@ -93,6 +93,19 @@ export function ContactForm() {
   const [formError, setFormError] = useState("");
   const [state, setState] = useState<SubmitState>("idle");
   const widgetRef = useRef<HTMLDivElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  // 送信完了時にページ先頭へ戻し、完了パネルへ焦点を移す。
+  // フォームは縦に長く、送信した位置のままだとスマホでフッターだけが見える状態になる。
+  // 焦点移動は読み上げ環境にも完了パネルの位置を伝えるため（スクロールは
+  // global.css の scroll-behavior に従い、視差効果を減らす設定では即時ジャンプ）
+  useEffect(() => {
+    if (state !== "success") return;
+    // 焦点を先に、preventScroll 付きで移す。素の focus() はパネルが見える最小限だけ
+    // 動かそうとして、直後の scrollTo と引っぱり合いになる（実測でスマホが 91px 残った）
+    successRef.current?.focus({ preventScroll: true });
+    window.scrollTo({ top: 0 });
+  }, [state]);
 
   // Turnstile ウィジェットを描画し、トークン取得・失効をハンドリングする。
   useEffect(() => {
@@ -168,7 +181,12 @@ export function ContactForm() {
 
   if (state === "success") {
     return (
-      <div role="status" className="rounded-lg bg-card p-6 shadow-card">
+      <div
+        ref={successRef}
+        role="status"
+        tabIndex={-1}
+        className="rounded-lg bg-card p-6 shadow-card outline-none"
+      >
         <p className="font-semibold text-foreground">送信が完了しました。</p>
         <p className="mt-2 text-muted-foreground">
           お問い合わせありがとうございます。通常 2〜3
@@ -270,7 +288,16 @@ export function ContactForm() {
         </p>
       )}
 
-      <Button type="submit" disabled={state === "submitting"}>
+      {/* Hero / 404 のボタン（px-6 py-2.5、実測 45px 高）と大きさを揃える。
+          shadcn の既定 size は h-8 px-2.5 で、同じサイト内で押し心地が変わってしまう。
+          高さを px で固定せず余白で決めているのは、タイポスケール（PHASE1C-003）を
+          変えたときに Hero 側と一緒に追従させるため。縦の余白から 1px 引いているのは
+          Button が透明の 1px 枠（focus 時の輪郭に使う）を持つぶんの相殺 */}
+      <Button
+        type="submit"
+        className="h-auto px-6 py-[calc(0.625rem-1px)]"
+        disabled={state === "submitting"}
+      >
         {state === "submitting" ? "送信中…" : "送信する"}
       </Button>
     </form>

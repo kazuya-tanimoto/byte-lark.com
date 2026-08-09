@@ -1,6 +1,7 @@
 # 訪問者は公開後の実機確認で見つかった表記・見た目の小さな不具合がない状態でサイトを見られる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-09
 
 ## 誰が
 - 訪問者（PC / スマホ）
