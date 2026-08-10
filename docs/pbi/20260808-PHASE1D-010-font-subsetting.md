@@ -1,7 +1,8 @@
 # 訪問者は低速回線でもフォント転送に足を引かれずページを表示できる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-10
+Completed: 2026-08-10
 
 ## 誰が
 - 訪問者（特に低速回線・モバイル回線）
@@ -19,7 +20,7 @@ Started: 2026-08-10
 - [x] 見出し（Zen Kaku Gothic New 500/700）と本文（Noto Sans JP Variable）の両方を対象に、ページあたりフォント転送量を数百 KB 級以下へ削減 → 実測 333〜1064KB / 18〜68 ファイル → 298〜338KB / 2〜3 ファイル
 - [x] 表示退行なし：全ページ × desktop / mobile で字形・ウェイトの欠け（豆腐・フォールバック混在）がないことを確認。動的に増える文字（今後の記事）への追従方法をビルドフローとして確立 → 収録全字を元フォントと突き合わせて差分 0px（閉包あり）を確認。追従は `yarn fonts` + CI の `yarn fonts:check`
 - [x] CLS 退行なし：≈0 を維持（PHASE1C-007 の optional / swap 方針は原則維持、変更する場合は CLS 実測を添えて判断）→ 全 11 ページで変更前後とも 0〜0.006、読み込み戦略は変更なし
-- [ ] 本番ドメインで Lighthouse Performance 90+ を全主要ページで確認（`bash scripts/lighthouse-audit.sh https://byte-lark.com performance`、運営者ターミナル実行）→ **main マージ待ち**。CF branch alias では 11 ページ中 10 ページが 100、記事 1 本が 99
+- [x] 本番ドメインで Lighthouse Performance 90+ を全主要ページで確認（`bash scripts/lighthouse-audit.sh https://byte-lark.com performance`）→ **11 ページすべて 91〜100**（最低は最長記事の 91）
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
 - [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
 - [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）（CLAUDE.md §7）
@@ -92,3 +93,10 @@ Started: 2026-08-10
 
 - Performance：89〜100（`/blog/` が 89）→ **10 ページが 100、記事 1 本が 99**
 - FCP 858〜1382ms / LCP 858〜1825ms / TBT 0ms / CLS 0〜0.005
+
+### 2026-08-10 追記（main マージ・本番計測 → Done）
+
+- PR #36 で `feat/phase-1` を main へマージ（9555d6d）。本番で `_astro/*` が `immutable` で返ること、`/blog/` の 1 枚目が `loading="eager"`、HTML から @font-face の塊が消えていることを確認
+- マージ前に CodeQL が 2 件で落ちたので直した（69897cc）。どちらも `scripts/subset-fonts.mjs` の HTML 走査部分——閉じタグは `</script >` のように空白や属性が付いても閉じ扱いになるのに取りこぼす正規表現、実体参照を段階的に置き換えると戻した結果を次の段が拾って二重に解ける（`&amp;lt;` が `<` になる）順序。実体参照は 1 回の走査でまとめて戻す形にした。`yarn fonts` を回して収録字・生成物とも差分 0 を確認
+- 本番 Lighthouse Performance（11 ページ）：**91〜100（100 が 2、99 が 7、98 が 1、91 が 1）**。起票の根拠だった「11 ページ中 9 ページが 59〜82」は解消。FCP は全ページ 1.5〜1.7 秒、CLS は 0〜0.005、TBT は全ページ 0ms
+- 最低の 91 は最長記事（`/blog/building-this-blog-with-claude-code/`）で、LCP 3363ms の中身はフォントではなく本文中の画像。フォント起因の遅れはもう残っていない
