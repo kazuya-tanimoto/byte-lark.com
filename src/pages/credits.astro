@@ -35,6 +35,25 @@ const sources = [
   },
 ];
 
+// 配信している書体の出典。OFL 1.1 は改変版の再配布にも著作権表示とライセンスの同梱を求める。
+// サブセット化（PHASE1D-010）は改変にあたるため、全文を public/fonts/OFL.txt に置いて辿れるようにした
+const fonts = [
+  {
+    name: "Noto Sans JP",
+    url: "https://github.com/google/fonts/tree/main/ofl/notosansjp",
+    copyright:
+      "Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'",
+    usage: "本文・ページ全体",
+  },
+  {
+    name: "Zen Kaku Gothic New",
+    url: "https://github.com/googlefonts/zen-kakugothic",
+    copyright:
+      "Copyright 2022 The Zen Kaku Gothic Project Authors (https://github.com/googlefonts/zen-kakugothic)",
+    usage: "見出し（Medium / Bold）",
+  },
+];
+
 const mitLicense = `Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -43,20 +62,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ---
 
 <PageLayout
-  title="アイコン出典 | byte-lark.com"
-  description="byte-lark.com の Skills ページで使用しているアイコンの出典とライセンス（Devicon / Tabler Icons / SVG Logos / Simple Icons）"
+  title="アイコン・書体の出典 | byte-lark.com"
+  description="byte-lark.com で使用しているアイコンと書体の出典とライセンス（Devicon / Tabler Icons / SVG Logos / Simple Icons / Noto Sans JP / Zen Kaku Gothic New）"
 >
-  <h1 class="text-3xl font-bold text-foreground">アイコン出典</h1>
+  <h1 class="text-3xl font-bold text-foreground">アイコン・書体の出典</h1>
 
   <p class="mt-6 text-muted-foreground">
     <a href="/skills" class="text-hibari-sky underline">Skills</a>
-    ページで使用しているアイコンの出典とライセンスです。いずれも配布元の許諾に従って自前ホストで配信しています。
+    ページで使用しているアイコンと、サイト全体で使っている書体の出典とライセンスです。いずれも配布元の許諾に従って自前ホストで配信しています。
   </p>
 
-  <!-- 出典一覧 -->
+  <!-- アイコン出典一覧 -->
   <section class="mt-10" aria-labelledby="credits-sources">
     <h2 id="credits-sources" class="heading-sun text-2xl font-bold text-foreground">
-      出典一覧
+      アイコン
     </h2>
 
     {
@@ -94,6 +113,46 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       Devicon および Tabler Icons に適用されます。著作権表示は上記の各項目に記載しています。
     </p>
     <p class="mt-4 whitespace-pre-line text-sm text-muted-foreground">{mitLicense}</p>
+  </section>
+
+  <!-- 書体 -->
+  <section class="mt-12" aria-labelledby="credits-fonts">
+    <h2 id="credits-fonts" class="heading-sun text-2xl font-bold text-foreground">
+      書体
+    </h2>
+    <p class="mt-4 text-muted-foreground">
+      本サイトで配信している書体です。いずれも SIL Open Font License 1.1
+      のもとで、サイトに出てくる文字だけに絞ったうえで自前ホストから配信しています。
+    </p>
+    {
+      fonts.map((font) => (
+        <div class="mt-8">
+          <h3 class="text-lg font-bold text-foreground">
+            {font.name}
+            <span class="ml-2 inline-block text-sm font-normal text-muted-foreground">
+              SIL Open Font License 1.1
+            </span>
+          </h3>
+          <p class="mt-2 text-muted-foreground">
+            <a
+              href={font.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-hibari-sky underline"
+            >
+              {font.url}
+            </a>
+          </p>
+          <p class="mt-1 text-muted-foreground">{font.copyright}</p>
+          <p class="mt-2 text-sm text-muted-foreground">使用箇所：{font.usage}</p>
+        </div>
+      ))
+    }
+    <p class="mt-8 text-sm text-muted-foreground">
+      ライセンス全文は
+      <a href="/fonts/OFL.txt" class="text-hibari-sky underline">/fonts/OFL.txt</a>
+      に置いています。
+    </p>
   </section>
 
   <!-- 商標について -->

@@ -1,14 +1,9 @@
-import { defineConfig, fontProviders } from "astro/config";
-
-import react from "@astrojs/react";
-
-import tailwindcss from "@tailwindcss/vite";
-
 import mdx from "@astrojs/mdx";
 
+import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-
-import { fontsourceVariants } from "./scripts/fontsource-variants.mjs";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig, fontProviders } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,15 +17,17 @@ export default defineConfig({
     }),
   ],
 
-  // フォントは Astro の Fonts API で扱う（PHASE1C-007）。
-  // provider は local ＝ node_modules の @fontsource-variable/* をそのまま使うので
-  // ビルド時にネットワーク不要、配信も従来どおりセルフホスト（Decision #24 の趣旨を維持）。
-  // npm provider は index.css をローカルで読んでも実体 URL を jsdelivr に書き換えるため不採用。
+  // フォントは Astro の Fonts API で扱う（PHASE1C-007）。provider は local ＝
+  // ビルド時にネットワーク不要、配信もセルフホスト（Decision #24 の趣旨を維持）。
+  //
+  // 実体は scripts/subset-fonts.mjs が作る「サイトに出てくる字だけ」のファイル（PHASE1D-010）。
+  // 元の配布物（fontsource）は文字コード順に 120 個前後へ切った塊で、1 ページで 18〜68 個・
+  // 0.33〜1.06MB 落ちていた。サブセットは 1 ファミリ 1 ファイル・全ページ共通なので、
+  // 文字範囲での出し分け（unicode-range）も要らない。記事を足したら `yarn fonts` で作り直す
   fonts: [
     {
       provider: fontProviders.local(),
-      // 見出し書体（PHASE1C-003。docs/design-direction.md §3 で「春空」選定時に確定）。
-      // 可変ウェイトが無いパッケージなので、使う 500 / 700 の CSS だけを読む
+      // 見出し書体（PHASE1C-003。docs/design-direction.md §3 で「春空」選定時に確定）
       name: "Zen Kaku Gothic New",
       cssVariable: "--font-zen-kaku",
       // 総称ファミリ（sans-serif）を持たせない。持たせると和文フォントより先に
@@ -38,14 +35,22 @@ export default defineConfig({
       fallbacks: [],
       // 最適化フォールバックは Arial 基準の寸法合わせで和文には効かない（PHASE1C-007 の一次確認）
       optimizedFallbacks: false,
-      // 見出しだけは swap。optional だと初回訪問でほぼ当たらず（多数のサブセットが
-      // 100ms の猶予に間に合わない）、ブランドの書体が初見の人に届かないため。
-      // 見出しが占める高さは小さく、差し替えのずれも実測で 0.0016 以下（PHASE1C-003）
+      // 見出しだけは swap。optional だと初回訪問でほぼ当たらず、
+      // ブランドの書体が初見の人に届かないため。差し替えのずれは実測 0.0016 以下（PHASE1C-003）
       display: "swap",
       options: {
-        variants: fontsourceVariants("@fontsource/zen-kaku-gothic-new", {
-          entries: ["500.css", "700.css"],
-        }),
+        variants: [
+          {
+            src: ["./src/assets/fonts/zen-kaku-gothic-new-500-subset.woff2"],
+            weight: "500",
+            style: "normal",
+          },
+          {
+            src: ["./src/assets/fonts/zen-kaku-gothic-new-700-subset.woff2"],
+            weight: "700",
+            style: "normal",
+          },
+        ],
       },
     },
     {
@@ -59,7 +64,16 @@ export default defineConfig({
       // 本文は optional のまま。ページの高さの大半を本文が占めるので、
       // ここを swap にすると端末のフォント次第で最大 0.09 のずれが出る（PHASE1C-003 実測）
       display: "optional",
-      options: { variants: fontsourceVariants("@fontsource-variable/noto-sans-jp") },
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/noto-sans-jp-subset.woff2"],
+            // ウェイトは可変軸のまま持つ（本文 400 / 強調 500・700 を 1 ファイルで賄う）
+            weight: "100 900",
+            style: "normal",
+          },
+        ],
+      },
     },
   ],
 
@@ -72,6 +86,6 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [tailwindcss()]
-  }
+    plugins: [tailwindcss()],
+  },
 });
