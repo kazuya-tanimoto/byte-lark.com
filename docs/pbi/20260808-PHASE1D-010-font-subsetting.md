@@ -1,6 +1,7 @@
 # 訪問者は低速回線でもフォント転送に足を引かれずページを表示できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-10
 
 ## 誰が
 - 訪問者（特に低速回線・モバイル回線）
@@ -14,14 +15,14 @@ Status: NotStarted
 - 関連: site-plan NFR（Lighthouse 90+）/ PHASE1C-003・007・010（現行フォント方式の確定経緯）
 
 ## 受け入れ条件
-- [ ] サブセット化の方式を調査・選定（ビルド時に全ページの使用グリフを走査して必要分だけのフォントを生成する方式。subfont / fonttools 系等。Astro Fonts API（`fontProviders.local()`）との共存可否が論点）
-- [ ] 見出し（Zen Kaku Gothic New 500/700）と本文（Noto Sans JP Variable）の両方を対象に、ページあたりフォント転送量を数百 KB 級以下へ削減
-- [ ] 表示退行なし：全ページ × desktop / mobile で字形・ウェイトの欠け（豆腐・フォールバック混在）がないことを確認。動的に増える文字（今後の記事）への追従方法をビルドフローとして確立
-- [ ] CLS 退行なし：≈0 を維持（PHASE1C-007 の optional / swap 方針は原則維持、変更する場合は CLS 実測を添えて判断）
-- [ ] 本番ドメインで Lighthouse Performance 90+ を全主要ページで確認（`bash scripts/lighthouse-audit.sh https://byte-lark.com performance`、運営者ターミナル実行）
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）（CLAUDE.md §7）
+- [x] サブセット化の方式を調査・選定（ビルド時に全ページの使用グリフを走査して必要分だけのフォントを生成する方式。subfont / fonttools 系等。Astro Fonts API（`fontProviders.local()`）との共存可否が論点）→ `subset-font`（harfbuzz の wasm）で全ページ共通の 1 ファミリ 1 ファイルを作り、Astro Fonts API の local provider にそのまま渡す方式を採用
+- [x] 見出し（Zen Kaku Gothic New 500/700）と本文（Noto Sans JP Variable）の両方を対象に、ページあたりフォント転送量を数百 KB 級以下へ削減 → 実測 333〜1064KB / 18〜68 ファイル → 298〜338KB / 2〜3 ファイル
+- [x] 表示退行なし：全ページ × desktop / mobile で字形・ウェイトの欠け（豆腐・フォールバック混在）がないことを確認。動的に増える文字（今後の記事）への追従方法をビルドフローとして確立 → 収録全字を元フォントと突き合わせて差分 0px（閉包あり）を確認。追従は `yarn fonts` + CI の `yarn fonts:check`
+- [x] CLS 退行なし：≈0 を維持（PHASE1C-007 の optional / swap 方針は原則維持、変更する場合は CLS 実測を添えて判断）→ 全 11 ページで変更前後とも 0〜0.006、読み込み戦略は変更なし
+- [ ] 本番ドメインで Lighthouse Performance 90+ を全主要ページで確認（`bash scripts/lighthouse-audit.sh https://byte-lark.com performance`、運営者ターミナル実行）→ **main マージ待ち**。CF branch alias では 11 ページ中 10 ページが 100、記事 1 本が 99
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）（CLAUDE.md §7）
 
 ## 技術メモ
 - 現行方式は確定事項として尊重する：Astro Fonts API + `fontProviders.local()`（PHASE1C-007）、見出し swap / 本文 optional（PHASE1C-003。swap 化は最大 CLS 0.09 の実測根拠あり）。サブセット化は「配るファイルを軽くする」変更であり、読み込み戦略の変更ではない
@@ -31,4 +32,63 @@ Status: NotStarted
 - 想定セッション数: 1〜2（方式調査に 1、組み込み・検証に 1）
 
 ## 実装ログ（着手後に追記、中断時は必須）
-（未着手）
+
+### 2026-08-10（実装・検証。本番計測のみ main マージ待ち）
+
+やったこと
+
+- 起票時の数字を実ブラウザで取り直した。ページあたり 18〜68 ファイル / 333〜1064KB は再現。あわせて **各ページの HTML に @font-face が約 283KB インラインで載っていた**ことが分かった（366 個の宣言。HTML 実サイズ 289〜346KB のほとんど）
+- 方式は「サイト全体で使う字だけを詰めた 1 ファミリ 1 ファイル」を採用（`scripts/subset-fonts.mjs` を新規作成）。道具は `subset-font`（harfbuzz の wasm。fonttools は pypi へ到達できず不採用）
+  - 元フォントは fontsource には無い（配布物が塊分割済みのため）。google/fonts のコミットを固定した URL から取り、sha256 を照合して `node_modules/.cache/font-sources` に置く。生成物 3 本だけをコミットするので、**通常のビルドと CI はネットワークに触れない**
+  - 収録字の集め方：本文は `src/` 走査（組み上がり HTML の全字を含むことを実測。0 件の取りこぼし）、見出しは `dist` の h1〜h4 + `font-heading` から。見出しを絞ると 1085 字 → 360 字で 1 本 40KB に収まる
+- 結果（実測）
+  - フォント転送：333〜1064KB / 18〜68 ファイル → **298〜338KB / 2〜3 ファイル**（全ページ共通なので 2 ページ目以降は 0）
+  - HTML：289〜346KB → **12〜70KB**（@font-face のインラインが消えたぶん）
+  - Lighthouse Performance：本番（変更前）56〜99 で 4 ページが 90 未満 → CF preview（変更後）**89〜100 で 10 ページが 95 以上**。FCP は全ページ 1.8〜9.5s → 0.8〜1.1s、CLS は前後とも 0〜0.006 で不変
+- 記事を足したときの追従：`yarn fonts`（build → 生成 → build）で作り直す。回し忘れは CI の `yarn fonts:check`（組み上がり HTML の字と収録字を突き合わせ）で止まる
+- fontsource 2 パッケージと `scripts/fontsource-variants.mjs` を削除（node_modules が 33MB 減）
+- サブセットは改変版の再配布にあたるので、`/credits` に「書体」節と `public/fonts/OFL.txt` を追加。ページ名と Footer のリンクを「アイコン出典」→「アイコン・書体の出典」に変更
+
+判断したこと
+
+- **レイアウト閉包を切る（`noLayoutClosure: true`）**：収録全字を元フォントと並べて撮り比べた結果、閉包ありは差分 **0px**（完全一致）、閉包なしは 0.20〜0.23%。中身を拡大して見るとサブピクセルのにじみで、字形の欠けや置き換わりは無い。欧文 115 字の行幅で 849px → 848px（0.1%）。切ると **129KB 軽くなる**（466KB → 337KB）ので切る方を採った。戻すなら `scripts/subset-fonts.mjs` の当該オプションを外すだけ
+- **ページ別サブセットは採らない**：試作では 31〜180KB とさらに軽いが、ページを移るたび落とし直しになる。全ページ共通なら 1 回で済み、記事が増えても収録字は頭打ちになる（今 1086 字）
+
+学び・つまずき
+
+- **塊分割は和文の約物の詰め（`：「` など）を殺していた**。`：`(U+FF1A) と `「`(U+300C) は fontsource では別ファイルに入るため、OpenType の機能はファイルをまたげず効かない。1 ファイルにまとめた副産物として詰めが効くようになり、記事の折り返し位置が数行ずれた（退行ではなく改善）
+- **`astro preview` は `_astro/*` にも `no-cache` を返す**ため、`font-display: optional` の本文フォントが当たらず端末フォントで撮れてしまう。本番同等（`immutable`）のヘッダで配る一時サーバーを立てて撮り直した
+- **本文フォント（optional）は実際には使われていない。preview でも本番でも同じ**。本文の woff2 だけ落とせないようにして撮り比べると差分 0px（見出しは 2910〜18114px の差＝効いている）。変更前から同じなので今回の退行ではないが、258KB を落として画面に反映されていないことになる。→ 申し送り
+- 元フォントの版が fontsource と google/fonts で違うぶん、字幅がごくわずかに動く可能性がある（実測では欧文 0.1%）。字形そのものは元フォントと完全一致を確認済み
+
+想定外
+
+- 本番の `_astro/*` は `cache-control: public, max-age=0, must-revalidate` で配られていた（内容ハッシュ付きの名前なのに毎回再検証している）。上の「本文フォントが使われない」の直接の原因もこれ。→ 申し送り
+- `/blog/` だけ 89 で残った。原因はフォントではなく **一覧 1 枚目のカード画像が `loading="lazy"`** で LCP を遅らせている（`lcp-lazy-loaded` が fail、FCP は 1.0s と良好）。→ 申し送り
+
+申し送り 3 件 → 同日に本 PBI 内で対応（下の追記を参照）
+
+1. `_astro/*` のキャッシュ指定を `immutable` にする → 対応（`public/_headers`）
+2. 本文フォントを preload するか → 実測のうえ**採らない**
+3. `/blog/` の 1 枚目のカード画像を `loading="eager"` にする → 対応
+
+### 2026-08-10 追記（申し送り 3 件の対応。本番計測のみ main マージ待ち）
+
+やったこと
+
+- `_astro/*` を 1 年 `immutable` で配るようにした（`public/_headers`）。Cloudflare Workers の静的アセット配信は `_headers` を読む（[公式 docs](https://developers.cloudflare.com/workers/static-assets/headers/)）。`public/` に置いたものはそのまま `dist/` に入り、`wrangler.jsonc` の `assets.directory` から読まれる。CF preview で画像・フォントとも `public, max-age=31536000, immutable` が返ること、HTML は従来どおり再検証されること、`_headers` 自体は配信されない（404）ことを確認
+- `/blog/` 一覧の 1 枚目のカード画像を先に取りにいくようにした。BlogCard に `priority` を足し、一覧の 1 件目にだけ渡す（Astro の `Image` が `loading="eager"` + `decoding="sync"` + `fetchpriority="high"` に展開する）。Home は一覧が下のほうにあるので付けない
+
+判断したこと
+
+- **本文フォントの preload は採らない**。CF preview に一度上げて同じ条件で計り比べたところ、11 ページ中 10 ページで LCP が 1.5〜2.7 秒悪化した（`/` は 940ms → 3201ms・Performance 100 → 92、`/blog/` は 1532ms → 3660ms・100 → 89）。258KB を最優先で取りにいくぶん、本来の LCP 要素が後ろに押される。`font-display: optional`（初回描画を絶対に遅らせない指定）の趣旨どおり、取りにいかないのが正しい。計測用のコミット（19786aa）は revert 済み（f06af0a）
+
+学び・つまずき
+
+- 本文フォントが「初回訪問の 1 ページ目だけ当たらない」のは仕様どおりで、直すべき欠陥ではなかった。`immutable` を入れたあとは **2 ページ目からキャッシュで当たる**（CF preview で回線制限あり・なしとも、本文 woff2 を落とせないようにした描画との画素差 19896px を確認）。1 ページ目に当てる手段は preload しかなく（preload なしは画素差 0px）、それは上記のとおり LCP を壊す
+- ローカル（node の静的サーバー）で計った Lighthouse は FCP が 3 秒台まで落ちて CF preview（0.9〜1.4 秒）と乖離する。preload の是非のように差が小さい判断は、CF preview で計らないと結論が逆になりうる
+
+結果（CF preview、11 ページ）
+
+- Performance：89〜100（`/blog/` が 89）→ **10 ページが 100、記事 1 本が 99**
+- FCP 858〜1382ms / LCP 858〜1825ms / TBT 0ms / CLS 0〜0.005

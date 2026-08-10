@@ -31,6 +31,11 @@ jobs:
         run: yarn test:run
       - name: Build
         run: yarn build
+      # 配信しているフォントは「サイトに出てくる字だけ」に絞ってある（PHASE1D-010）。
+      # 記事を足したのに `yarn fonts` を回し忘れると、新しく出てきた字だけが
+      # 端末任せの書体で描かれる。組み上がった HTML と収録字を突き合わせてここで止める
+      - name: Font coverage
+        run: yarn fonts:check
       # 依存の脆弱性を push 時点で検知する（PHASE1D-011）。
       # GitHub の Dependabot は既定ブランチ（main）しか走査しないため、
       # feat/* に積み上げた依存は main マージまで誰も見ない状態だった。

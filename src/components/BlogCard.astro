@@ -7,9 +7,12 @@ interface Props {
   /** カードタイトルの見出しレベル。既定は h3（Home の h2 セクション配下）。
       h1 直下の一覧（/blog/）では h2 を渡して見出し階層を保つ */
   headingLevel?: "h2" | "h3";
+  /** 最初から見えている位置のカードに付ける。画像を後回しにせず先に取りにいく
+      （loading=eager / fetchpriority=high）。1 ページに 1 枚だけ */
+  priority?: boolean;
 }
 
-const { post, headingLevel = "h3" } = Astro.props;
+const { post, headingLevel = "h3", priority = false } = Astro.props;
 const { title, description, category, publishedAt, cover, slug } = post.data;
 const href = `/blog/${slug ?? post.id}/`;
 // 見た目のサイズはタグと独立（クラス側で吸収）。タグだけ切り替える
@@ -40,6 +43,7 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
           alt=""
           width={640}
           height={336}
+          priority={priority}
           class="aspect-[40/21] w-full object-cover"
         />
       )
