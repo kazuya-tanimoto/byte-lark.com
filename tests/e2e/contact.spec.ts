@@ -15,6 +15,7 @@ async function stubTurnstile(page: Page, pass: boolean): Promise<void> {
     interface StubOptions {
       callback: (token: string) => void;
       "error-callback"?: () => void;
+      "expired-callback"?: () => void;
     }
     let rendered: StubOptions | null = null;
     const issue = () => {
@@ -30,6 +31,9 @@ async function stubTurnstile(page: Page, pass: boolean): Promise<void> {
       },
       reset: () => issue(),
     };
+    // トークンの寿命（本物は 300 秒）をテストから任意のタイミングで切らすための口
+    (window as unknown as { expireTurnstile: () => void }).expireTurnstile =
+      () => rendered?.["expired-callback"]?.();
   }, pass);
 }
 
@@ -247,6 +251,45 @@ test.describe("Contact フォーム", () => {
     // 失敗しても書いた内容は入力へ戻せば残っている
     await page.getByRole("button", { name: "入力へ戻る" }).click();
     await expect(page.getByLabel("本文")).toHaveValue("本文テスト");
+  });
+
+  test("確認画面で認証が切れた：無言で失敗せず、取り直して送れる", async ({
+    page,
+  }) => {
+    await stubTurnstile(page, true);
+    const posted: Record<string, unknown>[] = [];
+    await page.route("**/api/contact", async (route) => {
+      posted.push(route.request().postDataJSON());
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ ok: true }),
+      });
+    });
+
+    await page.goto("/contact");
+    await waitHydrated(page);
+
+    await fillForm(page, {
+      name: "テスト",
+      email: "test@example.com",
+      message: "本文テスト",
+    });
+    await page.getByRole("button", { name: "確認する" }).click();
+
+    // 確認画面に留まっている間にトークンの寿命が尽きた状況を作る
+    await page.evaluate(() =>
+      (window as unknown as { expireTurnstile: () => void }).expireTurnstile(),
+    );
+    await page.getByRole("button", { name: "送信する" }).click();
+
+    await expect(page.getByText("認証の有効期限が切れました")).toBeVisible();
+    expect(posted).toHaveLength(0);
+
+    // 取り直し（reset）で新しいトークンが出るので、もう一度押せば送れる
+    await page.getByRole("button", { name: "送信する" }).click();
+    await expect(page.getByText("送信が完了しました。")).toBeVisible();
+    expect(posted).toHaveLength(1);
   });
 
   // 確認画面はハイドレーション後にしか出ないため a11y.spec.ts の巡回では踏めない
