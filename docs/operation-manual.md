@@ -1,6 +1,6 @@
 # 運用マニュアル（運営者向け）
 
-最終更新: 2026-08-09
+最終更新: 2026-08-10
 
 本ファイルは byte-lark.com プロジェクトの**運営者（人間ユーザー）向け運用マニュアル**です。Claude Code との多セッション運用において、運営者が「何を / いつ / どう言えばいいか」をまとめます。
 
@@ -15,9 +15,9 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | **作業開始（初回 / 任意のタイミング）** | `PBIの対応して` / `次のタスク進めて` | INDEX.md → README §5 経由で次の PBI を特定 → §5.8 検出スクリプト実行 → 実装着手 |
 | **中断（コンテキスト消費 / 時間切れ）** | `ここまでで終了` / `中断します` / `今日はここまで` | InProgress な PBI の `## 実装ログ` に「やったこと / 残タスク / 学び / 想定外」追記 → WIP コミット → 報告 |
 | **再開（同一 PBI を続行）** | `続き進めて` / `再開して` | 該当 PBI の実装ログを読んで状況把握 → 続行 |
-| **Phase 0 全完了後の Phase 1a PBI 起票** | `Retrospective Gate (PHASE0-010) の申し送りに従って Phase 1a の PBI を起票して` | Gate PBI の「Phase 1a への申し送り」セクション + 各 Phase 0 PBI の実装ログを読み、Phase 1a PBI をドラフト |
-| **並行 PBI 開始指示** | `PHASE1B-010 と PHASE1C の PBI を並行で進めたい。手順教えて` | **別名でローカルに clone した別作業ツリー**で 2 つ目のセッションを起動（例：`git clone <repo> byte-lark-articles` → その中で `ccd`。初回のみ `gh auth login` と `yarn install`）。同一作業ツリーでの 2 セッション同時作業は禁止（1 ツリー 1 セッション、README §9 並行運用）。両方 `feat/phase-1` に直 commit/push、push 競合は `git pull --rebase` で解消（下記 Q6 / README §10.7） |
-| **公開フェーズ（1d）の main マージ承認** | `Phase 1d で公開、feat/phase-1 を main にマージしていい？` | Phase 1d PBI の受け入れ条件を再確認 → OK なら `git merge --no-ff feat/phase-1` で main へマージ + push。**公開前の 1a / 1b / 1c Gate ではマージしない**（README §10.6 / site-plan §8 Decision #25） |
+| **Gate 通過後の次 Phase PBI 起票** | `Retrospective Gate の申し送りに従って次の Phase の PBI を起票して` | Gate PBI の「次 Phase への申し送り」セクション + 直前 Phase 各 PBI の実装ログを読み、次 Phase PBI をドラフト |
+| **並行 PBI 開始指示** | `記事執筆と PHASE1E の PBI を並行で進めたい。手順教えて` | **別名でローカルに clone した別作業ツリー**で 2 つ目のセッションを起動（例：`git clone <repo> byte-lark-articles` → その中で `ccd`。初回のみ `gh auth login` と `yarn install`）。同一作業ツリーでの 2 セッション同時作業は禁止（1 ツリー 1 セッション、README §9 並行運用）。それぞれ別の短命ブランチを main から切るので push は競合しない。main が進んで PR が古くなったら `git rebase origin/main`（下記 Q6 / README §10.7） |
+| **本番反映（main マージ）の承認** | `この PBI の PR を main にマージしていい？` | PBI の受け入れ条件と CI green を再確認 → OK なら `gh pr merge --merge --delete-branch`。**main へのマージ＝ byte-lark.com への公開**で、マージした時点で本番が入れ替わる（README §10.6） |
 | **計画書のレビュー依頼** | （別セッションでレビュープロンプトを使用） | レビュー結果を別セッションから持ち込み、本セッションで反映 |
 | **その他全部** | （特に何もしない、Claude 任せ） | プロトコル通りに自動進行 |
 
@@ -38,8 +38,8 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 
 - **セッション終了前に必ず一言**：「終了」「中断」「ここまで」のいずれかを言ってから閉じる
 - **GitHub UI 操作**：Cloudflare Pages 接続（PHASE0-008）、リポジトリ設定変更等、Claude が手元で完結できない操作は運営者がダッシュボード操作
-- **main 保護設定**（プロジェクト初期化時 1 回）：GitHub UI の Branch protection rules で main への直接 push を禁止、PR 経由必須に
-- **Cloudflare Pages の Preview Branch Filter 設定**（プロジェクト初期化時 1 回）：CF Pages ダッシュボードで Custom branches に Include `feat/phase-*` を設定（sub-branch は v3.0 で廃止したため Exclude パターンは不要。詳細 README §10.8）
+- **main 保護設定**（設定済み・2026-08-09）：GitHub の ruleset「main protection」で main への直接 push を禁止、PR 必須、必須チェック `quality` / `e2e`（詳細 README §10.9）
+- **Cloudflare の preview ビルド**（設定不要）：ブランチ名を問わず preview が走ることを実測済み（README §10.8）
 
 ### 推奨
 
@@ -75,10 +75,10 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 
 - **対処**：「計画書（site-plan）の §X や PBI の受け入れ条件と乖離している」と指摘、Claude に方針確認させる
 
-### Q6: 並行作業中の `git push` が non-fast-forward で fail する
+### Q6: PR が「このブランチは main より遅れています」で止まる
 
-- **原因**：別セッションが先に `feat/phase-1` へ push しており、手元のブランチが古くなっている（並行作業は別 clone の複数セッションが同一ブランチへ push する運用。README §9 並行運用）
-- **対処**：`git pull --rebase origin feat/phase-1` → conflict あれば手動 resolve（INDEX.md は隣接 PBI 行が同 hunk として競合しやすい）→ `git push origin feat/phase-1`
+- **原因**：作業中に別セッション（または月次ルーチンの PR）が main を進めた。公開後は 1 作業 1 ブランチなので、同じブランチへの多重 push で衝突することはない
+- **対処**：`git fetch origin` → `git rebase origin/main` → conflict あれば手動 resolve（INDEX.md は隣接 PBI 行が同 hunk として競合しやすい）→ `git push --force-with-lease`
 - **詳細**：[docs/pbi/README.md](pbi/README.md) §10.7 参照
 
 ## 5. devcontainer（コンテナ自走環境）の運用
@@ -120,7 +120,7 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 ```bash
 mkdir -p ~/monitor
 curl -sSfL -o ~/monitor/health-check.sh \
-  https://raw.githubusercontent.com/kazuya-tanimoto/byte-lark.com/feat/phase-1/scripts/health-check.sh
+  https://raw.githubusercontent.com/kazuya-tanimoto/byte-lark.com/main/scripts/health-check.sh
 chmod +x ~/monitor/health-check.sh
 ```
 
@@ -146,12 +146,12 @@ bash ~/monitor/health-check.sh --inspect
 
 5. 通知が本当にメールで届くか確かめる。メールを送るのは cron（出力があったときだけ送る）なので、**cron に一時的な項目を足して確かめます**。SSH から手で叩いてもメールは飛びません。
 
-   異常系の実物には branch alias を使います（`noindex` が付くので必ず異常判定になる）。サーバーパネルの「Cron設定」に、本番用とは別にもう 1 つ登録します。
+   異常系の実物には作業ブランチの preview URL を使います（`noindex` が付くので必ず異常判定になる）。サーバーパネルの「Cron設定」に、本番用とは別にもう 1 つ登録します。
 
-   - 実行コマンド（1 行）：
+   - 実行コマンド（1 行。URL は今ある作業ブランチの branch alias に読み替える）：
 
 ```
-STATE_DIR=/home/<アカウント名>/monitor-test /bin/bash /home/<アカウント名>/monitor/health-check.sh --url https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev
+STATE_DIR=/home/<アカウント名>/monitor-test /bin/bash /home/<アカウント名>/monitor/health-check.sh --url https://<ブランチ名>-byte-lark.tanimoto-a49.workers.dev
 ```
 
    - 実行間隔：5 分ごと（分の欄に `*/5`）
@@ -275,3 +275,4 @@ Claude に「月次ネタ出しルーチンの頻度を変えて」「プロン�
 | 2026-08-02 | 並行運用ルール連動（README v3.5）：シーン別表の「並行 PBI 開始」を別名 clone の別作業ツリー前提に更新（同一ツリー 2 セッション禁止、初回 `gh auth login` + `yarn install`）。Q6 の原因記述も別 clone 運用に修正 |
 | 2026-08-09 | §6 サイト監視（health-check.sh）の設置と運用を新設（PHASE1D-007 連動）：Xserver への設置手順、cron 登録、通知が届くかの確かめ方、普段の運用、主な設定項目。通知はメール 1 本、チャット通知も外部の外形監視も入れない（運営者決定）。代わりに「触ったら手で実行して確認」「サーバー移行の案内が来たら cron を確認」の 2 点を明記。関連ドキュメント表に incident-response.md を追加。旧 §6 関連ドキュメント → §7、旧 §7 改訂履歴 → §8 に繰り下げ |
 | 2026-08-09 | §7 依存更新 PR の受け方を新設（PHASE1D-012 連動）：届く 2 種類（まとめて 1 本の minor/patch と個別のメジャー）、週 1 回 Claude に任せる運用、Dependabot の PR を直接マージせず作業ブランチで入れ直す理由、minor/patch とメジャーそれぞれの判断材料、Dependabot が触らないので手で合わせるもの（ui-tests.yml の Playwright コンテナのタグ / package.json の resolutions）。旧 §7 関連ドキュメント → §8、旧 §8 改訂履歴 → §9 に繰り下げ |
+| 2026-08-10 | ブランチ運用の切替を連動反映（README v3.9 / Phase 1d Gate = PHASE1D-009）：シーン別表の「公開フェーズの main マージ承認」を「本番反映（main マージ）の承認」に置き換え（`git merge --no-ff` + 直接 push は main 保護で不可能になっていた）、「並行 PBI 開始」をそれぞれ別の短命ブランチ前提に更新、Phase 0 限定だった起票行を汎用の Gate 通過後の起票に一般化。Q6 を「同一ブランチへの多重 push」から「main が進んで PR が古くなる」形に書き換え。必須チェックリストの main 保護と CF preview を設定済みの実態に更新。health-check.sh の取得 URL を `feat/phase-1` から `main` に変更（統合ブランチを畳んだため） |

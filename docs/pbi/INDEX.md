@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-10（PHASE1D-010 完了）
+最終更新: 2026-08-10（PHASE1D-009 完了＝ Phase 1d Gate 通過）
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -303,7 +303,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-014 | [hero-message-hierarchy](20260809-PHASE1D-014-hero-message-hierarchy.md) | Done |
 | PHASE1D-015 | [post-navigation-usability](20260809-PHASE1D-015-post-navigation-usability.md) | Done |
 | PHASE1D-016 | [contact-confirm-step](20260809-PHASE1D-016-contact-confirm-step.md) | Done |
-| **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
+| **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | **Done** |
 
 ### Phase 1d 推奨着手順序
 
@@ -337,11 +337,24 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 
 ---
 
-## Phase 1e：カテゴリ別一覧（旧 1c）
+## Phase 1e：公開後の運用・改善（site-plan v3.13 Decision #31 で再定義）
 
-PBI は **記事数到達時**（FR-19: 合計 10 件以上）に起票する。
+旧定義は「カテゴリ別一覧（旧 1c）」だったが、公開後の主活動が記事執筆で、次の機能（カテゴリ別一覧）が記事 10 本まで着手できないため、その間の改善に受け皿が無かった。Phase 1d Gate（PHASE1D-009、2026-08-10）で **公開後の運用・改善** に広げ、カテゴリ別一覧はこの Phase 内の 1 PBI に降ろした。
 
-起票時に含めるもの：記事末尾の前後記事リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、`/blog/tech` `/blog/life` が実 URL になる 1e なら仕掛けなしで成立する。
+| ID | タイトル | Status |
+|---|---|---|
+| PHASE1E-001 | 公開後の小さな手入れ（未起票） | NotStarted |
+
+### 起票済み・起票予定
+
+- **PHASE1E-001（次セッションで起票）**：公開後の小さな手入れ 6 件。PHASE1D-009 の棚卸し表で「まとめて PBI 化」と判定した分（運営者決定 2026-08-10）
+  1. `yarn fonts` を `docs/writing-workflow.md` に書く（記事追加のたびに必要。今は CI の `fonts:check` が落ちて初めて気づく）
+  2. `BaseLayout.astro` に `<link rel="alternate" type="application/rss+xml">` を足す
+  3. `scripts/lighthouse-audit.sh` の `BASE` 既定値を本番に変える
+  4. `astro.config.mjs` の sitemap 除外フィルタから存在しない `/sample-highlight/` を外す
+  5. `yarn check`（Biome）の対象に `worker/` `scripts/` `tests/` を足す
+  6. `src/lib/jsonld.ts` のオリジンを `Astro.site` に追随させる
+- **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 3 本
 
 ---
 
@@ -355,6 +368,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-10 | **PHASE1D-009 完了（Done）＝ Phase 1d Gate 通過**：非 Gate PBI 15 件（001〜008 / 010〜016）全 Done 確認 + `yarn build` / `check` / `check:ts` / `test:run` 全成功 + CI green（feat/phase-1 HEAD 96c52da・main 9555d6d とも全 check-run success）+ 本番 11 ページ 200・HSTS あり・noindex なし。Phase 1d 全実装ログと PHASE1C-012 の持ち越し 16 件を棚卸しし（前 Gate 分は 14 件消化 / 持ち越し 1 / 下表送り 1、Phase 1d 発の 21 項目は PBI 化 6 / 持ち越し 7 / 破棄 6 / 1e 移管 1 / 判断待ち 1）、「次 Phase への申し送り」を Gate PBI に記入。**運営者決定 3 件を site-plan Decision #31 として確定**：① 統合ブランチ `feat/phase-1` を畳み main 起点の「1 作業 1 ブランチ → PR」に戻す（未完成サイトを main に載せない遅延マージ = Decision #25 の理由が公開で消えたため。1D-008 で本番が 4 コミット遅れて実機確認を誤りかけたのが実害）② Phase 1e を「カテゴリ別一覧」から「**公開後の運用・改善**」に再定義し、公開直後の小さな手入れ 6 件（PHASE1E-001）から着手。カテゴリ別一覧（FR-19）と前後記事リンクは記事 10 本到達時に同 Phase へ追加起票 ③ **ダークモードはやらないと確定**し申し送り 3 件を破棄（1D-001 で実表示を見て見送りを決めていたが「やらない」と確定しておらず、Gate ごとに同じ判定を繰り返していた。再着手時の出発点は Gate PBI に記録）。計画書との差分 6 件を修正（README §10.1/§10.6 の「1a〜1c を集約」「main マージは一度だけ」が実態＝ 1a〜1d 集約・1d 中 4 回マージとずれ / operation-manual の main マージ手順が保護前の `git merge --no-ff` のまま / site-plan §6.7 自己参照 v3.8 / §7 現在地図 / §12 次アクション）。README を v3.9（§10 全面改訂）、site-plan を v3.13 に改訂し CLAUDE.md・operation-manual も連動。学び：README §10.8 は「CF は `feat/phase-*` だけ preview を作る」と書いていたが、実測では `chore/article-ideas-2026-08`（PR #34）でも preview ビルドが走っており、ブランチ運用を変える判断の前提だったので check-run で確かめてから決めた。次セッションは PHASE1E-001 の起票から |
 | 2026-08-10 | **PHASE1D-010 完了（Done）**：PR #36 で main へマージし（9555d6d）、本番 Lighthouse Performance は **11 ページすべて 91〜100**（100 が 2 / 99 が 7 / 98 が 1 / 91 が 1、FCP は全ページ 1.5〜1.7 秒、TBT 0ms、CLS 0〜0.005）。起票の根拠だった「11 ページ中 9 ページが 59〜82」は解消。最低の 91 は最長記事で、LCP 3363ms の中身はフォントでなく本文中の画像。マージ前に CodeQL が 2 件で落ちたので直した（69897cc）——`scripts/subset-fonts.mjs` の HTML 走査部分で、`</script >` のように空白や属性が付いた閉じタグを取りこぼす正規表現と、実体参照を段階的に置き換えることで戻した結果を次の段が拾って二重に解ける（`&amp;lt;` が `<` になる）順序。実体参照は 1 回の走査でまとめて戻す形にし、`yarn fonts` で収録字・生成物とも差分 0 を確認 |
 | 2026-08-10 | **PHASE1D-010 実装**：フォントを「サイトに出てくる字だけ」の 1 ファミリ 1 ファイルに作り直した（c704316）。フォント転送は 333〜1064KB / 18〜68 ファイル → 298〜338KB / 2〜3 ファイル、HTML も @font-face のインライン約 283KB が消えて 289〜346KB → 12〜70KB。Lighthouse Performance は本番（変更前）56〜99・90 未満 4 ページ → CF preview 89〜100・95 以上 10 ページ、FCP は全ページ 1.8〜9.5s → 0.8〜1.1s、CLS は前後とも 0〜0.006 で不変。道具は `subset-font`（harfbuzz の wasm、fonttools は pypi 到達不可で不採用）、元フォントは google/fonts のコミット固定 + sha256 照合で取得しキャッシュへ置くので通常のビルドと CI はネットワーク非依存。収録字は本文＝ `src/` 走査（組み上がり HTML の全字を含むことを実測）、見出し＝ dist の h1〜h4（1085 字 → 360 字）。記事追加時は `yarn fonts`、回し忘れは CI の `yarn fonts:check` で止まる。レイアウト閉包は切った（元フォントとの差はサブピクセルの 0.2%、切ると 129KB 減）。副産物：塊分割で効かなくなっていた和文の約物の詰めが復活／fontsource 2 パッケージ削除で node_modules 33MB 減／改変版の再配布にあたるため `/credits` に書体の出典と OFL 全文を追加（ページ名・Footer を「アイコン・書体の出典」に変更）。想定外：本番の `_astro/*` が `max-age=0, must-revalidate` で配られており、そのせいで **本文フォント（optional）は実際には使われていない**（preview でも本番でも同じ。変更前から同じ）／`/blog/` だけ 89 で残るが原因はフォントでなく一覧 1 枚目の画像の `loading="lazy"`。**この申し送り 3 件は同日に本 PBI 内で対応、コミットは分けた**：`public/_headers` で `_astro/*` を 1 年 `immutable` に（Cloudflare Workers の静的アセット配信は `_headers` を読む。73c8bef）／`/blog/` 1 枚目のカード画像を `priority` に（`loading="eager"` + `fetchpriority="high"`。8f5c391）／本文フォントの preload は CF preview で計り比べて**採らない**と判断（19786aa を f06af0a で revert）——11 ページ中 10 ページで LCP が 1.5〜2.7 秒悪化（`/` は 940ms → 3201ms・Performance 100 → 92）、258KB を最優先で取りにいくぶん本来の LCP 要素が後ろに押される。本文フォントは `immutable` により 2 ページ目からキャッシュで当たる（回線制限あり・なしとも画素差 19896px で確認）ので、1 ページ目に当てにいかないのが `font-display: optional` の趣旨どおり。結果 CF preview は **11 ページ中 10 ページが 100・記事 1 本が 99**（FCP 858〜1382ms / LCP 858〜1825ms / CLS 0〜0.005）。学び：ローカルの静的サーバーで計る Lighthouse は FCP が 3 秒台まで落ちて CF preview（0.9〜1.4 秒）と乖離するため、差の小さい判断は CF preview で計らないと結論が逆になりうる |
 | 2026-08-10 | **PHASE1D-008 完了（Done）＝公開後の実機確認 + R-01 点火**：R-01 月次記事ネタ出しを claude.ai のルーチン（`trig_01UP6sJ44uiN5tqn9eEv5Gru`、毎月 1 日 9:07 JST、Opus 5）として点火。点火方法は 4 案を比較して「月次ルーチンが `docs/article-backlog.md` に追記する PR を出す」を運営者が採用——判断の軸は「ネタが出ること」より「運営者が気づいて動くところまで届くか」で、GitHub の通知メールという既存の導線に乗るのが決め手（不採用：提案のみ＝見に行かないと気づけない / Xserver cron のリマインドメール＝仕組みは確実だが手間が毎回かかる、PR 不成立時の受け皿として温存 / カレンダー＝実行が運営者頼み）。その場で 1 回実行し push → PR #34 まで通ることを実測、出た 3 案（T13 依存警告の仕分け / T14 速度の点数と実利用者の食い違い / L7 法人化後の名前変更の波及）を main へマージ。運用手順を operation-manual §8 に新設（旧 §8→§9、§9→§10）。**確認の前段で本番が 4 コミット遅れていると判明**：PHASE1D-013〜016 が main 未反映のままで、特に 014 は h1 の高さをスマホで 46 → 74px に変えており Hero の鳥とボタンの位置関係がその上に乗る → PR #35 で `feat/phase-1` を main へマージし本番を最新化してから実機確認。iPhone 実機 4 点（ホーム画面アイコン / Hero スマホ構図 / Skills アイコン 34 件 /「視差効果を減らす」ON で目次ジャンプが即時）とも問題 0 件、1D-015 / 016 も同じ 1 回で確認。PHASE1B-015 申し送りの medium alert は PAT に Code scanning alerts の読み取りを足して API で確認し、全 6 件 fixed / open 0 件。学び：claude.ai のルーチンはアカウントに紐づき永続する（`CronCreate` はセッション内・7 日で失効するので月次運用に使えない）／ルーチンの PR はドラフトで届くので `gh pr ready` が要る／作成時に頼んでいない MCP 接続が既定で付くため `clear_mcp_connections` で外す／「本番で確認」を案内する前に本番が最新かを確かめる／記事 URL は末尾スラッシュへ 307 で飛ぶため `curl -L` が要り、付け忘れて未反映と一度誤認した |

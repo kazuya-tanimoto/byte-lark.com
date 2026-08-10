@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v3.8)
+# PBI フォーマット規約 (v3.9)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-08-09
+最終更新: 2026-08-10
 
 ---
 
@@ -295,9 +295,10 @@ devcontainer はボリューム名が devcontainerId（clone パス由来）で�
 ### 10.1 ブランチ階層
 
 ```
-main                          保護対象。公開フェーズ（1d）で feat/phase-1 を一度だけマージ（Decision #25）
+main                          正本かつ本番。ruleset で保護（§10.9）。公開（2026-08-08）以降はここが起点
+├── <短命ブランチ>            作業ごとに main から切り、PR でマージして削除（§10.3）
 ├── feat/phase-0              Phase 0 ブランチ（完了・main マージ済み）
-├── feat/phase-1              Phase 1a〜1c の作業を集約（直 commit/push、1d まで未マージ）
+├── feat/phase-1              Phase 1a〜1d の作業を集約（公開前の遅延マージ用。1d Gate で役割終了）
 └── archive/vite-react-chakra 旧版退避（Phase 0 開始時に切った）
 ```
 
@@ -305,90 +306,87 @@ main                          保護対象。公開フェーズ（1d）で feat/
 
 | ブランチ | 命名 | 例 |
 |---|---|---|
-| Phase ブランチ | `feat/phase-<phase>` | `feat/phase-0`, `feat/phase-1`（1a〜1c を集約） |
+| 機能・改善 | `feat/<short>` | `feat/blog-category-pages` |
+| 修正 | `fix/<short>` | `fix/rss-alternate` |
+| 雑務・docs | `chore/<short>` | `chore/article-ideas-2026-09` |
 | Archive | `archive/<context>` | `archive/vite-react-chakra` |
-| Hotfix | `fix/<short>` | `fix/typo-readme` |
 
-### 10.3 Phase 開始時（main から分岐する場合）
+公開前に使っていた Phase ブランチ（`feat/phase-<phase>`）は、1 Phase を丸ごと 1 本に集約して main マージを遅らせるための仕組みだった。公開後はその必要がないので、粒度は「1 作業 1 ブランチ」に戻す。
 
-main から新しい Phase ブランチを分岐するのは、**新規 Phase 系列の開始時のみ**（Phase 0、および公開後の 1e 以降）。
+### 10.3 作業開始時（main から分岐）
 
 ```bash
 git checkout main
 git pull origin main
-git checkout -b feat/phase-<phase>
-git push -u origin feat/phase-<phase>
+git checkout -b <type>/<short>
 ```
 
-**公開前の Phase 1a〜1c は分岐しない**：未完成サイト（仮デザイン・サンプル記事・未承認文面）を main に載せない方針（site-plan §8 Decision #25）のため、1a〜1c は統合ブランチ `feat/phase-1` に集約して直 commit/push し、main へのマージは公開フェーズ（1d）まで遅延する（§10.6）。1b / 1c 開始時に新ブランチを切らず、`feat/phase-1` をそのまま継続する（ブランチ名は sub-phase でなく Phase 1 全体を表す。PBI ID は PHASE1B-NNN 等 sub-phase 単位で振る）。
+- PBI 1 件につき 1 ブランチが基本。docs だけの小さな修正も同じ形（main は直接 push できない）
+- ブランチ名は CF の branch alias URL になる（`/` と英数字以外は `-` に置換）。preview ビルドはブランチ名を問わず走る（PR #34 の `chore/article-ideas-2026-08` で実測）ので、§7 の CF preview 検証はどの名前でも成立する
+- 並行作業は別名 clone の別作業ツリーで（§9 並行運用）。同一作業ツリーの 2 セッション同時作業は禁止
 
-### 10.4 PBI 着手時（直 commit/push）
+### 10.4 PBI 着手時
 
-Phase 1a 以降は sub-branch・worktree を使わず、統合ブランチ feat/phase-1 を直接チェックアウトして作業し commit / push する。
+§10.3 で切ったブランチで作業し、commit / push する（sub-branch・worktree は使わない）。
 
 ```bash
-# セッション開始: feat/phase-1 がチェックアウトされた状態で Claude Code を起動
 git add <files>
-git commit -m "feat(pbi): PHASE1A-NNN <desc>"
-git push origin feat/phase-1
+git commit -m "feat(pbi): PHASE1E-NNN <desc>"
+git push -u origin <type>/<short>
 ```
 
-**PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md 等）は本節対象外。Phase ブランチに直 commit してよい。
+**PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md 等）も同じ形。main には直接 push できない。
 
 ### 10.5 PBI 完了時
 
-§10.4 と同じブランチで commit / push する。マージ工程は不要（feat/phase-1 が統合ブランチ兼作業ブランチ）。
+受け入れ条件を確認して Done 化し、§10.6 の手順で main へマージする。
 
 ```bash
-# PBI 完了: 受け入れ条件確認 → STATUS: Done → INDEX.md 同期 → commit → push
-git add docs/pbi/PHASE1A-NNN-xxx.md docs/pbi/INDEX.md <実装ファイル群>
-git commit -m "feat(pbi): PHASE1A-NNN <desc>"
-git push origin feat/phase-1
+# 受け入れ条件確認 → Status: Done → INDEX.md 同期 → commit → push
+git add docs/pbi/PHASE1E-NNN-xxx.md docs/pbi/INDEX.md <実装ファイル群>
+git commit -m "feat(pbi): PHASE1E-NNN <desc>"
+git push origin <type>/<short>
 ```
 
-### 10.6 main へのマージ（公開フェーズに集約）
-
-main へのマージは**公開フェーズ（Phase 1d）で一度だけ**実施する（site-plan §8 Decision #25）。公開前の Gate（1a / 1b / 1c）ではマージせず、`feat/phase-1` に作業を積み上げる。未完成サイトを main 経由で本番公開・クロールさせないため。マージ手順は Phase 1d PBI（`draft-phase1d-domain-launch.md`）の受け入れ条件として実施：
+### 10.6 main へのマージ
 
 main は ruleset で保護されており **直接 push できない**（§10.9）。PR 経由でマージする：
 
 ```bash
-# 作業ブランチを最新にして push（必須チェック quality / e2e を通すため）
-git checkout feat/phase-1
-git push origin feat/phase-1
+# 作業ブランチを push（必須チェック quality / e2e を通すため）
+git push origin <type>/<short>
 
 # PR を作成 → CI green を確認 → マージ
-gh pr create --base main --head feat/phase-1 --title "<title>" --body "<body>"
-gh pr merge --merge   # merge commit を残す（--no-ff 相当）
-
-# feat/phase-1 も remote に保持（後で全体構造を見られる）
+gh pr create --base main --head <type>/<short> --title "<title>" --body "<body>"
+gh pr merge --merge --delete-branch   # merge commit を残す（--no-ff 相当）
 ```
 
 - `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash scripts/ci-status.sh` で確認してから実行する
 - コンテナから実行する場合、PAT に Pull requests: Read and write が必要（PHASE1D-011 で付与済み）
+- **main へのマージ＝ byte-lark.com への公開**。マージした時点で本番が入れ替わる
 
-- **Phase 0 は本モデル制定前**に完了したため `feat/phase-0` を main へマージ済み（PHASE0-010、`6a38240`）。これは歴史的経緯で、現行の遅延マージ方針とは別。
-- 公開後の 1e 以降は §10.3 の通常フロー（main から分岐 → 完了時マージ）に復帰する。
+#### 公開前の遅延マージ（2026-08-08 まで、歴史）
+
+公開前は未完成サイト（仮デザイン・サンプル記事・未承認文面）を main 経由でクロールさせないため、Phase 1a〜1d を統合ブランチ `feat/phase-1` に集約し、main マージを公開フェーズまで遅らせていた（site-plan §8 Decision #25）。実績は 1d 中の 4 回（`01239b9` 公開 / `2fee28f` プライバシーポリシー / `733662e` PR #35 / `9555d6d` PR #36）で、公開後は期中も随時マージしていた。この方式は 1d Gate（PHASE1D-009）で役割を終え、§10.3 の「1 作業 1 ブランチ」に戻した（Decision #31）。Phase 0 は本モデル制定前に完了しており `feat/phase-0` を main へマージ済み（PHASE0-010、`6a38240`）。
 
 ### 10.7 並行作業の競合対処
 
-並行作業は別 clone の別作業ツリーで行う（§9 並行運用。同一作業ツリーの 2 セッション同時作業は、push 以前にファイルの黙った上書きが起きるため禁止）。複数セッションが同時に feat/phase-1 に push すると non-fast-forward で後発が fail する：
+並行作業は別 clone の別作業ツリーで行う（§9 並行運用。同一作業ツリーの 2 セッション同時作業は、push 以前にファイルの黙った上書きが起きるため禁止）。
+
+1 作業 1 ブランチにしたことで、同じブランチへ複数セッションが push する形（統合ブランチ時代の non-fast-forward）は起きない。代わりに **main が進んで PR が古くなる**形で競合する：
 
 ```bash
-git pull --rebase origin feat/phase-1
-# conflict（INDEX.md 等）あれば手動 resolve → git rebase --continue
-git push origin feat/phase-1
+git fetch origin
+git rebase origin/main
+# conflict（INDEX.md 等。隣接 PBI 行が同 hunk として競合しやすい）あれば手動 resolve → git rebase --continue
+git push --force-with-lease origin <type>/<short>
 ```
 
-### 10.8 Cloudflare Pages の Preview Branch Filter（必須設定）
+### 10.8 Cloudflare の preview ビルド
 
-Phase ブランチのみ preview deployment が生成される（sub-branch なし）。**運営者は CF Pages のダッシュボードで Custom branches 設定を行う**：
+preview ビルドは**ブランチ名を問わず走る**（PR #34 の `chore/article-ideas-2026-08` の check-run `Workers Builds: byte-lark` が success であることを 2026-08-10 に実測）。branch alias URL はブランチ名の `/` と英数字以外を `-` に置換したもので、`https://<alias>-byte-lark.tanimoto-a49.workers.dev` になる。§7 の CF preview 検証はどのブランチ名でも成立する。
 
-- **Include Preview branches**：`feat/phase-*`（Phase ブランチのみ preview）
-
-または **Disable all preview deployments** 一択。
-
-設定詳細は [Cloudflare Pages: Branch deployment controls](https://developers.cloudflare.com/pages/configuration/branch-build-controls/) 参照。
+Deploy Hooks は Worker の Settings → Builds に設定済み（PHASE1C-012。push 取りこぼし時に URL 一発で再ビルドする保険。URL は 1Password 保管、repo・PBI・ログには書かない）。
 
 ### 10.9 main の保護
 
@@ -399,21 +397,13 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 - Require a pull request before merging（Required approvals は 0。一人体制のため自分の PR を自分でマージする）
 - Require status checks to pass：`quality` と `e2e`。`Workers Builds: byte-lark` は入れない（Cloudflare 側の取りこぼしでマージが止まるため。PHASE1C-008 実装ログ参照）
 - Block force pushes / Restrict deletions / Restrict creations
-- Phase ブランチ（`feat/phase-*`）は保護なし、直接 push OK（sub-branch は v3.0 で廃止）
+- main 以外のブランチは保護なし、直接 push OK
 
 緊急時に保護を外す必要が出たら、Settings → Rules → Rulesets → main protection の Enforcement status を Disabled にする（運営者操作。ruleset 自体の変更には Administration 権限が必要で、コンテナの PAT には**意図的に付与していない**——保護を書き換えられる権限を自走環境に渡すと歯止めが意味を失うため）。
 
-### 10.10 Hotfix（main に直接修正したい場合）
+### 10.10 Hotfix
 
-```bash
-git checkout main
-git pull origin main
-git checkout -b fix/<short-name>
-# 修正・commit
-git push -u origin fix/<short-name>
-# PR 作成 → main へマージ
-# 進行中の Phase ブランチは：git pull origin main を merge or rebase で取り込む
-```
+§10.3〜§10.6 の通常フローと同じ（公開後は全作業が main 起点の短命ブランチのため、Hotfix だけの特別な手順はない）。進行中の別ブランチがあれば `git rebase origin/main` で取り込む。
 
 ## 11. 改訂履歴
 
@@ -439,3 +429,4 @@ git push -u origin fix/<short-name>
 | 2026-08-02 | v3.6 | §5.1 に Dropped（取り下げ）状態を新設：スコープ変更で不要になった NotStarted の PBI に適用。Decision Log の記録を必須とし、ファイルは削除せず INDEX と同期。初出の適用は初期記事セット縮小（site-plan v3.11 Decision #29）による PHASE1B-010 / 011 / 013 |
 | 2026-08-07 | v3.7 | §5.4 に例外を追加（Phase 1c Gate = PHASE1C-012 での判断）：記事の公開・main マージ・DNS / ドメイン切替など**外から見える状態を変えるコミット**を打ったセッションは、その PBI の Done 化まで同一セッションで終える。終えられないならコミット自体を次セッションへ回す。§5.2（Status と INDEX の同一コミット同期）の守備範囲外で、§5.4 が正規に認める「InProgress のまま終える」の中で事故が起きていた（PHASE1B-009：記事は公開済みなのに PBI が InProgress のまま残存）。Phase 1d は該当コミットが並ぶため先行して規約化 |
 | 2026-08-09 | v3.8 | §10.9 main の保護を実態に更新（PHASE1D-011）：ruleset「main protection」を設定し、bypass list を空にして運営者本人の端末からも devcontainer からも直接 push を禁止（コンテナの PAT は本人として動くため、管理者を例外に含めると PAT もすり抜ける。放置自走セッションが本番へ直接デプロイする経路を塞ぐのが目的）。必須チェックは `quality` / `e2e` のみで `Workers Builds` は含めない。ruleset 変更に必要な Administration 権限は PAT に意図的に付与しない旨と、緊急時に Enforcement を Disabled にする逃げ道も明記。連動して §10.6 の main マージ手順を直接 push から PR 経由（`gh pr create` → CI green 確認 → `gh pr merge`）へ書き換え。従来 §10.9 は「直接 push 禁止」と書いていたが実際には未設定（`protected: false`）で、記述と現実がずれていた |
+| 2026-08-10 | v3.9 | §10 ブランチ運用を公開後の形に切替（Phase 1d Gate = PHASE1D-009、site-plan Decision #31）：統合ブランチ `feat/phase-1` を畳み、**1 作業 1 ブランチ**（main から短命ブランチ → PR → マージ → 削除）に戻した。未完成サイトを main に載せないための遅延マージ（Decision #25）は公開でその理由が消えたため。§10.1 図 / §10.2 命名規則（Phase ブランチ → `feat` `fix` `chore` の作業種別）/ §10.3〜§10.6 の手順 / §10.7 競合対処（同一ブランチへの多重 push → main が進んで PR が古くなる形）/ §10.10 Hotfix（通常フローに統合）を更新。あわせて §10.1 / §10.6 の「1a〜1c を集約」「main マージは一度だけ」が実態（1a〜1d を集約・1d 中に 4 回マージ）とずれていたのを是正し、遅延マージ方式は歴史として §10.6 末尾に残した。§10.8 は「CF Pages の Preview Branch Filter で `feat/phase-*` のみ preview」と書いていたが、実測では**ブランチ名を問わず preview ビルドが走る**（PR #34 の `chore/article-ideas-2026-08`）ため実態に書き換え。CLAUDE.md（ブランチ運用 / branch alias URL / Sandbox 制約）と operation-manual.md も連動更新 |
