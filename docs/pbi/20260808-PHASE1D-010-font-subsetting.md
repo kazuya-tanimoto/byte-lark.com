@@ -19,7 +19,7 @@ Started: 2026-08-10
 - [x] 見出し（Zen Kaku Gothic New 500/700）と本文（Noto Sans JP Variable）の両方を対象に、ページあたりフォント転送量を数百 KB 級以下へ削減 → 実測 333〜1064KB / 18〜68 ファイル → 298〜338KB / 2〜3 ファイル
 - [x] 表示退行なし：全ページ × desktop / mobile で字形・ウェイトの欠け（豆腐・フォールバック混在）がないことを確認。動的に増える文字（今後の記事）への追従方法をビルドフローとして確立 → 収録全字を元フォントと突き合わせて差分 0px（閉包あり）を確認。追従は `yarn fonts` + CI の `yarn fonts:check`
 - [x] CLS 退行なし：≈0 を維持（PHASE1C-007 の optional / swap 方針は原則維持、変更する場合は CLS 実測を添えて判断）→ 全 11 ページで変更前後とも 0〜0.006、読み込み戦略は変更なし
-- [ ] 本番ドメインで Lighthouse Performance 90+ を全主要ページで確認（`bash scripts/lighthouse-audit.sh https://byte-lark.com performance`、運営者ターミナル実行）→ **main マージ待ち**。CF branch alias では 11 ページ中 10 ページが 95〜100、`/blog/` のみ 89（原因はフォントではなく一覧 1 枚目の画像が `loading="lazy"`）
+- [ ] 本番ドメインで Lighthouse Performance 90+ を全主要ページで確認（`bash scripts/lighthouse-audit.sh https://byte-lark.com performance`、運営者ターミナル実行）→ **main マージ待ち**。CF branch alias では 11 ページ中 10 ページが 100、記事 1 本が 99
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
 - [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
 - [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh`）（CLAUDE.md §7）
@@ -66,8 +66,29 @@ Started: 2026-08-10
 - 本番の `_astro/*` は `cache-control: public, max-age=0, must-revalidate` で配られていた（内容ハッシュ付きの名前なのに毎回再検証している）。上の「本文フォントが使われない」の直接の原因もこれ。→ 申し送り
 - `/blog/` だけ 89 で残った。原因はフォントではなく **一覧 1 枚目のカード画像が `loading="lazy"`** で LCP を遅らせている（`lcp-lazy-loaded` が fail、FCP は 1.0s と良好）。→ 申し送り
 
-申し送り（運営者判断が要る 3 件）
+申し送り 3 件 → 同日に本 PBI 内で対応（下の追記を参照）
 
-1. `_astro/*` のキャッシュ指定を `immutable` にする（`public/_headers` 追加）。ページを移るたびの再検証が消え、本文フォントも 2 ページ目から効くようになる
-2. 本文フォントを実際に使わせるか。1 ファイルになったので `<link rel="preload">` が現実的になった（PHASE1C-007 で preload を見送った理由「多数の woff2 になる」が解消）。ただし 258KB が最優先で走るため LCP との兼ね合いは要実測
-3. `/blog/` の 1 枚目のカード画像を `loading="eager"` にする（本 PBI の範囲外だが、90+ の最後の 1 ページがこれで止まっている）
+1. `_astro/*` のキャッシュ指定を `immutable` にする → 対応（`public/_headers`）
+2. 本文フォントを preload するか → 実測のうえ**採らない**
+3. `/blog/` の 1 枚目のカード画像を `loading="eager"` にする → 対応
+
+### 2026-08-10 追記（申し送り 3 件の対応。本番計測のみ main マージ待ち）
+
+やったこと
+
+- `_astro/*` を 1 年 `immutable` で配るようにした（`public/_headers`）。Cloudflare Workers の静的アセット配信は `_headers` を読む（[公式 docs](https://developers.cloudflare.com/workers/static-assets/headers/)）。`public/` に置いたものはそのまま `dist/` に入り、`wrangler.jsonc` の `assets.directory` から読まれる。CF preview で画像・フォントとも `public, max-age=31536000, immutable` が返ること、HTML は従来どおり再検証されること、`_headers` 自体は配信されない（404）ことを確認
+- `/blog/` 一覧の 1 枚目のカード画像を先に取りにいくようにした。BlogCard に `priority` を足し、一覧の 1 件目にだけ渡す（Astro の `Image` が `loading="eager"` + `decoding="sync"` + `fetchpriority="high"` に展開する）。Home は一覧が下のほうにあるので付けない
+
+判断したこと
+
+- **本文フォントの preload は採らない**。CF preview に一度上げて同じ条件で計り比べたところ、11 ページ中 10 ページで LCP が 1.5〜2.7 秒悪化した（`/` は 940ms → 3201ms・Performance 100 → 92、`/blog/` は 1532ms → 3660ms・100 → 89）。258KB を最優先で取りにいくぶん、本来の LCP 要素が後ろに押される。`font-display: optional`（初回描画を絶対に遅らせない指定）の趣旨どおり、取りにいかないのが正しい。計測用のコミット（19786aa）は revert 済み（f06af0a）
+
+学び・つまずき
+
+- 本文フォントが「初回訪問の 1 ページ目だけ当たらない」のは仕様どおりで、直すべき欠陥ではなかった。`immutable` を入れたあとは **2 ページ目からキャッシュで当たる**（CF preview で回線制限あり・なしとも、本文 woff2 を落とせないようにした描画との画素差 19896px を確認）。1 ページ目に当てる手段は preload しかなく（preload なしは画素差 0px）、それは上記のとおり LCP を壊す
+- ローカル（node の静的サーバー）で計った Lighthouse は FCP が 3 秒台まで落ちて CF preview（0.9〜1.4 秒）と乖離する。preload の是非のように差が小さい判断は、CF preview で計らないと結論が逆になりうる
+
+結果（CF preview、11 ページ）
+
+- Performance：89〜100（`/blog/` が 89）→ **10 ページが 100、記事 1 本が 99**
+- FCP 858〜1382ms / LCP 858〜1825ms / TBT 0ms / CLS 0〜0.005
