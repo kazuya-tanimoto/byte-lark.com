@@ -23,7 +23,7 @@ Status: NotStarted
 
 - [ ] **`yarn fonts` を `docs/writing-workflow.md` に書く**。記事を足すと収録字が増えるためフォントの作り直しが要る（`yarn fonts` = build → 生成 → build）。回し忘れは CI の `yarn fonts:check` が止めるが、執筆手順に書かれていないので今は CI が落ちて初めて気づく。手順のどの段階で回すか（記事を書き終えて `draft: false` にする直前）まで明記する
 - [ ] **`src/layouts/BaseLayout.astro` に `<link rel="alternate" type="application/rss+xml">` を足す**。`/rss.xml` は配信されているのに HTML から辿れず、購読ツールが自動で見つけられない。`title` は `og:site_name` と揃える。全ページに入る（RSS は 1 本しかないため）
-- [ ] **`scripts/lighthouse-audit.sh` の `BASE` 既定値を本番（`https://byte-lark.com`）に変える**。現状は preview の workers.dev で、引数なしで叩くと本番でないものを測る（PHASE1D-004 で実際に踏んだ）。preview を測りたいときは従来どおり第 1 引数で渡す
+- [x] **`scripts/lighthouse-audit.sh` の `BASE` 既定値を本番（`https://byte-lark.com`）に変える**：対応済み（2026-08-10、`fix/ci-branch-triggers` で先行実施。既定値が削除済みブランチ `feat-phase-1` の alias を指して壊れていたため、CI トリガー修正と同じ PR で処置した）
 - [ ] **`yarn check`（Biome）の対象に `worker/` `scripts/` `tests/` を足す**。現状は `src` だけで、Worker 実装・ビルドスクリプト・E2E が素通りしている。`fix` も同じ範囲に揃える。既存ファイルに指摘が出る場合は、この PBI の中で直すか `biome.json` で除外するかを判断して記録する
 - [ ] **`astro.config.mjs` の sitemap 除外フィルタから `/sample-highlight/` を外す**。そのページは PHASE1A-020 で削除済みで、存在しないパスを除外し続けている。除外が 1 件も要らなくなるなら `filter` ごと落とす
 - [ ] **`src/lib/jsonld.ts` のオリジンを `Astro.site` に追随させる**。`https://byte-lark.com` がベタ書きで、値そのものは正しいが設定と二重管理になっている。`AUTHOR.url` / `PUBLISHER.url` の 2 か所

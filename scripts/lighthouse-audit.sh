@@ -2,8 +2,8 @@
 # Lighthouse 監査（運営者ターミナル実行用。サンドボックス内は Chrome 起動不可 → PHASE1A-020 参照）
 #
 # 使い方:
-#   bash scripts/lighthouse-audit.sh                                  # branch alias を accessibility のみ
-#   bash scripts/lighthouse-audit.sh https://byte-lark.com            # 本番を accessibility のみ
+#   bash scripts/lighthouse-audit.sh                                  # 本番を accessibility のみ
+#   bash scripts/lighthouse-audit.sh https://<branch-alias>.workers.dev   # preview を accessibility のみ
 #   bash scripts/lighthouse-audit.sh https://byte-lark.com performance,accessibility,best-practices,seo
 #
 # devcontainer 内から回すときは Chrome のサンドボックスが使えないので、
@@ -17,7 +17,7 @@
 # lighthouse を一時ディレクトリへ npm install して直接実行するため、この罠が発生しない。
 set -u
 
-BASE="${1:-https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev}"
+BASE="${1:-https://byte-lark.com}"
 CATEGORIES="${2:-accessibility}"
 # 公開記事も監査対象に含める（PHASE1C-011）。記事ページは一覧と DOM 構造が違い、
 # 見出し階層・コントラストの当たり方も別物になるため、静的 8 ページだけでは裏取りにならない
