@@ -1,0 +1,10 @@
+# Cloudflare Workers の静的アセット配信に読ませるヘッダ指定（PHASE1D-010）。
+# public/ に置いたものはそのまま dist/ に入り、wrangler の assets.directory から読まれる。
+# https://developers.cloudflare.com/workers/static-assets/headers/
+
+# ビルド成果物（CSS / JS / 画像 / フォント）はファイル名に内容のハッシュが入る。
+# 中身が変われば名前も変わるので、ブラウザに 1 年そのまま使わせてよい。
+# 既定は max-age=0, must-revalidate で、ページを移るたびに再検証の往復が入っていた。
+# これが本文フォント（font-display: optional）が画面に出ない直接の原因でもある。
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
