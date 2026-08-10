@@ -1,6 +1,7 @@
 # 訪問者は問い合わせの内容を送信前に確認してから送れる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-10
 
 ## 誰が
 - 訪問者（PC / スマホ）

@@ -302,7 +302,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-013 | [postlaunch-small-fixes](20260809-PHASE1D-013-postlaunch-small-fixes.md) | Done |
 | PHASE1D-014 | [hero-message-hierarchy](20260809-PHASE1D-014-hero-message-hierarchy.md) | Done |
 | PHASE1D-015 | [post-navigation-usability](20260809-PHASE1D-015-post-navigation-usability.md) | Done |
-| PHASE1D-016 | [contact-confirm-step](20260809-PHASE1D-016-contact-confirm-step.md) | NotStarted |
+| PHASE1D-016 | [contact-confirm-step](20260809-PHASE1D-016-contact-confirm-step.md) | InProgress |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
 ### Phase 1d 推奨着手順序
