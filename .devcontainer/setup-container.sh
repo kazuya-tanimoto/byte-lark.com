@@ -28,6 +28,11 @@ sync_claude_config() {
     cp "$HOST_CLAUDE/statusline.sh" "$CONFIG_DIR/statusline.sh"
     chmod +x "$CONFIG_DIR/statusline.sh"
   fi
+  # output style も毎起動コピーで最新化（settings.json の outputStyle が参照する）
+  if [ -d "$HOST_CLAUDE/output-styles" ]; then
+    mkdir -p "$CONFIG_DIR/output-styles"
+    cp "$HOST_CLAUDE/output-styles/"*.md "$CONFIG_DIR/output-styles/"
+  fi
 }
 
 setup_git() {
