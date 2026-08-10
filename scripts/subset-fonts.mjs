@@ -76,22 +76,34 @@ function walk(dir, keep) {
   return out;
 }
 
+const NAMED_ENTITIES = {
+  nbsp: " ",
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+};
+
 /** HTML からタグ・script・style を落として、画面に出る文字だけを残す */
 function textOf(html) {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, h) =>
-      String.fromCodePoint(Number.parseInt(h, 16)),
-    );
+  return (
+    html
+      // 閉じタグは `</script >` のように空白や属性が付いていても閉じ扱いになる
+      .replace(/<script\b[\s\S]*?<\/script[^>]*>/gi, " ")
+      .replace(/<style\b[\s\S]*?<\/style[^>]*>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      // 実体参照は 1 回の走査でまとめて戻す。段階的に置き換えると、戻した結果を
+      // 次の段が拾って二重に解けてしまう（`&amp;lt;` が `<` になる等）
+      .replace(
+        /&(?:#(\d+)|#x([0-9a-f]+)|([a-z]+));/gi,
+        (match, dec, hex, name) => {
+          if (dec) return String.fromCodePoint(Number(dec));
+          if (hex) return String.fromCodePoint(Number.parseInt(hex, 16));
+          return NAMED_ENTITIES[name.toLowerCase()] ?? match;
+        },
+      )
+  );
 }
 
 /** 制御文字を除いて Set に足す */
