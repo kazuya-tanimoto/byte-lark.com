@@ -153,6 +153,13 @@ const inputClass =
 // Button が透明の 1px 枠（focus 時の輪郭に使う）を持つぶんの相殺
 const buttonClass = "h-auto px-6 py-[calc(0.625rem-1px)]";
 
+// 画面が入れ替わるときの頭出しは、動かさず一息で合わせる。
+// global.css の scroll-behavior: smooth を明示的に上書きしている——ページ内リンクや
+// 「先頭へ戻る」（PHASE1D-015）で滑らせるのは、同じ画面の中をどこからどこへ動いたか
+// 伝えるため。ここは画面そのものが入れ替わるので伝える連続性がなく、実測でスマホ 927px
+// （画面の高さ 844px より長い）／PC 462px を流すぶん、ちらつくだけになる
+const SWAP_SCROLL = { block: "start", behavior: "instant" } as const;
+
 interface TextFieldProps {
   id: string;
   name: string;
@@ -237,7 +244,7 @@ function ConfirmPanel({ name, email, message, headingRef }: ConfirmPanelProps) {
         この内容で送信します
       </h3>
       <p className="mt-2 text-sm text-muted-foreground">
-        直したいところがあれば「入力へ戻る」で書き直せます。
+        直したいところがあれば「修正する」で直せます。
       </p>
       <dl className="mt-4 space-y-4">
         <div>
@@ -299,7 +306,8 @@ export function ContactForm() {
     // 焦点を先に、preventScroll 付きで移す。素の focus() はパネルが見える最小限だけ
     // 動かそうとして、直後の scrollTo と引っぱり合いになる（実測でスマホが 91px 残った）
     successRef.current?.focus({ preventScroll: true });
-    window.scrollTo({ top: 0 });
+    // 完了も画面の入れ替わりなので、確認 ⇄ 入力と同じく動かさずに合わせる
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [state]);
 
   // 画面が入力 ⇄ 確認で入れ替わったことを、目と焦点の両方に伝える。
@@ -314,10 +322,8 @@ export function ContactForm() {
     (confirming ? headingRef : nameRef).current?.focus({ preventScroll: true });
     // 頭出しはフォーム単体ではなく見出しを含む節ごと（節の scroll-mt-20 が効く）。
     // フォームの上端に合わせると「お問い合わせフォーム」が sticky ヘッダーに隠れる。
-    // behavior は渡さない（global.css の scroll-behavior に従わせ、視差効果を
-    // 減らす設定では即時ジャンプになる。PostLayout の目次リンクと同じ考え方）
     const form = formRef.current;
-    (form?.closest("section") ?? form)?.scrollIntoView({ block: "start" });
+    (form?.closest("section") ?? form)?.scrollIntoView(SWAP_SCROLL);
   }, [step]);
 
   const goConfirm = () => {
@@ -485,7 +491,7 @@ export function ContactForm() {
             onClick={backToInput}
             disabled={state === "submitting"}
           >
-            入力へ戻る
+            修正する
           </Button>
           <Button
             type="submit"

@@ -131,7 +131,7 @@ test.describe("Contact フォーム", () => {
       "typo@example.com",
     );
 
-    await page.getByRole("button", { name: "入力へ戻る" }).click();
+    await page.getByRole("button", { name: "修正する" }).click();
 
     await expect(page.getByLabel("お名前")).toHaveValue("テスト");
     await expect(page.getByLabel("メールアドレス")).toHaveValue(
@@ -249,7 +249,7 @@ test.describe("Contact フォーム", () => {
     await expect(page.getByText("送信が完了しました。")).toBeHidden();
 
     // 失敗しても書いた内容は入力へ戻せば残っている
-    await page.getByRole("button", { name: "入力へ戻る" }).click();
+    await page.getByRole("button", { name: "修正する" }).click();
     await expect(page.getByLabel("本文")).toHaveValue("本文テスト");
   });
 
