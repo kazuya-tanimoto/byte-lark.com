@@ -241,11 +241,8 @@ function ConfirmPanel({ name, email, message, headingRef }: ConfirmPanelProps) {
         tabIndex={-1}
         className="font-semibold text-foreground outline-none"
       >
-        この内容で送信します
+        以下の内容で送信します
       </h3>
-      <p className="mt-2 text-sm text-muted-foreground">
-        直したいところがあれば「修正する」で直せます。
-      </p>
       <dl className="mt-4 space-y-4">
         <div>
           <dt className="text-sm font-medium text-muted-foreground">お名前</dt>

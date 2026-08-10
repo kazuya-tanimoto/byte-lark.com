@@ -82,7 +82,7 @@ test.describe("Contact フォーム", () => {
     await page.getByRole("button", { name: "確認する" }).click();
 
     // 確認画面：送る内容が読み取り専用で出ており、入力欄は無い
-    await expect(page.getByText("この内容で送信します")).toBeVisible();
+    await expect(page.getByText("以下の内容で送信します")).toBeVisible();
     await expect(page.getByTestId("confirm-name")).toHaveText("谷本 一弥");
     await expect(page.getByTestId("confirm-email")).toHaveText(
       "test@example.com",
@@ -167,7 +167,7 @@ test.describe("Contact フォーム", () => {
       page.getByText("メールアドレスを入力してください。"),
     ).toBeVisible();
     await expect(page.getByText("本文を入力してください。")).toBeVisible();
-    await expect(page.getByText("この内容で送信します")).toBeHidden();
+    await expect(page.getByText("以下の内容で送信します")).toBeHidden();
     await expect(page.getByText("送信が完了しました。")).toBeHidden();
     expect(posted).toBe(false);
   });
@@ -189,7 +189,7 @@ test.describe("Contact フォーム", () => {
     await expect(
       page.getByText("メールアドレスの形式が正しくありません。"),
     ).toBeVisible();
-    await expect(page.getByText("この内容で送信します")).toBeHidden();
+    await expect(page.getByText("以下の内容で送信します")).toBeHidden();
   });
 
   test("Turnstile 失敗時：トークン未取得だと送信が拒否される", async ({
@@ -216,7 +216,7 @@ test.describe("Contact フォーム", () => {
     await expect(
       page.getByText("認証を完了してください", { exact: false }),
     ).toBeVisible();
-    await expect(page.getByText("この内容で送信します")).toBeVisible();
+    await expect(page.getByText("以下の内容で送信します")).toBeVisible();
     await expect(page.getByText("送信が完了しました。")).toBeHidden();
     expect(posted).toBe(false);
   });
@@ -304,7 +304,7 @@ test.describe("Contact フォーム", () => {
       message: "本文テスト",
     });
     await page.getByRole("button", { name: "確認する" }).click();
-    await expect(page.getByText("この内容で送信します")).toBeVisible();
+    await expect(page.getByText("以下の内容で送信します")).toBeVisible();
 
     const results = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
