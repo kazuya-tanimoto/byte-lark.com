@@ -27,9 +27,10 @@ const posts = (
           <CategoryFilter client:load />
         </div>
         <ul class="mt-6 grid gap-4 sm:grid-cols-2">
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <li data-blog-item data-category={post.data.category}>
-              <BlogCard post={post} headingLevel="h2" />
+              {/* 1 枚目は最初から見えている位置＝LCP。後回しにすると表示が遅れる */}
+              <BlogCard post={post} headingLevel="h2" priority={index === 0} />
             </li>
           ))}
         </ul>
