@@ -1,9 +1,9 @@
 name: Quality Checks
 on:
   push:
-    branches: [main, "feat/*"]
+    branches: [main, "feat/*", "fix/*", "chore/*"]
   pull_request:
-    branches: [main, "feat/*"]
+    branches: [main]
 
 # GITHUB_TOKEN を読み取り専用に固定
 permissions:
