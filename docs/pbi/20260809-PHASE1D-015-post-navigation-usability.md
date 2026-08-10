@@ -1,7 +1,8 @@
 # 訪問者は記事の途中から先頭へ戻れて、目次を使っても一覧へ戻れなくならない
 
-Status: InProgress
+Status: Done
 Started: 2026-08-09
+Completed: 2026-08-10
 
 ## 誰が
 - 訪問者（PC / スマホ）
@@ -22,8 +23,8 @@ Started: 2026-08-09
 - [x] 上記 2 点の E2E をブログ記事のテストに追加する
 - [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
 - [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `bash scripts/ci-status.sh` で UI Tests / Quality Checks が success）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `bash scripts/ci-status.sh` で UI Tests / Quality Checks が success）（CLAUDE.md §7）
 
 ## 技術メモ
 - 想定セッション数: 1
@@ -61,5 +62,14 @@ Started: 2026-08-09
 - 目次が無い記事の分岐は普通に見ているだけでは通らないので、`addInitScript` で目次要素を消してから読み込ませて確認した（ページ先頭へ戻り、JS エラーなし）
 - フッターとの重なり判定は「フッターが画面に入った瞬間」だと早すぎる。ボタンの実寸ぶん `rootMargin` で切り上げないと、まだ重なっていないのに引っ込む
 
+検証（CF preview / CI、c1e37ba）
+- CF preview（`https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev/blog/building-this-blog-with-claude-code/`）：iPhone 14 幅で読み始め非表示 → スクロールで表示 → 押すと目次が上端 80px（scrollY 478）→ 最下部で非表示。1440px 幅では出ない。目次 4 回クリックで `history.length` 増分 0、ハッシュは `#reactで自作`、現在地ハイライトも追従、戻る 1 回で `/blog/`
+- CI：`Quality Checks` success / `UI Tests` success（36 passed、Playwright 実行は 19.8s）、`Workers Builds: byte-lark` success
+
 想定外
-- なし
+- CI の `UI Tests` が 11 分かかった（従来 1分43秒）。テスト自体は 19.8 秒で、コンテナ準備・依存導入・スクショ取得側の遅さ。テストの問題と早合点しかけた
+- `scripts/ci-status.sh` は無認証 API（60 回/時）なので、30 秒間隔のポーリングを 2 本走らせて 403 に落とした。待ち合わせは認証付きの `gh` で行うか、間隔を空ける
+
+### 2026-08-10
+
+- CF preview を運営者が実機確認し、指摘なしで Done 化。「先頭へ戻る」の戻り先を目次の位置にしている点（ページ最上部ではない）も含めて了承

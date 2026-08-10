@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-09
+最終更新: 2026-08-10
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -301,7 +301,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-012 | [dependency-update-policy](20260809-PHASE1D-012-dependency-update-policy.md) | Done |
 | PHASE1D-013 | [postlaunch-small-fixes](20260809-PHASE1D-013-postlaunch-small-fixes.md) | Done |
 | PHASE1D-014 | [hero-message-hierarchy](20260809-PHASE1D-014-hero-message-hierarchy.md) | Done |
-| PHASE1D-015 | [post-navigation-usability](20260809-PHASE1D-015-post-navigation-usability.md) | InProgress |
+| PHASE1D-015 | [post-navigation-usability](20260809-PHASE1D-015-post-navigation-usability.md) | Done |
 | PHASE1D-016 | [contact-confirm-step](20260809-PHASE1D-016-contact-confirm-step.md) | NotStarted |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
@@ -355,6 +355,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-10 | **PHASE1D-015 完了（Done）**：記事内の移動 2 件を実装（c1e37ba）。目次のリンクをクリックで横取りし、自分でスクロールして `history.replaceState` でハッシュだけ差し替え——4 回クリックして `history.length` 増分 0、戻る 1 回で `/blog/` へ戻れることを実測（従来は 1 クリックごとに履歴 1 件）。移動先の見出しへ `focus({ preventScroll: true })` でキーボード・読み上げの現在地も運ぶ。xl 未満に「先頭へ戻る」ボタン（44px 円・右下）を追加し、戻り先は目次の位置（無ければページ先頭）、表示判定は IntersectionObserver 2 本で「戻り先が画面上へ抜けたら出す / フッターと重なる位置まで来たら引っ込める」。共有 URL 直開き・視差効果を減らす設定（即時ジャンプ）・追従目次の現在地ハイライト維持も実測。E2E 3 本追加で計 36 件 green。想定外：CI の UI Tests が 11 分かかったがテスト実行自体は 19.8 秒（コンテナ準備・スクショ取得側の遅さ）／`ci-status.sh` は無認証 API のため 30 秒間隔のポーリング 2 本で 403 に落ちる（待ち合わせは `gh` を使う） |
 | 2026-08-09 | **PHASE1D-015 スコープ変更（前後記事リンクを Phase 1e へ移管）**：着手時の運営者判断。前後リンクは訪問者が見ている一覧の並びと一致していないと使いづらいだけになるが、今の絞り込みは `CategoryFilter.tsx` の `useState` のみで URL にも保存領域にも残らず、追従させるには一覧の絞り込みを URL に持たせ・カードのリンクに印を付け・記事側で 3 通りの前後を出し分ける仕掛けが要る。Phase 1e（FR-19）で `/blog/tech` `/blog/life` が実 URL になれば同じことが仕掛けなしで成立し、公開記事 3 本（tech 2 / life 1）では出るリンクもほとんどない → 今回は作らず 1e 起票時に含める。015 は「上へ戻る」「目次の履歴」の 2 件に縮小 |
 | 2026-08-09 | **PHASE1D-014 完了（Done）**：Hero の情報の順番を整理（830da45）。3 巡の案出し（並べ方 3 案 → キャッチの強さ 4 段階 → 名前主役 2 案、比較は実画面スクショ埋め込みの 1 ページに集約）を経て、当初方針の「キャッチを最大に」は不採用——案A（キャッチ 42px 太字）を一度 push した後、汎用的な約束の文を最大サイズで張ると空虚に見えると運営者確認で差し戻し。名前主役のまま声量だけ落とす E1 に確定（名前 42 → 32px 太字 + 英字名、キャッチ 20px を直下に。h1 高さ desktop 55 → 87px / mobile 46 → 74px）。期中追加で説明文の「す。」だけが 2 行目に落ちる折り返しを修正（実測 1 行 673px に対し `max-w-2xl` = 672px と 1px 不足 → `max-w-3xl` + 狭幅の保険に文節折り `word-break: auto-phrase`）。学び：案出しは効く軸を先に見立てて振る／コピーの強度と表示サイズは釣り合わせる／大きさ・強さに関わる変更は選定後も本実装 preview の運営者確認を挟んでから Done に進める |
 | 2026-08-09 | **PHASE1D-013 完了（Done）**：公開後実機確認で挙がった小さい不具合 4 件を修正（6b66252）。About の見出し「屋号の由来」→「名前の由来」（会社概要の商号表記との食い違い解消。法人化記事の「屋号」は過去の事実として据え置き）／`BlogCard.astro` の `<article>` に `h-full` を足して `/blog/` 1 行目のカード高さを 339・366px → 366・366px に揃えた（トップは格子の直接の子なので前後で変化なし）／送信ボタンを 78×32 → 106×45px にして Hero（132×45px）と高さを一致／送信完了時に完了パネルへ焦点を移してページ先頭へ戻す（スマホ scrollY 497 → 0）。想定外なし・既存 E2E 33 件は無改修で全通過。学び：Hero のボタンは起票時記載の「約 40px」でなく実測 45px（タイポスケールで `text-sm` の行間が既定より大きい）→ 高さを px 固定せず Hero と同じ余白指定で追従させ、shadcn Button の透明 1px 枠ぶんを縦余白から相殺／素の `focus()` は直後の `scrollTo` と引っぱり合ってスマホで 91px 残る（`preventScroll: true` で解消）／CF は反映直後に同じ URL で古い版を返すことがあり、1 回の確認で断定できない |
