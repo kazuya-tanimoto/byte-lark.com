@@ -19,11 +19,13 @@ jobs:
     # 公式 Playwright コンテナ（ブラウザ + OS 依存を内蔵）。
     # これにより runtime の `playwright install --with-deps`（apt 実行）が不要になり、
     # Ubuntu 24.04(noble) 上で apt がハングしてジョブが timeout する問題を回避する。
-    # タグは @playwright/test の解決バージョン(1.59.1)と一致させること。
+    # タグは @playwright/test の解決バージョン(1.62.1)と一致させること。
+    # Dependabot は package.json しか更新しないのでこのタグは手で合わせる。
+    # ずれるとブラウザ実体が無く e2e が全件 fail する（PHASE1D-012 で実際に発生）。
     timeout-minutes: 20
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.59.1-noble
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,4 +47,34 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
+          retention-days: 30
+      # 見た目の確認用。devcontainer 内のセッションは firewall の都合で
+      # ブラウザを取得できないことがあり、そのときの唯一の実ブラウザ確認手段になる
+      # （PHASE1D-012。取り寄せは gh run download <run-id> -n screenshots）
+      - name: Capture screenshots
+        run: |
+          # Astro 7 は preview サーバーの情報を .astro/preview.json に書き、直前の e2e
+          # （Playwright の webServer が preview を起動）が残したロックを生きたサーバーと
+          # みなして起動を拒否する。--force は案内文にあるだけで実装されていない
+          # （astro/dist/cli/preview/index.js は無条件に checkExistingServer を見る）
+          rm -f .astro/preview.json
+          yarn preview --host 127.0.0.1 --port 4321 &
+          node -e '
+            const deadline = Date.now() + 60000;
+            (async () => {
+              while (Date.now() < deadline) {
+                try { if ((await fetch("http://127.0.0.1:4321/")).ok) process.exit(0); } catch {}
+                await new Promise((r) => setTimeout(r, 500));
+              }
+              console.error("preview サーバーが 60 秒以内に立ち上がらなかった");
+              process.exit(1);
+            })();
+          '
+          BASE_URL=http://127.0.0.1:4321 node scripts/capture-screenshots.mjs
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: screenshots/
           retention-days: 30

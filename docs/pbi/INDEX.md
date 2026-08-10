@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-08
+最終更新: 2026-08-10
 
 本ファイルは全 PBI の状態を一元管理するインデックスです。各 PBI ファイルの Status と必ず同期させてください（同期ルールは `docs/pbi/README.md` §5 参照）。
 
@@ -284,7 +284,7 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 
 ## Phase 1d：公開（site-plan v3.9 で新設）
 
-2026-08-08 起票（[draft-phase1d-domain-launch.md](draft-phase1d-domain-launch.md) の正式化 + PHASE1C-012 申し送りの引き受け + 法人化対応の追加。対応表はドラフト冒頭）：
+2026-08-08 起票（[draft-phase1d-domain-launch.md](draft-phase1d-domain-launch.md) の正式化 + PHASE1C-012 申し送りの引き受け + 法人化対応の追加。対応表はドラフト冒頭）。期中の追加起票：PHASE1D-011（公開時に判明した Dependabot アラート 61 件、2026-08-08）、PHASE1D-012（011 の設定修正で届いた更新 PR 5 本、2026-08-09）、PHASE1D-013〜016（運営者の公開後実機確認 PC + スマホで挙がった指摘 8 件、2026-08-09）：
 
 | ID | タイトル | Status |
 |---|---|---|
@@ -294,10 +294,15 @@ PHASE1C-012 (Phase 1c Retrospective Gate ← Phase 1d 移行前の必須ゲー�
 | PHASE1D-004 | [main-merge-custom-domain](20260808-PHASE1D-004-main-merge-custom-domain.md) | Done |
 | PHASE1D-005 | [www-redirect](20260808-PHASE1D-005-www-redirect.md) | Done |
 | PHASE1D-006 | [analytics-search-console](20260808-PHASE1D-006-analytics-search-console.md) | Done |
-| PHASE1D-007 | [monitoring-ignition](20260808-PHASE1D-007-monitoring-ignition.md) | NotStarted |
+| PHASE1D-007 | [monitoring-ignition](20260808-PHASE1D-007-monitoring-ignition.md) | Done |
 | PHASE1D-008 | [postlaunch-checks-routines](20260808-PHASE1D-008-postlaunch-checks-routines.md) | NotStarted |
 | PHASE1D-010 | [font-subsetting](20260808-PHASE1D-010-font-subsetting.md) | NotStarted |
-| PHASE1D-011 | [dependabot-triage](20260808-PHASE1D-011-dependabot-triage.md) | InProgress |
+| PHASE1D-011 | [dependabot-triage](20260808-PHASE1D-011-dependabot-triage.md) | Done |
+| PHASE1D-012 | [dependency-update-policy](20260809-PHASE1D-012-dependency-update-policy.md) | Done |
+| PHASE1D-013 | [postlaunch-small-fixes](20260809-PHASE1D-013-postlaunch-small-fixes.md) | Done |
+| PHASE1D-014 | [hero-message-hierarchy](20260809-PHASE1D-014-hero-message-hierarchy.md) | Done |
+| PHASE1D-015 | [post-navigation-usability](20260809-PHASE1D-015-post-navigation-usability.md) | Done |
+| PHASE1D-016 | [contact-confirm-step](20260809-PHASE1D-016-contact-confirm-step.md) | Done |
 | **PHASE1D-009** | [**retrospective-gate**](20260808-PHASE1D-009-retrospective-gate.md) **(Gate)** | NotStarted |
 
 ### Phase 1d 推奨着手順序
@@ -315,17 +320,28 @@ PHASE1D-004 (main マージ + カスタムドメイン接続 + 本番 Lighthouse
 ├─ PHASE1D-007 (監視点火) ← 004 後、相互に並行可
 ├─ PHASE1D-010 (フォントサブセット化 ← 004 の本番計測で Perf 未達 9 ページ、実施時期は運営者判断)
 └─ PHASE1D-011 (Dependabot アラート仕分け ← 005 の push 時に判明した 61 件。006 と並行可)
+     ↓
+   PHASE1D-012 (依存更新 PR の処置と受け方の決定 ← 011 の設定修正で届いた #29〜#33。Gate より先)
+  ↓
+┌─ PHASE1D-013 (公開後実機確認で出た小さい不具合 4 件 ← 原因特定済み、方針判断が要らない分)
+├─ PHASE1D-014 (Hero の見せ方 ← 案を出して運営者が選ぶ)
+├─ PHASE1D-015 (記事の回遊性: 上へ戻る / 目次の履歴。前後リンクは 1e へ)   ← 相互に並行可、Gate より先
+└─ PHASE1D-016 (お問い合わせフォームの確認画面)
   ↓
 PHASE1D-008 (公開後実機確認 + R-01 routine 点火)
   ↓
 PHASE1D-009 (Phase 1d Retrospective Gate)
 ```
 
+013〜016 は 2026-08-09 の運営者による公開後実機確認（PC + スマホ）で挙がった指摘の受け皿。008 の着手前に運営者が先行して見たものなので、008 の対象からは外してよい。
+
 ---
 
 ## Phase 1e：カテゴリ別一覧（旧 1c）
 
 PBI は **記事数到達時**（FR-19: 合計 10 件以上）に起票する。
+
+起票時に含めるもの：記事末尾の前後記事リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、`/blog/tech` `/blog/life` が実 URL になる 1e なら仕掛けなしで成立する。
 
 ---
 
@@ -339,6 +355,14 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-10 | **PHASE1D-016 完了（Done）**：お問い合わせを入力 → 確認 → 送信の 2 画面にした（6d28b26 / e960e90）。値は React の state が持つので戻ったときの保持は追加の仕組み不要。Turnstile は入力・確認で同じ DOM ノードに描き続ける方式を採用——公式 docs でトークンの寿命は 300 秒・`refresh-expired` の既定は `auto` なので、描き直さないほうが確認画面で止まっている間も自動更新が効く。自動更新の待ち時間に当たってトークンが無いまま送信を押した場合は、黙って失敗させず `reset()` して案内を出す（文面は未認証／期限切れで出し分け）。期中に既存の欠陥も 1 件直した：Worker はメール送信より前に siteverify を済ませるため、502 のあと同じトークンで押し直すと 403（使用済み）で落ちる → 送信失敗時もウィジェットを reset する。画面切り替えはフォーム単体でなく見出しを含む節ごと頭出し（`contact.astro` に `scroll-mt-20`）。E2E 6 → 9 本（確認経由の正常系／戻って直して送る／確認画面で失効して取り直す／確認画面の axe）、計 39 件 green。想定外：Biome の複雑度上限 15 に当たり `useTurnstile` フック / `TextField` / `ConfirmPanel` に分割／コンテナから `challenges.cloudflare.com` へ到達できずスクショは同寸法のスタブ枠で代替（PHASE1C-008 と同じ制約）。**Done 後に運営者指摘 3 件で作り直し（b3c68ae / 13182ea）**：戻りボタンは「入力へ戻る」→「修正する」（訪問者に示していない画面名を前提にしていた。定番は「戻る」か「修正する」で、最初に推した「書き直す」は実フォームでまず見ない文言だった）／画面切り替えのスクロールを一息に（実測でスマホ 927px = 画面の高さ 844px より長い距離を滑らせていた。scroll イベント 16〜20 回 → 1 回、行き先は不変。送信完了の先頭戻りも同様に揃えた）／確認画面の見出しを「以下の内容で送信します」にし、直し方を説明する一文は削除 |
+| 2026-08-10 | **PHASE1D-015 完了（Done）**：記事内の移動 2 件を実装（c1e37ba）。目次のリンクをクリックで横取りし、自分でスクロールして `history.replaceState` でハッシュだけ差し替え——4 回クリックして `history.length` 増分 0、戻る 1 回で `/blog/` へ戻れることを実測（従来は 1 クリックごとに履歴 1 件）。移動先の見出しへ `focus({ preventScroll: true })` でキーボード・読み上げの現在地も運ぶ。xl 未満に「先頭へ戻る」ボタン（44px 円・右下）を追加し、戻り先は目次の位置（無ければページ先頭）、表示判定は IntersectionObserver 2 本で「戻り先が画面上へ抜けたら出す / フッターと重なる位置まで来たら引っ込める」。共有 URL 直開き・視差効果を減らす設定（即時ジャンプ）・追従目次の現在地ハイライト維持も実測。E2E 3 本追加で計 36 件 green。想定外：CI の UI Tests が 11 分かかったがテスト実行自体は 19.8 秒（コンテナ準備・スクショ取得側の遅さ）／`ci-status.sh` は無認証 API のため 30 秒間隔のポーリング 2 本で 403 に落ちる（待ち合わせは `gh` を使う） |
+| 2026-08-09 | **PHASE1D-015 スコープ変更（前後記事リンクを Phase 1e へ移管）**：着手時の運営者判断。前後リンクは訪問者が見ている一覧の並びと一致していないと使いづらいだけになるが、今の絞り込みは `CategoryFilter.tsx` の `useState` のみで URL にも保存領域にも残らず、追従させるには一覧の絞り込みを URL に持たせ・カードのリンクに印を付け・記事側で 3 通りの前後を出し分ける仕掛けが要る。Phase 1e（FR-19）で `/blog/tech` `/blog/life` が実 URL になれば同じことが仕掛けなしで成立し、公開記事 3 本（tech 2 / life 1）では出るリンクもほとんどない → 今回は作らず 1e 起票時に含める。015 は「上へ戻る」「目次の履歴」の 2 件に縮小 |
+| 2026-08-09 | **PHASE1D-014 完了（Done）**：Hero の情報の順番を整理（830da45）。3 巡の案出し（並べ方 3 案 → キャッチの強さ 4 段階 → 名前主役 2 案、比較は実画面スクショ埋め込みの 1 ページに集約）を経て、当初方針の「キャッチを最大に」は不採用——案A（キャッチ 42px 太字）を一度 push した後、汎用的な約束の文を最大サイズで張ると空虚に見えると運営者確認で差し戻し。名前主役のまま声量だけ落とす E1 に確定（名前 42 → 32px 太字 + 英字名、キャッチ 20px を直下に。h1 高さ desktop 55 → 87px / mobile 46 → 74px）。期中追加で説明文の「す。」だけが 2 行目に落ちる折り返しを修正（実測 1 行 673px に対し `max-w-2xl` = 672px と 1px 不足 → `max-w-3xl` + 狭幅の保険に文節折り `word-break: auto-phrase`）。学び：案出しは効く軸を先に見立てて振る／コピーの強度と表示サイズは釣り合わせる／大きさ・強さに関わる変更は選定後も本実装 preview の運営者確認を挟んでから Done に進める |
+| 2026-08-09 | **PHASE1D-013 完了（Done）**：公開後実機確認で挙がった小さい不具合 4 件を修正（6b66252）。About の見出し「屋号の由来」→「名前の由来」（会社概要の商号表記との食い違い解消。法人化記事の「屋号」は過去の事実として据え置き）／`BlogCard.astro` の `<article>` に `h-full` を足して `/blog/` 1 行目のカード高さを 339・366px → 366・366px に揃えた（トップは格子の直接の子なので前後で変化なし）／送信ボタンを 78×32 → 106×45px にして Hero（132×45px）と高さを一致／送信完了時に完了パネルへ焦点を移してページ先頭へ戻す（スマホ scrollY 497 → 0）。想定外なし・既存 E2E 33 件は無改修で全通過。学び：Hero のボタンは起票時記載の「約 40px」でなく実測 45px（タイポスケールで `text-sm` の行間が既定より大きい）→ 高さを px 固定せず Hero と同じ余白指定で追従させ、shadcn Button の透明 1px 枠ぶんを縦余白から相殺／素の `focus()` は直後の `scrollTo` と引っぱり合ってスマホで 91px 残る（`preventScroll: true` で解消）／CF は反映直後に同じ URL で古い版を返すことがあり、1 回の確認で断定できない |
+| 2026-08-09 | **PHASE1D-007 完了（Done）＝監視の点火**：`scripts/health-check.sh` を新規実装（HTTP 200 / 改ざんカナリア 2 種 / 配信ヘッダ / TLS 残日数の 4 点、2 回連続の異常で通知・復旧通知あり、`--inspect` と `--test-notify` の確認モード付き）。Xserver に設置して 10 分間隔の cron を登録し、本番 apex で 4 項目とも通過（TLS 残 89 日）。メール到達は一時 cron（branch alias 対象）で実測し、1 回目無発報・2 回目着信としきい値の効きまで確認。**本番ヘッダの実測でセキュリティヘッダが 1 つも無いと判明**（計画書に要件の記載なし＝未検討項目）→ 運営者判断で HSTS のみ即時有効化（`max-age=15552000` / includeSubDomains なし / preload なし）し、監視の必須ヘッダにも追加。**GitHub の Secret scanning / Push protection が両方 disabled だったため ON にした**（設定画面にトグルが出ず、`gh api` の `security_and_analysis` で実状を確認 → PATCH で有効化。「public なら常時有効」という私の推測は誤りだった）。通知は**メール単線**で確定し Slack も UptimeRobot も不採用——スクリプトの消失・破損は cron のエラーメールで露見して静かには止まらず、静かに止まるのは cron 項目を人が消した場合だけ、という整理（冗長性なしを承知の選択、運営者指摘で「Slack は配送の二重化であって検知の二重化ではない」と訂正した経緯を PBI に記録）。人為以外の唯一の経路としてサーバー移行時の cron 確認を incident-response.md §7 に追加。operation-manual.md §6 を新設（旧 §6→§7、§7→§8） |
+| 2026-08-09 | **PHASE1D-012 起票（依存更新 PR の処置と受け方の決定）**：PHASE1D-011 で `.github/dependabot.yml` の不正キーを取り除いた結果、通常のバージョン更新が初めて機能し PR 5 本（#29 minor+patch 17 件まとめ / #30 @astrojs/react 6 / #31 @astrojs/mdx 7 / #32 jsdom 30 / #33 astro 7.1.6）が一度に届いた。011 の申し送り 2 件（Astro 6→7 メジャー更新 / 更新 PR の受け方）の受け皿として起票。#33 は 011 で「到達不能」として dismiss した astro 3 件の根本解消にあたる。あわせて旧スタック時代の Cloudflare 自動設定 PR #27（2026-05-08 起票、`vite.config.ts` 対象で現構成に非適用）をクローズ |
+| 2026-08-09 | **PHASE1D-011 完了（Done）**：Dependabot アラート 61 件を全件仕分けし **open 0 件**（fixed 194 / dismissed 4）に到達。57 件は範囲内の更新で解消（`yarn up -R` で hono 4.13.1 / ip-address 10.4.0 / qs 6.15.3 / tar 7.5.22 / undici 7.29.0・6.28.0 / js-yaml 4.3.1 ほか、直接依存は @astrojs/rss 4.0.19 / shadcn 4.16.2）、範囲外の 3 件は `resolutions` で解消（sharp 0.35.3 / esbuild 0.28.1 / yaml-language-server の yaml 2.9.0）。critical（node-tar の DoS）は macOS 専用 `fsevents` → `node-gyp` 経由で runtime 非露出だったが範囲内に修正版があり更新で消した。残り 4 件は `not_used` で理由付き dismiss（astro 3 件は View Transitions 未使用・spread 属性 0 件で到達不能、@hono/node-server は Windows 限定かつ修正版が親の範囲外）。**根本原因を特定**：GitHub の走査対象は既定ブランチのみで、main には 2026-08-08 まで旧スタックの lockfile が乗っていたため Astro 構成の依存が一度も走査されていなかった + 手元の CI にも audit 工程が無かった → `quality.yml` に `yarn npm audit --severity high --environment production` を追加（運営者決定）。`.github/dependabot.yml` の不正キー 3 つ（`security-updates-only` / `auto-merge` / `require-tests`）を削除し `groups` を追加、旧スタック時代の Dependabot PR 9 本をクローズ。想定外：**shadcn は開発用 CLI でなく `@import "shadcn/tailwind.css"` 経由で本番 CSS にも入っていた**（4.16.2 の shimmer / scroll-fade の土台で未使用 CSS が 899B 増 → 寄与 0B を実測し運営者判断で import を削除）／PAT の権限が 3 回不足（Dependabot alerts / Workflows / Pull requests）／設定修正の直後に Dependabot がバージョン更新 PR 5 本（#29〜#33）を作成し `groups` が 17 件を 1 本にまとめることを実地確認。出力は更新前と全ファイルバイト単位で一致（`diff -rq` で 0 差分）、main マージ（7f31b94）後の本番 11 ページ 200 / CI 全 green。申し送り：Astro 6→7 メジャー更新（PR #33 が受け皿）／PR #29〜#33 の受け方の方針／README §10.9 の main 保護が実際には未設定（`protected: false`）で記述とずれている |
 | 2026-08-08 | **PHASE1D-011 起票（Dependabot アラート仕分け）**：PHASE1D-005 の push 時に判明した Dependabot アラート 61 件（critical 1 / high 16）の全件仕分け・解消を独立 PBI 化。PHASE1D-007 が持つのは通知の有効化確認で、既存アラートの処置は本 PBI が担当（相互参照を PBI 本文に明記）。SSG + Workers 構成での露出区分（runtime / build / dev）を付けて記録し、依存更新は devcontainer または運営者ターミナルで実施（母艦 sandbox はレジストリ DNS 不可）。006 と並行可 |
 | 2026-08-08 | **PHASE1D-006 完了（Done）**：アクセス解析と検索登録を開通。CF Web Analytics はアカウント直下（`?to=/:account/web-analytics`）に `byte-lark.com` を登録して数字が出る状態に（Visits 44 / PV 52、beacon 識別子は登録前後で同一＝コード変更・再デプロイ不要。ドメイン内の Analytics → Web analytics は Observatory の RUM 欄で別物）。Search Console はドメイン プロパティを DNS 認証で登録：Google が出す Cloudflare 自動連携は使わず（メール系レコードを抱える DNS に外部の書き込み権限を常設しないため）手動 TXT を追加、公開 DNS 2 系統で反映と SPF 無傷を実測。サイトマップは URL 全体で送信し「成功しました」。OGP はタグ・画像を実測（既定画像 1200×630、記事は個別カバー webp 200）、X の公式 validator は廃止済みのため実施不可・Facebook デバッガーは運営者判断でスキップ → **受け取り側の描画確認は 009 Gate へ申し送り**。実ユーザー計測は LCP P75 620ms・CWV 3 指標 Good で、004 の Lighthouse 判定（Perf 59〜82）と食い違い → PHASE1D-010 の実施判断材料に追加 |
 | 2026-08-08 | **PHASE1D-005 完了（Done）**：www.byte-lark.com を apex へ 301 一本化。CF の www CNAME（→ Netlify）を撤去し AAAA `100::` Proxied + Redirect Rule（テンプレート「Redirect from WWW to root」+ Preserve query string、301）。curl 実測 5 通り合格（http は Always Use HTTPS との 2 段 301、クエリ保持確認）。旧 Netlify サイトは運営者決定により削除（byte-lark.netlify.app が 404 化を確認、アカウント自体も削除予定）。あわせて運営者が feat/phase-1 を main へマージ（2fee28f、check-runs 全 success）し、プライバシーポリシー改定が本番反映＝ 004 の申し送り解消。push 時に判明した Dependabot アラート 61 件（critical 1 / high 16、main に lockfile が乗って初走査）は要仕分け・未対応 |

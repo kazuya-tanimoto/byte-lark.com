@@ -1,6 +1,6 @@
 # 運用マニュアル（運営者向け）
 
-最終更新: 2026-07-19
+最終更新: 2026-08-09
 
 本ファイルは byte-lark.com プロジェクトの**運営者（人間ユーザー）向け運用マニュアル**です。Claude Code との多セッション運用において、運営者が「何を / いつ / どう言えばいいか」をまとめます。
 
@@ -100,7 +100,131 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 - PAT は fine-grained（この repo 限定 / Contents read+write / 無期限運用）。GitHub の fine-grained PAT 一覧で last used を時々確認し、使わなくなったら失効させる
 - コンテナから母艦の設定（`~/dotfiles`、`~/.claude` 等）への書き戻しは禁止。グローバル CLAUDE.md は read-only mount からのコピー持ち込みのみ、コンテナ内の Claude 設定は volume 内に閉じる
 
-## 6. 関連ドキュメント
+## 6. サイト監視（health-check.sh）の設置と運用
+
+本番サイトが落ちていないか・書き換えられていないかを Xserver の cron から定期的に見に行き、**異常のときだけ**メールで知らせる仕組み（PHASE1D-007 で導入。なぜこの形なのかは `docs/incident-response.md` §2）。スクリプトの実体はリポジトリの `scripts/health-check.sh`。通知はメール 1 本で、チャット通知や外部の外形監視は足していません（理由は incident-response.md §2）。
+
+見ているのは 4 つです。
+
+- HTTP ステータスが 200 か（落ちていないか）
+- 決めた文字列がページに残っているか（書き換えられていないか。既定は `<title>byte-lark.com</title>` と `合同会社バイトラーク`）
+- 配信ヘッダが想定どおりか（`noindex` が付いていないこと、HSTS が外れていないこと）
+- TLS 証明書の残日数（既定は 14 日を切ったら異常）
+
+1 回の失敗では鳴らしません。**2 回続けて異常**になったときだけ通知します（一時的な回線の揺れで起こされないため）。直ったときは「復旧」の通知が 1 回だけ飛びます。
+
+### 設置手順（Xserver、初回だけ）
+
+1. SSH でログインし、置き場所を作ってスクリプトを取ってくる：
+
+```bash
+mkdir -p ~/monitor
+curl -sSfL -o ~/monitor/health-check.sh \
+  https://raw.githubusercontent.com/kazuya-tanimoto/byte-lark.com/feat/phase-1/scripts/health-check.sh
+chmod +x ~/monitor/health-check.sh
+```
+
+2. 設定ファイルを作る（監視先を明示しておくだけ。既定値と同じなので省いても動きます）：
+
+```bash
+cat > ~/.byte-lark-monitor.env <<'EOF'
+MONITOR_URL="https://byte-lark.com"
+EOF
+chmod 600 ~/.byte-lark-monitor.env
+```
+
+3. 手で 1 回動かして、観測値が想定どおりか見る（この `--inspect` は状態も通知も触らない、ただの確認モード）：
+
+```bash
+bash ~/monitor/health-check.sh --inspect
+```
+
+4. サーバーパネルの「Cron設定」で登録する。
+   - 実行コマンド：`/bin/bash /home/<アカウント名>/monitor/health-check.sh`
+   - 実行間隔：10 分ごと（分の欄に `*/10`、他は `*`）
+   - 通知先メールアドレス：受け取りたいアドレス（cron は**出力があったときだけ**メールを送る。このスクリプトは正常時に何も出力しないので、平常時のメールはゼロ）
+
+5. 通知が本当にメールで届くか確かめる。メールを送るのは cron（出力があったときだけ送る）なので、**cron に一時的な項目を足して確かめます**。SSH から手で叩いてもメールは飛びません。
+
+   異常系の実物には branch alias を使います（`noindex` が付くので必ず異常判定になる）。サーバーパネルの「Cron設定」に、本番用とは別にもう 1 つ登録します。
+
+   - 実行コマンド（1 行）：
+
+```
+STATE_DIR=/home/<アカウント名>/monitor-test /bin/bash /home/<アカウント名>/monitor/health-check.sh --url https://feat-phase-1-byte-lark.tanimoto-a49.workers.dev
+```
+
+   - 実行間隔：5 分ごと（分の欄に `*/5`）
+
+   1 回目は無出力なのでメールは来ません。**2 回目（約 10 分後）に異常の内訳がメールで届けば正常**です。しきい値が効いていることも同時に確認できます。届いたらこの cron 項目を削除し、`rm -rf ~/monitor-test` で後始末します。
+
+   手元で出力の形だけ先に見たいときは、SSH から同じコマンドを 2 回叩けば同じ内容が画面に出ます。
+
+### 外部の死活監視は入れていません
+
+UptimeRobot のような外部サービスは使っていません。監視が止まる原因のほとんど（スクリプトを消す・壊す）は cron がエラーをメールで送るので気づけますし、静かに止まるのは cron の項目そのものを消したときだけだからです。詳しい理屈は incident-response.md §2 にあります。
+
+そのぶん、次の 2 つだけ守ってください。
+
+- スクリプトや cron を触ったら、必ず一度手で実行して壊れていないことを確かめる
+- Xserver からサーバー移行の案内が来たら、移行後に cron 設定が残っているか見る
+
+### 普段の運用
+
+- 平常時は何も届きません。届いたら異常です。読み方と初動は `docs/incident-response.md` §3 以降。
+- スクリプトや cron を触ったら、**必ず一度手で実行**して壊れていないことを確認します（この構成では監視自身の死活を別サービスで見張らない代わりに、これだけは守る。理由は incident-response.md §2）。
+- サイトの文言を大きく変えてカナリア文字列が消える場合は、`~/.byte-lark-monitor.env` に `CANARIES=("新しい文字列")` を書いて更新します。書き換えないと誤報が出ます。
+- 実行の履歴は `~/.byte-lark-monitor/health-check.log` に 1 行ずつ残ります。
+
+### 主な設定項目
+
+設定ファイル `~/.byte-lark-monitor.env` に書けるもの（すべて任意、書かなければ既定値）。
+
+- `MONITOR_URL`：監視先。既定 `https://byte-lark.com`
+- `PATHS`：確認するパス。既定 `("/")`。リダイレクトは追わないので末尾スラッシュまで正確に書く
+- `CANARIES`：残っているべき文字列の配列
+- `REQUIRE_HEADERS` / `FORBID_HEADERS`：`("ヘッダ名=部分文字列")` の配列。既定は `content-type=text/html` と `strict-transport-security=max-age` を必須、`x-robots-tag=noindex` を禁止
+- `TLS_MIN_DAYS`：証明書の残日数のしきい値。既定 14
+- `FAIL_THRESHOLD`：何回連続の異常で通知するか。既定 2
+- `MAIL_TO`：`mail` コマンドで直接送りたいときだけ設定。空なら cron のメール設定に任せる（Xserver ではこちらが基本）
+- `SLACK_WEBHOOK_URL`：Slack 等の Incoming Webhook。現在は未使用（空）。将来チャット通知を足したくなったらここに URL を書く。**URL は秘密情報**なのでこのファイルの外には出さない
+
+## 7. 依存更新 PR の受け方
+
+`.github/dependabot.yml` の設定で、毎週 Dependabot が更新の提案を PR として送ってきます。内訳は 2 種類です。
+
+- まとめて 1 本：バージョンの上 1 桁が変わらない更新（minor / patch）。何十件でも 1 本にまとまります
+- 個別に 1 本ずつ：上 1 桁が変わる更新（メジャー）。壊れる可能性があるので分けて届きます
+
+### 誰がいつ見るか
+
+運営者は届いた PR を自分で読む必要はありません。週 1 回程度、作業セッションの冒頭に Claude へ「Dependabot の PR を見て」と言えば足ります。急ぐのはセキュリティのアラートが出たときだけで、それは別経路（GitHub のアラート通知）で届きます。
+
+### Dependabot の PR は直接マージしない
+
+Dependabot は main を見て PR を作りますが、作業は統合ブランチの上で進んでいて、ロックファイルが main と食い違っています。そのため PR のブランチをそのままマージせず、同じ内容を作業ブランチ側で `yarn up` して入れ直します。入れ直した内容が main に届いた時点で、Dependabot は自分の PR を役目済みとして自動で閉じます。
+
+### まとめて 1 本（minor / patch）の判断
+
+一括で入れて、次の全部が通れば取り込みます。
+
+- `yarn check` / `yarn check:ts` / `yarn test:run` / `yarn build` / `yarn npm audit --severity high --environment production`
+- 更新前の `dist/` を別の場所に取っておき、更新後と比べる。ファイル名のハッシュを除いて、ページの見えるテキストが変わっていないこと
+
+### 個別 1 本（メジャー）の判断
+
+1 本ずつ、公式の変更履歴を読んでから入れます。判断の材料は次の 3 点です。
+
+- 出力が変わるか（HTML の詰め方、Markdown の処理系、CSS の生成規則など）
+- 他のパッケージを道連れにするか。たとえば Astro 7 は `@astrojs/mdx` 7 と `@astrojs/react` 6 と同時でないと入らない
+- `package.json` の `resolutions`（脆弱性を避けるための固定）が不要にならないか。メジャー更新で本体が安全な版を引くようになれば外せます
+
+### Dependabot が触らないので手で合わせるもの
+
+- `.github/workflows/ui-tests.yml` の Playwright コンテナのタグ。`@playwright/test` のバージョンと一致していないと E2E が全件失敗します（同ファイル内にも注意書きあり）
+- `package.json` の `resolutions`。不要になっても Dependabot は消しません
+
+## 8. 関連ドキュメント
 
 | ドキュメント | 役割 | 主な読者 |
 |---|---|---|
@@ -110,10 +234,11 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 | `docs/pbi/*.md` | 個別 PBI | Claude |
 | `docs/writing-workflow.md` | 記事執筆ワークフロー（Phase 1a 冒頭で作成予定） | 運営者 |
 | `docs/devcontainer-plan.md` | devcontainer 環境の設計・実施手順（PHASE1B-016） | Claude / 運営者 |
+| `docs/incident-response.md` | 監視の方針・インシデント初動フロー・ケース別手順 | 運営者 |
 | **本ファイル** | **運営者向け運用マニュアル** | **運営者** |
 | `CLAUDE.md` | プロジェクト規約 + 多セッション運用プロトコル（PHASE0-005 で全面書き換え） | Claude |
 
-## 7. 改訂履歴
+## 9. 改訂履歴
 
 | 日付 | 変更内容 |
 |---|---|
@@ -125,3 +250,5 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 | 2026-07-19 | §5 devcontainer 運用を新設（PHASE1B-016 連動）：起動手順（ccd / 手動）、firewall 有効確認、PAT の扱い、書き戻し禁止。旧 §5 関連ドキュメント → §6（devcontainer-plan.md 行追加）、旧 §6 改訂履歴 → §7 に繰り下げ |
 | 2026-07-19 | §5 更新（PHASE1B-016 ステップ 8 完了）：ccd / ccda / ccd-init を dotfiles に実装済みとなったため暫定の直接実行手順を削除。`ccd --rebuild` と他 repo 導入（ccd-init + dotfiles 型紙 README）を追記 |
 | 2026-08-02 | 並行運用ルール連動（README v3.5）：シーン別表の「並行 PBI 開始」を別名 clone の別作業ツリー前提に更新（同一ツリー 2 セッション禁止、初回 `gh auth login` + `yarn install`）。Q6 の原因記述も別 clone 運用に修正 |
+| 2026-08-09 | §6 サイト監視（health-check.sh）の設置と運用を新設（PHASE1D-007 連動）：Xserver への設置手順、cron 登録、通知が届くかの確かめ方、普段の運用、主な設定項目。通知はメール 1 本、チャット通知も外部の外形監視も入れない（運営者決定）。代わりに「触ったら手で実行して確認」「サーバー移行の案内が来たら cron を確認」の 2 点を明記。関連ドキュメント表に incident-response.md を追加。旧 §6 関連ドキュメント → §7、旧 §7 改訂履歴 → §8 に繰り下げ |
+| 2026-08-09 | §7 依存更新 PR の受け方を新設（PHASE1D-012 連動）：届く 2 種類（まとめて 1 本の minor/patch と個別のメジャー）、週 1 回 Claude に任せる運用、Dependabot の PR を直接マージせず作業ブランチで入れ直す理由、minor/patch とメジャーそれぞれの判断材料、Dependabot が触らないので手で合わせるもの（ui-tests.yml の Playwright コンテナのタグ / package.json の resolutions）。旧 §7 関連ドキュメント → §8、旧 §8 改訂履歴 → §9 に繰り下げ |

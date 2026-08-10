@@ -14,7 +14,9 @@ import PageLayout from "../layouts/PageLayout.astro";
   </p>
 
   <!-- 問合せフォーム -->
-  <section class="mt-10" aria-labelledby="contact-form">
+  <!-- scroll-mt-20: 入力 ⇄ 確認の切り替えでこの節を頭出しするとき、
+       sticky ヘッダーに見出しが隠れないようにする（PostLayout の見出しと同じ 5rem） -->
+  <section class="mt-10 scroll-mt-20" aria-labelledby="contact-form">
     <h2 id="contact-form" class="heading-sun text-2xl font-bold text-foreground">
       お問い合わせフォーム
     </h2>
