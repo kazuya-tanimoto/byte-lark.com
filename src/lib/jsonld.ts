@@ -1,4 +1,6 @@
 export interface ArticleJsonLdInput {
+  /** サイトのオリジン（`Astro.site?.origin`。末尾スラッシュなし） */
+  origin: string;
   /** 記事タイトル → headline */
   title: string;
   /** 記事概要 → description */
@@ -13,32 +15,39 @@ export interface ArticleJsonLdInput {
   dateModified?: Date;
 }
 
-/** 運営者（記事の著者）を表す Person schema。 */
-const AUTHOR = {
-  "@type": "Person",
-  name: "Kazuya Tanimoto",
-  url: "https://byte-lark.com/about",
-  sameAs: ["https://github.com/kazuya-tanimoto"],
-} as const;
+/**
+ * 運営者（記事の著者）を表す Person schema。
+ * オリジンは呼び出し側から受け取り、`astro.config.mjs` の `site` に追随させる（PHASE1E-001）。
+ */
+const author = (origin: string) =>
+  ({
+    "@type": "Person",
+    name: "Kazuya Tanimoto",
+    url: `${origin}/about`,
+    sameAs: ["https://github.com/kazuya-tanimoto"],
+  }) as const;
 
 /** 発行元を表す Organization schema。 */
-const PUBLISHER = {
-  "@type": "Organization",
-  name: "byte-lark",
-  legalName: "合同会社バイトラーク",
-  url: "https://byte-lark.com",
-} as const;
+const publisher = (origin: string) =>
+  ({
+    "@type": "Organization",
+    name: "byte-lark",
+    legalName: "合同会社バイトラーク",
+    url: origin,
+  }) as const;
 
 /**
  * About ページ用の Person schema の JSON-LD オブジェクトを生成する。
  * 戻り値を `JSON.stringify` して `<script type="application/ld+json">` に埋め込む。
+ *
+ * @param origin サイトのオリジン（`Astro.site?.origin`。末尾スラッシュなし）
  */
-export function buildPersonJsonLd() {
+export function buildPersonJsonLd(origin: string) {
   return {
     "@context": "https://schema.org",
-    ...AUTHOR,
+    ...author(origin),
     jobTitle: "PM / PO・フルスタックエンジニア",
-    worksFor: PUBLISHER,
+    worksFor: publisher(origin),
   };
 }
 
@@ -55,8 +64,8 @@ export function buildArticleJsonLd(input: ArticleJsonLdInput) {
     image: input.image,
     datePublished: input.datePublished.toISOString(),
     dateModified: (input.dateModified ?? input.datePublished).toISOString(),
-    author: AUTHOR,
-    publisher: PUBLISHER,
+    author: author(input.origin),
+    publisher: publisher(input.origin),
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": input.url,

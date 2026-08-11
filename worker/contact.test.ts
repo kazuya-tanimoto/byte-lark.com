@@ -166,9 +166,8 @@ describe("sendViaResend", () => {
     );
     expect(r.ok).toBe(true);
     expect(r.id).toBe("abc-123");
-    expect((captured?.headers as Record<string, string>).Authorization).toBe(
-      "Bearer re_key",
-    );
+    const headers = captured?.headers as Record<string, string> | undefined;
+    expect(headers?.Authorization).toBe("Bearer re_key");
   });
 
   it("エラー時は ok:false と詳細を返す", async () => {

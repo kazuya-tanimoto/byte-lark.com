@@ -48,6 +48,14 @@ const ogMeta = buildOgMeta({
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    {/* 購読ツールが HTML を開くだけでフィードを見つけられるようにする（PHASE1E-001）。
+        フィードは 1 本だけなので全ページに同じものを置く。title は og:site_name と揃える */}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="byte-lark.com"
+      href={new URL("/rss.xml", siteUrl).href}
+    />
     {Object.entries(ogMeta).map(([property, content]) => (
       property.startsWith("twitter:")
         ? <meta name={property} content={content} />

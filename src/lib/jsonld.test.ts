@@ -3,7 +3,7 @@ import { buildArticleJsonLd, buildPersonJsonLd } from "./jsonld";
 
 describe("buildPersonJsonLd", () => {
   it("schema.org の Person schema を生成する", () => {
-    const result = buildPersonJsonLd();
+    const result = buildPersonJsonLd("https://byte-lark.com");
 
     expect(result["@context"]).toBe("https://schema.org");
     expect(result["@type"]).toBe("Person");
@@ -11,10 +11,18 @@ describe("buildPersonJsonLd", () => {
     expect(result.url).toBe("https://byte-lark.com/about");
     expect(result.worksFor["@type"]).toBe("Organization");
   });
+
+  it("渡されたオリジンを URL に反映する（preview ビルド等）", () => {
+    const result = buildPersonJsonLd("https://example-byte-lark.workers.dev");
+
+    expect(result.url).toBe("https://example-byte-lark.workers.dev/about");
+    expect(result.worksFor.url).toBe("https://example-byte-lark.workers.dev");
+  });
 });
 
 describe("buildArticleJsonLd", () => {
   const input = {
+    origin: "https://byte-lark.com",
     title: "テスト記事",
     description: "テスト用の説明文",
     url: "https://byte-lark.com/blog/test/",
@@ -31,7 +39,9 @@ describe("buildArticleJsonLd", () => {
     expect(result.description).toBe(input.description);
     expect(result.image).toBe(input.image);
     expect(result.author["@type"]).toBe("Person");
+    expect(result.author.url).toBe("https://byte-lark.com/about");
     expect(result.publisher["@type"]).toBe("Organization");
+    expect(result.publisher.url).toBe("https://byte-lark.com");
     expect(result.mainEntityOfPage).toEqual({
       "@type": "WebPage",
       "@id": input.url,
