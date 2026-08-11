@@ -2,7 +2,7 @@
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-08-10
+最終更新: 2026-08-11
 
 ---
 
