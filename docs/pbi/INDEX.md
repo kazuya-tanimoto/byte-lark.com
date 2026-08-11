@@ -5,7 +5,7 @@
 ## 次にやること
 
 - 現在地：**Phase 1e（公開後の運用・改善）**。Phase 0 〜 1d は完了（2026-08-08 公開、1d Gate 通過 2026-08-10）
-- 次の PBI：**[PHASE1E-001 公開後の小さな手入れ](20260810-PHASE1E-001-postlaunch-housekeeping.md)**（NotStarted）
+- 次の PBI：**[PHASE1E-001 公開後の小さな手入れ](20260810-PHASE1E-001-postlaunch-housekeeping.md)**（InProgress、2026-08-11 着手。ブランチ `fix/postlaunch-housekeeping`）
 - ブランチ：main から短命ブランチを切って PR（統合ブランチ `feat/phase-1` は 1d Gate で畳んだ。README §10.3、site-plan Decision #31）
 - 直前 Gate の申し送り：[PHASE1D-009](20260808-PHASE1D-009-retrospective-gate.md) の `## 次 Phase への申し送り`
 
@@ -354,7 +354,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 
 | ID | タイトル | Status |
 |---|---|---|
-| PHASE1E-001 | [postlaunch-housekeeping](20260810-PHASE1E-001-postlaunch-housekeeping.md) | NotStarted |
+| PHASE1E-001 | [postlaunch-housekeeping](20260810-PHASE1E-001-postlaunch-housekeeping.md) | InProgress |
 
 ### 起票済み・起票予定
 
