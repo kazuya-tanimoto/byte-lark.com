@@ -11,10 +11,10 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    sitemap({
-      // 検証用デモページは検索エンジンに案内しない（削除判断は PHASE1A-020）
-      filter: (page) => !page.includes("/sample-highlight/"),
-    }),
+    // 除外指定は持たない。唯一の対象だった検証用デモページ（/sample-highlight/）は
+    // PHASE1A-020 で削除済みで、存在しないパスを除外し続けていた（PHASE1E-001）。
+    // 404 ページは @astrojs/sitemap が既定で除く
+    sitemap(),
   ],
 
   // フォントは Astro の Fonts API で扱う（PHASE1C-007）。provider は local ＝

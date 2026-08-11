@@ -98,7 +98,10 @@ const entries = pngs.map((png, i) => {
   offset += png.length;
   return e;
 });
-writeFileSync(`${ROOT}public/favicon.ico`, Buffer.concat([header, ...entries, ...pngs]));
+writeFileSync(
+  `${ROOT}public/favicon.ico`,
+  Buffer.concat([header, ...entries, ...pngs]),
+);
 
 console.log(
   `generated: favicon.svg / favicon.ico (${icoSizes.join("+")}) / apple-touch-icon.png (180)`,

@@ -41,6 +41,7 @@ const ogImageUrl = ogImage
   : new URL("/og-default.png", siteUrl).href;
 
 const jsonLd = buildArticleJsonLd({
+  origin: siteUrl,
   title,
   description,
   url: canonicalUrl,
