@@ -2,7 +2,7 @@
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-08-10
+最終更新: 2026-08-11
 
 ---
 
@@ -386,7 +386,7 @@ git push --force-with-lease origin <type>/<short>
 
 preview ビルドは**ブランチ名を問わず走る**（PR #34 の `chore/article-ideas-2026-08` の check-run `Workers Builds: byte-lark` が success であることを 2026-08-10 に実測）。branch alias URL はブランチ名の `/` と英数字以外を `-` に置換したもので、`https://<alias>-byte-lark.tanimoto-a49.workers.dev` になる。§7 の CF preview 検証はどのブランチ名でも成立する。
 
-Deploy Hooks は Worker の Settings → Builds に設定済み（PHASE1C-012。push 取りこぼし時に URL 一発で再ビルドする保険。URL は 1Password 保管、repo・PBI・ログには書かない）。
+Deploy Hooks は Worker の Settings → Build に「main manual rebuild」（対象ブランチ main）が 1 本だけある（PHASE1D-004）。CF 側が push を取りこぼしたとき、コードを変えずに URL を 1 回叩いて本番を焼き直すための保険。`feat/phase-1` 向けの 1 本（PHASE1C-012）は、統合ブランチを畳んだのに合わせて 2026-08-11 に削除した。短命ブランチは push のたびに preview ビルドが走るので、ブランチ別の hook は要らない。URL は認証ヘッダー不要で識別子そのものが鍵のため Bitwarden 保管とし、repo・PBI・ログには書かない。
 
 ### 10.9 main の保護
 
@@ -430,3 +430,4 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 | 2026-08-07 | v3.7 | §5.4 に例外を追加（Phase 1c Gate = PHASE1C-012 での判断）：記事の公開・main マージ・DNS / ドメイン切替など**外から見える状態を変えるコミット**を打ったセッションは、その PBI の Done 化まで同一セッションで終える。終えられないならコミット自体を次セッションへ回す。§5.2（Status と INDEX の同一コミット同期）の守備範囲外で、§5.4 が正規に認める「InProgress のまま終える」の中で事故が起きていた（PHASE1B-009：記事は公開済みなのに PBI が InProgress のまま残存）。Phase 1d は該当コミットが並ぶため先行して規約化 |
 | 2026-08-09 | v3.8 | §10.9 main の保護を実態に更新（PHASE1D-011）：ruleset「main protection」を設定し、bypass list を空にして運営者本人の端末からも devcontainer からも直接 push を禁止（コンテナの PAT は本人として動くため、管理者を例外に含めると PAT もすり抜ける。放置自走セッションが本番へ直接デプロイする経路を塞ぐのが目的）。必須チェックは `quality` / `e2e` のみで `Workers Builds` は含めない。ruleset 変更に必要な Administration 権限は PAT に意図的に付与しない旨と、緊急時に Enforcement を Disabled にする逃げ道も明記。連動して §10.6 の main マージ手順を直接 push から PR 経由（`gh pr create` → CI green 確認 → `gh pr merge`）へ書き換え。従来 §10.9 は「直接 push 禁止」と書いていたが実際には未設定（`protected: false`）で、記述と現実がずれていた |
 | 2026-08-10 | v3.9 | §10 ブランチ運用を公開後の形に切替（Phase 1d Gate = PHASE1D-009、site-plan Decision #31）：統合ブランチ `feat/phase-1` を畳み、**1 作業 1 ブランチ**（main から短命ブランチ → PR → マージ → 削除）に戻した。未完成サイトを main に載せないための遅延マージ（Decision #25）は公開でその理由が消えたため。§10.1 図 / §10.2 命名規則（Phase ブランチ → `feat` `fix` `chore` の作業種別）/ §10.3〜§10.6 の手順 / §10.7 競合対処（同一ブランチへの多重 push → main が進んで PR が古くなる形）/ §10.10 Hotfix（通常フローに統合）を更新。あわせて §10.1 / §10.6 の「1a〜1c を集約」「main マージは一度だけ」が実態（1a〜1d を集約・1d 中に 4 回マージ）とずれていたのを是正し、遅延マージ方式は歴史として §10.6 末尾に残した。§10.8 は「CF Pages の Preview Branch Filter で `feat/phase-*` のみ preview」と書いていたが、実測では**ブランチ名を問わず preview ビルドが走る**（PR #34 の `chore/article-ideas-2026-08`）ため実態に書き換え。CLAUDE.md（ブランチ運用 / branch alias URL / Sandbox 制約）と operation-manual.md も連動更新 |
+| 2026-08-11 | v3.9（据え置き） | 事実修正（クラリフィケーション）。§10.8 の Deploy Hooks 記述を実態に更新：残っているのは「main manual rebuild」（対象 main）の 1 本だけで、`feat/phase-1` 向けは統合ブランチを畳んだのに合わせて削除済み。短命ブランチは push で preview ビルドが走るためブランチ別 hook は不要と明記。あわせて hook URL の保管先を 1Password → Bitwarden に訂正（実際の保管先。Done PBI 内の当時表記は不変） |
