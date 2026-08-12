@@ -1,13 +1,24 @@
 name: Quality Checks
 on:
+  # 短命ブランチへの push では走らせない。PR が開いている間は push と pull_request の
+  # 両方が発火して同じコミットに check-run が 2 本ずつ付いていた（PR #39 で実測）。
+  # 検査は pull_request 側に寄せる：こちらは main とマージした結果（merge ref）を見るので
+  # ブランチ単体を見る push 側より強く、必須チェックを最新に保つ設定も無効にしてある。
+  # 作業ブランチの CI は「最初の push の直後に draft PR を作る」ことで受ける（README §10.4）
   push:
-    branches: [main, "feat/*", "fix/*", "chore/*"]
+    branches: [main]
+  # dependabot/* や archive/* は push フィルタに入らないため、この trigger が唯一の検査経路
   pull_request:
     branches: [main]
 
 # GITHUB_TOKEN を読み取り専用に固定
 permissions:
   contents: read
+
+# 同一 ref で新しい push が来たら進行中の古い run を打ち切る（ui-tests.yml と同じ扱い）
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   quality:

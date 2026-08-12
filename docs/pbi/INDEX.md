@@ -1,12 +1,12 @@
 # PBI Index
 
-最終更新: 2026-08-11（PHASE1E-001 完了）
+最終更新: 2026-08-12（PHASE1E-002 完了）
 
 ## 次にやること
 
 - 現在地：**Phase 1e（公開後の運用・改善）**。Phase 0 〜 1d は完了（2026-08-08 公開、1d Gate 通過 2026-08-10）
-- 次の PBI：**未起票**。[PHASE1E-001 公開後の小さな手入れ](20260810-PHASE1E-001-postlaunch-housekeeping.md) は 2026-08-11 に Done。以後の主活動は記事の書き足しで、カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは**記事が 10 本に届いた時点**で Phase 1e に追加起票する（現在 3 本）
-- ブランチ：main から短命ブランチを切って PR（統合ブランチ `feat/phase-1` は 1d Gate で畳んだ。README §10.3、site-plan Decision #31）
+- 次の PBI：**未起票**。[PHASE1E-002 CI トリガーの整理](20260812-PHASE1E-002-ci-trigger-cleanup.md) は 2026-08-12 に Done（[PHASE1E-001](20260810-PHASE1E-001-postlaunch-housekeeping.md) は 2026-08-11 に Done）。PHASE1D-009 の棚卸し表の持ち越しから、docs 肥大の分割 / セキュリティヘッダの残り / 旧インフラ撤収 / 運営者の実機確認まとめ を起票候補として保留中（2026-08-12 運営者判断待ち）。以後の主活動は記事の書き足しで、カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは**記事が 10 本に届いた時点**で Phase 1e に追加起票する（現在 3 本）
+- ブランチ：main から短命ブランチを切り、**最初の push の直後に draft PR**（CI は PR がある状態でのみ走る。README §10.4、PHASE1E-002）。統合ブランチ `feat/phase-1` は 1d Gate で畳んだ（site-plan Decision #31）
 - 直前 Gate の申し送り：[PHASE1D-009](20260808-PHASE1D-009-retrospective-gate.md) の `## 次 Phase への申し送り`
 
 > 本ファイルは 400 行を超えており、`Read` は 1 回で全体を返しません（下の Phase 別の表や改訂履歴は切れた先にあります）。現在地と次の一手は必ず本節に置き、詳細は必要な節を `offset` 付きで読んでください。
@@ -355,6 +355,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 | ID | タイトル | Status |
 |---|---|---|
 | PHASE1E-001 | [postlaunch-housekeeping](20260810-PHASE1E-001-postlaunch-housekeeping.md) | Done |
+| PHASE1E-002 | [ci-trigger-cleanup](20260812-PHASE1E-002-ci-trigger-cleanup.md) | Done |
 
 ### 起票済み・起票予定
 
@@ -365,6 +366,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
   4. `astro.config.mjs` の sitemap 除外フィルタから存在しない `/sample-highlight/` を外す
   5. `yarn check`（Biome）の対象に `worker/` `scripts/` `tests/` を足す
   6. `src/lib/jsonld.ts` のオリジンを `Astro.site` に追随させる
+- **PHASE1E-002（2026-08-12 起票）**：CI トリガーの整理。`quality.yml` / `ui-tests.yml` が `push` と `pull_request` の両方で発火し、PR が開いている間は同じコミットに `quality` / `e2e` が 2 本ずつ付いていた（PR #39 の head `7bdd828` で実測）。`push` を main だけに絞り、短命ブランチの検査は `pull_request` に一本化する。代わりに最初の push の直後に draft PR を作る運用へ（README §10.4）。出所は PHASE1D-009 の棚卸しではなく 2026-08-12 の運営者指摘
 - **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 3 本
 
 ---
@@ -379,6 +381,7 @@ PBI は **Phase 1 完了 + 記事 30 本以上**の段階で起票する。
 
 | 日付 | 変更内容 |
 |---|---|
+| 2026-08-12 | **PHASE1E-002 完了（Done）＝ CI トリガーの整理**：CI が push と PR で 2 回走る件の判断。実測では quality 40〜50 秒 / e2e 103〜118 秒・queue 0 秒で並列のため待ち時間は 1 巡 2 分弱だが、同一コミットに check-run が 2 本ずつ付く。`pull_request` を残す判断の根拠は 2 つ——(1) `actions/checkout` の既定が merge ref なので main とマージした結果を検査する（必須チェックは strict 無効でブランチを最新に保つ要求が無いため、main が進んだ壊れを拾えるのはこちらだけ）(2) `dependabot/*` `archive/*` は push フィルタに入らずこの trigger が唯一の検査経路。よって `push` を `[main]` に絞る側を採り、PR #38（2026-08-10、push trigger を `fix/*` `chore/*` に拡張）を逆向きに畳む。#38 の目的だった「PR 作成まで §7 検証が詰まる」は、最初の push の直後に draft PR を作ることで解消する（CI と CF preview が同時に始まる。draft のあいだは GitHub がマージを止めるので、必須レビュー 0 件でも緑になった瞬間の誤マージを防げる）。README を v3.10（§10.4〜§10.6）、CLAUDE.md §7 も連動更新。実地検証：push だけでは Actions の run が 0 件（付くのは CF の `Workers Builds` のみ）、draft PR（#41）で `quality` / `e2e` が起動し `3d8250f` の check-run 7 本はすべて名前が一意 = 重複解消。学び：`pull_request` の run は**その PR の merge commit にある workflow ファイル**で走るため、トリガー自体を書き換える PR では変更後の設定が自分自身に適用される（`pull_request` を残していなければこの PR に CI が 1 本も付かなかった）。push 発火が消えたことは「何も起きない」ことの確認なので、緑を待つ検証と手順が違う |
 | 2026-08-11 | **PHASE1E-001 完了（Done）＝ Phase 1e 1 本目**：公開後の小さな手入れ 6 件を消化。項目 3（`lighthouse-audit.sh` の `BASE` 既定値を本番へ）は 2026-08-10 に PR #38 で先行実施済みで、残り 5 件を `fix/postlaunch-housekeeping` で実装——① `docs/writing-workflow.md` を 7 段→8 段にし「フォントを作り直す（`draft: false` の直前）」を新設 ② `BaseLayout.astro` に RSS の `<link rel="alternate">`（全ページ、`title` は `og:site_name` と同一）③ Biome の検査対象を `src` → `src worker scripts tests`（出た指摘は 2 件だけで除外せず両方修正）④ sitemap の除外 `filter` を削除（対象の `/sample-highlight/` は PHASE1A-020 で削除済み）⑤ `jsonld.ts` のオリジンを呼び出し側の `Astro.site` から渡す形に。回帰確認は HTML 12 枚に RSS の 1 行が増えるだけで非 HTML は差分ゼロ、CI（806fab6）は Quality / UI Tests / Workers Builds すべて success。学び：**`astro:config/client` は Vitest では中身が空になる**（モジュール解決は通るが実体が `undefined`）ため、設定値をライブラリ側で読む案は不採用にした。`yarn preview` は Astro 7 でデーモン起動し `--port` が埋まっていると黙って別ポートを選ぶ（ログで実ポートを読む）。あわせて同日、`README.md` §10.8 の Deploy Hooks 記述を実態（「main manual rebuild」1 本のみ、`feat/phase-1` 向けは削除済み、URL の保管先は Bitwarden）に修正（PR #39） |
 | 2026-08-10 | **PHASE1D-009 完了（Done）＝ Phase 1d Gate 通過**：非 Gate PBI 15 件（001〜008 / 010〜016）全 Done 確認 + `yarn build` / `check` / `check:ts` / `test:run` 全成功 + CI green（feat/phase-1 HEAD 96c52da・main 9555d6d とも全 check-run success）+ 本番 11 ページ 200・HSTS あり・noindex なし。Phase 1d 全実装ログと PHASE1C-012 の持ち越し 16 件を棚卸しし（前 Gate 分は 14 件消化 / 持ち越し 1 / 下表送り 1、Phase 1d 発の 21 項目は PBI 化 6 / 持ち越し 7 / 破棄 6 / 1e 移管 1 / 判断待ち 1）、「次 Phase への申し送り」を Gate PBI に記入。**運営者決定 3 件を site-plan Decision #31 として確定**：① 統合ブランチ `feat/phase-1` を畳み main 起点の「1 作業 1 ブランチ → PR」に戻す（未完成サイトを main に載せない遅延マージ = Decision #25 の理由が公開で消えたため。1D-008 で本番が 4 コミット遅れて実機確認を誤りかけたのが実害）② Phase 1e を「カテゴリ別一覧」から「**公開後の運用・改善**」に再定義し、公開直後の小さな手入れ 6 件（PHASE1E-001）から着手。カテゴリ別一覧（FR-19）と前後記事リンクは記事 10 本到達時に同 Phase へ追加起票 ③ **ダークモードはやらないと確定**し申し送り 3 件を破棄（1D-001 で実表示を見て見送りを決めていたが「やらない」と確定しておらず、Gate ごとに同じ判定を繰り返していた。再着手時の出発点は Gate PBI に記録）。計画書との差分 6 件を修正（README §10.1/§10.6 の「1a〜1c を集約」「main マージは一度だけ」が実態＝ 1a〜1d 集約・1d 中 4 回マージとずれ / operation-manual の main マージ手順が保護前の `git merge --no-ff` のまま / site-plan §6.7 自己参照 v3.8 / §7 現在地図 / §12 次アクション）。README を v3.9（§10 全面改訂）、site-plan を v3.13 に改訂し CLAUDE.md・operation-manual も連動。学び：README §10.8 は「CF は `feat/phase-*` だけ preview を作る」と書いていたが、実測では `chore/article-ideas-2026-08`（PR #34）でも preview ビルドが走っており、ブランチ運用を変える判断の前提だったので check-run で確かめてから決めた。**Done 後に運営者指摘で引き継ぎの導線を作り直し**：当初は「次セッションで PHASE1E-001 を起票」としていたが、INDEX.md（436 行 / 80KB）も site-plan.md（630 行 / 86KB）も `Read` の 1 回分（約 274 行）を超えており、申し送りを書いた場所（INDEX の Phase 1e 節 340 行 / 改訂履歴 367 行 / site-plan §12 は 530 行）がすべて切れた先にあった。さらに INDEX に置いた PHASE1E-001 の行には実ファイルが無く、開始時チェックの grep（`docs/pbi/*PHASE*.md`）の検出対象にもならない。→ ① PHASE1E-001 を実ファイルとして起票 ② INDEX 冒頭に「次にやること」節を新設（現在地 / 次の PBI / ブランチ運用 / 直前 Gate へのリンク）。INDEX の肥大化そのものは持ち越し（根治は改訂履歴の切り出しか Phase 別分割）。次セッションは **PHASE1E-001 の着手**から |
 | 2026-08-10 | **PHASE1E-001 起票（公開後の小さな手入れ）**：PHASE1D-009 の棚卸しで「まとめて PBI 化」と判定した 6 件（`yarn fonts` を writing-workflow.md に記載 / BaseLayout に RSS の `<link rel="alternate">` / lighthouse-audit.sh の `BASE` 既定値を本番へ / `yarn check` の対象に worker・scripts・tests / sitemap 除外から削除済みの `/sample-highlight/` を除去 / jsonld.ts のオリジンを `Astro.site` 追随に）。出所は PHASE1D-001 の「範囲外の項目」5 件 + PHASE1D-010 の実装ログ 1 件。優先順は記事追加のたびに効く `yarn fonts` が 1 番、訪問者に見える RSS が 2 番。ブランチは main 起点（Decision #31 ①）。`yarn check` の範囲拡大で既存指摘が大量に出た場合は別 PBI へ切り出し可と技術メモに明記 |
