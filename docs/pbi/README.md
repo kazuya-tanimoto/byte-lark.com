@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v3.9)
+# PBI フォーマット規約 (v3.10)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-08-11
+最終更新: 2026-08-12
 
 ---
 
@@ -327,13 +327,20 @@ git checkout -b <type>/<short>
 
 ### 10.4 PBI 着手時
 
-§10.3 で切ったブランチで作業し、commit / push する（sub-branch・worktree は使わない）。
+§10.3 で切ったブランチで作業し、commit / push する（sub-branch・worktree は使わない）。**最初の push の直後に draft PR を作る**。
 
 ```bash
 git add <files>
 git commit -m "feat(pbi): PHASE1E-NNN <desc>"
 git push -u origin <type>/<short>
+
+# 最初の push の直後。以降の push はこの PR が拾う（作り直さない）
+gh pr create --draft --base main --head <type>/<short> --title "<title>" --body "<body>"
 ```
+
+CI（`quality` / `e2e`）は短命ブランチへの push では走らず、**PR がある状態でのみ走る**（`.github/workflows/*.yml` の trigger。PHASE1E-002）。draft PR を先に作っておくことで、CI と CF の preview ビルドが同時に始まり、§7 の検証を待たせずに済む。draft のあいだは GitHub がマージを止めるので、緑になった瞬間の誤マージも防げる。
+
+修正が要る場合も**同じブランチに push し直すだけ**でよい。PR の head が動いて CI と preview が再実行される。PR を閉じて作り直すのは、作業自体を取りやめるときだけ。branch alias URL はブランチ名から決まるので、やり直しても preview の URL は変わらない。
 
 **PBI 実装ではない docs 単独の修正**（site-plan.md、INDEX.md 等）も同じ形。main には直接 push できない。
 
@@ -350,18 +357,19 @@ git push origin <type>/<short>
 
 ### 10.6 main へのマージ
 
-main は ruleset で保護されており **直接 push できない**（§10.9）。PR 経由でマージする：
+main は ruleset で保護されており **直接 push できない**（§10.9）。PR 経由でマージする。PR は §10.4 で draft として作ってあるので、ここでやるのは draft を外してマージするところだけ：
 
 ```bash
-# 作業ブランチを push（必須チェック quality / e2e を通すため）
+# 最後の push（Done 化した PBI と INDEX.md を含む）
 git push origin <type>/<short>
 
-# PR を作成 → CI green を確認 → マージ
-gh pr create --base main --head <type>/<short> --title "<title>" --body "<body>"
+# CI green + §7 の検証が済んでから draft を外す → マージ
+gh pr ready
 gh pr merge --merge --delete-branch   # merge commit を残す（--no-ff 相当）
 ```
 
 - `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash scripts/ci-status.sh` で確認してから実行する
+- draft のままではマージできない。`gh pr ready` は「§7 の検証を全部終えた」という宣言として使う
 - コンテナから実行する場合、PAT に Pull requests: Read and write が必要（PHASE1D-011 で付与済み）
 - **main へのマージ＝ byte-lark.com への公開**。マージした時点で本番が入れ替わる
 
@@ -431,3 +439,4 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 | 2026-08-09 | v3.8 | §10.9 main の保護を実態に更新（PHASE1D-011）：ruleset「main protection」を設定し、bypass list を空にして運営者本人の端末からも devcontainer からも直接 push を禁止（コンテナの PAT は本人として動くため、管理者を例外に含めると PAT もすり抜ける。放置自走セッションが本番へ直接デプロイする経路を塞ぐのが目的）。必須チェックは `quality` / `e2e` のみで `Workers Builds` は含めない。ruleset 変更に必要な Administration 権限は PAT に意図的に付与しない旨と、緊急時に Enforcement を Disabled にする逃げ道も明記。連動して §10.6 の main マージ手順を直接 push から PR 経由（`gh pr create` → CI green 確認 → `gh pr merge`）へ書き換え。従来 §10.9 は「直接 push 禁止」と書いていたが実際には未設定（`protected: false`）で、記述と現実がずれていた |
 | 2026-08-10 | v3.9 | §10 ブランチ運用を公開後の形に切替（Phase 1d Gate = PHASE1D-009、site-plan Decision #31）：統合ブランチ `feat/phase-1` を畳み、**1 作業 1 ブランチ**（main から短命ブランチ → PR → マージ → 削除）に戻した。未完成サイトを main に載せないための遅延マージ（Decision #25）は公開でその理由が消えたため。§10.1 図 / §10.2 命名規則（Phase ブランチ → `feat` `fix` `chore` の作業種別）/ §10.3〜§10.6 の手順 / §10.7 競合対処（同一ブランチへの多重 push → main が進んで PR が古くなる形）/ §10.10 Hotfix（通常フローに統合）を更新。あわせて §10.1 / §10.6 の「1a〜1c を集約」「main マージは一度だけ」が実態（1a〜1d を集約・1d 中に 4 回マージ）とずれていたのを是正し、遅延マージ方式は歴史として §10.6 末尾に残した。§10.8 は「CF Pages の Preview Branch Filter で `feat/phase-*` のみ preview」と書いていたが、実測では**ブランチ名を問わず preview ビルドが走る**（PR #34 の `chore/article-ideas-2026-08`）ため実態に書き換え。CLAUDE.md（ブランチ運用 / branch alias URL / Sandbox 制約）と operation-manual.md も連動更新 |
 | 2026-08-11 | v3.9（据え置き） | 事実修正（クラリフィケーション）。§10.8 の Deploy Hooks 記述を実態に更新：残っているのは「main manual rebuild」（対象 main）の 1 本だけで、`feat/phase-1` 向けは統合ブランチを畳んだのに合わせて削除済み。短命ブランチは push で preview ビルドが走るためブランチ別 hook は不要と明記。あわせて hook URL の保管先を 1Password → Bitwarden に訂正（実際の保管先。Done PBI 内の当時表記は不変） |
+| 2026-08-12 | v3.10 | §10.4〜§10.6 を draft PR 前提の手順に変更（PHASE1E-002）：CI（`quality` / `e2e`）の `push` trigger を `main` だけに絞り、短命ブランチの検査は `pull_request` に一本化した。PR が開いている間は push と pull_request の両方が発火し、同じコミットに check-run が 2 本ずつ付いていたため（PR #39 の head `7bdd828` で実測）。`pull_request` 側を残したのは、(1) main とマージした結果（merge ref）を検査するので push 側より強い、(2) `dependabot/*` `archive/*` は push フィルタに入らずこの trigger が唯一の経路、の 2 点。代わりに **最初の push の直後に draft PR を作る**ことを §10.4 に明記し、作業ブランチの CI と CF preview が同時に始まる形にした（PR #38 が push trigger 拡張で塞いだ「PR 作成まで検証が詰まる」穴は、これで満たされる）。§10.6 は `gh pr create` → `gh pr ready` に置き換え、draft を外す操作を §7 検証完了の宣言と位置づけた。あわせて `quality.yml` に concurrency（`cancel-in-progress`）を追加。CLAUDE.md §7 も連動更新 |

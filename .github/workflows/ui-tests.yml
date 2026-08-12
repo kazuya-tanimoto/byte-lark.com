@@ -1,7 +1,10 @@
 name: UI Tests
 on:
+  # 短命ブランチへの push では走らせない（理由は quality.yml の同じ位置）。
+  # 作業ブランチの CI は draft PR で受ける（README §10.4）
   push:
-    branches: [main, "feat/*", "fix/*", "chore/*"]
+    branches: [main]
+  # dependabot/* や archive/* は push フィルタに入らないため、この trigger が唯一の検査経路
   pull_request:
     branches: [main]
 

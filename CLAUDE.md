@@ -9,7 +9,7 @@
 
 ## Build & Test Commands
 - yarn dev / build / preview
-- yarn test:run / test:e2e（test:e2e は Bash サンドボックスで Chromium 起動不可 → push 後に CI で実行。§7 / Sandbox 制約参照）
+- yarn test:run / test:e2e（test:e2e は Bash サンドボックスで Chromium 起動不可 → draft PR を作って CI で実行。§7 / Sandbox 制約参照）
 - yarn check / check:ts / fix
 - yarn new-post --slug <slug> [--title "Title"] [--category tech|life]
 
@@ -44,13 +44,13 @@
    - 例外（先行トラック）: site-plan §8 Decision #28 の Phase 1c 先行トラック（PHASE1C-001〜007）は Phase 1b Gate 未通過でも着手可。記事 PBI（PHASE1B-008 / 009 / 012。Decision #29 で 3 本に縮小）とは並行可、ただし別名 clone の別作業ツリーに限る（1 ツリー 1 セッション。INDEX.md は pull→即コミット、同一 PBI を 2 セッションで触らない。README §9 並行運用）。どの PBI を進めるかは運営者指示に従う
 4. Update PBI Status: NotStarted → InProgress + Started date
 5. Sync INDEX.md
-6. Implement
+6. Implement（最初の push の直後に **draft PR** を作る。CI は短命ブランチへの push では走らず、PR がある状態でのみ走る。README §10.4）
 7. Verify: UI/フロントエンド変更がある場合、PBI を Done にする前に以下を**すべて**実施して出力する（必須）:
    - **ローカル検証**: `yarn dev` を起動し Playwright でスクリーンショット確認（デスクトップ + モバイル幅）
    - **CF preview 検証**: push 後に Playwright で CF branch alias URL を開いてスクリーンショット確認
      - Branch alias URL は作業ブランチ名から決まる：`https://<ブランチ名の / と英数字以外を - に置換>-byte-lark.tanimoto-a49.workers.dev`（例：`fix/rss-alternate` → `https://fix-rss-alternate-byte-lark.tanimoto-a49.workers.dev`）。preview ビルドはブランチ名を問わず走る（PR #34 の `chore/article-ideas-2026-08` で実測）
      - ※ version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行に記載される
-   - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**push 後に CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。`bash scripts/ci-status.sh` で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）
+   - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。CI は `push` では main しか見ないので、**draft PR を作っていないと 1 度も走らない**（PHASE1E-002）。`bash scripts/ci-status.sh` で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）。修正が要る場合は同じブランチに push し直せば PR がそのまま拾う（PR を作り直さない）
    ```
    ## 検証報告
    - ローカル確認: （dev server で確認した内容）
@@ -86,7 +86,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 ## Sandbox 制約
 - git 操作は worktree 不使用。公開後は main から短命ブランチを切って作業し、PR でマージする（main は ruleset で保護され直接 push できない。詳細: docs/pbi/README.md §10.3-10.6）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
-- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `scripts/ci-status.sh` で合否を読む（gh CLI は sandbox 内で TLS/keychain により不可、curl は可）。UI スクショ確認は MCP Playwright で行う
+- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、draft PR を作って CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `scripts/ci-status.sh` で合否を読む（gh CLI は sandbox 内で TLS/keychain により不可、curl は可）。UI スクショ確認は MCP Playwright で行う
 - 上記の yarn / E2E / gh 制約は母艦（macOS Seatbelt sandbox）のもの。devcontainer 内のセッションには適用されない（次節）
 
 ## Devcontainer 自走環境
