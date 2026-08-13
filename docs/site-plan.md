@@ -1,34 +1,10 @@
-# byte-lark.com サイト構築計画書 (v3.13)
+# byte-lark.com サイト構築計画書 (v3.14)
 
-最終更新: 2026-08-10
+最終更新: 2026-08-13
 
-> v3.12 → v3.13 主な変更：**公開後の運用形態の確定**（Phase 1d Gate = PHASE1D-009）。① 統合ブランチ `feat/phase-1` を畳み、main 起点の「1 作業 1 ブランチ → PR」に戻す ② Phase 1e を「カテゴリ別一覧」から「公開後の運用・改善」に再定義（カテゴリ別一覧と前後記事リンクは記事 10 本到達時に同 Phase へ追加起票）③ ダークモードはやらないと確定。Decision #31 追加、§7 ロードマップ 1e 行・現在地図・§12 次アクションを公開後の実態に更新。README v3.9 / CLAUDE.md / operation-manual.md 連動。
-
-> v3.11 → v3.12 主な変更：**記事ライセンスの変更（CC BY 4.0 → 通常の著作権表記）**。Footer の CC BY 表記を削除して © のみとし、Privacy ページに「著作権について」節を新設（出典明記の引用は歓迎 / 全文転載・二次利用は Contact へ相談）。CC BY は全文転載 + 広告収益化をクレジットのみで合法化するため Phase 2 の収益化計画と相性が悪く、配布後は取消不能のため公開（1d）前に変更。Decision #30 追加、Q12・R-09・CLAUDE.md（版数参照）連動。
-
-> v3.10 → v3.11 主な変更：**初期記事セットの縮小（6 本 → 3 本、公開優先）**。公開前に揃える記事を T1 サイト構築総括（PHASE1B-008、公開済み）+ T2 自前フォーム実装（PHASE1B-009）+ L1 法人化（PHASE1B-012）の 3 本に縮小し、残り 3 本（T3 レガシー移行 / T5 PO 業務 / L2+L3 ストレングス）は `docs/article-backlog.md` に移して公開後に月次 routine（R-01）で消化する。Decision #29 追加、§7 ロードマップ 1b 行・PHASE1B-014（Gate 完了条件）・INDEX.md・article-backlog.md・CLAUDE.md 連動。PHASE1B-010 / 011 / 013 は取り下げ（Dropped、README v3.6 で状態を新設）。
-
-> v3.9 → v3.10 主な変更：**Phase 1c 先行トラックの導入（1b 記事執筆との並行許可）**。1c（デザインブラッシュアップ）を二段構えに分割：**先行トラック**（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）は 1b Gate 通過前でも起票・着手可、**仕上げトラック**（B-3 CSS サイズ / 全記事での最終再検証 / 1c Gate）は従来どおり 1b Gate 通過後に起票。Decision #28 追加、§7 ロードマップ 1c 行・「PBI の起票タイミング」節を連動更新。README §9 例外（v3.3）/ INDEX.md / CLAUDE.md / draft-phase1c-design-polish.md / PHASE1B-014 も連動。先行トラック PBI（PHASE1C-001〜007）を同日起票。
-
-> v3.8 → v3.9 主な変更：**Phase 再編（公開の独立フェーズ化）**。新 1b = コンテンツ整備（Skills / Career 実データ化、About / Privacy 文面確定、Contact フォーム化、初期記事セット）、新 1c = デザインブラッシュアップ（旧 1b）、新 1d = 公開（NS 移管 / カスタムドメイン / Web Analytics / Search Console。旧 PHASE1A-018 を移管）、新 1e = カテゴリ別一覧（旧 1c）。Decision #25（公開フェーズ分離）・#26（Contact 自前フォーム = Worker + Turnstile + Resend）追加、FR-29 追加、FR-19 / FR-28 / Decision #4 #15 #21 #23 / R-06 #07 #08 #12 / Q11 / §6.7 の Phase 名を連動更新。**読み替え注意**：Done 済み PBI 内の旧 Phase 名は当時の表記のまま（旧 1b → 新 1c、旧 1c → 新 1e と読む）。
-
-> v3.7 → v3.8 主な変更：Phase 0 Retrospective Gate（PHASE0-010）での事実修正。§6.4 ディレクトリ構成から `tailwind.config.ts` を削除（Tailwind v4 は CSS ベース設定のため不使用）。Decision #21 を shadcn 4.x の preset 体系（Radix + Nova）に更新。
-
-> v3.6 → v3.7 主な変更：ブランチ運用方針確定。README.md §10 ブランチ運用 新設（Phase ブランチ + 常時 PBI sub-branch + worktree 並行 / merge --no-ff / sub-branch マージ後保持 / CF Pages Preview Branch Filter 必須 / main 保護 / Hotfix 手順）。operation-manual.md に並行 PBI 開始シーン・Phase 完了マージ承認・main 保護・CF Pages filter・Q6（push 競合対処）追加。PHASE0-007 に CF Pages Custom branches 設定追加、PHASE0-009 main マージ手順を `git merge --no-ff` で具体化。§14 row 1 拡張、運用ルール表に「ブランチ運用」「CF Pages branch filter」行追加。
-
-> v3.5 → v3.6 主な変更：運営者向け運用マニュアル `docs/operation-manual.md` を新規作成（シーン別フレーズ表 / 中断 signal リカバリー / トラブルシューティング Q1-Q5）。INDEX.md 着手ルールに「セッション開始時の必須チェック」（§5.8 検出スクリプト実行）を必須化、CLAUDE.md ヘッダーにも同等の必須化と operation-manual.md への誘導を追加。§14 row 1 想定箇所に operation-manual.md と INDEX.md セッション開始チェックを追加、運用ルール表に「運営者向けプロトコル変更」行を追加。
-
-> v3.4 → v3.5 主な変更：4 回目レビュー推奨を反映。§14 row 1（v3.x）の想定箇所列に PBI 内参照（INDEX.md / PHASE0-005 / PHASE0-009）を明示追加し row 2 と粒度統一、row 3 の `N 件` placeholder を `<件数> 件` に明確化、運用ルールに「改訂履歴の同期」「想定箇所列での 1 件ずつ突合」「将来の scripts 化検討」を追記。CLAUDE.md キックオフヘッダの参照をクリッカブルリンク化、INDEX.md 改訂履歴に v3.4 / v3.5 連動行を追記。
-
-> v3.3 → v3.4 主な変更：3 回目レビューで検出された連動更新漏れ再発（§6.7 line 348 の v3.2 残存、§7 フロー図の PHASE0-001〜009 残存）を修正。再発防止のため §14「バージョン参照箇所一覧（メンテ用）」を新設。PHASE0-008 の Web Analytics 観測方法を具体化（DevTools / View Source）。CLAUDE.md にキックオフ用の暫定ヘッダ追加（PHASE0-005 で丸ごと差し替え予定だが、それまでの初動セッション向けに INDEX.md へのポインタ）。
-
-> v3.2 → v3.3 主な変更：差分レビュー指摘を反映。連動更新漏れの修正（§6.4 writing-workflow タイミング、§12 各バージョン参照、§13.4 誤字）。PBI 側にも連動修正（PHASE0-009 受け入れ条件に PHASE0-010 含める、計画書バージョン参照を v3.3 に、PHASE0-008 の Web Analytics 計測 Done 判定を緩和、PHASE0-002 の playwright.config.ts 表現修正、PHASE0-010 の行数基準削除、PHASE0-006 ファイルリネーム、INDEX.md 構造整合）。
-
-> v3.1 → v3.2 主な変更：Phase 0 PBI レビュー指摘を反映。writing-workflow.md の作成タイミングを Phase 0 末 → Phase 1a 冒頭に変更、Decision Log #21（shadcn style/baseColor デフォルト）追加、§6.7 既存資産取扱表を Phase 0 PBI 群と整合させた。
-
-> v3 → v3.1 主な変更：PBI を Phase ごとに起票する方針を §7 / §12 に明記、Phase 間に Retrospective Gate を導入（Phase 0 完了 → 学び棚卸 → 次 Phase PBI 起票 → レビュー → 実装の流れを規定）。
-
-> v2 → v3 主な変更：レビュー指摘を全面反映。Tailwind v4 統合方法の修正、デプロイ先・解析ツール確定、shadcn 利用範囲を明示、法令・コンプラ系（プライバシー / アフィリエイト表記 / 構造化データ）追加、Playwright 既存資産扱いの修正、CLAUDE.md 更新を Phase 0 タスクに、Phase 0 工数 2-3 日に修正、Phase 1a に CI / 仮 HEX / コードハイライトを移設、リスク表大幅拡張、未決事項 Q1-Q13、§13 法人化に伴う改訂を独立章化。
+> v3.13 → v3.14 主な変更：**計画書と INDEX の分割（読み込み効率化、PHASE1E-005）**。改訂履歴と「版ごとの主な変更」を `docs/site-plan-history.md` へ、Decision Log 本体を `docs/site-plan-decisions.md` へ切り出し（§8 は誘導スタブ、参照表記「site-plan §8 Decision #NN」は不変）。INDEX.md の改訂履歴も `docs/pbi/INDEX-history.md` へ切り出し。あわせて §12 の README 参照のドリフト（v3.9 のまま、現行 v3.11）を修正。§14・CLAUDE.md 連動更新。
+>
+> 過去の「版ごとの主な変更」と改訂履歴表は [docs/site-plan-history.md](site-plan-history.md) を参照。
 
 ---
 
@@ -379,7 +355,7 @@ Astro の標準機能で完全対応：
 | `src/dev/`、`@react-buddy/*` 依存 | 削除 | — |
 | `src/stories/` Storybook 公式テンプレ | 削除 | — |
 | `CLAUDE.md`（プロジェクト規約） | **書き換え**（PHASE0-005、Astro/Tailwind/shadcn + 多セッション運用プロトコル） | 同パス |
-| `docs/site-plan.md` | 上書き（v2 → v3.13） | 本ファイル |
+| `docs/site-plan.md` | 上書き（v2 → v3.14） | 本ファイル |
 | `docs/operation-manual.md` | **新規作成済**（v3.6 連動、運営者向けプロトコル） | 同パス |
 | `.github/workflows/codeql.yml` | 流用（言語自動検出で Astro 対応） | 同パス |
 | `.github/dependabot.yml` | 内容確認の上、依存先パッケージ名を更新（PHASE0-007） | 同パス |
@@ -424,39 +400,7 @@ Phase 2（記事 30 本以上で起票）
 
 ## 8. 技術選定の判断履歴（Decision Log）
 
-| # | 決定 | 理由 | 反対案・棄却理由 |
-|---|---|---|---|
-| 1 | Phase 1 から Astro で SSG 構築（Vite + React + Chakra スタックは廃止） | Phase 2 で SSG 必須化が確定 / Chakra 学習動機が消滅 / 段階移行で Phase 1 の労力が捨てられる手戻りコスト大 | Vite 維持して Phase 2 で移行（v1 案）→ 既存資産保護の動機消滅により段階移行のメリット消失 |
-| 2 | UI フレームワークは Tailwind CSS v4 + shadcn/ui、統合は **`@tailwindcss/vite`**（`@astrojs/tailwind` は Tailwind 3 legacy 専用） | AI 訓練データ豊富 / コピペ型でコンポーネントが repo 内に存在 / Astro 公式統合 / 2026 年デファクト | Chakra v3 → API 大幅刷新で書き直し量同等 + AI フレンドリー度劣る / Mantine → 採用層小・shadcn ほどコピペ型でなく自前ビルドが残る |
-| 3 | アイコンは Lucide | shadcn/ui デフォルト / 軽量 / 単一セット | react-icons → 多様だが shadcn と統一感失う |
-| 4 | Markdown / MDX を `src/content/posts/` フラット配置、category は frontmatter | Phase 1e の URL 拡張は frontmatter 駆動で柔軟 / 記事少ないうちのみすぼらしさ回避 | category ディレクトリ分割（v1 案）→ 記事少ない時のスカスカ感悪化 |
-| 5 | Career / Skills は専用ページ + Home に抜粋 | 件数多いとトップが縦長になり Blog プレビューを圧迫 | 全件 Home 配置（v1 案）→ Blog プレビューが目立たない |
-| 6 | Qualifications は Home 内セクション維持（独立ページなし） | 件数少（5 件）で独立ページにする実利薄い | 独立ページ化 → コンテンツ薄すぎ |
-| 7 | Phase 2 で Next.js 移行は **撤回** | Phase 1 から SSG なので Phase 2 の移行作業自体が不要 | （v1 案で誤って採用、撤回） |
-| 8 | Lint は Biome 2 を採用 | 既存資産（`biome.jsonc`）流用 / 高速 / TS と相性良 / .astro 対応 experimental あり | ESLint + Prettier → 設定肥大、Biome で十分 |
-| 9 | テストは Vitest + Playwright | 既存資産流用 / Astro 公式サポート | Jest → 採用減少傾向 |
-| 10 | Storybook は **削除**（個人運用フェーズでは） | 個人ブログ単独運用で過剰 / shadcn/ui のコピペ型なら repo 内コードで代替可 | 維持 → 二重メンテコスト。**ただし将来人を雇うフェーズで再導入の可能性は残す** |
-| 11 | OGP は SSG 時に静的生成（react-helmet 等は使わない） | Astro 標準で各ページ frontmatter からビルド時に生成可 / クローラー JS 非実行に対応 | クライアント生成 → SNS 共有時無題で出る |
-| 12 | サイト構成は個人主軸ハイブリッド | エージェント案件主体のため純コーポレートは ROI 低い、将来直案件にも開く | 純コーポレート / 純パーソナル |
-| 13 | カテゴリは tech / life の 2 区画 | ジャンル分散リスクを IA で吸収、URL 拡張時の設計が明確 | フラット運用 → 読者層分散で AdSense RPM 下がる懸念 |
-| 14 | カラーパレットは Plan B（周辺色 + ヒバリ羽色アクセント） | 「飛翔・春」コンセプトと「ヒバリ実物」両立 / 色彩論的に安定（Wikipedia / ADW で実物色裏取り済み） | 実物色のみ（地味） / 周辺色のみ（実物との接点薄い） |
-| 15 | ロゴは Phase 1c で ClaudeDesign を使って新規作成、反復上限 5 ラウンド。**2026-08-01 延長**：PHASE1C-004 で 5 ラウンド消化後も未確定のため運営者判断で上限を延長（ラウンド 6 以降は旧案 1+2 ベースの画像生成 AI 編集ルートで続行） | 既存テキストロゴはヒバリ意匠なし / 旧 ChatGPT 案はモノトーン / 上限なしだと Phase 1c 暴走 | 既存流用 / 旧案採用 / 反復上限なし。延長時の打ち切り（既存ロゴ継続）→ ロゴは 1c の中核成果物で、方向性（鳥=旧1+残像尾、数字と円=旧2）は合意済みのため完遂が合理的 |
-| 16 | shadcn/ui は **React Island 必要箇所のみ**で利用、静的部品は Astro 自前 | shadcn 部品は React ランタイムを乗せる Island 化が必要、Header/Footer 等で過剰 / Astro の Zero-JS philosophy と整合 | 全コンポーネント shadcn → 不要 JS が乗る |
-| 17 | デプロイ先は **Cloudflare Workers**（Q8 確定、Phase 1a で Pages → Workers 移行） | 商用利用可 / 無料枠厚い / CF 公式・Astro 公式ともに新規は Workers 推奨 / Web Analytics 統合（Cookieless） | Vercel → 商用利用条項の解釈余地、Pro 必須リスク / Netlify → 帯域・ビルド分制限がやや厳しい / Pages 維持 → 公式推奨から外れつつある |
-| 18 | アクセス解析は **Cloudflare Web Analytics**（Q9 確定） | Cookieless で同意 UI 不要、CF Pages と統合楽、無料 | GA4 → Cookie バナー必要で UX 悪化、過剰機能 / Plausible → 月額発生 |
-| 19 | Phase 2 で広告と並列して **ニュースレター / Substack / note 転載**も検討 | AdSense は記事 30+ で RPM 安定までかかる / 別線で同記事資産を活用すると ROI 早い | 広告一本 → 収益化までの時間が長い |
-| 20 | 旧 Hugo `byte-lark.com` の URL は **301 計画なし**（dead で OK） | 旧 repo 削除済 / 新ドメインの再開で別アイデンティティ / 旧 URL retain の実利薄 | 301 設定 → 旧コンテンツ無いので意味薄い |
-| 21 | shadcn 4.x で **Radix ライブラリ + Nova preset** で初期化（旧 style/baseColor 概念は 4.x で廃止、preset 体系に移行） | デフォルト構成で進めて Phase 1c の ClaudeDesign アウトプットに合わせて再調整、Phase 0 を判断で止めない | 初期からブランドカラーで設定 → カラーパレット未確定の段階で決められない |
-| 22 | コードハイライトは **Shiki**（Astro 組込み、テーマ `github-light`）（Q13 確定） | 追加依存ゼロ / ビルド時レンダリングでクライアント JS なし / テーマ豊富 / 後から Expressive Code に差し替え可 | Expressive Code → ファイル名タブ等リッチだが追加依存あり / Prism → Shiki より機能・テーマが少ない |
-| 23 | 記事 cover 画像は **装飾不要**（optional フィールドのみ定義）（Q5 確定） | Phase 1a はページ実装が主目的、cover に工数を割らない / optional にしておけば Phase 1c 以降で OGP ジェネレータ等を後付け可 | OGP ジェネレータ → 実装工数追加 / Unsplash → 選定の手間 + ライセンス表記必要 |
-| 24 | 和文フォントは **@fontsource-variable/noto-sans-jp**（セルフホスト）。**読み込みは Astro 公式 Fonts API 経由**（`fonts` 設定 + `<Font>`、provider は local で node_modules のパッケージをそのまま使う。PHASE1C-007 で更新） | 既存 Geist と同パターンで統一 / CSP 設定不要 / パフォーマンス制御しやすい / Fonts API に移すと font-display と preload をフォント単位で制御でき、和文の差し替えずれ（CLS）を止められる | Google Fonts CDN → 外部リクエスト + Workers CSP 設定が別途必要 / CSS の `@import` 直書き（旧構成）→ font-display・preload を制御できない / Fonts API の npm・fontsource provider → 実体 URL が jsdelivr になりビルド時に外部 CDN 依存 |
-| 25 | **Phase 再編（v3.9）**：公開を独立フェーズ 1d に分離、1b をコンテンツ整備として新設（旧 1b デザイン → 1c、旧 1c カテゴリ → 1e）。公開は 1c 完了 + 初期記事セット + 再 QA を前提条件とする | 未完成サイト（仮デザイン・サンプル記事・未承認文面・旧コード由来の Career / Skills）を法人ドメインで公開・クロールさせないため / 公開は DNS・メール継続（MX が apex 名指し）・旧 www Netlify サイトの畳みを含む一度きりの重要イベントで独立管理が必要 / コンテンツ先・デザイン後にすると実記事でタイポ・カード設計を検証でき手戻りがない | 1a 内で公開（旧計画）→ main は Hello, World! のままで公開すると placeholder がクロールされる / production branch 一時切替 → 未完成サイトの全世界公開で棄却 |
-| 26 | **Contact は自前フォームに置換**（Worker `/api/contact` + Cloudflare Turnstile + Resend、送信元は `send.byte-lark.com` サブドメイン認証、API キーは Workers secret、mailto 廃止）（FR-29） | アドレス平文公開は収集ボットに拾われ、CF のメール難読化は Workers 配信に不適用（公式 docs 明記）/ メーラー未設定環境では mailto が無反応で商談機会を取りこぼす / Turnstile・Resend とも無料枠で月数十件は余裕 / CSRF はセッション認証なしのため主論点でなく、対策の本命は Turnstile サーバー側検証 + レートリミット | mailto 維持 → スパム露出 + UX 劣化 / Google Form → 法人サイトの体裁劣化・Google 依存 / SES → サンドボックス解除等の手間が小規模用途に見合わない |
-| 27 | **E2E は CI（GitHub Actions）で検証**：`yarn test:e2e` は Bash サンドボックスで Chromium が起動できない（macOS Seatbelt が Mach port 登録を拒否、FATAL）。CI（`.github/workflows/ui-tests.yml`）を Playwright 公式コンテナ `mcr.microsoft.com/playwright:v<ver>-noble` 化し push で自動実行、Claude は `scripts/ci-status.sh`（無認証 REST API、public repo）で合否確認。スクショ確認は MCP Playwright で実施 | 旧 `--with-deps` は noble runner の apt で 60 分ハング→timeout でテスト未実行だった / 運営者手動実行は自走を妨げる / gh CLI は sandbox 内で TLS・keychain により不可、curl は可 | 運営者ターミナル手動実行（旧 PBI 019 前提）→ 毎回手作業で自走せず / sandbox で直接実行 → Chromium 起動不可 |
-| 28 | **Phase 1c 先行トラックの 1b 並行**（v3.10）：1c を「先行トラック（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）」と「仕上げトラック（B-3 CSS サイズ / 全記事最終再検証 / 1c Gate）」に二分し、先行トラックは 1b Gate 通過前に起票・着手可とする。運用はセッション単位の切替（push 競合は README §10.7） | 1b 残タスク（記事 PBI 008〜013）は運営者リライト・ヒアリング律速で待ち時間が発生する / Decision #25「実コンテンツで検証」の前提は、全ページ実データ承認済み（PHASE1B-001〜005）+ 実記事 1 本（008 ドラフト）で実質充足 / ロゴは反復上限 5 ラウンドでリードタイム最長、早期着手が R-06（1c 長期化）の緩和になる / Gate の学び反映（README §9）は仕上げトラック起票に残る | 厳格順守（1b 完了まで 1c 禁止）→ 運営者律速の待ち時間に開発が止まる / 1c 全量起票 → 1b Gate 申し送りの反映機会が消え、記事依存 PBI が長期 InProgress 化 |
-| 29 | **初期記事セットの縮小（6 本 → 3 本、公開優先）**（v3.11）：公開前に揃える記事を T1 サイト構築総括（008、公開済み）+ T2 自前フォーム実装（009）+ L1 法人化（012）の 3 本とし、T3 / T5 / L2+L3 は `article-backlog.md` へ移管して公開後に R-01 月次 routine で消化する。PHASE1B-010 / 011 / 013 は Dropped（README v3.6 で新設した取り下げ状態） | 記事執筆は運営者リライト律速で、6 本待つと公開が数週間単位で遅れる（Decision #28 と同じ構図）/ 公開を早めるほど検索エンジンのインデックス開始が早まり、Lighthouse の Performance / SEO 計測（本番ドメインでのみ確定可）にも早く到達する / 初期 6 本は SEO 的な閾値ではなくネタ出し時の区切りで、1e カテゴリ一覧の条件（10 本）にも 6 本では届かない / life を 1 本（L1 法人化）含めることで屋号サイトとして人となりを見せ、About の補強にもなる | 6 本維持 → 公開が記事執筆律速で遅延 / tech 3 本（T1+T2+T3）→ life 空のまま公開で人となりが見えない / 2 本公開 → ブログ一覧がさらに薄く、life も空になるため見送り |
-| 31 | **公開後の運用形態を確定**（v3.13、Phase 1d Gate = PHASE1D-009）：① 統合ブランチ `feat/phase-1` を畳み、main を起点とする「1 作業 1 ブランチ → PR」に戻す（README §10.3 / §10.6）② Phase 1e を「カテゴリ別一覧」から「**公開後の運用・改善**」に再定義し、公開直後の小さな手入れから着手。カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは記事 10 本到達時に同 Phase 内へ追加起票 ③ ダークモードは**やらない**と確定（PHASE1C-002 / 004 / 005 からの申し送り 3 件を破棄） | ① 未完成サイトを main に載せない遅延マージ（Decision #25）の理由は公開で消え、むしろ main = 本番なので小さく入れるほうが本番と手元のずれが起きない（1D-008 で本番が 4 コミット遅れ、実機確認を誤りかけた）。月次ルーチン R-01 が既に短命ブランチ + PR で回っている ② 公開後の主活動は記事執筆で、次の機能（カテゴリ別一覧）は記事 10 本まで着手できない。その間の小さな改善に受け皿が無いと放置される ③ 1D-001 で全 11 ページ × 2 幅の実表示を撮って見送りを決めたが「やらない」と確定していないため、Gate ごとに同じ判定を繰り返していた。Shiki がインライン style に色を焼くのでコードブロックはデュアルテーマ化なしに暗くならず、アイコン 34 件も `<img>` 参照で `currentColor` が効かない。記事 3 本の個人サイトに対して実装量が見合わない | ① `feat/phase-1` を継続 → main が遅れ、本番と手元のずれが続く ② Phase 1e を記事 10 本まで開かない → 小さな手入れ 6 件が宙に浮く / 手入れ用に別 Phase を新設 → Phase の刻みが細かくなりすぎる ③ ダークモードを持ち越し → 判定の手間が毎 Gate かかる（再着手したくなった時の出発点は Gate PBI に記録済みなので、破棄しても情報は失われない） |
-| 30 | **記事ライセンスを CC BY 4.0 → 通常の著作権表記に変更**（v3.12、Q12 更新）：Footer の CC BY 表記を削除して「© byte-lark. All rights reserved.」のみとし、Privacy ページに「著作権について」節を新設（出典明記の引用は歓迎 / 全文転載・二次利用は Contact へ相談） | CC BY は全文転載 + 商用利用（広告収益化）をクレジット表示のみで合法化するため、Phase 2 の収益化計画（AdSense / アソシエイト）やコピーサイトへの SEO 評価流出と相性が悪い / 引用（著作権法 32 条）はライセンスに関係なく誰でも可能で、CC を外しても紹介・シェアは阻害されない / CC ライセンスは配布後取消不能のため、本番公開（1d）前が変更の最終機会（preview は noindex で実質未配布） | CC BY 維持 → 拡散最大化と引き換えに転載収益化を許容することになり収益化方針と矛盾 / CC BY-NC(-ND) 化 → 通常著作権 + 引用で同じ効果が得られ、中途半端な自由ライセンスを名乗る意味がない |
+本体は [docs/site-plan-decisions.md](site-plan-decisions.md) に分割した（v3.14、読み込み効率化）。参照表記は従来どおり「site-plan §8 Decision #NN」を使い、新しい決定は分割先の表の末尾に # 連番で追記する。
 
 ## 9. リスク / 留意事項
 
@@ -536,7 +480,7 @@ Phase 0 〜 1d は完了（2026-08-08 公開、1d Gate は 2026-08-10 通過）�
 3. 記事が 10 本に届いたらカテゴリ別一覧 + 前後記事リンクを Phase 1e に追加起票（FR-19）
 4. 記事 30 本以上で Phase 2（広告収益化）を起票
 
-PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.9 を参照。
+PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.11 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
 **運営者向け運用マニュアル**（シーン別フレーズ / リカバリー / トラブルシューティング）は `docs/operation-manual.md` を参照。
 
@@ -575,7 +519,7 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 
 | パターン | 想定箇所 | 確認コマンド |
 |---|---|---|
-| `v3.x` | site-plan.md タイトル / 改訂履歴 / 自己参照 / §6.7 既存資産取扱表 / §12 次アクション / §14 自身の予防策説明 / **INDEX.md ロードマップ参照（line 74 周辺）** / **INDEX.md セッション開始時必須チェック注記** / **PHASE0-005 内 CLAUDE.md テンプレ（current: v3.x 行）** / **PHASE0-010 「計画書 v3.x と実態の差分」（line 30, 85 周辺）** / **operation-manual.md（v3.x 連動言及がある場合）** / **CLAUDE.md ヘッダー（v3.x 連動言及がある場合）** / **README.md の version（タイトル + v3.0 以降の改訂履歴）+ CLAUDE.md / site-plan §12 の README 参照 — README は v3.0 で v3.x 名前空間に移行したため本パターンで site-plan 自身の version と混在する。想定箇所列で「site-plan の version」と「README の version」を仕分けること** | `grep -rn "v3\." docs/ CLAUDE.md` |
+| `v3.x` | site-plan.md タイトル / 改訂履歴（分割先 docs/site-plan-history.md）/ 自己参照 / §6.7 既存資産取扱表 / §12 次アクション / §14 自身の予防策説明 / **INDEX.md ロードマップ参照（line 74 周辺）** / **INDEX.md セッション開始時必須チェック注記** / **PHASE0-005 内 CLAUDE.md テンプレ（current: v3.x 行）** / **PHASE0-010 「計画書 v3.x と実態の差分」（line 30, 85 周辺）** / **operation-manual.md（v3.x 連動言及がある場合）** / **CLAUDE.md ヘッダー（v3.x 連動言及がある場合）** / **README.md の version（タイトル + v3.0 以降の改訂履歴）+ CLAUDE.md / site-plan §12 の README 参照 — README は v3.0 で v3.x 名前空間に移行したため本パターンで site-plan 自身の version と混在する。想定箇所列で「site-plan の version」と「README の version」を仕分けること** | `grep -rn "v3\." docs/ CLAUDE.md` |
 | `v2.x` | **過去事実の記録のみ**（v2.9 以前の README 改訂履歴行 / 各 Done PBI 内の当時の README 参照、例: PHASE0-005・PHASE0-002・PHASE1A-008）。**現行参照はもう v2.x に無い**（README は v3.0 で v3.x へ移行）→ grep ヒットは書き換えず歴史として残す | `grep -rn "v2\." docs/` |
 | PHASE0-NNN 件数 / 範囲 | INDEX.md 表 / §7 ロードマップ / §7 フロー図（`PHASE0-001〜<N>`） / §12 次アクション / PHASE0-009 受け入れ条件 / PHASE0-010 受け入れ条件 | `grep -rn "PHASE0-\|<件数> 件" docs/`（`<件数>` は実値、例：`10 件`）|
 | 新規 PBI 追加時のリンク | INDEX.md 表 + 推奨着手順序図 / 関連 PBI の依存表記 | INDEX.md および関連 PBI を Read |
@@ -591,7 +535,7 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 
 - **計画書バージョンを上げる前**：必ず本表の全パターンで grep し、自己参照箇所を新バージョンに更新。grep 結果から「現参照」と「改訂履歴等の過去事実記述」を **想定箇所列を頼りに 1 件ずつ突合**して仕分けする
 - **PBI を追加・リネーム・削除する時**：本表の該当パターンで grep し、INDEX.md / 関連 PBI / site-plan §6.7・§7 を同期
-- **改訂履歴の同期**：site-plan.md / README.md / INDEX.md / 関連 PBI のいずれかで改訂履歴行を追加する時、他の改訂履歴も**同コミット内で**整合更新（前ラウンドで INDEX.md 改訂履歴の追記漏れが発生した教訓）
+- **改訂履歴の同期**：site-plan（分割先 `docs/site-plan-history.md`）/ README.md / INDEX（分割先 `docs/pbi/INDEX-history.md`）/ 関連 PBI のいずれかで改訂履歴行を追加する時、他の改訂履歴も**同コミット内で**整合更新（前ラウンドで INDEX.md 改訂履歴の追記漏れが発生した教訓）。v3.14 で site-plan / INDEX の改訂履歴は別ファイルに分割済み
 - **本表自体のメンテ**：新たな連動更新漏れパターンが発覚したら、本表に追加して将来の漏れを防ぐ
 - **将来の自動化**：本 §14 の grep 7 パターンを `scripts/check-version-refs.sh` 等にスクリプト化し、lefthook の pre-push に組み込む案を Phase 1a 冒頭で別 PBI として起票検討（手動 grep 忘れリスクの構造的排除）
 
@@ -599,32 +543,4 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 
 ## 改訂履歴
 
-| 日付 | 変更内容 |
-|---|---|
-| 2026-04-30 | v1 初版作成 |
-| 2026-05-01 | v2：UI スタックを Tailwind v4 + shadcn/ui に転換、Phase 2 Next.js 移行を撤回、Phase 1 から Astro で SSG 構築、Phase 1 を 1a/1b/1c 分割、Career/Skills 抜粋化と専用ページ化、ヒバリブランドコンセプト反映、Q1-Q8 |
-| 2026-05-01 | v3：レビュー指摘を全面反映。Tailwind v4 統合方法を `@tailwindcss/vite` に修正、Q8 = Cloudflare Pages 確定、Q9 = Cloudflare Web Analytics 確定、shadcn を React Island 必要箇所のみに限定、FR-22-28 / NFR-11-12 追加、Playwright 既存資産扱い修正、CLAUDE.md 更新を Phase 0 タスクに、Phase 0 工数 2-3 日に修正、Phase 1a に CI / 仮 HEX / コードハイライトを冒頭タスクに、リスク表 8 項目 → 15 項目に拡張、Q9-Q13 追加、§13 法人化に伴う改訂を独立章化、Decision Log #16-#20 追加 |
-| 2026-05-01 | v3.1：PBI を Phase ごとに起票する方針を §7 / §12 に明記、Phase 間に Retrospective Gate を導入、§7 ロードマップに Gate / 次 Phase 起票ステップを追加 |
-| 2026-05-02 | v3.2：Phase 0 PBI レビュー指摘を反映。§11 writing-workflow.md 作成タイミングを Phase 1a 冒頭に変更、Decision Log #21（shadcn デフォルト style/baseColor）追加、§6.7 既存資産取扱表を Phase 0 PBI 群（特に PHASE0-001 残置リスト・PHASE0-006 workflow 一時無効化）と整合 |
-| 2026-05-02 | v3.3：差分レビュー反映。連動更新漏れ（§6.4 writing-workflow タイミング / §12 各バージョン・件数 / §13.4 誤字）修正、PBI 側の連動修正（PHASE0-009 範囲 + 計画書バージョン参照、PHASE0-008 Web Analytics Done 判定緩和、PHASE0-002 playwright.config.ts 表現、PHASE0-010 行数基準削除、PHASE0-006 ファイルリネーム、INDEX.md 構造整合） |
-| 2026-05-02 | v3.4：3 回目レビューで検出された連動更新漏れ再発（§6.7 v3.2、§7 フロー図 PHASE0-001〜009）を修正。再発防止のため §14 バージョン参照箇所一覧を新設。PHASE0-008 観測方法を具体化、CLAUDE.md にキックオフ暫定ヘッダ追加 |
-| 2026-05-02 | v3.5：4 回目レビュー推奨を反映。§14 row 1 想定箇所に PBI 内参照追加、row 3 placeholder 明確化、運用ルールに改訂履歴同期・1 件ずつ突合・scripts 化検討を追記。CLAUDE.md ヘッダのリンク化、INDEX.md 改訂履歴に v3.4/v3.5 連動行追記 |
-| 2026-05-03 | v3.6：運営者向け運用マニュアル `docs/operation-manual.md` 新規作成。INDEX.md 着手ルールに「セッション開始時の必須チェック」（§5.8 検出スクリプト実行）を必須化、CLAUDE.md ヘッダにも同等の必須化と operation-manual.md 誘導追加。§14 row 1 拡張、運用ルール表に「運営者向けプロトコル変更」行追加 |
-| 2026-05-03 | v3.7：ブランチ運用方針確定。README.md §10 新設（Phase ブランチ + 常時 PBI sub-branch + worktree 並行 / merge --no-ff / sub-branch マージ後保持 / CF Pages Preview Branch Filter 必須 / main 保護 / Hotfix）。operation-manual.md / PHASE0-007 / PHASE0-009 / CLAUDE.md ヘッダに連動反映、§14 row 1 拡張・運用ルール表に「ブランチ運用」「CF Pages branch filter」行追加 |
-| 2026-05-03 | PHASE0 PBI 番号を着手順序に整列（旧 010→新 006、旧 006→新 007、旧 007→新 008、旧 008→新 009、旧 009→新 010）。本日以前の改訂履歴行に出てくる PBI 番号は当時の番号付けを参照 |
-| 2026-05-08 | v3.8：PHASE0-010 Retrospective Gate 事実修正。§6.4 `tailwind.config.ts` 削除（Tailwind v4 は CSS ベース設定）、Decision #21 を shadcn 4.x preset 体系に更新 |
-| 2026-06-13 | v3.9：Phase 再編（公開の独立フェーズ化）。1b = コンテンツ整備（新設）、1c = デザイン（旧 1b）、1d = 公開（新設、旧 PHASE1A-018 を移管）、1e = カテゴリ別一覧（旧 1c）。背景：本番 Worker が Phase 0 placeholder のまま・MX が apex 名指し・www に旧 Netlify サイト稼働という現状調査結果を受け、未完成サイトの公開を防ぐ構成に変更。Decision #25 #26 追加（公開フェーズ分離 / Contact 自前フォーム = Worker + Turnstile + Resend）、FR-29 追加、PHASE1A-020 の検証 URL を branch alias に変更、ドラフト 2 本作成（draft-phase1b-content-launch-prep.md / draft-phase1d-domain-launch.md）。Done 済み PBI 内の旧 Phase 名は当時表記のまま（読み替え：旧 1b → 新 1c、旧 1c → 新 1e） |
-| 2026-06-14 | E2E 検証を CI ルートに正式化（クラリフィケーション、v 番号据え置き）。`ui-tests.yml` を Playwright 公式コンテナ化して install ハング/timeout を解消、`scripts/ci-status.sh` 追加。Decision #27 追加・NFR-06 に CI 検証注記。§7 検証ゲートを 2→3 項目化（E2E/CI green 確認を常設、README §4.6 ルール 7 / 受け入れ条件テンプレ / INDEX セッション開始チェック / CLAUDE.md §7 連動、PBI 021・022 に N/A 行追加）。PBI 019 に事後追記で前方参照。旧「E2E は運営者ターミナル手動」前提は本日以降 CI 検証に置換 |
-| 2026-06-14 | Phase 1a Retrospective Gate（PHASE1A-022）での事実修正（クラリフィケーション、v 番号据え置き）。§10 未決事項 Q1/Q2/Q3/Q4/Q6/Q7/Q10/Q12 を Phase 1a 実装での確定値に反映（各 PHASE1A-006/008/009/014/015 参照）、§12 の README 参照を v2.8 → v2.9、§6.4 構成図に `src/types/` と `public/favicon.svg`〔暫定〕を追記。なお main マージ＋本番デプロイは v3.9 Decision #25 で Phase 1d 移管済みのため Gate では実施せず（PHASE1A-022 マージ節を N/A 化、運営者承認） |
-| 2026-06-14 | ガバナンス文書ドリフト一括是正（クラリフィケーション、v 番号据え置き）。README §10 ブランチ運用を deferred-merge に是正し README を v3.0 → v3.1 化（公開前 1a〜1c は feat/phase-1a 集約、main マージは 1d。site-plan §7 1d 行は元から整合）。連動して §12 の README 参照を v2.9 → v3.1 に訂正（前 Gate の v2.9 修正が誤り。README 現行は v3.0 だった）、§14 メンテ表の v2.x / v3.x 行を README の v3.x 名前空間移行に合わせて更新。CLAUDE.md line 69/90・operation-manual.md（毎 Phase マージ + 旧 worktree 記述）・INDEX.md も同コミットで是正。過去事実の改訂履歴行（直前の line 含む）と Done PBI 本体は不変のまま。 |
-| 2026-06-14 | 統合ブランチ改名（クラリフィケーション、v 番号据え置き。README v3.2 連動）。公開前 1a〜1c を集約する統合ブランチを `feat/phase-1a` → `feat/phase-1` にリネーム（sub-phase 名で統合ブランチを呼ぶ名前と中身のズレを解消。deferred-merge 構造は不変）。§12 の README 参照を v3.2 に更新。CLAUDE.md / README §10 / operation-manual.md / draft-phase1d の現行・前方参照と CF プレビュー URL（`feat-phase-1-...`）も連動更新。`feat/phase-*` パターン内なので CF filter / main 保護は無変更。Done PBI 本体の当時のブランチ名は不変。 |
-| 2026-07-12 | v3.10：**Phase 1c 先行トラック導入（1b 記事執筆との並行許可）**。1c を先行トラック（記事非依存：デザイン方向性確定 / 確定 HEX + color-contrast 再有効化 / タイポ確定 / ロゴ刷新 / favicon / B-1 見出しレベル / B-2 フォント CLS）と仕上げトラック（B-3 CSS サイズ / 全記事最終再検証 / 1c Gate、1b Gate 後に起票）に二分。背景：1b 残タスク（記事 008〜013）が運営者リライト・ヒアリング律速で、記事非依存のデザイン作業を待たせる実益がない（実コンテンツ検証の前提は 1b-001〜005 承認済み + 008 ドラフトで実質充足）。Decision #28 追加、§7 ロードマップ 1c 行・「PBI の起票タイミング」節に例外注記、§12 参照更新。README §9 例外追加（v3.3）、INDEX.md Phase 1c 節・着手ルール、CLAUDE.md、draft-phase1c-design-polish.md 着手条件、PHASE1B-014 申し送り宛先を連動更新。先行トラック PBI（PHASE1C-001〜007）を同日起票 |
-| 2026-07-30 | フォント読み込みを Astro 公式 Fonts API へ移行（PHASE1C-007、Decision #24 更新、v 番号据え置き）。`src/styles/global.css` の `@import "@fontsource-variable/*"` をやめ、`astro.config.mjs` の `fonts` 設定（provider は local、variants は `scripts/fontsource-variants.mjs` が fontsource の index.css から生成）+ BaseLayout の `<Font>` に変更。和文 Noto Sans JP は `display: "optional"`（差し替えによる本文のずれを構造的に無くす）、欧文 Geist は preload。背景：CLS はフォールバックの字形寸法差で決まり、端末の日本語フォント次第で 0.09〜0.23 まで振れることを実測。Astro の最適化フォールバックは Arial 基準で和文には効かないため和文側は無効化 |
-| 2026-07-13 | デザイン方向性確定（PHASE1C-001 完了の事実反映、クラリフィケーション、v 番号据え置き）。運営者が草案 3 案（快晴 / 春空 / 野の羽色、モックは docs/design-drafts/phase1c-001/）から**案2「春空」を選定**（修正指示なし）。確定記録を docs/design-direction.md に新設（パレット HEX/oklch + AA 検証値 / タイポ方向性 / トーン・署名要素 / 002〜005 への引き継ぎ）。§6.5.2 に確定候補値の所在を追記、§6.5.3 見出し書体を Zen Kaku Gothic New に更新 |
-| 2026-08-01 | ロゴ反復上限の延長（Decision #15 更新、v 番号据え置き）。PHASE1C-004 で 5 ラウンド消化（1 ボツ + 2〜5 差し戻し）後も未確定。運営者判断で上限を延長し、ラウンド 6 以降は「鳥 = 旧案1（尾を短縮 + 残像ストローク）、円と数字の滝 = 旧案2」の合意構成を画像生成 AI（Gemini）の編集ベースで作成するルートに切替。経緯詳細は PBI 実装ログ |
-| 2026-07-31 | タイポグラフィ確定（PHASE1C-003、§6.5.3 を確定値に差し替え、v 番号据え置き）。見出し書体 Zen Kaku Gothic New（500 / 700）を導入し、欧文専用の Geist は廃止して本文を Noto Sans JP 一本に。サイズ / 行間を `--text-*` トークン化（本文 16px / 行間 1.95、見出し 42 / 32 / 24 / 17 / 14px）、ウェイトは 500・700 の 2 段。和文は palt +`text-wrap: balance` + `word-break: auto-phrase`、コード内の和文コメントは Noto Sans JP に固定。読み込みは見出し swap / 本文 optional（初回訪問でブランド書体が出ることと CLS 抑制の両立。実測は PBI 実装ログ）。docs/design-direction.md §3 に確定結果を追記 |
-| 2026-08-02 | v3.11：**初期記事セット縮小（6 本 → 3 本、公開優先）**。公開前は T1（008 公開済み）+ T2（009）+ L1 法人化（012）の 3 本、T3 / T5 / L2+L3 は article-backlog.md へ移管し公開後に R-01 routine で消化。Decision #29 追加、§7 1b 行・§12 の自己参照更新。PHASE1B-010 / 011 / 013 を Dropped 化（README v3.6 で状態新設）、PHASE1B-014 完了条件・INDEX.md・CLAUDE.md 連動 |
-| 2026-08-05 | v3.12：**記事ライセンス変更（CC BY 4.0 → 通常の著作権表記）**。Footer の CC BY 表記を削除して © のみとし、Privacy に「著作権について」節を新設（出典明記の引用は歓迎、全文転載・二次利用は Contact へ相談）。CC BY は転載収益化をクレジットのみで許すため Phase 2 収益化と相性が悪く、配布後取消不能のため公開（1d）前に変更。Decision #30 追加、Q12・R-09 更新、CLAUDE.md（版数参照）連動 |
-| 2026-08-07 | Phase 1c Gate（PHASE1C-012）での事実修正（クラリフィケーション、v 番号据え置き）。§13 の現在地マーカーを §13.1 法人化前 → §13.2 移行期へ移動（PHASE1B-014 で記録に留めた持ち越し分の消化）。§12 の自己参照 v3.11 → v3.12、README 参照 v3.3 → v3.6（v3.12 改訂時の連動更新漏れ。CLAUDE.md の README 参照も同時修正）。決定内容の変更なし |
-| 2026-08-10 | v3.13：**公開後の運用形態を確定**（Phase 1d Gate = PHASE1D-009）。Decision #31 追加（統合ブランチを畳んで main 起点の 1 作業 1 ブランチへ / Phase 1e を「公開後の運用・改善」に再定義 / ダークモードはやらないと確定）。§7 ロードマップ 1e 行と現在地図、§12 次アクションを公開後の実態に書き換え。あわせて Gate で検出した差分を修正：§6.7 既存資産取扱表の自己参照が v3.8 のまま（→ v3.13）、§12 の README 参照 v3.8 → v3.9。README（§10 ブランチ運用を全面改訂、v3.9）・CLAUDE.md（ブランチ運用 / branch alias URL / Sandbox 制約）・operation-manual.md（シーン別表 / Q6 / 必須チェックリスト / health-check の取得 URL）を連動更新 |
-| 2026-08-08 | PHASE1D-002 での §13 実態合わせ（v 番号据え置き）。§13.2 の「byte-lark 株式会社（仮）」想定を実態（合同会社バイトラーク）へ更新、Footer / About に代表社員・所在地（市区レベル：香川県高松市、運営者決定）を追加、プライバシーポリシーに安全管理措置を明記し改定日 2026-08-08 を記載、インボイス登録番号は掲載なしで確定（直案件開始時に再検討）。incident-response.md の法人化前提記述も実態合わせ |
+[docs/site-plan-history.md](site-plan-history.md) に分割した（v3.14）。改訂履歴行と「版ごとの主な変更」の追記は分割先へ。他ファイルの改訂履歴との同期ルールは §14 の運用ルールに従う。
