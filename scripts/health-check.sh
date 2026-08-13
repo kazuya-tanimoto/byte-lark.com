@@ -37,7 +37,8 @@ MONITOR_URL="${MONITOR_URL:-https://byte-lark.com}"
 declare -a PATHS=("/")
 
 # 改ざんカナリア。text/html のページに、この文字列がすべて残っていることを確認する
-declare -a CANARIES=("<title>byte-lark.com</title>" "合同会社バイトラーク")
+# title は「〜 - byte-lark.com」の末尾だけ見る。前半（名前・役割）は変わりうるため完全一致にしない
+declare -a CANARIES=("byte-lark.com</title>" "合同会社バイトラーク")
 
 # 「name=部分文字列」形式。ヘッダ値にその文字列が含まれていることを要求する。
 # HSTS は Cloudflare のゾーン設定で付けているので、外れたら異常として拾う
