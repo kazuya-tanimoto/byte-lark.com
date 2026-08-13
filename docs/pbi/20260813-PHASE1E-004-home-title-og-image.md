@@ -1,7 +1,8 @@
 # 検索結果と SNS カードで、トップページが「誰の何のサイトか」を名前・役割入りタイトルと専用 OG 画像で伝えられる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-13
+Completed: 2026-08-13
 
 ## 誰が
 - 検索・SNS 経由の訪問者（ペルソナ最上位: エージェント担当者 / クライアント案件 PM の面談前リサーチ）
@@ -16,15 +17,15 @@ Started: 2026-08-13
 - 出所: 2026-08-13 の外部レビュー指摘 T1 / T2（採用判断の経緯は INDEX.md 起票済み節）
 
 ## 受け入れ条件
-- [ ] `index.astro` の title を「名前 + 役割 + サイト名」形式に変更。文言案を運営者に確認してから実装（案: `谷本和也 | PM/PO・フルスタックエンジニア - byte-lark.com`。Hero の表記 `PM / PO・フルスタックエンジニア` と揃える）
-- [ ] og:title / twitter:title が title と一致（`buildOgMeta()` が title から生成するため実装上は自動。出力で確認）
-- [ ] 他ページの title を壊していない（`yarn build` 後、`dist/` の全 HTML から `<title>` を抽出して一覧確認）
-- [ ] tools/imagegen（cover-image skill）でトップ用 OG 画像（1200x630）を生成し、記事カバーと同系統のトーンにする。候補を提示し運営者が選定
-- [ ] `index.astro` が `BaseLayout` に `ogImage` を渡し、`/` の og:image が専用画像を指す（他ページのフォールバック `og-default.png` は現状維持）
-- [ ] CF preview の HTML で title / og:title / og:image の出力を確認（X の card validator は廃止済み（PHASE1D-009 棚卸し表）。実投稿での見た目確認は 1D-006 の持ち越しと同じ機会に行う）
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] `index.astro` の title を「名前 + 役割 + サイト名」形式に変更。文言は運営者確認のうえ確定：`谷本和也 | PM / PO・フルスタックエンジニア - byte-lark.com`（Hero の表記に揃えた）
+- [x] og:title / twitter:title が title と一致（dist/index.html の出力で確認）
+- [x] 他ページの title を壊していない（`yarn build` 後、dist/ 全 12 HTML の `<title>` 抽出で「`/` のみ変更」を確認）
+- [x] tools/imagegen でトップ用 OG 画像を生成（Flash 3 候補、記事カバーと同トーンの設計図調）。1200px/400px/240px 比較を提示し運営者が候補 02 を選定
+- [x] `index.astro` が `BaseLayout` に `ogImage="/og-home.png"` を渡し、`/` の og:image が `https://byte-lark.com/og-home.png` を指す。他ページは og-default.png のまま（blog / career の dist 出力で確認）
+- [x] CF preview（branch alias）の HTML で title / og:title / og:image / twitter:title の出力を確認
+- [x] ローカル スクショ確認（dev server、desktop 1280px + mobile 390px。レイアウト崩れなし）
+- [x] CF preview スクショ確認（feat-1e-004-home-title-og-byte-lark.tanimoto-a49.workers.dev、desktop + mobile）
+- [x] E2E / CI green 確認（`scripts/ci-status.sh`：UI Tests=success / Quality Checks=success @ 9b368ef）
 
 ## 技術メモ
 - 想定セッション数: 1（小）
@@ -52,11 +53,23 @@ Started: 2026-08-13
 - OG 画像生成のコンテナ自走化を運営者承認のうえ決定：`allowed-domains.conf` に pypi.org / files.pythonhosted.org / generativelanguage.googleapis.com を追加
 
 残タスク:
-- 運営者：このクローン直下に `.env`（`GEMINI_API_KEY=...`）配置 → ccd 再起動 → resume
-- 再起動後：`tools/imagegen` の壊れた `.venv` を作り直し（`python3 -m venv .venv` が ensurepip 不足で失敗した残骸あり。venv 再作成も pip も firewall 更新後なら通る想定。pip が無ければ get-pip.py を先に）
-- Flash 3 枚生成（承認済み、約 45 円）→ 原寸 + 400px 縮小で評価 → 候補提示・運営者選定
-- 選定画像を 1200x630 に縮小して `public/og-home.png` に配置 → §7 検証（ローカル / CF preview スクショ、CI green、CF preview の meta 出力確認）
+- 運営者：このクローン直下に `.env`（`GEMINI_API_KEY=...`）配置 → ccd 再起動 → resume →（セッション 2 で完了）
 
 学び・想定外:
 - devcontainer には imagegen の実行基盤が丸ごと無い（`.venv` なし / pip・ensurepip なし / firewall が pypi・googleapis を遮断 / `.env` なし）。cover-image skill の手順は母艦前提だった
 - sudo と `rm -rf` はコンテナ内でも permission 拒否される（apt でのパッケージ追加・ディレクトリ掃除は不可）
+
+### 2026-08-13 セッション 2（devcontainer、コンテナ再起動後）
+
+やったこと:
+- firewall 疎通確認 OK（初回は Claude セッションのみの再起動で firewall 未更新 → コンテナ自体の再起動が必要だった。postStartCommand はコンテナ起動時のみ実行）
+- `.venv` 再構築：ensurepip 不在のため `python3 -m venv --without-pip --clear` → pypi から pip wheel を取得し `python <wheel>/pip install --ignore-installed pip` で bootstrap → python-dotenv / google-genai / Pillow 導入
+- Flash 3 枚生成（prompt_home.txt + reference-logo.png）→ 1200px / 400px / 240px 縮小で比較評価 → 運営者が候補 02（線画 + 翼断面図）を選定（240px 比較で鳥の形の判別性が最良）
+- 02 を 1200x630 LANCZOS 縮小で `public/og-home.png` に配置（860KB。256 色量子化は橙アクセントが劣化するため不採用）
+- §7 検証：ローカル / CF preview スクショ（desktop 1280px + mobile 390px）、CF preview の title / og:title / og:image / twitter:title 出力確認、CI green 確認
+
+学び・想定外:
+- venv の pip bootstrap は get-pip.py（bootstrap.pypa.io、firewall 外）不要。pip wheel は zip なので `python <wheel>/pip install` で直接実行できる
+- pip wheel 直接実行時は `--ignore-installed` が必要（wheel 自身が sys.path に乗り「already satisfied」になる）
+- Astro 6 の `yarn dev` はデーモン化する（バックグラウンド起動不要、停止は `yarn dev stop`）
+- コンテナ内でも repo の Playwright（chromium）で直接スクショ確認できる。母艦 MCP Playwright は不要だった
