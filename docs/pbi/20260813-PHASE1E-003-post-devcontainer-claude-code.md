@@ -46,8 +46,11 @@ Started: 2026-08-13
 - ヒアリング 1 巡目完了（質問と回答は `docs/article-interviews/claude-code-devcontainer.md`）。読者像 (a) 放置自走したい Claude Code ユーザー / 経緯を前半に / コード・スクショあり / 安全原則は深掘り / トーンは既存 tech 記事準拠 / タグ確定
 - **前後編 2 本に分割**（運営者承認）：安全原則の深掘り + ハマりどころ 3 件を 3,000 字 1 本に入れると両方薄くなるため。前編 = 設計編 / 後編 = 調整編。herdr は端末非依存の書き方で通し、T10 予告リンクに留める。反論想定 2 件（公式 sandboxing との関係 / firewall は IP ベース）は前編に入れる
 - 前編ドラフト作成（`src/content/posts/claude-code-devcontainer.md`、`draft: true`、本文約 3,300 字）。後編は雛形 + frontmatter のみ（本文は前編確定後）。`yarn build` 通過（12 ページ、draft は出力対象外）
+- 後編ドラフト作成（`src/content/posts/claude-code-devcontainer-tuning.md`、`draft: true`、本文約 3,000 字）。運営者指示により前編確定を待たず執筆。ハマりどころ 3 件を「隔離の副作用（母艦なら届いていたものが届かない）」の軸で通した。statusline バッジ判定と CleanShot マウントはコンテナ内の実物コードを確認して引用。CONTAINER バッジのスクショは TODO コメントで場所だけ確保（コンテナ内からは撮影不可 → 母艦セッションか運営者）。`yarn build` 通過
+- 並行作業の運用確認（運営者と合意）：PHASE1E-004 は別クローンの別セッションで並行する。同一クローン 2 セッションは checkout がクローン単位のため不成立。INDEX.md は pull→即コミットで衝突回避
 
 残タスク
-- 前編の運営者レビュー / リライト → 後編ドラフト執筆
+- 前編・後編の運営者レビュー / リライト
+- 後編の CONTAINER バッジのスクショ差し込み（TODO コメント箇所）
 - cover 画像 2 枚（cover-image skill）
 - 公開時：publishedAt を公開日に更新、前後編の相互リンク実効確認、`yarn fonts`、§7 検証
