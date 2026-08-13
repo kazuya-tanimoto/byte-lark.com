@@ -357,7 +357,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 | PHASE1E-001 | [postlaunch-housekeeping](20260810-PHASE1E-001-postlaunch-housekeeping.md) | Done |
 | PHASE1E-002 | [ci-trigger-cleanup](20260812-PHASE1E-002-ci-trigger-cleanup.md) | Done |
 | PHASE1E-003 | [post-devcontainer-claude-code](20260813-PHASE1E-003-post-devcontainer-claude-code.md) | NotStarted |
-| PHASE1E-004 | [home-title-og-image](20260813-PHASE1E-004-home-title-og-image.md) | NotStarted |
+| PHASE1E-004 | [home-title-og-image](20260813-PHASE1E-004-home-title-og-image.md) | InProgress |
 
 ### 起票済み・起票予定
 
