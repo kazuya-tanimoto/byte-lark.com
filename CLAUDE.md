@@ -58,7 +58,7 @@
    - E2E/CI 確認: `scripts/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
    - 未検証項目: （あれば正直に書く）
    ```
-8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit
+8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit → push → **README §10.6 のとおり `gh pr ready` → `gh pr merge --merge --delete-branch` まで実行**（マージまでが完了フロー。マージだけを運営者判断に委ねない）
 
 ### How to end this session
 - If a PBI is InProgress: append to `## 実装ログ` (やったこと/残タスク/学び/想定外)
@@ -104,7 +104,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.13)
-- docs/pbi/README.md          PBI format spec (v3.9) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.11) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）
