@@ -1,6 +1,7 @@
 # 訪問者は「devcontainer で Claude Code を自走させる環境を作った話」（tech）を読める
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-13
 
 ## 誰が
 - 訪問者

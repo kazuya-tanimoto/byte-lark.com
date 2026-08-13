@@ -5,7 +5,7 @@
 ## 次にやること
 
 - 現在地：**Phase 1e（公開後の運用・改善）**。Phase 0 〜 1d は完了（2026-08-08 公開、1d Gate 通過 2026-08-10）
-- 次の PBI：**[PHASE1E-003 記事 T9（devcontainer で Claude Code 自走）](20260813-PHASE1E-003-post-devcontainer-claude-code.md)**（2026-08-13 起票、運営者指名）。並行枠として [PHASE1E-004 トップの title / OG 画像](20260813-PHASE1E-004-home-title-og-image.md) も同日起票（外部レビュー指摘 T1+T2 採用分。003 の運営者リライト待ちの間に進める）。外部レビュー T3〜T7 と、PHASE1D-009 棚卸し持ち越し分（docs 肥大の分割 / セキュリティヘッダの残り / 旧インフラ撤収 / 運営者の実機確認まとめ）は引き続き運営者判断待ち。以後の主活動は記事の書き足しで、カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは**記事が 10 本に届いた時点**で Phase 1e に追加起票する（現在 3 本）
+- 次の PBI：**[PHASE1E-003 記事 T9（devcontainer で Claude Code 自走）](20260813-PHASE1E-003-post-devcontainer-claude-code.md)**（InProgress、2026-08-13 着手）。並行枠として [PHASE1E-004 トップの title / OG 画像](20260813-PHASE1E-004-home-title-og-image.md) も同日起票（外部レビュー指摘 T1+T2 採用分。003 の運営者リライト待ちの間に進める）。外部レビュー T3〜T7 は**不採用で確定**（運営者決定 2026-08-13。サイトの目的は職能リファレンスのまま、営業サイトへの方針転換はしない）。PHASE1D-009 棚卸し持ち越し分（docs 肥大の分割 / セキュリティヘッダの残り / 旧インフラ撤収 / 運営者の実機確認まとめ）は引き続き運営者判断待ち。以後の主活動は記事の書き足しで、カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは**記事が 10 本に届いた時点**で Phase 1e に追加起票する（現在 3 本）
 - ブランチ：main から短命ブランチを切り、**最初の push の直後に draft PR**（CI は PR がある状態でのみ走る。README §10.4、PHASE1E-002）。統合ブランチ `feat/phase-1` は 1d Gate で畳んだ（site-plan Decision #31）
 - 直前 Gate の申し送り：[PHASE1D-009](20260808-PHASE1D-009-retrospective-gate.md) の `## 次 Phase への申し送り`
 
@@ -356,7 +356,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 |---|---|---|
 | PHASE1E-001 | [postlaunch-housekeeping](20260810-PHASE1E-001-postlaunch-housekeeping.md) | Done |
 | PHASE1E-002 | [ci-trigger-cleanup](20260812-PHASE1E-002-ci-trigger-cleanup.md) | Done |
-| PHASE1E-003 | [post-devcontainer-claude-code](20260813-PHASE1E-003-post-devcontainer-claude-code.md) | NotStarted |
+| PHASE1E-003 | [post-devcontainer-claude-code](20260813-PHASE1E-003-post-devcontainer-claude-code.md) | InProgress |
 | PHASE1E-004 | [home-title-og-image](20260813-PHASE1E-004-home-title-og-image.md) | NotStarted |
 
 ### 起票済み・起票予定
@@ -370,7 +370,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
   6. `src/lib/jsonld.ts` のオリジンを `Astro.site` に追随させる
 - **PHASE1E-002（2026-08-12 起票）**：CI トリガーの整理。`quality.yml` / `ui-tests.yml` が `push` と `pull_request` の両方で発火し、PR が開いている間は同じコミットに `quality` / `e2e` が 2 本ずつ付いていた（PR #39 の head `7bdd828` で実測）。`push` を main だけに絞り、短命ブランチの検査は `pull_request` に一本化する。代わりに最初の push の直後に draft PR を作る運用へ（README §10.4）。出所は PHASE1D-009 の棚卸しではなく 2026-08-12 の運営者指摘
 - **PHASE1E-003（2026-08-13 起票）**：記事 T9「devcontainer で Claude Code を自走させる環境を作った」（tech）。開発環境 3 連作の 2 本目を先行執筆（運営者指名 2026-08-13）
-- **PHASE1E-004（2026-08-13 起票）**：トップページの title / og:title と専用 OG 画像。出所は 2026-08-13 の外部レビュー（Opus によるサイト評価）指摘 T1+T2。同レビューの T3（ご依頼ページ新設）/ T4（Career 定量化）/ T5・T6（Skills・資格の見せ方）/ T7（ブログの営業記事化）は、サイトの目的（site-plan §2「職能リファレンス」）を「営業サイト」へ広げるかの判断と運営者インプットが必要なため未起票・判断待ち
+- **PHASE1E-004（2026-08-13 起票）**：トップページの title / og:title と専用 OG 画像。出所は 2026-08-13 の外部レビュー（Opus によるサイト評価）指摘 T1+T2。同レビューの T3（ご依頼ページ新設）/ T4（Career 定量化）/ T5・T6（Skills・資格の見せ方）/ T7（ブログの営業記事化）は**不採用で確定**（運営者決定 2026-08-13。「営業サイトへの転換」という前提自体が site-plan §2 の目的にない方針変更であり、転換しないと判断。外からサイトを見ただけの提案で運営者の商流実態に合わない）
 - **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 3 本
 
 ---
