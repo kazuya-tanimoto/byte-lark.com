@@ -1,7 +1,8 @@
 # PHASE1E-006: セキュリティヘッダの追加（nosniff / Referrer-Policy / X-Frame-Options）
 
-Status: InProgress
+Status: Done
 Started: 2026-08-15
+Completed: 2026-08-15
 
 ## 誰が
 
@@ -17,12 +18,12 @@ PHASE1D-007 の実測で本番にセキュリティヘッダが 1 つも無い�
 
 ## 受け入れ条件
 
-- [ ] `public/_headers` に `/*` 向けの 3 ヘッダを追加：`X-Content-Type-Options: nosniff` / `Referrer-Policy: strict-origin-when-cross-origin` / `X-Frame-Options: DENY`
-- [ ] CF preview（branch alias URL）で 3 ヘッダが返ることを curl で実測確認
-- [ ] 既存ヘッダに影響が無いこと（`/_astro/*` の Cache-Control、HSTS）を同実測で確認
-- [ ] ローカル スクショ確認：N/A（ヘッダのみ、表示に変更なし）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認：N/A（同上。curl でのヘッダ実測で代替）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認：`bash scripts/ci-status.sh` で Quality Checks / UI Tests が success（CLAUDE.md §7）
+- [x] `public/_headers` に `/*` 向けの 3 ヘッダを追加：`X-Content-Type-Options: nosniff` / `Referrer-Policy: strict-origin-when-cross-origin` / `X-Frame-Options: DENY`
+- [x] CF preview（branch alias URL）で 3 ヘッダが返ることを curl で実測確認
+- [x] 既存ヘッダに影響が無いこと（`/_astro/*` の Cache-Control、HSTS）を同実測で確認（HSTS は CF ダッシュボード側設定で `_headers` 変更の影響外。本番 apex はマージ後に確認）
+- [x] ローカル スクショ確認：N/A（ヘッダのみ、表示に変更なし）（CLAUDE.md §7）
+- [x] CF preview スクショ確認：N/A（同上。curl でのヘッダ実測で代替）（CLAUDE.md §7）
+- [x] E2E / CI green 確認：`bash scripts/ci-status.sh` で Quality Checks / UI Tests が success（CLAUDE.md §7）
 
 ## 技術メモ
 
@@ -37,3 +38,18 @@ PHASE1D-007 の実測で本番にセキュリティヘッダが 1 つも無い�
 - 同日の運営者決定：Xserver 側 DNS ゾーンは切り戻し保険として残す（確定、判断待ちから除去）。Turnstile 実送信は運営者が実施しメール到達を確認済み
 
 ## 実装ログ（着手後に追記、中断時は必須）
+
+### 2026-08-15 セッション 1（起票・実施・完了）
+
+#### やったこと
+- `public/_headers` に `/*` ルールを追加（3 ヘッダ + コメント 2 行のみ、計 7 行）
+- CF preview（`chore-1e-006-security-headers-byte-lark.tanimoto-a49.workers.dev`）で curl 実測：
+  - `/`：`x-content-type-options: nosniff` / `referrer-policy: strict-origin-when-cross-origin` / `x-frame-options: DENY` の 3 つとも返る
+  - `/_astro/BaseLayout.D1BVeaQ3.css`：`cache-control: public, max-age=31536000, immutable` 維持 + 3 ヘッダも付与（`/*` と `/_astro/*` のルールはマージされる）
+- CI：Quality Checks / UI Tests(e2e) とも success（実装コミット f9887e1）
+
+#### 学び
+- `_headers` の複数ルールは同一パスに両方マッチするとヘッダがマージされる（`/_astro/*` にも 3 ヘッダが付いた。上書きでなく加算）
+
+#### 想定外
+- なし
