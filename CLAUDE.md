@@ -17,7 +17,7 @@
 - src/pages/         Astro routes (file-based)
 - src/components/    Custom Astro / React components
 - src/components/ui/ shadcn/ui copy-paste components
-- src/content/posts/ Markdown / MDX articles
+- src/content/posts/ Markdown / MDX articles（常に `<slug>/index.md` のフォルダ形式。posts 直下にフラット配置しない）
 - src/data/          Structured TS data (career, skills)
 - src/layouts/       BaseLayout / PageLayout / PostLayout
 - src/lib/           Utilities (cn, OGP helpers, JSON-LD)
