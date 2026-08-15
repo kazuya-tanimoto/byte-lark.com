@@ -36,7 +36,7 @@ RUN corepack enable
 # Playwright Chromium の OS 依存パッケージのみ焼き込み（ブラウザ本体は
 # postCreate で repo の @playwright/test と同じバージョンを入れる）。
 # バージョンは repo の @playwright/test 解決バージョンに合わせて更新すること。
-ARG PLAYWRIGHT_VERSION=1.59.1
+ARG PLAYWRIGHT_VERSION=1.62.1
 RUN npx -y playwright@${PLAYWRIGHT_VERSION} install-deps chromium \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
