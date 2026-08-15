@@ -1,4 +1,4 @@
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 
@@ -29,10 +29,11 @@ if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
   process.exit(1);
 }
 
-const filePath = resolve(POSTS_DIR, `${slug}.md`);
+const dirPath = resolve(POSTS_DIR, slug);
+const filePath = resolve(dirPath, "index.md");
 
-if (existsSync(filePath)) {
-  console.error(`Error: ${filePath} already exists`);
+if (existsSync(dirPath)) {
+  console.error(`Error: ${dirPath} already exists`);
   process.exit(1);
 }
 
@@ -53,5 +54,6 @@ slug: ${slug}
 
 `;
 
+mkdirSync(dirPath);
 writeFileSync(filePath, content, "utf-8");
-console.log(`Created: src/content/posts/${slug}.md`);
+console.log(`Created: src/content/posts/${slug}/index.md`);

@@ -65,7 +65,8 @@ Claude が以下を行う:
 - `yarn new-post --slug <slug>` で雛形を生成
 - frontmatter を埋める（`draft: true`）
 - 本文を Markdown で書く
-- 文体プロファイル（`docs/writing-style/profile.md`）があればそのトーンに寄せる
+- 文体プロファイル（`docs/writing-style/profile.md`）を必読し、そのトーン・「避ける表現」を守って書く
+- article-review スキルの 7 軸（事実照合〜読者適合）を満たす前提で書き、ドラフトを出す前に自己チェックする。レビューで初めて直すのではなく、初回ドラフトから考慮する
 
 ## 6. リライト
 
@@ -94,7 +95,7 @@ yarn fonts
 
 ## 画像・添付ファイルの置き場所
 
-- 画像を使う記事はフォルダ形式にする: `src/content/posts/<slug>/index.md` + 画像を同じフォルダに同居（loader は `**/*.{md,mdx}` なのでフォルダ化しても収集される。URL は frontmatter の `slug` で決まるため変わらない）
+- 記事は画像の有無によらず常にフォルダ形式で作る: `src/content/posts/<slug>/index.md`（`yarn new-post` がこの形式で生成。posts 直下にフラットな `<slug>.md` を置かない）。画像は同じフォルダに同居（loader は `**/*.{md,mdx}` なのでフォルダ化しても収集される。URL は frontmatter の `slug` で決まるため変わらない）
 - 本文からは相対パスで参照する（`![説明](./figure.png)`）。Astro のビルド時最適化（圧縮・ハッシュ名・width/height 自動付与）が効く。`public/` 置きは最適化が効かないため記事画像には使わない
 - アイキャッチは frontmatter の `cover: ./cover.png`。ブログ一覧カード・記事ページ冒頭・og:image（1200×630 に自動変換）の 3 か所に自動反映される。元画像は縦横比 40:21（1200×630 以上）で作る
 - AI 生成イラストを使う場合は、確定パレット「春空」（docs/design-direction.md §2）とブランドトーン（ヒバリ意匠）に寄せ、記事間で作風を揃える
@@ -110,4 +111,4 @@ yarn fonts
 yarn new-post --slug my-first-post
 ```
 
-`src/content/posts/my-first-post.md` が生成される。詳細は `scripts/new-post.ts` を参照。
+`src/content/posts/my-first-post/index.md` が生成される。詳細は `scripts/new-post.ts` を参照。
