@@ -10,6 +10,8 @@ pre-commit:
 pre-push:
   parallel: false
   commands:
+    version-refs:
+      run: bash scripts/check-version-refs.sh
     typecheck:
       run: yarn check:ts
     vitest:
