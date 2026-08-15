@@ -103,7 +103,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 - wip(pbi): PHASE0-NNN <note>    # 中間コミット
 
 ## Related Docs
-- docs/site-plan.md           Site construction plan (current: v3.14)
+- docs/site-plan.md           Site construction plan (current: v3.15)
 - docs/site-plan-decisions.md Decision Log 本体（site-plan §8 は誘導スタブ。改訂履歴は site-plan-history.md / pbi/INDEX-history.md に分割）
 - docs/pbi/README.md          PBI format spec (v3.11) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview

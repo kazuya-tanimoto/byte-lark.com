@@ -4,6 +4,8 @@
 
 ## 版ごとの主な変更（新しい順）
 
+> v3.14 → v3.15 主な変更：**§14 バージョン参照チェックのスクリプト化（PHASE1E-007）**。現行版数の相互参照検査を `scripts/check-version-refs.sh` に実装し lefthook pre-push へ組み込み（§14「将来の自動化」を実装済みに更新）。R-13 のオフサイト mirror バックアップは見送り確定（Decision #32）。CLAUDE.md 連動更新。
+
 > v3.13 → v3.14 主な変更：**計画書と INDEX の分割（読み込み効率化、PHASE1E-005）**。改訂履歴と「版ごとの主な変更」を `docs/site-plan-history.md` へ、Decision Log 本体を `docs/site-plan-decisions.md` へ切り出し（§8 は誘導スタブ、参照表記「site-plan §8 Decision #NN」は不変）。INDEX.md の改訂履歴も `docs/pbi/INDEX-history.md` へ切り出し。あわせて §12 の README 参照のドリフト（v3.9 のまま、現行 v3.11）を修正。§14・CLAUDE.md 連動更新。
 
 > v3.12 → v3.13 主な変更：**公開後の運用形態の確定**（Phase 1d Gate = PHASE1D-009）。① 統合ブランチ `feat/phase-1` を畳み、main 起点の「1 作業 1 ブランチ → PR」に戻す ② Phase 1e を「カテゴリ別一覧」から「公開後の運用・改善」に再定義（カテゴリ別一覧と前後記事リンクは記事 10 本到達時に同 Phase へ追加起票）③ ダークモードはやらないと確定。Decision #31 追加、§7 ロードマップ 1e 行・現在地図・§12 次アクションを公開後の実態に更新。README v3.9 / CLAUDE.md / operation-manual.md 連動。
@@ -66,3 +68,4 @@
 | 2026-08-10 | v3.13：**公開後の運用形態を確定**（Phase 1d Gate = PHASE1D-009）。Decision #31 追加（統合ブランチを畳んで main 起点の 1 作業 1 ブランチへ / Phase 1e を「公開後の運用・改善」に再定義 / ダークモードはやらないと確定）。§7 ロードマップ 1e 行と現在地図、§12 次アクションを公開後の実態に書き換え。あわせて Gate で検出した差分を修正：§6.7 既存資産取扱表の自己参照が v3.8 のまま（→ v3.13）、§12 の README 参照 v3.8 → v3.9。README（§10 ブランチ運用を全面改訂、v3.9）・CLAUDE.md（ブランチ運用 / branch alias URL / Sandbox 制約）・operation-manual.md（シーン別表 / Q6 / 必須チェックリスト / health-check の取得 URL）を連動更新 |
 | 2026-08-08 | PHASE1D-002 での §13 実態合わせ（v 番号据え置き）。§13.2 の「byte-lark 株式会社（仮）」想定を実態（合同会社バイトラーク）へ更新、Footer / About に代表社員・所在地（市区レベル：香川県高松市、運営者決定）を追加、プライバシーポリシーに安全管理措置を明記し改定日 2026-08-08 を記載、インボイス登録番号は掲載なしで確定（直案件開始時に再検討）。incident-response.md の法人化前提記述も実態合わせ |
 | 2026-08-13 | v3.14：**計画書と INDEX の分割（読み込み効率化）**（PHASE1E-005）。改訂履歴と「版ごとの主な変更」を本ファイルへ、Decision Log 本体を docs/site-plan-decisions.md へ切り出し（§8 は誘導スタブ、参照表記は不変）。INDEX.md の改訂履歴も docs/pbi/INDEX-history.md へ切り出し。§12 の README 参照ドリフト（v3.9 → 現行 v3.11）を修正、§14 の改訂履歴同期ルール・CLAUDE.md（セッション開始手順 / Related Docs）連動 |
+| 2026-08-15 | v3.15：**§14 バージョン参照チェックのスクリプト化**（PHASE1E-007）。現行版数の相互参照検査を scripts/check-version-refs.sh に実装し lefthook pre-push へ組み込み、§14「将来の自動化」を実装済みに更新。R-13 のオフサイト mirror バックアップは見送り確定（Decision #32）。CLAUDE.md（Related Docs 版数）連動 |

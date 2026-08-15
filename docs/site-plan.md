@@ -1,8 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.14)
+# byte-lark.com サイト構築計画書 (v3.15)
 
-最終更新: 2026-08-13
+最終更新: 2026-08-15
 
-> v3.13 → v3.14 主な変更：**計画書と INDEX の分割（読み込み効率化、PHASE1E-005）**。改訂履歴と「版ごとの主な変更」を `docs/site-plan-history.md` へ、Decision Log 本体を `docs/site-plan-decisions.md` へ切り出し（§8 は誘導スタブ、参照表記「site-plan §8 Decision #NN」は不変）。INDEX.md の改訂履歴も `docs/pbi/INDEX-history.md` へ切り出し。あわせて §12 の README 参照のドリフト（v3.9 のまま、現行 v3.11）を修正。§14・CLAUDE.md 連動更新。
+> v3.14 → v3.15 主な変更：**§14 バージョン参照チェックのスクリプト化（PHASE1E-007）**。現行版数の相互参照検査を `scripts/check-version-refs.sh` に実装し lefthook pre-push へ組み込み（§14「将来の自動化」を実装済みに更新）。R-13 のオフサイト mirror バックアップは見送り確定（Decision #32）。CLAUDE.md 連動更新。
 >
 > 過去の「版ごとの主な変更」と改訂履歴表は [docs/site-plan-history.md](site-plan-history.md) を参照。
 
@@ -355,7 +355,7 @@ Astro の標準機能で完全対応：
 | `src/dev/`、`@react-buddy/*` 依存 | 削除 | — |
 | `src/stories/` Storybook 公式テンプレ | 削除 | — |
 | `CLAUDE.md`（プロジェクト規約） | **書き換え**（PHASE0-005、Astro/Tailwind/shadcn + 多セッション運用プロトコル） | 同パス |
-| `docs/site-plan.md` | 上書き（v2 → v3.14） | 本ファイル |
+| `docs/site-plan.md` | 上書き（v2 → v3.15） | 本ファイル |
 | `docs/operation-manual.md` | **新規作成済**（v3.6 連動、運営者向けプロトコル） | 同パス |
 | `.github/workflows/codeql.yml` | 流用（言語自動検出で Astro 対応） | 同パス |
 | `.github/dependabot.yml` | 内容確認の上、依存先パッケージ名を更新（PHASE0-007） | 同パス |
@@ -418,7 +418,7 @@ Phase 2（記事 30 本以上で起票）
 | R-10 | プライバシー・解析法務（GA4 + EU 訪問者等） | コンプラ違反 | Q9 で **Cloudflare Web Analytics 採用** = Cookieless = 同意 UI 不要。プライバシーポリシー（FR-22）に明記 | アクセス開始時点 | 運営者 |
 | R-11 | インシデント対応（改ざん・連絡先漏えい） | 信用毀損 | (a) Cloudflare のセキュリティイベント or UptimeRobot で監視、(b) 漏えい時の対応者 = 運営者本人、(c) 最低限の連絡先 + 手順を `docs/incident-response.md` に記載（Phase 1a 末） | インシデント発生時 | 運営者 |
 | R-12 | 時間捻出リスク（本業繁忙期に Phase 1a が止まる） | 全体スケジュール延伸 | 月別の現実投下時間見積を持つ / Phase ごと +50% バッファ。停滞時は Phase 縮小（FR-19 を 1e → Phase 2 に等）で対応 | Phase 1a で 1 週間以上の進捗ゼロ | 運営者 |
-| R-13 | バックアップ（GitHub アカウント停止リスク） | 全資産喪失 | Git は GitHub + ローカル + 別オフサイト（外付け SSD or 別 git ホスティングへの mirror）。`docs/backup-policy.md` に記載 | アカウント停止通知 | 運営者 |
+| R-13 | バックアップ（GitHub アカウント停止リスク） | 全資産喪失 | ローカル clone（母艦 + devcontainer）との併存で受容。オフサイト mirror / `docs/backup-policy.md` は見送り（2026-08-15、Decision #32。全損は GitHub 停止 + 母艦故障の同時発生に限られる） | アカウント停止通知 | 運営者 |
 | R-14 | デプロイ先のフリープラン制限（CF Pages のビルド回数制限等） | 公開停止 | 月初に CF Pages ダッシュボードで使用量確認。法人化後は有料プラン契約を検討 | 月使用量 80% 到達 | 運営者 |
 | R-15 | 依存スタック（Astro 6 / Tailwind v4 / shadcn）の若さ | 破壊的変更頻度高 | major up は専用ブランチで検証、本サイトを pin で運用。リリースノートを月次で確認 | 月次レビュー | Claude |
 
@@ -537,7 +537,7 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 - **PBI を追加・リネーム・削除する時**：本表の該当パターンで grep し、INDEX.md / 関連 PBI / site-plan §6.7・§7 を同期
 - **改訂履歴の同期**：site-plan（分割先 `docs/site-plan-history.md`）/ README.md / INDEX（分割先 `docs/pbi/INDEX-history.md`）/ 関連 PBI のいずれかで改訂履歴行を追加する時、他の改訂履歴も**同コミット内で**整合更新（前ラウンドで INDEX.md 改訂履歴の追記漏れが発生した教訓）。v3.14 で site-plan / INDEX の改訂履歴は別ファイルに分割済み
 - **本表自体のメンテ**：新たな連動更新漏れパターンが発覚したら、本表に追加して将来の漏れを防ぐ
-- **将来の自動化**：本 §14 の grep 7 パターンを `scripts/check-version-refs.sh` 等にスクリプト化し、lefthook の pre-push に組み込む案を Phase 1a 冒頭で別 PBI として起票検討（手動 grep 忘れリスクの構造的排除）
+- **自動化（実装済み、PHASE1E-007）**：現行版数の相互参照（site-plan タイトル / 冒頭注記 / §6.7 / §12 README 参照 / CLAUDE.md Related Docs / site-plan-history.md 追記）は `scripts/check-version-refs.sh` が lefthook pre-push で機械検査する。過去事実の仕分けと PBI 件数系は本表の手動 grep のまま
 
 ---
 
