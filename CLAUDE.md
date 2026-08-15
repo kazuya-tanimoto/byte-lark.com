@@ -17,7 +17,7 @@
 - src/pages/         Astro routes (file-based)
 - src/components/    Custom Astro / React components
 - src/components/ui/ shadcn/ui copy-paste components
-- src/content/posts/ Markdown / MDX articles
+- src/content/posts/ Markdown / MDX articles（常に `<slug>/index.md` のフォルダ形式。posts 直下にフラット配置しない）
 - src/data/          Structured TS data (career, skills)
 - src/layouts/       BaseLayout / PageLayout / PostLayout
 - src/lib/           Utilities (cn, OGP helpers, JSON-LD)
@@ -35,7 +35,7 @@
 ## Multi-session work
 
 ### How to start work in this session
-1. Read docs/site-plan.md (current Phase, Decision Log)
+1. Read docs/site-plan.md (current Phase; Decision Log 本体は docs/site-plan-decisions.md)
 2. Read docs/pbi/INDEX.md (PBI status overview)
 3. Pick the next PBI:
    - If any InProgress PBI exists, read its 実装ログ first; resume only if explicitly handed off
@@ -58,7 +58,7 @@
    - E2E/CI 確認: `scripts/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
    - 未検証項目: （あれば正直に書く）
    ```
-8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit
+8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit → push → **README §10.6 のとおり `gh pr ready` → `gh pr merge --merge --delete-branch` まで実行**（マージまでが完了フロー。マージだけを運営者判断に委ねない）
 
 ### How to end this session
 - If a PBI is InProgress: append to `## 実装ログ` (やったこと/残タスク/学び/想定外)
@@ -103,8 +103,9 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 - wip(pbi): PHASE0-NNN <note>    # 中間コミット
 
 ## Related Docs
-- docs/site-plan.md           Site construction plan (current: v3.13)
-- docs/pbi/README.md          PBI format spec (v3.9) including §10 branch ops
+- docs/site-plan.md           Site construction plan (current: v3.15)
+- docs/site-plan-decisions.md Decision Log 本体（site-plan §8 は誘導スタブ。改訂履歴は site-plan-history.md / pbi/INDEX-history.md に分割）
+- docs/pbi/README.md          PBI format spec (v3.11) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）
