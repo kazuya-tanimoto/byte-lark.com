@@ -92,7 +92,11 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -x
 
 # Install Claude
-RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
+# npm は optionalDependencies（claude 本体のネイティブバイナリ）の取得失敗を exit 0 で
+# 握りつぶし、スタブが残ったままビルドが成功してしまう（2026-08-15 monotrip.jp で実測）。
+# 実行して検証し、壊れたイメージをビルド時点で落とす
+RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION} \
+  && claude --version
 
 # Copy and set up firewall / perms scripts
 # （node に許す sudo はこの固定 2 スクリプトのみ。汎用 sudo は与えない）
