@@ -1,6 +1,6 @@
 ---
 title: "記事タイトル"
-description: "短い概要（OGP description にも使われる、80-120字程度）"
+description: "短い概要（OGP descriptionにも使われる、80-120字程度）"
 category: tech
 tags: [astro, typescript]
 publishedAt: 2026-01-01
@@ -12,7 +12,7 @@ slug: my-post-slug
 
 # 記事タイトル
 
-導入: 何についての記事か、読者が得られるものを 2-3 文で。
+導入: 何についての記事か、読者が得られるものを2-3文で。
 
 ## 背景 / 動機
 
@@ -20,7 +20,7 @@ slug: my-post-slug
 
 ## 本題
 
-### セクション 1
+### セクション1
 
 内容。コード例があれば:
 
@@ -28,7 +28,7 @@ slug: my-post-slug
 const example = "hello";
 ```
 
-### セクション 2
+### セクション2
 
 続き。
 
