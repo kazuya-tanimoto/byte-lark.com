@@ -29,6 +29,9 @@
 - Blog category は frontmatter、URL は flat /blog/:slug
 - Color palette: 確定パレット「春空」（docs/design-direction.md §2、PHASE1C-002 で global.css トークンに反映済み）。sun / wash / チップ面は文字色に使わない
 
+## Article Writing
+- 記事本文に関わる作業（ドラフト作成・リライト・レビュー・部分修正）の前に docs/writing-style/profile.md を必読し、そのルールに従う
+
 ## Code Style
 - TypeScript strict, 2-space indent, 100 char line, named exports preferred
 
