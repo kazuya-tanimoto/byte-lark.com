@@ -96,7 +96,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 - `.devcontainer/` は Claude Code をコンテナ内で全権限自走させる環境（PHASE1B-016 導入。設計・実施手順: docs/devcontainer-plan.md）。今いる環境の見分け方：作業ディレクトリが `/workspace` ならコンテナ内、`/Users/kazuya/...` なら母艦
 - 住み分け：コンテナ = yarn ネットワーク系 / `yarn test:e2e` ローカル実行 / `--dangerously-skip-permissions` 放置自走。母艦 = MCP Playwright スクショ確認・ブラウザ系 MCP・プロジェクトメモリ。コンテナ内では Sandbox 制約節の回避策は不要（直接実行してよい）
 - 書き戻し禁止：コンテナから母艦の設定（`~/dotfiles`、`~/.claude`）に書き戻さない。グローバル CLAUDE.md は read-only mount からのコピー持ち込みのみ（.devcontainer/setup-container.sh）、コンテナ内の Claude 設定は専用 volume に閉じる
-- push 認証は fine-grained PAT（この repo 限定 / Contents read+write）。コンテナ内 `gh auth login` で専用 volume に永続化済み。PAT を repo / イメージ / 環境変数に書かない
+- push 認証は fine-grained PAT（この repo 限定。権限は Contents read+write を起点に、運用上必要になった分のみ追加）。コンテナ内 `gh auth login` で専用 volume に永続化済み。PAT を repo / イメージ / 環境変数に書かない
 - 起動は fish 関数 `ccd`（dotfiles 管理、firewall 有効チェック付き。`ccd --auto` = 放置自走）。運営者向け手順は docs/operation-manual.md §5
 
 ## Commit Convention
