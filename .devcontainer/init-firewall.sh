@@ -13,6 +13,13 @@ ALLOWED_CONF="/workspace/.devcontainer/allowed-domains.conf"
 # 1. Extract Docker DNS info BEFORE any flushing
 DOCKER_DNS_RULES=$(iptables-save -t nat | grep "127\.0\.0\.11" || true)
 
+# 再実行に耐えるよう policy を先に ACCEPT へ戻す。iptables -F はルールを消すだけで
+# policy は前回の DROP が残るため、これが無いと再実行時に自分の DROP で
+# api.github.com を引けずに exit 1 し、DNS 以外が全て落ちた状態で固まる
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
 # Flush existing rules and delete existing ipsets
 iptables -F
 iptables -X

@@ -78,8 +78,8 @@ slug: incorporating-bytelark
 
 ## 社名の由来
 
-[About](/about) にも書いていますが、byte-lark は byte（バイト）と lark（ヒバリ）を組み合わせた名前です。  
-ドイツ語の Beitrag（バイトラーク）には「貢献」という意味があります。  
+[About](/about)にも書いていますが、byte-larkはbyte（バイト）とlark（ヒバリ）を組み合わせた名前です。  
+ドイツ語のBeitrag（バイトラーク）には「貢献」という意味があります。  
 個人事業のときから使っていた屋号を、そのまま法人名に引き継ぎました。
 
 ## まとめ
