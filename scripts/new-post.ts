@@ -4,6 +4,9 @@ import { parseArgs } from "node:util";
 
 const POSTS_DIR = resolve(import.meta.dirname, "../src/content/posts");
 
+const CATEGORIES = ["tech", "life"] as const;
+type Category = (typeof CATEGORIES)[number];
+
 const { values } = parseArgs({
   options: {
     slug: { type: "string" },
@@ -40,7 +43,15 @@ if (existsSync(dirPath)) {
 const now = new Date();
 const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 const title = values.title ?? "記事タイトル";
-const category = values.category === "life" ? "life" : "tech";
+
+if (!(CATEGORIES as readonly string[]).includes(values.category)) {
+  console.error(
+    `Error: --category "${values.category}" is invalid. Use one of: ${CATEGORIES.join(" / ")}`,
+  );
+  process.exit(1);
+}
+
+const category = values.category as Category;
 
 const content = `---
 title: "${title}"

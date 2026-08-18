@@ -112,6 +112,9 @@
       "WebFetch(domain:plausible.io)"
     ],
     "deny": [
+      "Bash(yarn exec*)",
+      "Bash(yarn dlx*)",
+      "Bash(yarn node*)",
       "Bash(git add -A*)",
       "Bash(git add --all*)",
       "Bash(git add -u*)",
