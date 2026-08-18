@@ -69,3 +69,14 @@ Started: 2026-08-13
 
 学び・想定外
 - ドラフト生成が profile.md を参照する仕組みはあったが「基本トーン」等が未記入で効いていなかった。文体指摘はルール化して profile.md に蓄積するのが再発防止になる（今回実施）
+
+### 2026-08-18
+
+やったこと
+- 前編 cover 作成・配置：候補 3 枚から運営者が 01（桜色アクセント・コンテナ断面）を選定。2000×1050 に縮小して配置、frontmatter に `cover: ./cover.png` 追加、publishedAt を公開日 2026-08-18 に更新
+- カバーデザインの暫定方針を cover-image skill（.claude/skills/cover-image/SKILL.md）に追記：一覧で「全部同じ画像」に見える問題への対応。固定 = 設計図調 + 雲雀署名、可変 = 主役モチーフ + アクセント色ローテーション。記事用プロンプト `tools/imagegen/prompt_claude-code-devcontainer.txt` 新調
+- 前後編一括公開の想定を前編単独公開に変更（運営者指示）：前編の後編リンク 2 箇所（冒頭「後編に分けて〜」/ 末尾「後編にまとめました〜」）からリンクを外し文言調整
+
+残タスク
+- **後編公開時：前編の上記 2 箇所に `/blog/claude-code-devcontainer-tuning` へのリンクを戻す**（冒頭の導入段落と本文末尾）
+- 前編公開フローの続き：article-review → 承認反映 → `yarn fonts` → `draft: false` → §7 検証 → マージ

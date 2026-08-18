@@ -1,10 +1,11 @@
 ---
 title: "Claude Codeを全権限で自走させるなら、隔離が要る"
-description: "Claude Codeに開発を任せて放置したい。でも全権限を渡すのは怖い。devcontainerで隔離して自走させる環境を作った話の設計編です。手元のMacへの書き戻し禁止・最小権限のPAT・default-denyのfirewallを実体験から書きます。"
+description: "Claude Codeに開発を任せて放置したい。でも全権限を渡すのは怖い。devcontainerで隔離して自走させる環境の設計編です。手元のMacへの書き戻し禁止・最小権限のPAT・default-denyのfirewallを書きます。"
 category: tech
 tags: ["claude code", "devcontainer", "docker"]
-publishedAt: 2026-08-13
-draft: true
+publishedAt: 2026-08-18
+draft: false
+cover: ./cover.png
 slug: claude-code-devcontainer
 ---
 
@@ -18,7 +19,7 @@ Claude Codeには`--dangerously-skip-permissions`というオプションがあ�
 調べた結果、全権限で自走させるなら隔離した環境を別に用意するしかない、という結論になりました。  
 隔離環境自体は、Anthropic公式の雛形をベースにすれば現実的な手間で作れます。  
 この記事はその設計編で、devcontainerを選んだ理由と、作るときに決めたことを書きます。  
-実際に使い始めてからの細かい調整（こちらも結構ありました）は[後編](/blog/claude-code-devcontainer-tuning)に分けています。
+実際に使い始めてからの細かい調整（こちらも結構ありました）は後編に分けて、近いうちに公開します。
 
 ## 困っていたこと
 
@@ -39,7 +40,7 @@ Claude Codeには`--dangerously-skip-permissions`というオプションがあ�
 
 ## 「専用Mac」案はやめた
 
-最初に考えたのは、Claude専用に、最悪壊れてもいいMacを用意し、その上でフル権限で走らせる案ですが、これは調べた上でやめました。  
+最初に考えたのは、Claude専用に、最悪壊れてもいいMacを用意し、その上で全権限で走らせる案ですが、これは調べた上でやめました。  
 そのMacの中にはClaudeを止めるものが何もないので、OSの設定も、git pushのためにMacへ置く認証情報も、そのままLLMが触れてしまいます。  
 それに、使い込むうちに設定やデータが溜まって、結局「壊れたら困るMac」になりそうでした。
 
@@ -52,7 +53,7 @@ Anthropicの公式ドキュメントも、`--dangerously-skip-permissions`を使
 AnthropicがClaude Codeのリポジトリで[公式の雛形](https://github.com/anthropics/claude-code/tree/main/.devcontainer)を公開していて、設計の骨格はこれをベースにしました。  
 やっていることは大きく3つです。
 
-- コンテナから見える手元のMacのファイルは、作業対象のリポジトリだけ（bind mount）
+- コンテナが書き込める手元のMacのファイルは、作業対象のリポジトリだけ（bind mount）
 - Claudeの設定とログイン状態はコンテナ専用のvolumeに永続化（初回1回ログインすれば済む）
 - 起動時にfirewallを張り、外向きの通信を許可した宛先だけに絞る（default-deny）
 
@@ -135,4 +136,4 @@ iptables -A OUTPUT -m set --match-set allowed-domains dst -j ACCEPT
 - firewallで守れる範囲は限られるので、そこは割り切って使う
 
 ここまでが設計の話です。  
-実際に使い始めると「コンテナの中のClaudeだけURLがリンクにならない」「スクリーンショットが渡せない」といった、設計時には見えなかった細かい不便が出てきました。それらの改善の試行錯誤は[後編](/blog/claude-code-devcontainer-tuning)に続きます。
+実際に使い始めると「コンテナの中のClaudeだけURLがリンクにならない」「スクリーンショットが渡せない」といった、設計時には見えなかった細かい不便が出てきました。それらの改善の試行錯誤は後編にまとめました。公開したらここにリンクを足します。
