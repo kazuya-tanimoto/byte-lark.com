@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # CI（GitHub Actions）の状況を無認証 REST API で取得する。
-# 本リポジトリは public なのでトークン不要。Bash サンドボックス内では gh CLI が
-# TLS/keychain で失敗するが curl は通るため、curl + jq で代替する。
+# 本リポジトリは public なのでトークン不要。gh CLI も使える（dotfiles の
+# sandbox.excludedCommands で sandbox 外実行・2026-07-04〜）が、本スクリプトは
+# 環境設定に依存しない無認証 curl + jq で完結させている。
 #
 # 使い方:
 #   bash scripts/ci-status.sh [branch]   # branch 省略時は現在のブランチ

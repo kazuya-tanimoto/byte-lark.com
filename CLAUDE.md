@@ -31,6 +31,7 @@
 
 ## Article Writing
 - 記事本文に関わる作業（ドラフト作成・リライト・レビュー・部分修正）の前に docs/writing-style/profile.md を必読し、そのルールに従う
+- 公開前（`draft: false` にする前）に `/article-review` で全軸レビューし、承認された指摘だけを反映する（docs/writing-workflow.md 手順 8）
 
 ## Code Style
 - TypeScript strict, 2-space indent, 100 char line, named exports preferred
@@ -89,8 +90,9 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 ## Sandbox 制約
 - git 操作は worktree 不使用。公開後は main から短命ブランチを切って作業し、PR でマージする（main は ruleset で保護され直接 push できない。詳細: docs/pbi/README.md §10.3-10.6）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
-- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、draft PR を作って CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `scripts/ci-status.sh` で合否を読む（gh CLI は sandbox 内で TLS/keychain により不可、curl は可）。UI スクショ確認は MCP Playwright で行う
-- 上記の yarn / E2E / gh 制約は母艦（macOS Seatbelt sandbox）のもの。devcontainer 内のセッションには適用されない（次節）
+- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、draft PR を作って CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `scripts/ci-status.sh` で合否を読む。UI スクショ確認は MCP Playwright で行う
+- gh CLI は使える：運営者のユーザー設定（dotfiles の `sandbox.excludedCommands`、2026-07-04 導入）で gh のみ sandbox 外実行になるため。環境設定依存なので、gh が失敗する環境では無認証 curl の `scripts/ci-status.sh` で代替する
+- 上記の yarn / E2E 制約は母艦（macOS Seatbelt sandbox）のもの。devcontainer 内のセッションには適用されない（次節）
 
 ## Devcontainer 自走環境
 - `.devcontainer/` は Claude Code をコンテナ内で全権限自走させる環境（PHASE1B-016 導入。設計・実施手順: docs/devcontainer-plan.md）。今いる環境の見分け方：作業ディレクトリが `/workspace` ならコンテナ内、`/Users/kazuya/...` なら母艦

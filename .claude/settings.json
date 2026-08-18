@@ -52,6 +52,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "awk '/^<!-- hook-digest:start -->/{f=1;next} /^<!-- hook-digest:end -->/{f=0} f' \"$HOME/.claude/output-styles/concise-ja.md\"",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "Notification": [
@@ -103,6 +112,9 @@
       "WebFetch(domain:plausible.io)"
     ],
     "deny": [
+      "Bash(yarn exec*)",
+      "Bash(yarn dlx*)",
+      "Bash(yarn node*)",
       "Bash(git add -A*)",
       "Bash(git add --all*)",
       "Bash(git add -u*)",

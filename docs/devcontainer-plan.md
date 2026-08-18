@@ -13,7 +13,7 @@
 
 macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると：
 
-- 実行できないコマンドが多い（`yarn add` / `yarn up` は DNS 解決失敗、E2E の Chromium は Mach port 拒否で起動不可、`docker` は非互換、`gh` は TLS/keychain 不可）
+- 実行できないコマンドが多い（`yarn add` / `yarn up` は DNS 解決失敗、E2E の Chromium は Mach port 拒否で起動不可、`docker` は非互換、`gh` は TLS/keychain 不可 ※gh のみ 2026-07-04 に dotfiles の sandbox 除外設定で解消済み、他は現存）
 - 承認プロンプトが多く、放置自走（無人実行）ができない
 
 ### 1.2 過去に却下した案
