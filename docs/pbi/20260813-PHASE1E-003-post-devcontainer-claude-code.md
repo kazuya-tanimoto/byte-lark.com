@@ -77,6 +77,11 @@ Started: 2026-08-13
 - カバーデザインの暫定方針を cover-image skill（.claude/skills/cover-image/SKILL.md）に追記：一覧で「全部同じ画像」に見える問題への対応。固定 = 設計図調 + 雲雀署名、可変 = 主役モチーフ + アクセント色ローテーション。記事用プロンプト `tools/imagegen/prompt_claude-code-devcontainer.txt` 新調
 - 前後編一括公開の想定を前編単独公開に変更（運営者指示）：前編の後編リンク 2 箇所（冒頭「後編に分けて〜」/ 末尾「後編にまとめました〜」）からリンクを外し文言調整
 
+- article-review 全軸実施（指摘6件）。運営者承認により要修正1（description 129→119字）+ 推奨2（bind mount「見える→書き込める」/「フル権限」→「全権限」）を反映、軽微3（倒置文・CDN括弧・LLM呼称）は見送り
+- `draft: false` → `yarn fonts` 再生成（13 page(s) built、新規グリフ追加）→ `yarn check:ts` 0 errors
+- §7 検証：ローカル（preview + Playwright、desktop 1280 / mobile 375、一覧・記事とも正常。桜色カバーが既存の橙2本と一覧で明確に区別できることを確認）/ CF preview（branch alias、同2幅で正常。og:image cover webp / Article JSON-LD headline を実 HTML で確認）/ CI（head e8de6ff で UI Tests・Quality Checks・Workers Builds・CodeQL すべて success）
+- 前編を公開（PR #43 マージ）。**PBI は後編が残るため InProgress 継続**
+
 残タスク
-- **後編公開時：前編の上記 2 箇所に `/blog/claude-code-devcontainer-tuning` へのリンクを戻す**（冒頭の導入段落と本文末尾）
-- 前編公開フローの続き：article-review → 承認反映 → `yarn fonts` → `draft: false` → §7 検証 → マージ
+- **後編公開時：前編の 2 箇所に `/blog/claude-code-devcontainer-tuning` へのリンクを戻す**（冒頭の導入段落と本文末尾）
+- 後編：CONTAINER バッジのスクショ差し込み（TODO コメント箇所）→ リライト運営者レビュー → cover 生成（暫定方針：アクセント色は桜色・橙以外から）→ article-review → 公開
