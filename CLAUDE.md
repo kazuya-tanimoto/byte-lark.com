@@ -29,6 +29,10 @@
 - Blog category は frontmatter、URL は flat /blog/:slug
 - Color palette: 確定パレット「春空」（docs/design-direction.md §2、PHASE1C-002 で global.css トークンに反映済み）。sun / wash / チップ面は文字色に使わない
 
+## Article Writing
+- 記事本文に関わる作業（ドラフト作成・リライト・レビュー・部分修正）の前に docs/writing-style/profile.md を必読し、そのルールに従う
+- 公開前（`draft: false` にする前）に `/article-review` で全軸レビューし、承認された指摘だけを反映する（docs/writing-workflow.md 手順 8）
+
 ## Code Style
 - TypeScript strict, 2-space indent, 100 char line, named exports preferred
 
@@ -93,7 +97,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 - `.devcontainer/` は Claude Code をコンテナ内で全権限自走させる環境（PHASE1B-016 導入。設計・実施手順: docs/devcontainer-plan.md）。今いる環境の見分け方：作業ディレクトリが `/workspace` ならコンテナ内、`/Users/kazuya/...` なら母艦
 - 住み分け：コンテナ = yarn ネットワーク系 / `yarn test:e2e` ローカル実行 / `--dangerously-skip-permissions` 放置自走。母艦 = MCP Playwright スクショ確認・ブラウザ系 MCP・プロジェクトメモリ。コンテナ内では Sandbox 制約節の回避策は不要（直接実行してよい）
 - 書き戻し禁止：コンテナから母艦の設定（`~/dotfiles`、`~/.claude`）に書き戻さない。グローバル CLAUDE.md は read-only mount からのコピー持ち込みのみ（.devcontainer/setup-container.sh）、コンテナ内の Claude 設定は専用 volume に閉じる
-- push 認証は fine-grained PAT（この repo 限定 / Contents read+write）。コンテナ内 `gh auth login` で専用 volume に永続化済み。PAT を repo / イメージ / 環境変数に書かない
+- push 認証は fine-grained PAT（この repo 限定。権限は Contents read+write を起点に、運用上必要になった分のみ追加）。コンテナ内 `gh auth login` で専用 volume に永続化済み。PAT を repo / イメージ / 環境変数に書かない
 - 起動は fish 関数 `ccd`（dotfiles 管理、firewall 有効チェック付き。`ccd --auto` = 放置自走）。運営者向け手順は docs/operation-manual.md §5
 
 ## Commit Convention
