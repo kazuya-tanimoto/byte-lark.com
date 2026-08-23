@@ -3,8 +3,9 @@ title: "devcontainerのClaude Codeを快適にする5つの調整"
 description: "devcontainerで隔離したClaude Codeを日常の道具にするための調整編。URLがリンクにならない、スクリーンショットを渡せない、スマホから見えない——使い始めてから出てきた5つの不便をどう解消したかを書きます。"
 category: tech
 tags: ["claude code", "devcontainer", "docker"]
-publishedAt: 2026-08-13
-draft: true
+publishedAt: 2026-08-23
+draft: false
+cover: ./cover.png
 slug: claude-code-devcontainer-tuning
 ---
 
