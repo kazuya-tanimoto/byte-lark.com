@@ -169,7 +169,8 @@ OCI runtime exec failed: exec failed: unable to start container process: exec: "
 
 コンテナの中に入って`which claude`を打っても`claude not found`でした。
 
-調べたところ、イメージの中のclaudeは500バイトのダミーファイルになっていました。  
+調べたところ、イメージの中のclaudeの本体ファイル（`bin/claude.exe`）は500バイトのダミーになっていました。  
+中身は「Error: claude native binary not installed.」と表示するだけのテキストです。  
 npmで配布されるClaude Codeは、次のような作りになっているようです。
 
 - `npm install`でまず置き場所にダミーファイルを置く
@@ -188,7 +189,8 @@ RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION} \
 ```
 
 claudeが壊れていればこの行でビルドが失敗するので、claudeのインストール失敗をビルドの失敗として検知できます。  
-ダミーファイル自体は存在するので、ファイルの有無を見る確認では検知できません。実際に実行して確かめるのがポイントです。  
+今回はPATH上の`claude`も無かったので`which claude`でも気づけましたが、本体の`claude.exe`はダミーが存在しているので、ファイルの有無を見る確認では見逃します。  
+実際に実行して確かめるのが確実です。  
 この1行は雛形にも入れました。
 
 ## まとめ
