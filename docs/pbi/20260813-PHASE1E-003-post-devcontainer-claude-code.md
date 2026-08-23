@@ -85,3 +85,20 @@ Started: 2026-08-13
 残タスク
 - **後編公開時：前編の 2 箇所に `/blog/claude-code-devcontainer-tuning` へのリンクを戻す**（冒頭の導入段落と本文末尾）
 - 後編：CONTAINER バッジのスクショ差し込み（TODO コメント箇所）→ リライト運営者レビュー → cover 生成（暫定方針：アクセント色は桜色・橙以外から）→ article-review → 公開
+
+### 2026-08-20〜23
+
+やったこと
+- 後編の運営者レビューを複数往復で反映：説明の具体化（リンク判定の挙動・貼り付けの仕組み・CDN 記述の事実化）、用語の統一（バッジ・シェル・手元の Mac）、自作コマンド（ccd / ccdsh / ccds）の初出定義、ビルド章に当時の実エラー文を母艦ログから転記、まとめの自構成限定の話を削除、未公開記事（herdr）の予告を削除
+- article-review 全軸実施（指摘 12 件）。運営者承認により #1-3, #5-10, #12 を反映、#11 は見送り、#4（publishedAt / cover）は公開時に対応
+- コンテナから確認できない 6 項目（CleanShot の CDN・ccd の仕様・TERM_PROGRAM の有無 等）を母艦セッション向け依頼文にまとめて運営者に依頼 → 全件一致（TERM_PROGRAM 不在は `devcontainer exec ... env | grep TERM_PROGRAM` → exit=1 で実測）。ビルド章を結果に合わせて精密化（head 6ce657f、CI green）
+- 今回の指摘を次の記事に持ち越さないためのルール化（PR #62、`chore/writing-feedback-rules`）：profile.md「避ける表現」に 10 項目追加、article-review skill に観点追加（観察と仕様の区別・初出定義・抽象段落・まとめの自構成限定・未公開予告・未検証項目へのローカル向け依頼文）と subagent 実行の節、writing-workflow をレビュー 2 回制（ドラフト → /article-review 1 回目 → 運営者レビュー → /article-review 2 回目）に変更
+
+学び
+- 運営者レビューの前に skill でレビューを 1 回通せば、誤字・表記揺れ・事実の不一致は運営者に届く前に潰せる。運営者の確認は内容判断に絞れる
+- 記事内の「〜でした」という挙動の記述は、観察なのか仕様なのかをレビューで区別する。観察だけを根拠に仕様を断定していた箇所が指摘された
+- コンテナから確認できない事実は、前提知識ゼロで打てるコマンド + 報告形式を添えた依頼文にすると 1 往復で済む
+
+残タスク
+- **後編公開時：前編の 2 箇所に `/blog/claude-code-devcontainer-tuning` へのリンクを戻す**（冒頭の導入段落と本文末尾）
+- 後編：cover 生成（アクセント色は桜色・橙以外）→ publishedAt 更新 + `draft: false` + `yarn fonts` → §7 検証（ローカル / CF preview スクショは母艦）→ `gh pr ready` → merge
