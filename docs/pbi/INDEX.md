@@ -1,11 +1,11 @@
 # PBI Index
 
-最終更新: 2026-08-15（PHASE1E-007 完了）
+最終更新: 2026-08-23（PHASE1E-008 起票）
 
 ## 次にやること
 
 - 現在地：**Phase 1e（公開後の運用・改善）**。Phase 0 〜 1d は完了（2026-08-08 公開、1d Gate 通過 2026-08-10）
-- 直近の PBI：**[PHASE1E-003 記事 T9（devcontainer で Claude Code 自走）](20260813-PHASE1E-003-post-devcontainer-claude-code.md)**（Done。2026-08-13 着手、前後編 2 本構成で前編 2026-08-18 / 後編 2026-08-23 公開）。並行枠として [PHASE1E-004 トップの title / OG 画像](20260813-PHASE1E-004-home-title-og-image.md) も同日起票（外部レビュー指摘 T1+T2 採用分。003 の運営者リライト待ちの間に進める）。外部レビュー T3〜T7 は不採用で確定（2026-08-13 運営者決定：サイトの目的を「営業サイト」へ広げない）。PHASE1D-009 棚卸し持ち越し分は、docs 肥大の分割を [PHASE1E-005](20260813-PHASE1E-005-docs-slimming.md) として起票・実施済み、Netlify アカウントは削除済み（2026-08-13 運営者報告）。判断待ちだった 3 件は 2026-08-15 に決着：セキュリティヘッダの残りは [PHASE1E-006](20260815-PHASE1E-006-security-headers.md) として起票・実施済み（CSP は見送り確定）、Xserver 側 DNS ゾーンは切り戻し保険として残すで確定、Turnstile 実送信は運営者がメール到達を確認済み。SNS カードの実物確認も 2026-08-15 に完了（運営者が metatags.io でトップ + 記事ページを確認。X / Facebook / LinkedIn / Pinterest / Slack のプレビューで画像・タイトル・説明文とも正常描画、記事の webp カバーも表示された。1D-006 からの持ち越しは解消）。実機確認の残なし。site-plan 棚卸し（2026-08-15）から §14 grep 自動化を [PHASE1E-007](20260815-PHASE1E-007-version-refs-check.md) として起票・実施済み、R-13 オフサイト mirror バックアップは見送り確定（Decision #32）。以後の主活動は記事の書き足しで、カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは**記事が 10 本に届いた時点**で Phase 1e に追加起票する（現在 5 本：T1・T2・法人化・T9 前後編）
+- 直近の PBI：**[PHASE1E-008 記事 T8（alacritty + tmux → ghostty + herdr 乗り換え）](20260823-PHASE1E-008-post-ghostty-herdr-migration.md)**（NotStarted。2026-08-23 起票。開発環境 3 連作の 1 本目で、先行公開した T9 の前に空いていた枠を埋める。素材はバックログ 1 行のみなのでヒアリングの深掘りが要）。その前の [PHASE1E-003 記事 T9（devcontainer で Claude Code 自走）](20260813-PHASE1E-003-post-devcontainer-claude-code.md) は Done（2026-08-13 着手、前後編 2 本構成で前編 2026-08-18 / 後編 2026-08-23 公開）。並行枠として [PHASE1E-004 トップの title / OG 画像](20260813-PHASE1E-004-home-title-og-image.md) も同日起票（外部レビュー指摘 T1+T2 採用分。003 の運営者リライト待ちの間に進める）。外部レビュー T3〜T7 は不採用で確定（2026-08-13 運営者決定：サイトの目的を「営業サイト」へ広げない）。PHASE1D-009 棚卸し持ち越し分は、docs 肥大の分割を [PHASE1E-005](20260813-PHASE1E-005-docs-slimming.md) として起票・実施済み、Netlify アカウントは削除済み（2026-08-13 運営者報告）。判断待ちだった 3 件は 2026-08-15 に決着：セキュリティヘッダの残りは [PHASE1E-006](20260815-PHASE1E-006-security-headers.md) として起票・実施済み（CSP は見送り確定）、Xserver 側 DNS ゾーンは切り戻し保険として残すで確定、Turnstile 実送信は運営者がメール到達を確認済み。SNS カードの実物確認も 2026-08-15 に完了（運営者が metatags.io でトップ + 記事ページを確認。X / Facebook / LinkedIn / Pinterest / Slack のプレビューで画像・タイトル・説明文とも正常描画、記事の webp カバーも表示された。1D-006 からの持ち越しは解消）。実機確認の残なし。site-plan 棚卸し（2026-08-15）から §14 grep 自動化を [PHASE1E-007](20260815-PHASE1E-007-version-refs-check.md) として起票・実施済み、R-13 オフサイト mirror バックアップは見送り確定（Decision #32）。以後の主活動は記事の書き足しで、カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは**記事が 10 本に届いた時点**で Phase 1e に追加起票する（現在 5 本：T1・T2・法人化・T9 前後編）
 - ブランチ：main から短命ブランチを切り、**最初の push の直後に draft PR**（CI は PR がある状態でのみ走る。README §10.4、PHASE1E-002）。統合ブランチ `feat/phase-1` は 1d Gate で畳んだ（site-plan Decision #31）
 - 直前 Gate の申し送り：[PHASE1D-009](20260808-PHASE1D-009-retrospective-gate.md) の `## 次 Phase への申し送り`
 
@@ -361,6 +361,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 | PHASE1E-005 | [docs-slimming](20260813-PHASE1E-005-docs-slimming.md) | Done |
 | PHASE1E-006 | [security-headers](20260815-PHASE1E-006-security-headers.md) | Done |
 | PHASE1E-007 | [version-refs-check](20260815-PHASE1E-007-version-refs-check.md) | Done |
+| PHASE1E-008 | [post-ghostty-herdr-migration](20260823-PHASE1E-008-post-ghostty-herdr-migration.md) | NotStarted |
 
 ### 起票済み・起票予定
 
@@ -375,7 +376,8 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 - **PHASE1E-003（2026-08-13 起票）**：記事 T9「devcontainer で Claude Code を自走させる環境を作った」（tech）。開発環境 3 連作の 2 本目を先行執筆（運営者指名 2026-08-13）
 - **PHASE1E-004（2026-08-13 起票）**：トップページの title / og:title と専用 OG 画像。出所は 2026-08-13 の外部レビュー（Opus によるサイト評価）指摘 T1+T2。同レビューの T3（ご依頼ページ新設）/ T4（Career 定量化）/ T5・T6（Skills・資格の見せ方）/ T7（ブログの営業記事化）は、サイトの目的（site-plan §2「職能リファレンス」）を「営業サイト」へ広げるかの判断と運営者インプットが必要なため未起票・判断待ちとしていた → **2026-08-13 運営者決定で不採用**（目的は職能リファレンスのまま広げない）
 - **PHASE1E-005（2026-08-13 起票）**：計画書・INDEX の分割。INDEX.md（88.6KB、うち改訂履歴 61.7KB）と site-plan.md（86KB）が Read 1 回分を超えている件の根治。改訂履歴を `INDEX-history.md` / `docs/site-plan-history.md` へ、Decision Log を `docs/site-plan-decisions.md` へ切り出す。出所は PHASE1D-009 棚卸しの持ち越し項目（運営者決定 2026-08-13）
-- **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 3 本
+- **PHASE1E-008（2026-08-23 起票）**：記事 T8「alacritty + tmux から ghostty + herdr へ乗り換えた」（tech）。開発環境 3 連作の 1 本目。T9（PHASE1E-003）を先に公開したため、3 本目 T10 の前に 1 本目を埋める（運営者指示 2026-08-23）。起票と同時に backlog の公開済み T9 行を削除
+- **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 5 本
 
 ---
 
