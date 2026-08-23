@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v3.11)
+# PBI フォーマット規約 (v3.12)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-08-13
+最終更新: 2026-08-23
 
 ---
 
@@ -21,7 +21,7 @@ docs/pbi/YYYYMMDD-PHASE-NNN-スラッグ.md
 ```
 
 - `YYYYMMDD`：起票日
-- `PHASE`：`PHASE0` / `PHASE1A` / `PHASE1B` / `PHASE1C` / `PHASE2`
+- `PHASE`：`PHASE0` / `PHASE1A` / `PHASE1B` / `PHASE1C` / `PHASE1D` / `PHASE1E` / `PHASE2`
 - `NNN`：PHASE 内通番（3 桁ゼロ埋め、`001` から）
 - スラッグ：英小文字 + ハイフン、内容を端的に表す
 
@@ -114,13 +114,13 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 
 最重要セクション。以下のルールに従う：
 
-1. **観測可能な条件**で書く
+1. **観測可能な条件**で書く。運営者判断を含む条件は「運営者が決めた + 記録先（Decision Log / site-plan / INDEX のどこか）」まで書く
 2. **チェックボックス形式**で 1 件 1 行
 3. **失敗ケース・エッジケース**も含める
 4. **自動検証可能な条件**は明示する（`yarn check:ts` がエラーなし、Lighthouse Accessibility 90+ 等）
 5. ユーザー操作可能な機能は Playwright で検証可能な粒度に書く
 6. 受け入れ条件の項目数は**網羅性の目安**（観測条件・エッジケース・自動検証を漏らさないための確認用）であって、PBI のサイズ基準ではない。サイズ判定は §7 のスコープ基準（触るファイル群 × 外部依存・概ね 1 セッション）で行う。項目が 20+ に膨らむ場合は分割を検討する合図
-7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する
+7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する。運営者の手作業（DNS・外部ダッシュボード操作）や preview で確認できない項目（SNS カード・本番 apex のヘッダ等）が条件に含まれるときは、誰が何で確認するかを条件の行に書く
 8. **Gate PBI の申し送り棚卸し（必須）**：Retrospective Gate PBI の受け入れ条件には「当該 Phase 全 PBI の実装ログにある申し送り・積み残しを項目単位で列挙し、各項目を **PBI 化（起票先を明記）/ 持ち越し（本 Gate の申し送りセクションに記載）/ 破棄（理由を明記）** のいずれかに判定する」を必ず置く。前 Gate から持ち越された未消化項目も同じ表に含めて再判定する（どの Phase にも属さない項目——例：ダークモード実表示検証——が Gate の網から漏れる経路を塞ぐ）。これにより次 Phase の起票者は全実装ログを再走査せず、直前 Gate の棚卸し表を一次資料にできる。「全ログを読む」だけでは項目が黙って落ちる余地があった（2026-08-01 の棚卸しで、実装ログ内にのみ存在する申し送り 7 件が grep で初めて可視化された経験を規約化）
 
 ### 4.7 技術メモ
@@ -139,6 +139,7 @@ Claude Code 向けの実装ヒント。任意セクション。
 - フィールドリスト・テーブル
 - 設計判断の理由
 - 関連 PBI への参照
+- 範囲外にした項目の行き先（起票先 PBI か INDEX「起票済み・起票予定」）
 
 ### 4.9 実装ログ
 
@@ -262,6 +263,7 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 - 複数のロール（訪問者 + 運営者等）が混在
 - 異なる Phase にまたがる
 - 概ね 1 営業日（人間換算 / 1 セッション）を超える
+- 運営者の判断（方針・採否・文言・置き場）と、その結果に依存する実装が同居している（判断待ちで draft PR が開きっぱなしになる。判断 PBI → 実装 PBI に分ける）
 
 ## 8. PBI を書かない場合
 
@@ -290,6 +292,8 @@ PBI 単位でコミットを分けるのを推奨（複数 PBI を 1 コミッ�
 3. push 競合は §10.7 で対処
 
 devcontainer はボリューム名が devcontainerId（clone パス由来）で分離されるため、別 clone なら設定・認証・node_modules が衝突せず同時起動できる。新 clone の初回のみ `gh auth login`（PAT はボリュームに永続化）と `yarn install` が必要。
+
+**起票後のセルフチェック（v3.12）**：PBI を書き終えたら commit して運営者に出す前に `/pbi-review`（`.claude/skills/pbi-review`）で全軸点検し、指摘を潰してから出す。運営者側の起票レビューも同じ skill で行える。規約の本文はこの README と CLAUDE.md が正で、skill は照合手順だけを持つ（skill にだけあるルールを作らない）。
 
 ## 10. ブランチ運用
 
@@ -442,3 +446,4 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 | 2026-08-11 | v3.9（据え置き） | 事実修正（クラリフィケーション）。§10.8 の Deploy Hooks 記述を実態に更新：残っているのは「main manual rebuild」（対象 main）の 1 本だけで、`feat/phase-1` 向けは統合ブランチを畳んだのに合わせて削除済み。短命ブランチは push で preview ビルドが走るためブランチ別 hook は不要と明記。あわせて hook URL の保管先を 1Password → Bitwarden に訂正（実際の保管先。Done PBI 内の当時表記は不変） |
 | 2026-08-12 | v3.10 | §10.4〜§10.6 を draft PR 前提の手順に変更（PHASE1E-002）：CI（`quality` / `e2e`）の `push` trigger を `main` だけに絞り、短命ブランチの検査は `pull_request` に一本化した。PR が開いている間は push と pull_request の両方が発火し、同じコミットに check-run が 2 本ずつ付いていたため（PR #39 の head `7bdd828` で実測）。`pull_request` 側を残したのは、(1) main とマージした結果（merge ref）を検査するので push 側より強い、(2) `dependabot/*` `archive/*` は push フィルタに入らずこの trigger が唯一の経路、の 2 点。代わりに **最初の push の直後に draft PR を作る**ことを §10.4 に明記し、作業ブランチの CI と CF preview が同時に始まる形にした（PR #38 が push trigger 拡張で塞いだ「PR 作成まで検証が詰まる」穴は、これで満たされる）。§10.6 は `gh pr create` → `gh pr ready` に置き換え、draft を外す操作を §7 検証完了の宣言と位置づけた。あわせて `quality.yml` に concurrency（`cancel-in-progress`）を追加。CLAUDE.md §7 も連動更新 |
 | 2026-08-13 | v3.11 | §5.3 に手順 8（push → §10.6 の ready → merge まで実行）を追加。完了フローの要約が「コミット」で終わっており、§10.5-10.6 の本則（Done 化 → main へマージ）への導線が無かったため、PHASE1E-004 で Done コミット後にマージを運営者判断へ委ねるフロー違反が発生。要約と本則のずれを是正し、マージ委ねの禁止を明記。CLAUDE.md「How to start work」手順 8 も連動更新 |
+| 2026-08-23 | v3.12 | §9 に起票後のセルフチェックを追加：PBI を書き終えたら commit 前に `/pbi-review`（`.claude/skills/pbi-review`、新設）で全軸点検する。skill は monotrip.jp の同名 skill を本 repo の規約（README / CLAUDE.md の各節）に置き換えた copy で、repo ごとに個別進化させる（ユーザーレベル共通化は規約差が構造的なため見送り）。規約の本文は README / CLAUDE.md が正、skill は照合手順のみ。skill にだけあったルールを README 側へ移した：§4.6 ルール 1（運営者判断の記録先）/ ルール 7（手作業・preview 不可項目の確認方法）/ §4.8（範囲外項目の行き先）/ §7（判断と実装の同居は分割）。§2 の PHASE 列挙に 1D / 1E を追加。CLAUDE.md「How to draft next-Phase PBIs」と site-plan §12 の README 参照も連動更新 |
