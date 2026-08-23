@@ -31,7 +31,7 @@
 
 ## Article Writing
 - 記事本文に関わる作業（ドラフト作成・リライト・レビュー・部分修正）の前に docs/writing-style/profile.md を必読し、そのルールに従う
-- 公開前（`draft: false` にする前）に `/article-review` で全軸レビューし、承認された指摘だけを反映する（docs/writing-workflow.md 手順 8）
+- レビューは 2 回。ドラフト直後に Claude が subagent で `/article-review` を実行し自分で反映（手順 7）、運営者リライト後にもう一度実行して承認された指摘だけを反映（手順 9）。公開（`draft: false`）は 2 回目の後（docs/writing-workflow.md 手順 7 / 9）
 
 ## Code Style
 - TypeScript strict, 2-space indent, 100 char line, named exports preferred
@@ -77,6 +77,7 @@
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
 - Draft next-Phase PBIs reflecting the learnings
 - **All drafted PBIs MUST carry the §7 verification gate in 受け入れ条件** (ローカル / CF preview スクショ確認 + E2E/CI green 確認, テンプレ常設・非該当は `[x] …：N/A（理由）`). README §4.6 ルール 7。INDEX.md セッション開始チェックが起票漏れを機械検出する
+- 起票した PBI は commit して運営者に出す前に `/pbi-review`（`.claude/skills/pbi-review`）で全軸セルフチェックし、指摘を潰してから出す（README §9）
 - Append to INDEX.md as Status: NotStarted
 - Commit on the working branch (docs-only)
 
@@ -110,7 +111,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.15)
 - docs/site-plan-decisions.md Decision Log 本体（site-plan §8 は誘導スタブ。改訂履歴は site-plan-history.md / pbi/INDEX-history.md に分割）
-- docs/pbi/README.md          PBI format spec (v3.11) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.12) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）

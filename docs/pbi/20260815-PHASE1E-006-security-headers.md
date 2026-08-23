@@ -1,4 +1,4 @@
-# PHASE1E-006: セキュリティヘッダの追加（nosniff / Referrer-Policy / X-Frame-Options）
+# 訪問者は、全ページで基本のセキュリティヘッダ 3 つ（nosniff / Referrer-Policy / X-Frame-Options）の保護を受けられる
 
 Status: Done
 Started: 2026-08-15
@@ -53,3 +53,6 @@ PHASE1D-007 の実測で本番にセキュリティヘッダが 1 つも無い�
 
 #### 想定外
 - なし
+
+### 2026-08-23 事後追記
+- タイトルを README §4.1 のユーザーストーリー形式に是正（件名形式からの書式変更のみ、内容変更なし）
