@@ -1,7 +1,8 @@
 # 訪問者は「devcontainer で Claude Code を自走させる環境を作った話」（tech）を読める
 
-Status: InProgress
+Status: Done
 Started: 2026-08-13
+Completed: 2026-08-23
 
 ## 誰が
 - 訪問者
@@ -14,17 +15,17 @@ Started: 2026-08-13
 - 関連: docs/article-backlog.md T9 / docs/devcontainer-plan.md / PHASE1B-016 / docs/writing-workflow.md
 
 ## 受け入れ条件
-- [ ] 運営者 + Claude でヒアリング（writing-workflow §3）→ Claude が Markdown ドラフト生成（`draft: true`）
-- [ ] **前後編 2 本構成**（2026-08-13 運営者決定）：前編 = 設計編（slug: claude-code-devcontainer、隔離の理由と安全原則）/ 後編 = 調整編（slug: claude-code-devcontainer-tuning、ハマりどころ 3 件）。以下の条件は両記事に適用
-- [ ] frontmatter 完備：title（`| byte-lark.com` サフィックス無し）/ description（80-120字・OGP 兼用）/ category: tech / tags / publishedAt（公開当日の日付に更新してからマージ）/ slug。本文冒頭に `# タイトル` を重複させない
-- [ ] バックログ T9 のハマりどころ 3 件を後編の柱に含める：① コンテナ内 Claude だけ URL がリンクにならない（`TERM_PROGRAM` 不在 → `--remote-env FORCE_HYPERLINK=1`）② スクショをコンテナに渡せない（CleanShot 保存先を read-only bind mount。素材: `docs/article-interviews/20260809-cleanshot-container-mount.md`）③ 母艦とコンテナの見分けがつかない（statusline に CONTAINER バッジ。「直したのに反映されない」= postCreate コピーと named volume の話、`ccdsh` 追加まで）
-- [ ] 運営者がリライトし `draft: false` に変更（最終承認を実装ログに記録）
-- [ ] `draft: false` の直前に `yarn fonts` でフォントを作り直す（writing-workflow 8 段構成、PHASE1E-001）
-- [ ] OGP / Article JSON-LD が記事ページで正しく出力される（`buildArticleJsonLd()`、headline 汚染なし）
-- [ ] `yarn build` 成功 / `yarn check:ts` エラーなし
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] 運営者 + Claude でヒアリング（writing-workflow §3）→ Claude が Markdown ドラフト生成（`draft: true`）
+- [x] **前後編 2 本構成**（2026-08-13 運営者決定）：前編 = 設計編（slug: claude-code-devcontainer、隔離の理由と安全原則）/ 後編 = 調整編（slug: claude-code-devcontainer-tuning、ハマりどころ 3 件）。以下の条件は両記事に適用
+- [x] frontmatter 完備：title（`| byte-lark.com` サフィックス無し）/ description（80-120字・OGP 兼用）/ category: tech / tags / publishedAt（公開当日の日付に更新してからマージ）/ slug。本文冒頭に `# タイトル` を重複させない
+- [x] バックログ T9 のハマりどころ 3 件を後編の柱に含める：① コンテナ内 Claude だけ URL がリンクにならない（`TERM_PROGRAM` 不在 → `--remote-env FORCE_HYPERLINK=1`）② スクショをコンテナに渡せない（CleanShot 保存先を read-only bind mount。素材: `docs/article-interviews/20260809-cleanshot-container-mount.md`）③ 母艦とコンテナの見分けがつかない（statusline に CONTAINER バッジ。「直したのに反映されない」= postCreate コピーと named volume の話、`ccdsh` 追加まで）
+- [x] 運営者がリライトし `draft: false` に変更（最終承認を実装ログに記録）
+- [x] `draft: false` の直前に `yarn fonts` でフォントを作り直す（writing-workflow 8 段構成、PHASE1E-001）
+- [x] OGP / Article JSON-LD が記事ページで正しく出力される（`buildArticleJsonLd()`、headline 汚染なし）
+- [x] `yarn build` 成功 / `yarn check:ts` エラーなし
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 - 想定セッション数: 1（ヒアリング → ドラフト → 運営者リライト。リライト待ちは実装フェーズ外）
@@ -99,6 +100,19 @@ Started: 2026-08-13
 - 記事内の「〜でした」という挙動の記述は、観察なのか仕様なのかをレビューで区別する。観察だけを根拠に仕様を断定していた箇所が指摘された
 - コンテナから確認できない事実は、前提知識ゼロで打てるコマンド + 報告形式を添えた依頼文にすると 1 往復で済む
 
+やったこと（公開日 2026-08-23）
+- 後編 cover 作成・配置：4 モチーフ（調整パネル+スパナ / 分解図 / 配線図 / 歯車）を各 1 枚生成して運営者が「調整パネル+スパナ」を選定。菜の花色の再生成 3 枚は運営者判断で不採用（橙 2 本と同系に見える）。初回の藤色版を採用し、Pillow で藤色画素の色相を紫（violet）に変更、文字化け「LABDTEE」の削除と重複寸法「DIM. 450」→「DIM. 480」（同画像の「8」字形を移植）を修正。2000×1050 に縮小して配置。生成物は `tools/imagegen/out/claude-code-devcontainer-tuning/final/`（gitignore）。プロンプトは `tools/imagegen/prompt_claude-code-devcontainer-tuning.txt`
+- publishedAt を 2026-08-23 に更新、`draft: false`、`cover: ./cover.png`。`yarn fonts` 再生成（noto 1115 字、zen-kaku 399 字、`yarn fonts:check` OK）。`yarn check` / `yarn check:ts` 0 errors
+- 前編の 2 箇所（冒頭導入・本文末尾）に後編リンク `/blog/claude-code-devcontainer-tuning` を復活（commit 936a548）
+- §7 検証（後編、head 936a548）
+  - ローカル：`yarn preview` + Playwright（コンテナ内 Chromium）で desktop 1280 / mobile 375 の /blog・後編・前編を確認。一覧先頭に紫アクセントの後編カバーが並び、既存 4 本と一目で区別できる。前編の後編リンク 2 箇所が `a[href="/blog/claude-code-devcontainer-tuning"]` として描画
+  - CF preview：`https://post-claude-code-devcontainer-tuning-byte-lark.tanimoto-a49.workers.dev` で同 2 幅を確認。og:image が後編 cover の webp、Article JSON-LD の headline・datePublished 2026-08-23 を実 HTML で確認
+  - CI：`bash scripts/ci-status.sh` → UI Tests completed/success、Quality Checks completed/success（936a548）。CodeQL・Workers Builds も pass
+
+学び
+- アクセント色は「色名が違う」だけでは足りない。淡い藤色と桜色は濃紺の上でどちらも薄桃に見えた。400px 比較で既存と並べてから決める（cover-image skill の判定基準どおり）
+- 生成画像の文字化け・重複ラベルは、同じ画像内の正常な字形を移植すれば書体を揃えたまま直せる（再生成より構図を保てる）
+- `pkill -f '<pattern>'` は自分のシェルにも一致して Bash ツールを落とす（exit 144）。`pgrep` + `kill` も同じ。ポート番号やプロセス名の完全一致で絞る
+
 残タスク
-- **後編公開時：前編の 2 箇所に `/blog/claude-code-devcontainer-tuning` へのリンクを戻す**（冒頭の導入段落と本文末尾）
-- 後編：cover 生成（アクセント色は桜色・橙以外）→ publishedAt 更新 + `draft: false` + `yarn fonts` → §7 検証（ローカル / CF preview スクショは母艦）→ `gh pr ready` → merge
+- なし（PR #60 マージで完了）
