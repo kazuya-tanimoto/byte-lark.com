@@ -45,9 +45,6 @@ devcontainer exec --workspace-folder . \
 
 Claude Codeでは、クリップボードの画像をそのまま貼り付けて「このスクショのここが崩れてる」と相談できますが、コンテナ内ではこれができませんでした。  
 スクショは[CleanShot X](https://cleanshot.com/)というツールで撮っています。  
-Claude Codeに画像を渡す方法は、[公式ドキュメント](https://code.claude.com/docs/en/common-workflows#work-with-images)に3つ書かれています。  
-ウィンドウへのドラッグ＆ドロップ、`Ctrl+V`での貼り付け、入力に画像ファイルのパスを書く、の3つです。  
-Macでスクショを貼り付けていたのは、実質この3つ目でした。  
 撮ったスクショを貼り付けると、入力に入るのは画像そのものではなくMac上の画像ファイルのパス（`/Users/.../CleanShot 2026-08-09 at 12.45.21.png`のような文字列）で、Claude Codeがそのパスのファイルを読んで画像として扱います。  
 コンテナの中のClaude Codeにも同じパスの文字列は入りますが、そのパスはコンテナには存在しないので読めない、という状況でした。
 
