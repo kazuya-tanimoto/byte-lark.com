@@ -161,9 +161,13 @@ Claudeを自走させる際に相性の良い機能なのですが、Macのセ�
 ## ビルドは成功したのに、claudeが入っていない
 
 この環境一式は雛形にして、別のプロジェクトでも同じ構成のコンテナを使い回しています。  
-その新しいプロジェクトで、初回のイメージビルドは成功したのに、起動すると「claudeが見つからない」というエラーになりました。
+その新しいプロジェクトで、初回のイメージビルドは成功したのに、起動すると次のエラーになりました。
 
-<!-- TODO: 当時の実際のエラー文をここに貼る（monotrip.jp セッションログから抽出） -->
+```text
+OCI runtime exec failed: exec failed: unable to start container process: exec: "claude": executable file not found in $PATH
+```
+
+コンテナの中に入って`which claude`を打っても`claude not found`でした。
 
 調べたところ、イメージの中のclaudeは500バイトのダミーファイルになっていました。  
 npmで配布されるClaude Codeは、次のような作りになっているようです。
