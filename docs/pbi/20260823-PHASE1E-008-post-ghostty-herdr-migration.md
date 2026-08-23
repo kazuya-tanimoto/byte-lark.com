@@ -1,6 +1,7 @@
 # 訪問者は「alacritty + tmux から ghostty + herdr へ乗り換えた話」（tech）を読める
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-23
 
 ## 誰が
 - 訪問者
@@ -46,3 +47,7 @@ Status: NotStarted
 - 起票と同時に backlog から公開済み T9 の行を削除した（backlog「使い方」ルールの消し忘れ）
 
 ## 実装ログ
+
+### 2026-08-23 セッション 1
+- やったこと：起票（/pbi-review セルフチェック 5 件反映：cover 暫定方針の継続確認 / 公開コミットと Done 化の同セッション / コンテナでの検証経路と imagegen 基盤 / 運営者向け依頼文の形式 / herdr version 未確認の明記）→ 着手。前提確認：既存記事に herdr / ghostty の記述なし（grep）、`tools/imagegen/.venv` あり、T8 専用の取材メモなし（`docs/article-interviews/` に該当ファイルなし）。ヒアリング 1 巡目の質問を運営者に提示
+- 残タスク：ヒアリング回答待ち → 深掘り → ドラフト → /article-review 1 回目
