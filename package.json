@@ -18,17 +18,17 @@
     "fonts:check": "node scripts/subset-fonts.mjs --check"
   },
   "dependencies": {
-    "@astrojs/mdx": "^7.0.5",
-    "@astrojs/react": "^6.0.2",
+    "@astrojs/mdx": "^7.0.7",
+    "@astrojs/react": "^6.0.4",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "astro": "^7.1.6",
+    "astro": "^7.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.28.0",
+    "lucide-react": "^1.33.0",
     "radix-ui": "^1.6.7",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -38,8 +38,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "@axe-core/playwright": "^4.12.1",
-    "@biomejs/biome": "^2.5.7",
+    "@axe-core/playwright": "^4.13.0",
+    "@biomejs/biome": "^2.5.9",
     "@playwright/test": "^1.62.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
@@ -47,10 +47,10 @@
     "lefthook": "^2.1.10",
     "pixelmatch": "^7.2.0",
     "pngjs": "^7.0.0",
-    "shadcn": "^4.16.2",
+    "shadcn": "^4.18.0",
     "subset-font": "^2.5.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "resolutions": {
     "stream-replace-string@npm:^2.0.0": "patch:stream-replace-string@npm%3A2.0.0#~/.yarn/patches/stream-replace-string-npm-2.0.0-2e7e10c117.patch",
