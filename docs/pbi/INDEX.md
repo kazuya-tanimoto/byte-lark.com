@@ -1,11 +1,11 @@
 # PBI Index
 
-最終更新: 2026-08-24（PHASE1E-009 起票）
+最終更新: 2026-08-25（PHASE1E-009 完了）
 
 ## 次にやること
 
 - 現在地：**Phase 1e（公開後の運用・改善）**。Phase 0 〜 1d は完了（2026-08-08 公開、1d Gate 通過 2026-08-10）
-- 直近の PBI：**[PHASE1E-009 「先頭へ戻る」ボタンの挙動見直し](20260824-PHASE1E-009-back-to-top-behavior.md)**（NotStarted。2026-08-24 起票。monotrip.jp の Decision #30 の横展開＝戻り先をページ先頭に統一・全ページ全幅に出す・フッターで隠す挙動を削除。運営者依頼 2026-08-24）。その前の [PHASE1E-003 記事 T9（devcontainer で Claude Code 自走）](20260813-PHASE1E-003-post-devcontainer-claude-code.md) は Done（2026-08-13 着手、前後編 2 本構成で前編 2026-08-18 / 後編 2026-08-23 公開）。並行枠として [PHASE1E-004 トップの title / OG 画像](20260813-PHASE1E-004-home-title-og-image.md) も同日起票（外部レビュー指摘 T1+T2 採用分。003 の運営者リライト待ちの間に進める）。外部レビュー T3〜T7 は不採用で確定（2026-08-13 運営者決定：サイトの目的を「営業サイト」へ広げない）。PHASE1D-009 棚卸し持ち越し分は、docs 肥大の分割を [PHASE1E-005](20260813-PHASE1E-005-docs-slimming.md) として起票・実施済み、Netlify アカウントは削除済み（2026-08-13 運営者報告）。判断待ちだった 3 件は 2026-08-15 に決着：セキュリティヘッダの残りは [PHASE1E-006](20260815-PHASE1E-006-security-headers.md) として起票・実施済み（CSP は見送り確定）、Xserver 側 DNS ゾーンは切り戻し保険として残すで確定、Turnstile 実送信は運営者がメール到達を確認済み。SNS カードの実物確認も 2026-08-15 に完了（運営者が metatags.io でトップ + 記事ページを確認。X / Facebook / LinkedIn / Pinterest / Slack のプレビューで画像・タイトル・説明文とも正常描画、記事の webp カバーも表示された。1D-006 からの持ち越しは解消）。実機確認の残なし。site-plan 棚卸し（2026-08-15）から §14 grep 自動化を [PHASE1E-007](20260815-PHASE1E-007-version-refs-check.md) として起票・実施済み、R-13 オフサイト mirror バックアップは見送り確定（Decision #32）。以後の主活動は記事の書き足しで、カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは**記事が 10 本に届いた時点**で Phase 1e に追加起票する（現在 5 本：T1・T2・法人化・T9 前後編）
+- 直近の PBI：**[PHASE1E-009 「先頭へ戻る」ボタンの挙動見直し](20260824-PHASE1E-009-back-to-top-behavior.md)**（Done。2026-08-24 起票、2026-08-25 着手・完了。monotrip.jp の Decision #30 の横展開＝戻り先をページ先頭に統一・全ページ全幅に出す・フッターで隠す挙動を削除。全ページ共通の `src/components/BackToTop.astro` に集約。運営者確認で「常時見える追従目次が出ている間は出さない」を追加し、byte-lark 側は Decision #33 として記録、site-plan v3.16）。その前の [PHASE1E-003 記事 T9（devcontainer で Claude Code 自走）](20260813-PHASE1E-003-post-devcontainer-claude-code.md) は Done（2026-08-13 着手、前後編 2 本構成で前編 2026-08-18 / 後編 2026-08-23 公開）。並行枠として [PHASE1E-004 トップの title / OG 画像](20260813-PHASE1E-004-home-title-og-image.md) も同日起票（外部レビュー指摘 T1+T2 採用分。003 の運営者リライト待ちの間に進める）。外部レビュー T3〜T7 は不採用で確定（2026-08-13 運営者決定：サイトの目的を「営業サイト」へ広げない）。PHASE1D-009 棚卸し持ち越し分は、docs 肥大の分割を [PHASE1E-005](20260813-PHASE1E-005-docs-slimming.md) として起票・実施済み、Netlify アカウントは削除済み（2026-08-13 運営者報告）。判断待ちだった 3 件は 2026-08-15 に決着：セキュリティヘッダの残りは [PHASE1E-006](20260815-PHASE1E-006-security-headers.md) として起票・実施済み（CSP は見送り確定）、Xserver 側 DNS ゾーンは切り戻し保険として残すで確定、Turnstile 実送信は運営者がメール到達を確認済み。SNS カードの実物確認も 2026-08-15 に完了（運営者が metatags.io でトップ + 記事ページを確認。X / Facebook / LinkedIn / Pinterest / Slack のプレビューで画像・タイトル・説明文とも正常描画、記事の webp カバーも表示された。1D-006 からの持ち越しは解消）。実機確認の残なし。site-plan 棚卸し（2026-08-15）から §14 grep 自動化を [PHASE1E-007](20260815-PHASE1E-007-version-refs-check.md) として起票・実施済み、R-13 オフサイト mirror バックアップは見送り確定（Decision #32）。以後の主活動は記事の書き足しで、カテゴリ別一覧（FR-19）と記事末尾の前後記事リンクは**記事が 10 本に届いた時点**で Phase 1e に追加起票する（現在 5 本：T1・T2・法人化・T9 前後編）
 - ブランチ：main から短命ブランチを切り、**最初の push の直後に draft PR**（CI は PR がある状態でのみ走る。README §10.4、PHASE1E-002）。統合ブランチ `feat/phase-1` は 1d Gate で畳んだ（site-plan Decision #31）
 - 直前 Gate の申し送り：[PHASE1D-009](20260808-PHASE1D-009-retrospective-gate.md) の `## 次 Phase への申し送り`
 
@@ -361,7 +361,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 | PHASE1E-005 | [docs-slimming](20260813-PHASE1E-005-docs-slimming.md) | Done |
 | PHASE1E-006 | [security-headers](20260815-PHASE1E-006-security-headers.md) | Done |
 | PHASE1E-007 | [version-refs-check](20260815-PHASE1E-007-version-refs-check.md) | Done |
-| PHASE1E-009 | [back-to-top-behavior](20260824-PHASE1E-009-back-to-top-behavior.md) | NotStarted |
+| PHASE1E-009 | [back-to-top-behavior](20260824-PHASE1E-009-back-to-top-behavior.md) | Done |
 
 ### 起票済み・起票予定
 

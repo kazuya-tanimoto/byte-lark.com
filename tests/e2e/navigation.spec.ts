@@ -71,3 +71,24 @@ test.describe("404 ページ", () => {
     await expect(page.getByRole("link", { name: "Home へ戻る" })).toBeVisible();
   });
 });
+
+// PHASE1E-009：「先頭へ戻る」は全ページ共通の部品（src/components/BackToTop.astro）。
+// 記事ページでの確認は blog.spec.ts が持つので、ここは目次の無いページで見る。
+// viewport は既定（Desktop Chrome 1280px）＝ xl 相当なので、旧実装の xl:hidden を
+// 外したことの裏取りも兼ねる
+test.describe("「先頭へ戻る」（記事ページ以外）", () => {
+  test("トップページでもスクロール後に出て、押すとページの先頭へ戻る", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const button = page.getByRole("button", { name: "ページの先頭へ戻る" });
+    await expect(button).toBeHidden();
+
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
+    await expect(button).toBeVisible();
+
+    await button.click();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+    await expect(button).toBeHidden();
+  });
+});

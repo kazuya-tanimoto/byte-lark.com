@@ -1,8 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.15)
+# byte-lark.com サイト構築計画書 (v3.16)
 
-最終更新: 2026-08-15
+最終更新: 2026-08-25
 
-> v3.14 → v3.15 主な変更：**§14 バージョン参照チェックのスクリプト化（PHASE1E-007）**。現行版数の相互参照検査を `scripts/check-version-refs.sh` に実装し lefthook pre-push へ組み込み（§14「将来の自動化」を実装済みに更新）。R-13 のオフサイト mirror バックアップは見送り確定（Decision #32）。CLAUDE.md 連動更新。
+> v3.15 → v3.16 主な変更：**「先頭へ戻る」ボタンを全ページ共通・ページ先頭固定に変更（PHASE1E-009）**。戻り先をページの先頭に統一し、全ページに出し、フッターで隠す挙動を削除。画面幅では出し分けず、常時見える追従目次が出ている間だけ出さない（Decision #33、monotrip.jp Decision #30 の横展開）。CLAUDE.md 連動更新。
 >
 > 過去の「版ごとの主な変更」と改訂履歴表は [docs/site-plan-history.md](site-plan-history.md) を参照。
 
@@ -355,7 +355,7 @@ Astro の標準機能で完全対応：
 | `src/dev/`、`@react-buddy/*` 依存 | 削除 | — |
 | `src/stories/` Storybook 公式テンプレ | 削除 | — |
 | `CLAUDE.md`（プロジェクト規約） | **書き換え**（PHASE0-005、Astro/Tailwind/shadcn + 多セッション運用プロトコル） | 同パス |
-| `docs/site-plan.md` | 上書き（v2 → v3.15） | 本ファイル |
+| `docs/site-plan.md` | 上書き（v2 → v3.16） | 本ファイル |
 | `docs/operation-manual.md` | **新規作成済**（v3.6 連動、運営者向けプロトコル） | 同パス |
 | `.github/workflows/codeql.yml` | 流用（言語自動検出で Astro 対応） | 同パス |
 | `.github/dependabot.yml` | 内容確認の上、依存先パッケージ名を更新（PHASE0-007） | 同パス |
