@@ -1,8 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.16)
+# byte-lark.com サイト構築計画書 (v3.17)
 
 最終更新: 2026-08-25
 
-> v3.15 → v3.16 主な変更：**「先頭へ戻る」ボタンを全ページ共通・ページ先頭固定に変更（PHASE1E-009）**。戻り先をページの先頭に統一し、全ページに出し、フッターで隠す挙動を削除。画面幅では出し分けず、常時見える追従目次が出ている間だけ出さない（Decision #33、monotrip.jp Decision #30 の横展開）。CLAUDE.md 連動更新。
+> v3.16 → v3.17 主な変更：**「先頭へ戻る」ボタンの本番不具合修正（PHASE1E-009 追修正）**。出現しきい値を「1 画面ぶん」から固定 300px へ（大画面の短いページで一度も出なかった）。追従目次の判定を「その画面幅で描画されるか」から「いま画面内に見えているか」へ（低い窓では記事末尾で目次が画面外へ抜け、先頭へ戻る手段が消えていた）。Decision #33 を追修正、CLAUDE.md 連動更新。
 >
 > 過去の「版ごとの主な変更」と改訂履歴表は [docs/site-plan-history.md](site-plan-history.md) を参照。
 
@@ -355,7 +355,7 @@ Astro の標準機能で完全対応：
 | `src/dev/`、`@react-buddy/*` 依存 | 削除 | — |
 | `src/stories/` Storybook 公式テンプレ | 削除 | — |
 | `CLAUDE.md`（プロジェクト規約） | **書き換え**（PHASE0-005、Astro/Tailwind/shadcn + 多セッション運用プロトコル） | 同パス |
-| `docs/site-plan.md` | 上書き（v2 → v3.16） | 本ファイル |
+| `docs/site-plan.md` | 上書き（v2 → v3.17） | 本ファイル |
 | `docs/operation-manual.md` | **新規作成済**（v3.6 連動、運営者向けプロトコル） | 同パス |
 | `.github/workflows/codeql.yml` | 流用（言語自動検出で Astro 対応） | 同パス |
 | `.github/dependabot.yml` | 内容確認の上、依存先パッケージ名を更新（PHASE0-007） | 同パス |
