@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-25（PHASE1E-009 完了）
+最終更新: 2026-08-25（PHASE1E-010 起票）
 
 ## 次にやること
 
@@ -362,6 +362,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 | PHASE1E-006 | [security-headers](20260815-PHASE1E-006-security-headers.md) | Done |
 | PHASE1E-007 | [version-refs-check](20260815-PHASE1E-007-version-refs-check.md) | Done |
 | PHASE1E-009 | [back-to-top-behavior](20260824-PHASE1E-009-back-to-top-behavior.md) | Done |
+| PHASE1E-010 | [post-image-lightbox](20260825-PHASE1E-010-post-image-lightbox.md) | NotStarted |
 
 ### 起票済み・起票予定
 
@@ -377,7 +378,8 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 - **PHASE1E-004（2026-08-13 起票）**：トップページの title / og:title と専用 OG 画像。出所は 2026-08-13 の外部レビュー（Opus によるサイト評価）指摘 T1+T2。同レビューの T3（ご依頼ページ新設）/ T4（Career 定量化）/ T5・T6（Skills・資格の見せ方）/ T7（ブログの営業記事化）は、サイトの目的（site-plan §2「職能リファレンス」）を「営業サイト」へ広げるかの判断と運営者インプットが必要なため未起票・判断待ちとしていた → **2026-08-13 運営者決定で不採用**（目的は職能リファレンスのまま広げない）
 - **PHASE1E-005（2026-08-13 起票）**：計画書・INDEX の分割。INDEX.md（88.6KB、うち改訂履歴 61.7KB）と site-plan.md（86KB）が Read 1 回分を超えている件の根治。改訂履歴を `INDEX-history.md` / `docs/site-plan-history.md` へ、Decision Log を `docs/site-plan-decisions.md` へ切り出す。出所は PHASE1D-009 棚卸しの持ち越し項目（運営者決定 2026-08-13）
 - **PHASE1E-009（2026-08-24 起票）**：「先頭へ戻る」ボタン（PHASE1D-015 導入）の挙動見直し。戻り先を全ページ共通で「ページの先頭」に統一（目次戻りをやめる）、全ページ・全画面幅に出す（`xl:hidden` を外す）、フッターが見えたら隠す挙動を削除、`aria-label` を「ページの先頭へ戻る」に変更。出所は 2026-08-24 の運営者依頼で、monotrip.jp が同じ見直しを決定済み（monotrip Decision #30。monotrip の実装は byte-lark からの踏襲で、4 条件の一致を起票時に確認）。実装時に運営者承認のうえ Decision Log へ記録する
-- **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 3 本
+- **PHASE1E-010（2026-08-25 起票）**：記事内画像のクリック拡大（モーダル）。本文画像が本文幅まで縮小され UI スクショの細部が読めない件（後編記事の statusline スクショ 2 枚で顕在化、運営者提案 2026-08-25）。`<dialog>` ベースの依存なし自前実装を想定。着手は PHASE1E-008 マージ後
+- **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 5 本
 
 ---
 
