@@ -1,0 +1,59 @@
+{/* 全ページ共通の「ページの先頭へ戻る」ボタン（PHASE1E-009。PHASE1D-015 の記事ページ限定版を置き換え）。
+    表示・非表示は下のスクリプトが hidden / flex を掛け替えて制御する */}
+<button
+  type="button"
+  data-back-to-top
+  aria-label="ページの先頭へ戻る"
+  class="fixed right-4 bottom-5 z-40 hidden size-11 items-center justify-center rounded-full bg-card text-hibari-sky-deep ring-1 ring-border shadow-card transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-hibari-sky"
+>
+  <svg
+    class="size-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 19V5" />
+    <path d="m5 12 7-7 7 7" />
+  </svg>
+</button>
+
+<script>
+  // 出す条件は「読み始めでは出さない」だけ（PHASE1E-009）。1 画面ぶん下げたら出す。
+  // 目次や記事ヘッダーを anchor にしていた旧方式（PHASE1D-015）はそれらの無いページで
+  // 成立しないので、スクロール量そのものを見る形にした。フッターが見えたら隠す挙動は
+  // 廃止——一番上に戻りたくなるのは読み終えた瞬間で、そこで消えるのは機能として逆向き。
+  const button = document.querySelector<HTMLButtonElement>("[data-back-to-top]");
+  if (button) {
+    // global.css の scroll-behavior は no-preference で囲ってあるが、scrollTo に behavior を
+    // 明示するとその指定が勝つため、こちらでも同じ配慮をする
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let shown = false;
+    const update = () => {
+      const show = window.scrollY > window.innerHeight;
+      if (show === shown) return;
+      shown = show;
+      button.classList.toggle("hidden", !show);
+      button.classList.toggle("flex", show);
+    };
+    // rAF で 1 フレーム 1 回に間引く（追従目次のハイライトと同じ型）
+    let queued = false;
+    const schedule = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        update();
+      });
+    };
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    button.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" });
+    });
+    update();
+  }
+</script>

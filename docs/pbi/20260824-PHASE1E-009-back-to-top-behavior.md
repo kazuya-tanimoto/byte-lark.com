@@ -1,6 +1,7 @@
 # 訪問者はどのページでも右下のボタンでページの先頭に戻れる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-25
 
 ## 誰が
 
@@ -93,9 +94,13 @@ Status: NotStarted
 
 ## 実装ログ
 
-### YYYY-MM-DD セッション N
+### 2026-08-25 セッション 1
 
-- やったこと：
+- やったこと：全ページ共通の `src/components/BackToTop.astro` を新設し `BaseLayout.astro` の
+  `<Footer />` 直後に配置。`PostLayout.astro` からボタン markup・表示制御スクリプト・
+  `data-post-header`（ボタン専用の fallback anchor だった）を削除。出現判定は
+  IntersectionObserver から `window.scrollY > window.innerHeight` に置き換え、
+  フッター用 observer は廃止
 - 残タスク：
 - 学び・つまずき：
 - 想定外だった点：
