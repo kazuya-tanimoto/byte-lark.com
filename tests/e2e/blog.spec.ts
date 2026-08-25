@@ -93,6 +93,22 @@ test.describe("記事内の移動", () => {
 
   // PHASE1E-009 で全ページ共通の部品（src/components/BackToTop.astro）に移した。
   // ここは記事ページでの確認、記事ページ以外は navigation.spec.ts が見る
+  test("追従目次が出ている幅では「先頭へ戻る」を出さない", async ({ page }) => {
+    // 既定の Desktop Chrome は 1280px ＝ xl。右カラムの追従目次が常時見えるので、
+    // 3 つ目の常設案内としてボタンは出さない（2026-08-25 運営者決定）
+    await page.goto(`/blog/${PUBLISHED_SLUG}/`);
+    await expect(page.locator("[data-toc-sidebar]")).toBeVisible();
+
+    const button = page.getByRole("button", { name: "ページの先頭へ戻る" });
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
+    await expect(button).toBeHidden();
+
+    await page.evaluate(() =>
+      window.scrollTo(0, document.documentElement.scrollHeight),
+    );
+    await expect(button).toBeHidden();
+  });
+
   test.describe("スマホ幅の「先頭へ戻る」", () => {
     test.use({ viewport: { width: 390, height: 664 } });
 

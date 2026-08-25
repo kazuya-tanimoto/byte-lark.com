@@ -27,13 +27,20 @@
   // 成立しないので、スクロール量そのものを見る形にした。フッターが見えたら隠す挙動は
   // 廃止——一番上に戻りたくなるのは読み終えた瞬間で、そこで消えるのは機能として逆向き。
   const button = document.querySelector<HTMLButtonElement>("[data-back-to-top]");
+  const stickyToc = document.querySelector<HTMLElement>("[data-toc-sidebar]");
   if (button) {
     // global.css の scroll-behavior は no-preference で囲ってあるが、scrollTo に behavior を
     // 明示するとその指定が勝つため、こちらでも同じ配慮をする
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // 常時見える追従目次が出ている間は出さない（2026-08-25 運営者決定）。sticky ヘッダーと
+    // 追従目次で常設の案内が既に 2 つあり、3 つ目は効きが薄いうえ 1280px 幅では窮屈になる
+    // （目次カードとの空きが横 56px / 縦 11px）。判定に offsetParent を使うのは、目次が
+    // hidden xl:block ＝画面幅だけで出し分かるため。画面内に入っているかで見ると記事末尾で
+    // 目次が抜けた瞬間にボタンが現れてしまう
+    const stickyTocShown = () => stickyToc !== null && stickyToc.offsetParent !== null;
     let shown = false;
     const update = () => {
-      const show = window.scrollY > window.innerHeight;
+      const show = window.scrollY > window.innerHeight && !stickyTocShown();
       if (show === shown) return;
       shown = show;
       button.classList.toggle("hidden", !show);
