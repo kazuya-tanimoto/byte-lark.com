@@ -84,7 +84,10 @@ test.describe("「先頭へ戻る」（記事ページ以外）", () => {
     const button = page.getByRole("button", { name: "ページの先頭へ戻る" });
     await expect(button).toBeHidden();
 
-    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
+    // しきい値は 300px（BackToTop.astro）。手前では出ず、越えたら出る
+    await page.evaluate(() => window.scrollTo(0, 200));
+    await expect(button).toBeHidden();
+    await page.evaluate(() => window.scrollTo(0, 400));
     await expect(button).toBeVisible();
 
     await button.click();
