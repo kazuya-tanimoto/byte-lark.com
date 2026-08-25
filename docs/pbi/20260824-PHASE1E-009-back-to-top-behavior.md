@@ -1,7 +1,8 @@
 # 訪問者はどのページでも右下のボタンでページの先頭に戻れる
 
-Status: InProgress
+Status: Done
 Started: 2026-08-25
+Completed: 2026-08-25
 
 ## 誰が
 
@@ -29,33 +30,36 @@ Started: 2026-08-25
 ## 受け入れ条件
 
 <!-- PBI 固有 -->
-- [ ] 全ページ共通の部品として実装した（`src/layouts/BaseLayout.astro` 配下の新規コンポーネント）。
+- [x] 全ページ共通の部品として実装した（`src/layouts/BaseLayout.astro` 配下の新規コンポーネント）。
       記事ページの現行ボタン（`src/layouts/PostLayout.astro` の `data-back-to-top` と付随
       スクリプト）はこれに置き換えた
-- [ ] 戻り先は全ページ共通で「ページの先頭」。記事ページでも目次の位置には戻さない
-- [ ] 全ページ・全画面幅に出す。現行の `xl:hidden` は外した
-- [ ] 表示条件は「読み始めでは出さない」だけ。フッターが見えたら隠す挙動は削除した
-- [ ] `aria-label` は「ページの先頭へ戻る」
-- [ ] `prefers-reduced-motion: reduce` では smooth スクロールにしない（現行の配慮を維持）
-- [ ] タップ領域 44×44px 以上、キーボードで到達・実行できる（現行 `size-11` /
+- [x] 戻り先は全ページ共通で「ページの先頭」。記事ページでも目次の位置には戻さない
+- [x] 全ページ・全画面幅に出す。現行の `xl:hidden` は外した
+      → **2026-08-25 運営者決定で条件を 1 つ追加**：画面幅では出し分けない（`xl:hidden` は外した）が、
+        常時見える追従目次が出ている間は出さない。理由と却下案は Decision #33 に記録
+- [x] 表示条件は「読み始めでは出さない」だけ。フッターが見えたら隠す挙動は削除した
+- [x] `aria-label` は「ページの先頭へ戻る」
+- [x] `prefers-reduced-motion: reduce` では smooth スクロールにしない（現行の配慮を維持）
+- [x] タップ領域 44×44px 以上、キーボードで到達・実行できる（現行 `size-11` /
       `focus-visible` リングを維持）
-- [ ] モバイル幅の実表示で、ボタンがフッターのリンク・© 行と重ならないことを確認した。
+- [x] モバイル幅の実表示で、ボタンがフッターのリンク・© 行と重ならないことを確認した。
       重なる場合は隠すのではなく余白か位置で調整した
-- [ ] xl 以上の実表示で、追従目次とボタンが同時に出た記事ページを運営者が確認して承認した
+- [x] xl 以上の実表示で、追従目次とボタンが同時に出た記事ページを運営者が確認して承認した
       （煩雑なら出し方を調整。承認の日付と見たものを実装ログに記録）
-- [ ] E2E を新仕様に追随した（`tests/e2e/blog.spec.ts:94-127` の 2 件が
+      → 確認の結果「出し方を調整」を選択（2026-08-25）。追従目次が出ている間はボタンを出さない
+- [x] E2E を新仕様に追随した（`tests/e2e/blog.spec.ts:94-127` の 2 件が
       `aria-label`「記事の先頭へ戻る」で参照）：
       - 「押すと目次の位置へ戻る」テストは「ページの先頭へ戻る」+ 新 `aria-label` に書き換え、
         スクロール量 2000px 固定の前提はページの高さに依存しない形に直した
       - 「フッターが見えている間は出さない」テストは挙動ごと削除した
       - 記事ページ以外（トップまたは記事一覧）でボタンが出て動く E2E を追加した
-- [ ] 挙動変更の決定を運営者承認のうえ `docs/site-plan-decisions.md` に記録した
+- [x] 挙動変更の決定を運営者承認のうえ `docs/site-plan-decisions.md` に記録した
       （monotrip Decision #30 の横展開である旨を背景に書く）
-- [ ] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
+- [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
 <!-- 定型（削除禁止。該当しないものは [x] N/A（理由）） -->
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 
@@ -96,11 +100,55 @@ Started: 2026-08-25
 
 ### 2026-08-25 セッション 1
 
-- やったこと：全ページ共通の `src/components/BackToTop.astro` を新設し `BaseLayout.astro` の
-  `<Footer />` 直後に配置。`PostLayout.astro` からボタン markup・表示制御スクリプト・
-  `data-post-header`（ボタン専用の fallback anchor だった）を削除。出現判定は
-  IntersectionObserver から `window.scrollY > window.innerHeight` に置き換え、
-  フッター用 observer は廃止
-- 残タスク：
+- やったこと：
+  - 全ページ共通の `src/components/BackToTop.astro` を新設し、`BaseLayout.astro` の
+    `<Footer />` 直後に配置（404 を含む全ページに乗る）。`aria-label` は「ページの先頭へ戻る」、
+    `xl:hidden` は付けない。円・44px・`focus-visible` リングは現行のまま流用
+  - 運営者確認で「追従目次が出ている間はボタンを出さない」を追加（下記）。判定は
+    `[data-toc-sidebar]` の `offsetParent` が null かどうか。CSS の `hidden xl:block` を
+    そのまま読む形なので、条件は画面幅だけで変わりスクロールでは変わらない
+  - 出現判定を IntersectionObserver（目次 / 記事ヘッダーを anchor に見る）から
+    `window.scrollY > window.innerHeight` に置き換えた。anchor が要らないので目次の無い
+    ページでも同じ判定で成立する。`scroll` / `resize` は passive + rAF で 1 フレーム 1 回に間引く
+  - フッター用の IntersectionObserver は廃止。クリックは `window.scrollTo({ top: 0 })` で、
+    `prefers-reduced-motion: reduce` のときだけ `behavior: "auto"`
+  - `PostLayout.astro` からボタン markup・制御スクリプト・`data-post-header` を削除
+    （`data-post-header` はボタンの fallback anchor 専用だった）。目次の履歴置き換えと
+    現在地ハイライトは無改造
+  - E2E：記事ページの 2 件を 1 件に統合して書き換え（`tests/e2e/blog.spec.ts`）、
+    トップページの 1 件を追加（`tests/e2e/navigation.spec.ts`）。さらに xl の記事ページで
+    ボタンを出さないことの 1 件を追加し、計 40 件 green
+  - Decision #33 を記録し site-plan を v3.16 へ（`check-version-refs.sh` の対象 4 ファイルを連動）
+- 運営者確認（受け入れ条件の xl 項目）：**2026-08-25、「出し方を調整」を選択**。見たものは
+  CF preview（`https://feat-back-to-top-all-pages-byte-lark.tanimoto-a49.workers.dev`）の
+  記事ページを 1280×720 でスクロールした状態のスクショで、右カラムの追従目次とボタンが
+  同時に出ている画面。一度は「このまま承認」と判断されたが、その後の再確認で違和感の指摘があり、
+  追従目次が出ている間は出さない形に変更した。決め手は 3 点——ヘッダーが全ページ sticky
+  （`src/components/Header.astro:16`）で記事ページの xl は常設の案内が 3 つになる /
+  ボタン固有の働きは「記事ヘッダーのぶんだけ上」に限られる（目次の先頭リンクは最初の h2）/
+  1280×720 で目次カードとの空きが横 56px・縦 11px と詰まる
+- 残タスク：なし
 - 学び・つまずき：
+  - 追従目次とボタンは xl のどの幅でも重ならない。横の空きは 1280px で 56px、1366px で 99px、
+    1440px で 136px、1920px で 376px。最も詰まるのがちょうど 1280px で、そこから広げるほど空く
+    （本文コンテナが `max-w-[1080px]` の中央寄せで、ボタンは常に画面右端から 16px のため）。
+    縦は高さ 900px で目次下端 645 / ボタン上端 836
+  - 出し分けを「画面幅」ではなく「追従目次が描画されているか」に置いた。旧 `xl:hidden` を
+    戻すと、目次を持たない記事や記事以外の長いページでも xl で消えてしまう
+    （1280×720 実測で Career 4686px / About 2153px / Privacy 2132px）
+  - 「追従目次が画面内にあるか」で判定すると、記事末尾で目次が画面外へ抜けた瞬間にボタンが
+    現れてちらつく。目次は `sticky top-24` だが、親の `<aside>` が記事の終わりで尽きるため。
+    `offsetParent` なら CSS の出し分けだけを読むのでこれが起きない
+  - 出現しきい値ちょうどで上下すると 1 回切り替わる。出る境目と消える境目をずらす案は
+    今回は入れない。旧実装も同じ性質で公開後に指摘が出ておらず、条件を 1 つ増やすと
+    「読み始めでは出さない、それだけ」という決めごとが濁るため。あとから足せる
+  - 受け入れ条件は「フッターが見えている間は出さない」テストを削除としていたが、削除だけだと
+    「末尾でも消えない」ことを誰も見なくなる。同じテストの中で末尾までスクロールし、
+    `toBeInViewport()` でフッターが見えている状態でボタンが残ることを確認する形に置き換えた
+  - 記事ページ以外の E2E はトップページを選んだ。1280×720 で `/blog` は 1750px しかなく
+    1 画面ぶん（720px）を超える余裕が 310px しか無い。トップは 2593px で余裕 1153px あり、
+    記事の増減の影響も受けにくい
 - 想定外だった点：
+  - スクラッチ領域に置いた検証スクリプトから `@playwright/test` を import すると
+    `ERR_MODULE_NOT_FOUND` になる。ESM の解決がスクリプト自身の場所からになるため。
+    `node_modules` へのシンボリックリンクを 1 本張って回避した
