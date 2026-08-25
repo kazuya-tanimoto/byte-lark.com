@@ -4,6 +4,7 @@ import { Font } from "astro:assets";
 import { buildOgMeta, type OgMeta } from "../lib/og";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import BackToTop from "../components/BackToTop.astro";
 
 interface Props {
   title: string;
@@ -69,5 +70,7 @@ const ogMeta = buildOgMeta({
       <slot />
     </div>
     <Footer />
+    {/* 全ページ共通の「ページの先頭へ戻る」（PHASE1E-009） */}
+    <BackToTop />
   </body>
 </html>

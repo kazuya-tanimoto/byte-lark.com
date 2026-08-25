@@ -4,6 +4,8 @@
 
 ## 版ごとの主な変更（新しい順）
 
+> v3.15 → v3.16 主な変更：**「先頭へ戻る」ボタンを全ページ共通・ページ先頭固定に変更（PHASE1E-009）**。戻り先をページの先頭に統一し、全ページに出し、フッターで隠す挙動を削除。画面幅では出し分けず、常時見える追従目次が出ている間だけ出さない（Decision #33、monotrip.jp Decision #30 の横展開）。CLAUDE.md 連動更新。
+
 > v3.14 → v3.15 主な変更：**§14 バージョン参照チェックのスクリプト化（PHASE1E-007）**。現行版数の相互参照検査を `scripts/check-version-refs.sh` に実装し lefthook pre-push へ組み込み（§14「将来の自動化」を実装済みに更新）。R-13 のオフサイト mirror バックアップは見送り確定（Decision #32）。CLAUDE.md 連動更新。
 
 > v3.13 → v3.14 主な変更：**計画書と INDEX の分割（読み込み効率化、PHASE1E-005）**。改訂履歴と「版ごとの主な変更」を `docs/site-plan-history.md` へ、Decision Log 本体を `docs/site-plan-decisions.md` へ切り出し（§8 は誘導スタブ、参照表記「site-plan §8 Decision #NN」は不変）。INDEX.md の改訂履歴も `docs/pbi/INDEX-history.md` へ切り出し。あわせて §12 の README 参照のドリフト（v3.9 のまま、現行 v3.11）を修正。§14・CLAUDE.md 連動更新。
@@ -69,3 +71,4 @@
 | 2026-08-08 | PHASE1D-002 での §13 実態合わせ（v 番号据え置き）。§13.2 の「byte-lark 株式会社（仮）」想定を実態（合同会社バイトラーク）へ更新、Footer / About に代表社員・所在地（市区レベル：香川県高松市、運営者決定）を追加、プライバシーポリシーに安全管理措置を明記し改定日 2026-08-08 を記載、インボイス登録番号は掲載なしで確定（直案件開始時に再検討）。incident-response.md の法人化前提記述も実態合わせ |
 | 2026-08-13 | v3.14：**計画書と INDEX の分割（読み込み効率化）**（PHASE1E-005）。改訂履歴と「版ごとの主な変更」を本ファイルへ、Decision Log 本体を docs/site-plan-decisions.md へ切り出し（§8 は誘導スタブ、参照表記は不変）。INDEX.md の改訂履歴も docs/pbi/INDEX-history.md へ切り出し。§12 の README 参照ドリフト（v3.9 → 現行 v3.11）を修正、§14 の改訂履歴同期ルール・CLAUDE.md（セッション開始手順 / Related Docs）連動 |
 | 2026-08-15 | v3.15：**§14 バージョン参照チェックのスクリプト化**（PHASE1E-007）。現行版数の相互参照検査を scripts/check-version-refs.sh に実装し lefthook pre-push へ組み込み、§14「将来の自動化」を実装済みに更新。R-13 のオフサイト mirror バックアップは見送り確定（Decision #32）。CLAUDE.md（Related Docs 版数）連動 |
+| 2026-08-25 | v3.16：**「先頭へ戻る」ボタンを全ページ共通・ページ先頭固定に変更**（PHASE1E-009）。戻り先を全ページ共通で「ページの先頭」に統一（目次戻りを廃止）、全ページに出す（`xl:hidden` 撤廃）、フッターが見えたら隠す挙動を削除、`aria-label` を「ページの先頭へ戻る」へ。画面幅では出し分けず、常時見える追従目次が出ている間だけ出さない（同日の運営者判断）。Decision #33 追加（monotrip.jp Decision #30 の横展開）。実装は `src/components/BackToTop.astro` に集約し `BaseLayout` へ配置。CLAUDE.md（Related Docs 版数）連動 |

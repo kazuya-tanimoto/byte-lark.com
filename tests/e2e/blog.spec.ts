@@ -91,37 +91,47 @@ test.describe("記事内の移動", () => {
     await expect(page).toHaveURL(/\/blog\/?$/);
   });
 
+  // PHASE1E-009 で全ページ共通の部品（src/components/BackToTop.astro）に移した。
+  // ここは記事ページでの確認、記事ページ以外は navigation.spec.ts が見る
+  test("追従目次が出ている幅では「先頭へ戻る」を出さない", async ({ page }) => {
+    // 既定の Desktop Chrome は 1280px ＝ xl。右カラムの追従目次が常時見えるので、
+    // 3 つ目の常設案内としてボタンは出さない（2026-08-25 運営者決定）
+    await page.goto(`/blog/${PUBLISHED_SLUG}/`);
+    await expect(page.locator("[data-toc-sidebar]")).toBeVisible();
+
+    const button = page.getByRole("button", { name: "ページの先頭へ戻る" });
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
+    await expect(button).toBeHidden();
+
+    await page.evaluate(() =>
+      window.scrollTo(0, document.documentElement.scrollHeight),
+    );
+    await expect(button).toBeHidden();
+  });
+
   test.describe("スマホ幅の「先頭へ戻る」", () => {
     test.use({ viewport: { width: 390, height: 664 } });
 
-    test("読み始めでは出ず、スクロール後に出て、押すと目次の位置へ戻る", async ({
+    test("読み始めでは出ず、スクロール後に出て、押すとページの先頭へ戻る", async ({
       page,
     }) => {
       await page.goto(`/blog/${PUBLISHED_SLUG}/`);
-      const button = page.getByRole("button", { name: "記事の先頭へ戻る" });
+      const button = page.getByRole("button", { name: "ページの先頭へ戻る" });
       await expect(button).toBeHidden();
 
-      await page.evaluate(() => window.scrollTo(0, 2000));
+      // 出す条件は「1 画面ぶん下げたら」。ページの高さに依存しない量で確かめる
+      await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
       await expect(button).toBeVisible();
 
-      await button.click();
-      // sticky ヘッダー分の余白（scroll-mt-20 = 80px）を空けて目次が出る
-      const toc = page.locator("[data-toc-mobile]");
-      await expect
-        .poll(async () => Math.round((await toc.boundingBox())?.y ?? -1))
-        .toBeLessThanOrEqual(85);
-      await expect(button).toBeHidden();
-    });
-
-    test("フッターが見えている間は出さない", async ({ page }) => {
-      await page.goto(`/blog/${PUBLISHED_SLUG}/`);
-      const button = page.getByRole("button", { name: "記事の先頭へ戻る" });
-      await page.evaluate(() => window.scrollTo(0, 2000));
-      await expect(button).toBeVisible();
-
+      // 一番上に戻りたくなるのは読み終えた瞬間なので、フッターが見えても消えない
       await page.evaluate(() =>
         window.scrollTo(0, document.documentElement.scrollHeight),
       );
+      await expect(page.locator("footer")).toBeInViewport();
+      await expect(button).toBeVisible();
+
+      await button.click();
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
       await expect(button).toBeHidden();
     });
   });
