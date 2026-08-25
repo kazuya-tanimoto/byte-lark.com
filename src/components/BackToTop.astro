@@ -22,25 +22,30 @@
 </button>
 
 <script>
-  // 出す条件は「読み始めでは出さない」だけ（PHASE1E-009）。1 画面ぶん下げたら出す。
-  // 目次や記事ヘッダーを anchor にしていた旧方式（PHASE1D-015）はそれらの無いページで
-  // 成立しないので、スクロール量そのものを見る形にした。フッターが見えたら隠す挙動は
-  // 廃止——一番上に戻りたくなるのは読み終えた瞬間で、そこで消えるのは機能として逆向き。
+  // 出す条件は「読み始めでは出さない」だけ（PHASE1E-009）。しきい値は固定 300px。
+  // 当初の「1 画面ぶん」は大画面の短いページ（/contact は 1512×982 で可動域 527px）で
+  // 一度も出なかった（2026-08-25 本番実測）。300px はページタイトルが sticky ヘッダー裏に
+  // 隠れる位置（記事以外で最大 211px）より下、かつ /contact でも残り 227px で出る値。
+  // フッターが見えたら隠す挙動は廃止——一番上に戻りたくなるのは読み終えた瞬間で、
+  // そこで消えるのは機能として逆向き。
   const button = document.querySelector<HTMLButtonElement>("[data-back-to-top]");
   const stickyToc = document.querySelector<HTMLElement>("[data-toc-sidebar]");
   if (button) {
     // global.css の scroll-behavior は no-preference で囲ってあるが、scrollTo に behavior を
     // 明示するとその指定が勝つため、こちらでも同じ配慮をする
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // 常時見える追従目次が出ている間は出さない（2026-08-25 運営者決定）。sticky ヘッダーと
-    // 追従目次で常設の案内が既に 2 つあり、3 つ目は効きが薄いうえ 1280px 幅では窮屈になる
-    // （目次カードとの空きが横 56px / 縦 11px）。判定に offsetParent を使うのは、目次が
-    // hidden xl:block ＝画面幅だけで出し分かるため。画面内に入っているかで見ると記事末尾で
-    // 目次が抜けた瞬間にボタンが現れてしまう
-    const stickyTocShown = () => stickyToc !== null && stickyToc.offsetParent !== null;
+    // 常時見える追従目次が画面内にある間は出さない（2026-08-25 運営者決定・同日追修正）。
+    // 当初は幅だけの判定（offsetParent）だったが、低い窓では記事末尾で目次が画面外へ
+    // 抜けてもボタンが出ず、先頭へ戻る手段が消える穴が本番で見つかった。offsetParent は
+    // hidden xl:block の非表示幅を弾くために残し、見えているかは rect で判定する
+    const stickyTocVisible = () => {
+      if (stickyToc === null || stickyToc.offsetParent === null) return false;
+      const rect = stickyToc.getBoundingClientRect();
+      return rect.bottom > 0 && rect.top < window.innerHeight;
+    };
     let shown = false;
     const update = () => {
-      const show = window.scrollY > window.innerHeight && !stickyTocShown();
+      const show = window.scrollY > 300 && !stickyTocVisible();
       if (show === shown) return;
       shown = show;
       button.classList.toggle("hidden", !show);

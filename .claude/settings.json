@@ -130,9 +130,6 @@
       "Bash(git commit *-a)"
     ]
   },
-  "worktree": {
-    "bgIsolation": "none"
-  },
   "sandbox": {
     "filesystem": {
       "allowWrite": [".git"]

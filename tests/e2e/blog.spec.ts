@@ -93,20 +93,43 @@ test.describe("記事内の移動", () => {
 
   // PHASE1E-009 で全ページ共通の部品（src/components/BackToTop.astro）に移した。
   // ここは記事ページでの確認、記事ページ以外は navigation.spec.ts が見る
-  test("追従目次が出ている幅では「先頭へ戻る」を出さない", async ({ page }) => {
-    // 既定の Desktop Chrome は 1280px ＝ xl。右カラムの追従目次が常時見えるので、
-    // 3 つ目の常設案内としてボタンは出さない（2026-08-25 運営者決定）
+  test("追従目次が画面内にある間は「先頭へ戻る」を出さない", async ({
+    page,
+  }) => {
+    // 既定の Desktop Chrome は 1280×720 ＝ xl。この高さなら追従目次は記事末尾まで
+    // 画面内に残るので、3 つ目の常設案内としてボタンは出さない（2026-08-25 運営者決定）
     await page.goto(`/blog/${PUBLISHED_SLUG}/`);
     await expect(page.locator("[data-toc-sidebar]")).toBeVisible();
 
     const button = page.getByRole("button", { name: "ページの先頭へ戻る" });
-    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
+    await page.evaluate(() => window.scrollTo(0, 400));
     await expect(button).toBeHidden();
 
     await page.evaluate(() =>
       window.scrollTo(0, document.documentElement.scrollHeight),
     );
+    await expect(page.locator("[data-toc-sidebar]")).toBeInViewport();
     await expect(button).toBeHidden();
+  });
+
+  test("低い窓で目次が画面外へ抜けたら「先頭へ戻る」を出す", async ({
+    page,
+  }) => {
+    // 高さ 280px の窓では、記事末尾でフッターが画面を占めて追従目次が画面外へ抜ける。
+    // 目次が見えない以上、幅が xl でもボタンを出す（2026-08-25 追修正。
+    // 幅だけの判定では、この状態で先頭へ戻る手段が消えていた）
+    await page.setViewportSize({ width: 1280, height: 280 });
+    await page.goto(`/blog/${PUBLISHED_SLUG}/`);
+    const button = page.getByRole("button", { name: "ページの先頭へ戻る" });
+
+    await page.evaluate(() =>
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "instant",
+      }),
+    );
+    await expect(page.locator("[data-toc-sidebar]")).not.toBeInViewport();
+    await expect(button).toBeVisible();
   });
 
   test.describe("スマホ幅の「先頭へ戻る」", () => {
@@ -119,8 +142,10 @@ test.describe("記事内の移動", () => {
       const button = page.getByRole("button", { name: "ページの先頭へ戻る" });
       await expect(button).toBeHidden();
 
-      // 出す条件は「1 画面ぶん下げたら」。ページの高さに依存しない量で確かめる
-      await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
+      // 出す条件は「300px 下げたら」。手前の 200px では出ない
+      await page.evaluate(() => window.scrollTo(0, 200));
+      await expect(button).toBeHidden();
+      await page.evaluate(() => window.scrollTo(0, 400));
       await expect(button).toBeVisible();
 
       // 一番上に戻りたくなるのは読み終えた瞬間なので、フッターが見えても消えない
