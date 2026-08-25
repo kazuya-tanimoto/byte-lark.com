@@ -33,11 +33,34 @@ sync_claude_config() {
     mkdir -p "$CONFIG_DIR/output-styles"
     cp "$HOST_CLAUDE/output-styles/"*.md "$CONFIG_DIR/output-styles/"
   fi
+  # worktree 運用 hook（スクリプト + settings への登録）も dotfiles から毎起動同期。
+  # 登録は hooks.json の event ごとに「旧 worktree 登録を除いて追記」する冪等マージ
+  if [ -d "$HOST_CLAUDE/hooks" ]; then
+    mkdir -p "$CONFIG_DIR/hooks"
+    cp "$HOST_CLAUDE/hooks/"*.sh "$CONFIG_DIR/hooks/"
+    chmod +x "$CONFIG_DIR/hooks/"*.sh
+    if [ -f "$HOST_CLAUDE/hooks/hooks.json" ] && command -v jq >/dev/null 2>&1; then
+      merged=$(jq -s '
+        .[0] as $s | .[1] as $f |
+        $s + { hooks: (
+          ($s.hooks // {}) as $sh | ($f.hooks // {}) as $fh |
+          $sh + ($fh | with_entries(
+            .value = (
+              (($sh[.key] // []) | map(select(tojson | contains("worktree-") | not)))
+              + .value
+            )
+          ))
+        )}' "$CONFIG_DIR/settings.json" "$HOST_CLAUDE/hooks/hooks.json")
+      printf '%s\n' "$merged" > "$CONFIG_DIR/settings.json"
+    fi
+  fi
 }
 
 setup_git() {
   git config --global user.name "Kazuya Tanimoto"
   git config --global user.email "tanimoto@byte-lark.com"
+  # 母艦側の改行変換と表示を揃える（CRLF ファイルが phantom diff にならないように）
+  git config --global core.autocrlf input
   # bind mount した repo の所有権が uid 違いに見える環境向け（idempotent）
   git config --global --get-all safe.directory 2>/dev/null | grep -qx /workspace \
     || git config --global --add safe.directory /workspace
