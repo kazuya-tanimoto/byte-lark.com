@@ -59,7 +59,7 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 - [ ] テスト・Lint・型チェック等の自動検証条件
 - [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 - [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 
 ## 技術メモ（任意）
 - 関連ファイル / 配置先パス
@@ -120,7 +120,7 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 4. **自動検証可能な条件**は明示する（`yarn check:ts` がエラーなし、Lighthouse Accessibility 90+ 等）
 5. ユーザー操作可能な機能は Playwright で検証可能な粒度に書く
 6. 受け入れ条件の項目数は**網羅性の目安**（観測条件・エッジケース・自動検証を漏らさないための確認用）であって、PBI のサイズ基準ではない。サイズ判定は §7 のスコープ基準（触るファイル群 × 外部依存・概ね 1 セッション）で行う。項目が 20+ に膨らむ場合は分割を検討する合図
-7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する。運営者の手作業（DNS・外部ダッシュボード操作）や preview で確認できない項目（SNS カード・本番 apex のヘッダ等）が条件に含まれるときは、誰が何で確認するかを条件の行に書く
+7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する。運営者の手作業（DNS・外部ダッシュボード操作）や preview で確認できない項目（SNS カード・本番 apex のヘッダ等）が条件に含まれるときは、誰が何で確認するかを条件の行に書く
 8. **Gate PBI の申し送り棚卸し（必須）**：Retrospective Gate PBI の受け入れ条件には「当該 Phase 全 PBI の実装ログにある申し送り・積み残しを項目単位で列挙し、各項目を **PBI 化（起票先を明記）/ 持ち越し（本 Gate の申し送りセクションに記載）/ 破棄（理由を明記）** のいずれかに判定する」を必ず置く。前 Gate から持ち越された未消化項目も同じ表に含めて再判定する（どの Phase にも属さない項目——例：ダークモード実表示検証——が Gate の網から漏れる経路を塞ぐ）。これにより次 Phase の起票者は全実装ログを再走査せず、直前 Gate の棚卸し表を一次資料にできる。「全ログを読む」だけでは項目が黙って落ちる余地があった（2026-08-01 の棚卸しで、実装ログ内にのみ存在する申し送り 7 件が grep で初めて可視化された経験を規約化）
 
 ### 4.7 技術メモ
@@ -373,7 +373,7 @@ gh pr ready
 gh pr merge --merge --delete-branch   # merge commit を残す（--no-ff 相当）
 ```
 
-- `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash scripts/ci-status.sh` で確認してから実行する
+- `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash ~/.claude/bin/ci-status.sh`（`--wait` で完了待ち）で確認してから実行する
 - draft のままではマージできない。`gh pr ready` は「§7 の検証を全部終えた」という宣言として使う
 - コンテナから実行する場合、PAT に Pull requests: Read and write が必要（PHASE1D-011 で付与済み）
 - **main へのマージ＝ byte-lark.com への公開**。マージした時点で本番が入れ替わる

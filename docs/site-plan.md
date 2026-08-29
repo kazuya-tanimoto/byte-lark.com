@@ -86,7 +86,7 @@
 | NFR-03 | TypeScript strict、ビルド時型チェック通過 | |
 | NFR-04 | Lint 通過（Biome 2 を採用） | `.astro` 対応のため override 設定で対象範囲調整 |
 | NFR-05 | 単体テスト：React Island 部分 (.tsx) と lib/ ロジックを Vitest でカバー | `.astro` は SSR 専用テンプレで Vitest 直接対象外、Playwright で担保 |
-| NFR-06 | E2E テスト：主要画面遷移と挙動を Playwright で検証 | 既存 tests/ は Playwright 公式デモのテンプレ 2 本のみ。**自プロジェクト用は新規作成**。設定（playwright.config.ts）は流用。**実行・検証は CI（`.github/workflows/ui-tests.yml`、Playwright 公式コンテナ）で自動化**——Bash サンドボックスは Chromium 起動不可のため `yarn test:e2e` のローカル実行不可、`scripts/ci-status.sh` で合否確認（Decision #27） |
+| NFR-06 | E2E テスト：主要画面遷移と挙動を Playwright で検証 | 既存 tests/ は Playwright 公式デモのテンプレ 2 本のみ。**自プロジェクト用は新規作成**。設定（playwright.config.ts）は流用。**実行・検証は CI（`.github/workflows/ui-tests.yml`、Playwright 公式コンテナ）で自動化**——Bash サンドボックスは Chromium 起動不可のため `yarn test:e2e` のローカル実行不可、`~/.claude/bin/ci-status.sh` で合否確認（Decision #27。スクリプトは dotfiles 正本に一本化、2026-08-30） |
 | NFR-07 | Lighthouse スコア：Performance / Accessibility / SEO すべて 90+ | SSG なので達成容易 |
 | NFR-08 | 依存追加は最小限 | |
 | NFR-09 | OGP / SEO メタは SSG 時に静的生成（クライアント JS 非依存） | Astro の標準機能で担保 |

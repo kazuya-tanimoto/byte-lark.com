@@ -54,12 +54,12 @@
    - **CF preview 検証**: push 後に Playwright で CF branch alias URL を開いてスクリーンショット確認
      - Branch alias URL は作業ブランチ名から決まる：`https://<ブランチ名の / と英数字以外を - に置換>-byte-lark.tanimoto-a49.workers.dev`（例：`fix/rss-alternate` → `https://fix-rss-alternate-byte-lark.tanimoto-a49.workers.dev`）。preview ビルドはブランチ名を問わず走る（PR #34 の `chore/article-ideas-2026-08` で実測）
      - ※ version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行に記載される
-   - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。CI は `push` では main しか見ないので、**draft PR を作っていないと 1 度も走らない**（PHASE1E-002）。`bash scripts/ci-status.sh` で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）。修正が要る場合は同じブランチに push し直せば PR がそのまま拾う（PR を作り直さない）
+   - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。CI は `push` では main しか見ないので、**draft PR を作っていないと 1 度も走らない**（PHASE1E-002）。`bash ~/.claude/bin/ci-status.sh`（完了まで待つなら `--wait`）で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）。修正が要る場合は同じブランチに push し直せば PR がそのまま拾う（PR を作り直さない）
    ```
    ## 検証報告
    - ローカル確認: （dev server で確認した内容）
    - CF preview 確認: （作業ブランチの branch alias URL）（スクリーンショットまたは観察事実）
-   - E2E/CI 確認: `scripts/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
+   - E2E/CI 確認: `~/.claude/bin/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
    - 未検証項目: （あれば正直に書く）
    ```
 8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit → push → **README §10.6 のとおり `gh pr ready` → `gh pr merge --merge --delete-branch` まで実行**（マージまでが完了フロー。マージだけを運営者判断に委ねない）
@@ -91,8 +91,8 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 ## Sandbox 制約
 - git 操作は worktree 不使用。公開後は main から短命ブランチを切って作業し、PR でマージする（main は ruleset で保護され直接 push できない。詳細: docs/pbi/README.md §10.3-10.6）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
-- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、draft PR を作って CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `scripts/ci-status.sh` で合否を読む。UI スクショ確認は MCP Playwright で行う
-- gh CLI は使える：運営者のユーザー設定（dotfiles の `sandbox.excludedCommands`、2026-07-04 導入）で gh のみ sandbox 外実行になるため。環境設定依存なので、gh が失敗する環境では無認証 curl の `scripts/ci-status.sh` で代替する
+- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、draft PR を作って CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `bash ~/.claude/bin/ci-status.sh` で合否を読む。UI スクショ確認は MCP Playwright で行う
+- gh CLI は使える：運営者のユーザー設定（dotfiles の `sandbox.excludedCommands`、2026-07-04 導入）で gh のみ sandbox 外実行になるため。`ci-status.sh` は `command -v gh` で経路を決め、gh があれば gh api 一本。gh が失敗しても無認証 curl に落ちず、stderr を出して exit 1 する（curl は gh 不在時のみ）
 - 上記の yarn / E2E 制約は母艦（macOS Seatbelt sandbox）のもの。devcontainer 内のセッションには適用されない（次節）
 
 ## Devcontainer 自走環境
