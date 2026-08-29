@@ -10,6 +10,8 @@ const targets: { path: string; expectedStatus: number }[] = [
   { path: "/blog", expectedStatus: 200 },
   // 記事詳細ページ（PHASE1B-008 で実記事投入、006/007 申し送りの再追加）
   { path: "/blog/building-this-blog-with-claude-code", expectedStatus: 200 },
+  // 本文に画像がある記事。拡大表示が <img> に足す role / 名前を機械で見張る（PHASE1E-010）
+  { path: "/blog/claude-code-devcontainer-tuning", expectedStatus: 200 },
   { path: "/contact", expectedStatus: 200 },
   { path: "/privacy", expectedStatus: 200 },
   { path: "/this-page-does-not-exist", expectedStatus: 404 },

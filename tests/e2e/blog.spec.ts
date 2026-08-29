@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 // PHASE1B-008 で実記事を投入したため、空状態前提のテストを実記事前提に書き換えた
 // （PHASE1B-006/007 申し送りの再有効化：一覧→詳細遷移 / カテゴリフィルタ / draft 非表示）。
@@ -6,6 +6,8 @@ import { expect, test } from "@playwright/test";
 const PUBLISHED_SLUG = "building-this-blog-with-claude-code";
 // draft 非表示検証用の恒久 fixture（src/content/posts/e2e-draft-fixture.md）
 const DRAFT_SLUG = "e2e-draft-fixture";
+// 本文に画像がある記事（PHASE1E-010 の拡大表示の検証用）
+const POST_WITH_IMAGE_SLUG = "claude-code-devcontainer-tuning";
 
 test.describe("Blog 一覧（実記事あり）", () => {
   test("一覧に公開記事のカードが表示される", async ({ page }) => {
@@ -158,6 +160,85 @@ test.describe("記事内の移動", () => {
       await button.click();
       await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
       await expect(button).toBeHidden();
+    });
+  });
+});
+
+// PHASE1E-010：本文画像のクリック拡大。markdown 由来の <img> に
+// src/components/ImageLightbox.astro が後から操作を張る作りなので、
+// 「実記事の画像で実際に開く」ところまで見る
+test.describe("記事内画像の拡大表示", () => {
+  const dialog = (page: Page) => page.locator("dialog[data-image-lightbox]");
+
+  test("画像を押すと拡大表示が開き、Esc で閉じて元の画像に戻る", async ({
+    page,
+  }) => {
+    await page.goto(`/blog/${POST_WITH_IMAGE_SLUG}/`);
+    const image = page.locator(".post-body img[data-zoomable]").first();
+    await expect(image).toHaveCount(1);
+    await expect(dialog(page)).toBeHidden();
+
+    await image.click();
+    await expect(dialog(page)).toBeVisible();
+    // 拡大に使うのは元解像度。画面幅で選ばれた縮小版を引き伸ばさない
+    const [source, zoomed] = await Promise.all([
+      image.evaluate((el: HTMLImageElement) => el.src),
+      dialog(page)
+        .locator("img")
+        .evaluate((el: HTMLImageElement) => el.src),
+    ]);
+    expect(zoomed).toBe(source);
+
+    await page.keyboard.press("Escape");
+    await expect(dialog(page)).toBeHidden();
+    await expect(image).toBeFocused();
+  });
+
+  test("キーボードだけで開閉できる", async ({ page }) => {
+    await page.goto(`/blog/${POST_WITH_IMAGE_SLUG}/`);
+    const image = page.locator(".post-body img[data-zoomable]").first();
+    await image.focus();
+    await page.keyboard.press("Enter");
+    await expect(dialog(page)).toBeVisible();
+
+    // 開いている間、焦点は拡大表示の中にある（背後は <dialog> が inert にする）
+    await expect(
+      page.getByRole("button", { name: "拡大表示を閉じる" }),
+    ).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(dialog(page)).toBeHidden();
+    await expect(image).toBeFocused();
+  });
+
+  test.describe("スマホ幅では画面に収めた表示と原寸を行き来できる", () => {
+    test.use({ viewport: { width: 390, height: 664 } });
+
+    test("押すたびに収めた表示と原寸が入れ替わる", async ({ page }) => {
+      await page.goto(`/blog/${POST_WITH_IMAGE_SLUG}/`);
+      const image = page.locator(".post-body img[data-zoomable]").first();
+      await image.click();
+      const zoomed = dialog(page).locator("img");
+      await expect(zoomed).toBeVisible();
+
+      const width = () =>
+        zoomed.evaluate((el: HTMLImageElement) =>
+          Math.round(el.getBoundingClientRect().width),
+        );
+      const natural = await zoomed.evaluate(
+        (el: HTMLImageElement) => el.naturalWidth,
+      );
+      const fitted = await width();
+      expect(fitted).toBeLessThan(natural);
+
+      await zoomed.click();
+      expect(await width()).toBe(natural);
+      // 原寸では画像の中央から見せる（左上に飛ばされない）
+      expect(
+        await dialog(page).evaluate((el) => el.scrollLeft),
+      ).toBeGreaterThan(0);
+
+      await zoomed.click({ position: { x: 5, y: 5 } });
+      expect(await width()).toBe(fitted);
     });
   });
 });
