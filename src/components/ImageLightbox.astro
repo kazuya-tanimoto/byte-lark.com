@@ -1,0 +1,165 @@
+{/* 記事本文の画像をクリック / タップで拡大表示する（PHASE1E-010）。
+    本文画像は本文幅（max-w-3xl）まで縮められ、UI スクショの文字が読めなかった。
+    markdown の `![]()` 由来の <img> には手を入れず、この 1 コンポーネントで完結させる
+    （BackToTop.astro と同じ「依存なし・自前 vanilla」の作り）。
+    暗幕は ::backdrop ではなく dialog 自身の背景で描く——dialog は全面を覆っており
+    見た目は同じで、疑似要素より描画のばらつきが少ない（スクリーンショットにも写る）。
+    拡大表示は <dialog> の showModal()。モーダル化・背後の inert 化・Esc での終了は
+    ブラウザが持っている（https://developer.mozilla.org/docs/Web/HTML/Element/dialog ）ので、
+    閉じたあとのフォーカス戻しだけ自前で行う */}
+<dialog
+  data-image-lightbox
+  aria-label="画像の拡大表示"
+  class="hidden h-full max-h-none w-full max-w-none overflow-auto overscroll-contain bg-black/80 p-4 open:flex"
+>
+  <button
+    type="button"
+    data-lightbox-close
+    aria-label="拡大表示を閉じる"
+    class="fixed top-4 right-4 flex size-11 items-center justify-center rounded-full bg-card text-hibari-sky-deep ring-1 ring-border shadow-card transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-hibari-sky"
+  >
+    <svg
+      class="size-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  </button>
+  {/* src / alt はクリックされた画像から script が入れる。srcset は持たせない
+      ——縮小版が選ばれると拡大の意味が無くなるため、常に元解像度を出す。
+      m-auto は「小さければ中央、大きければ端から並べてスクロール」のため
+      （flex の justify-center だと、はみ出したとき手前側が掴めなくなる） */}
+  <img data-lightbox-image alt="" class="m-auto max-h-full max-w-full object-contain" />
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("[data-image-lightbox]");
+  const body = document.querySelector(".post-body");
+  const image = dialog?.querySelector<HTMLImageElement>("[data-lightbox-image]");
+  const closeButton = dialog?.querySelector<HTMLButtonElement>("[data-lightbox-close]");
+
+  if (dialog && body && image && closeButton) {
+    // 拡大の対象と操作方法は script が付ける。JS が動かない環境では今までどおりの
+    // ただの画像に留まり、cursor も出ない（下の style が data 属性を見ている）
+    for (const target of body.querySelectorAll("img")) {
+      target.dataset.zoomable = "";
+      target.tabIndex = 0;
+      target.setAttribute("role", "button");
+      // 読み上げ時の名前は alt。装飾で alt が空のものだけ言葉を足す
+      if (target.alt === "") target.setAttribute("aria-label", "画像を拡大表示");
+    }
+
+    let opener: HTMLImageElement | null = null;
+    const open = (target: HTMLImageElement) => {
+      opener = target;
+      // src プロパティは属性の値（= 元解像度）を返す。currentSrc だと画面幅に応じて
+      // ブラウザが選んだ縮小版になり、拡大しても粗いままになる
+      image.src = target.src;
+      image.alt = target.alt;
+      dialog.removeAttribute("data-zoomed");
+      dialog.showModal();
+      // 収まりきるかは表示してからでないと測れない。デコード済みなら即、まだなら読み終わりに
+      if (image.complete) applyFit();
+      else image.addEventListener("load", applyFit, { once: true });
+    };
+
+    // 画面に収めた表示では、横長のスクショはモバイルで結局読めない（実測: 390px 幅の端末で
+    // 1310px の画像が 358px に収まる）。そこで拡大表示の中でもう一段、原寸への行き来を持たせる。
+    // 収まりきっている画像には出さない（押しても何も起きないカーソルを出さないため）
+    const overflows = () =>
+      image.naturalWidth > image.clientWidth || image.naturalHeight > image.clientHeight;
+    const applyFit = () => {
+      const zoomed = dialog.hasAttribute("data-zoomed");
+      image.classList.toggle("max-h-full", !zoomed);
+      image.classList.toggle("max-w-full", !zoomed);
+      // Tailwind preflight の img { max-width: 100% } が残るので、原寸では明示的に外す
+      image.classList.toggle("max-w-none", zoomed);
+      image.classList.toggle("max-h-none", zoomed);
+      dialog.dataset.zoomableImage = !zoomed && overflows() ? "" : "no";
+    };
+
+    const zoomable = (event: Event) =>
+      (event.target as HTMLElement).closest<HTMLImageElement>("img[data-zoomable]");
+
+    body.addEventListener("click", (event) => {
+      const target = zoomable(event);
+      if (target) open(target);
+    });
+    body.addEventListener("keydown", (event) => {
+      const key = (event as KeyboardEvent).key;
+      if (key !== "Enter" && key !== " ") return;
+      const target = zoomable(event);
+      if (!target) return;
+      // Space は既定でページを送ってしまうので止める
+      event.preventDefault();
+      open(target);
+    });
+
+    closeButton.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      // 画像の外側（余白）を押したら閉じる。閉じるボタンの上では閉じない
+      if (event.target === dialog) {
+        dialog.close();
+        return;
+      }
+      if (event.target !== image) return;
+      // 画像そのものを押したら、収めた表示と原寸を行き来する
+      if (dialog.hasAttribute("data-zoomed")) dialog.removeAttribute("data-zoomed");
+      else if (overflows()) dialog.dataset.zoomed = "";
+      else return;
+      applyFit();
+      // 原寸へ移った直後は画像の中央から見せる（左上に飛ばされると何を見ているか分からない）
+      if (dialog.hasAttribute("data-zoomed")) {
+        dialog.scrollTo({
+          left: (dialog.scrollWidth - dialog.clientWidth) / 2,
+          top: (dialog.scrollHeight - dialog.clientHeight) / 2,
+        });
+      }
+    });
+    // Esc・背景・ボタンのどれで閉じても、元いた画像へ戻す。
+    // focus は直後のスクロールと引っぱり合うので preventScroll を付ける（PHASE1D-013 の学び）
+    dialog.addEventListener("close", () => {
+      opener?.focus({ preventScroll: true });
+      opener = null;
+    });
+  }
+</script>
+
+<style is:global>
+  /* 対象は script が data 属性を付けたものだけ。scoped style は markdown 由来の
+     <img>（本コンポーネントの外で生成される）に届かないため is:global で書く */
+  .post-body img[data-zoomable] {
+    cursor: zoom-in;
+  }
+  /* 拡大表示の中で、さらに原寸へ行けるとき / 収めた表示へ戻れるときのカーソル */
+  dialog[data-image-lightbox][data-zoomable-image=""] img {
+    cursor: zoom-in;
+  }
+  dialog[data-image-lightbox][data-zoomed] img {
+    cursor: zoom-out;
+  }
+  .post-body img[data-zoomable]:focus-visible {
+    outline: 2px solid var(--color-hibari-sky);
+    outline-offset: 2px;
+  }
+
+  /* 開くときだけ淡く出す。閉じるのは即時（見終わって本文に戻る動きを待たせない）。
+     動きを減らす設定では付けない */
+  @media (prefers-reduced-motion: no-preference) {
+    dialog[data-image-lightbox][open] {
+      animation: image-lightbox-in 0.15s ease-out;
+    }
+  }
+  @keyframes image-lightbox-in {
+    from {
+      opacity: 0;
+    }
+  }
+</style>

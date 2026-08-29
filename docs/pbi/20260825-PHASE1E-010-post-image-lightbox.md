@@ -1,6 +1,7 @@
 # 訪問者は記事内の画像をクリックして拡大表示できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-08-29
 
 ## 誰が
 
@@ -62,8 +63,10 @@ Status: NotStarted
 - 実行環境: 実装・ローカルスクショ確認はコンテナ（`yarn preview` + repo の Playwright、
   PHASE1E-003 / 004 実績）でも母艦（`yarn dev` + MCP Playwright）でも可。
   E2E スイートは draft PR 経由の CI で検証
-- 着手タイミング: PHASE1E-008（記事 T8）のマージ後に main から短命ブランチを切る。
-  T8 のスクショ掲載と重ねると §7 検証の題材がそろう
+- 着手タイミング: 当初は「PHASE1E-008（記事 T8）のマージ後」としていたが、2026-08-29 に
+  先行着手へ変更（運営者判断）。公開済みの後編記事に本文画像 2 枚があり
+  （`src/content/posts/claude-code-devcontainer-tuning/index.md:119,122`）、§7 検証の
+  題材は T8 を待たずにそろう。T8 との依存はドキュメントのみでコードの競合は無い
 - 現状の実装事実（2026-08-25、dist の実 HTML で確認）:
   - 本文画像は markdown `![alt](./file.png)` 由来。Astro が webp へ変換して出力するが
     解像度は元のまま（実測: `dist/blog/claude-code-devcontainer-tuning/index.html` の
@@ -98,4 +101,41 @@ Status: NotStarted
 
 ## 実装ログ
 
-（未着手）
+### 2026-08-29 セッション 1
+- 着手判断：当初の「PHASE1E-008 マージ後」を先行着手へ変更（運営者判断）。理由は公開済みの
+  後編記事に本文画像 2 枚があり（`src/content/posts/claude-code-devcontainer-tuning/index.md:119,122`）、
+  §7 検証の題材が T8 を待たずにそろうため。008 のブランチが持つのは docs だけで、
+  本 PBI が触る `astro.config.mjs` / `src/layouts/PostLayout.astro` とは競合しない
+  （`git diff --stat origin/main...post/ghostty-herdr-migration` で確認）。
+  010 の起票コミット 2 本は 008 のブランチ上にあったので、main から切った本ブランチへ
+  cherry-pick して持ち込んだ（INDEX.md の競合は「008 の記述は入れず 010 だけ入れる」で解決）
+- 前提確認（README §5.3）：Astro は 7.2.0（`node -e` で実測）。`image.layout` と
+  `image.responsiveStyles` は 5.10.0 以降の設定で、7.2.0 の型定義にも存在する
+  （`node_modules/astro/dist/types/public/config.d.ts:2057,2069`）。着手前の dist では
+  本文画像が `srcset=""` の元解像度 1 本だったことも実測で確認
+- やったこと
+  - `astro.config.mjs` に `image: { layout: "constrained" }` を追加。markdown の `![]()` 由来にも
+    効き、640 / 750 / 828 / 1080 / 1280 / 1310w の webp と `sizes` が出るようになった
+  - `src/components/ImageLightbox.astro` を新設し `PostLayout.astro` から呼ぶ。`<dialog>` +
+    vanilla script で依存追加なし。PBI の技術メモは「PostLayout に直接置く」だったが、
+    BackToTop.astro と同じ「1 部品完結」に揃えた（PostLayout は既に 330 行）
+  - `tests/e2e/blog.spec.ts` に 3 本追加（クリック開閉 + 元解像度 / キーボード開閉 /
+    スマホ幅の原寸トグル）。`tests/e2e/a11y.spec.ts` の axe 対象に画像入り記事を追加
+- 判断したこと
+  - `responsiveStyles` は既定の false のまま。有効にすると Astro が img へグローバル CSS を
+    足すが、本文画像は Tailwind preflight の `max-width:100%`、カバーは自前の
+    `aspect / object-cover` で既に整っており、上書きの手当てを増やす理由が無い
+  - 暗幕は `::backdrop` ではなく dialog 自身の背景で描く。見た目は同じで、描画のばらつきが
+    少なく実測もできる（開いた状態の背景を実測: RGB 247,246,243 → 44,44,44）
+  - 拡大表示の中に「画面に収める ↔ 原寸」のトグルを足した。当初の実装（常に画面に収める）だと
+    390px 幅の端末で 1310px の画像が 358px にしかならず、元の困りごと（スクショの文字が読めない）が
+    そのまま残っていたため。デスクトップでは元から収まるのでトグルは出さない
+- 想定外
+  - `max-w-full` を外すだけでは原寸にならない。Tailwind preflight の `img { max-width: 100% }` が
+    残るため、原寸側で `max-w-none` / `max-h-none` を明示する必要があった
+  - `naturalWidth` は srcset の `w` 記述子があると「実ピクセル ÷ 密度」を返す。390px 幅の端末で
+    640w が選ばれたとき 390 と出るので、配信解像度の確認は `currentSrc` で見る
+  - デスクトップの `sizes` は `(min-width: 1310px) 1310px, 100vw` で、本文の実表示幅 768px に対して
+    過大。markdown 由来の画像に `sizes` を個別指定する手段が Astro に無いため許容した。
+    実ファイルは 1310w で 7.6KB、DPR 2 の環境では 1536px 必要なので損にはならない
+- 残タスク：CF preview 確認 → 運営者の見た目承認 → CI green → Done 化 → マージ
