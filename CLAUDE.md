@@ -49,7 +49,7 @@
 4. Update PBI Status: NotStarted → InProgress + Started date
 5. Sync INDEX.md
 6. Implement（最初の push の直後に **draft PR** を作る。CI は短命ブランチへの push では走らず、PR がある状態でのみ走る。README §10.4）
-7. Verify: UI/フロントエンド変更がある場合、PBI を Done にする前に以下を**すべて**実施して出力する（必須）:
+7. Verify: PBI を Done にする前に以下を**すべて**実施して出力する（必須）。スクショ 2 種は UI/フロントエンド変更がある場合、テスト追加は振る舞いが変わる場合に必須。非該当なら受け入れ条件に `N/A（理由）` を書く:
    - **ローカル検証**: `yarn dev` を起動し Playwright でスクリーンショット確認（デスクトップ + モバイル幅）
    - **CF preview 検証**: push 後に Playwright で CF branch alias URL を開いてスクリーンショット確認
      - Branch alias URL は作業ブランチ名から決まる：`https://<ブランチ名の / と英数字以外を - に置換>-byte-lark.tanimoto-a49.workers.dev`（例：`fix/rss-alternate` → `https://fix-rss-alternate-byte-lark.tanimoto-a49.workers.dev`）。preview ビルドはブランチ名を問わず走る（PR #34 の `chore/article-ideas-2026-08` で実測）
