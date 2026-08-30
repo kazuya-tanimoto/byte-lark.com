@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-30（セッション開始チェックにテスト追加の検出を追加）
+最終更新: 2026-08-30（PHASE1E-011 起票：SEO・配信まわりの E2E を足す）
 
 ## 次にやること
 
@@ -365,6 +365,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 | PHASE1E-007 | [version-refs-check](20260815-PHASE1E-007-version-refs-check.md) | Done |
 | PHASE1E-009 | [back-to-top-behavior](20260824-PHASE1E-009-back-to-top-behavior.md) | Done |
 | PHASE1E-010 | [post-image-lightbox](20260825-PHASE1E-010-post-image-lightbox.md) | Done |
+| PHASE1E-011 | [seo-endpoint-test-coverage](20260830-PHASE1E-011-seo-endpoint-test-coverage.md) | NotStarted |
 
 ### 起票済み・起票予定
 
@@ -381,7 +382,8 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 - **PHASE1E-005（2026-08-13 起票）**：計画書・INDEX の分割。INDEX.md（88.6KB、うち改訂履歴 61.7KB）と site-plan.md（86KB）が Read 1 回分を超えている件の根治。改訂履歴を `INDEX-history.md` / `docs/site-plan-history.md` へ、Decision Log を `docs/site-plan-decisions.md` へ切り出す。出所は PHASE1D-009 棚卸しの持ち越し項目（運営者決定 2026-08-13）
 - **PHASE1E-009（2026-08-24 起票）**：「先頭へ戻る」ボタン（PHASE1D-015 導入）の挙動見直し。戻り先を全ページ共通で「ページの先頭」に統一（目次戻りをやめる）、全ページ・全画面幅に出す（`xl:hidden` を外す）、フッターが見えたら隠す挙動を削除、`aria-label` を「ページの先頭へ戻る」に変更。出所は 2026-08-24 の運営者依頼で、monotrip.jp が同じ見直しを決定済み（monotrip Decision #30。monotrip の実装は byte-lark からの踏襲で、4 条件の一致を起票時に確認）。実装時に運営者承認のうえ Decision Log へ記録する
 - **PHASE1E-010（2026-08-25 起票）**：記事内画像のクリック拡大（モーダル）。本文画像が本文幅まで縮小され UI スクショの細部が読めない件（後編記事の statusline スクショ 2 枚で顕在化、運営者提案 2026-08-25）。`<dialog>` ベースの依存なし自前実装を想定。2026-08-27 に本文画像のレスポンシブ化（`image.layout` で縮小版 + srcset を出し分け、拡大は元解像度）をスコープ追加（運営者承認）。着手は 2026-08-29（当初の「008 マージ後」は、公開済みの後編記事に本文画像があり §7 検証の題材が足りているため先行着手へ変更）
-- **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 5 本
+- **PHASE1E-011（2026-08-30 起票）**：`/rss.xml`・sitemap・`robots.txt`・OGP / canonical / JSON-LD・`/credits` の E2E を足す。出所は 2026-08-30 の運営者指示（monotrip.jp でテスト書き忘れが頻発した件を受けた点検）。監査で分かったのは、生成関数の unit はあるのに「その結果が配信物に届いているか」を誰も見ていないこと。公開後のマージ済み PR 39 件のうち `src/` を変えてテストを触らなかった実害 2 件（PR #44 / #36）が、この穴と同じ場所を指していた。同日の README v3.13 / Stop hook 改訂は「これから起票する PBI」への歯止めで、本 PBI は「既に空いている穴」を埋める側
+- **カテゴリ別一覧 + 記事末尾の前後記事リンク（記事 10 本到達時に起票）**：`/blog/tech` `/blog/life` の実 URL 化（FR-19）と、前後リンク（PHASE1D-015 から移管、2026-08-09 運営者判断）。前後の並びは訪問者が見ている一覧と一致させる必要があり、カテゴリが実 URL になれば仕掛けなしで成立する。現在の公開記事は 5 本。あわせて **[PHASE1E-011 SEO・配信まわりの E2E](20260830-PHASE1E-011-seo-endpoint-test-coverage.md)** を 2026-08-30 に起票（NotStarted）
 
 ---
 
