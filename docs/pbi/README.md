@@ -1,4 +1,4 @@
-# PBI フォーマット規約 (v3.12)
+# PBI フォーマット規約 (v3.13)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
@@ -56,7 +56,8 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 - [ ] 観測可能な条件 1
 - [ ] 観測可能な条件 2
 - [ ] エラー / エッジケース条件
-- [ ] テスト・Lint・型チェック等の自動検証条件
+- [ ] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
+- [ ] テスト追加：新しい振る舞いに E2E / unit を足す（§4.6 ルール 9。追加不要な PBI は `[x] …：N/A（理由）`）
 - [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 - [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 - [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
@@ -122,6 +123,8 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 6. 受け入れ条件の項目数は**網羅性の目安**（観測条件・エッジケース・自動検証を漏らさないための確認用）であって、PBI のサイズ基準ではない。サイズ判定は §7 のスコープ基準（触るファイル群 × 外部依存・概ね 1 セッション）で行う。項目が 20+ に膨らむ場合は分割を検討する合図
 7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する。運営者の手作業（DNS・外部ダッシュボード操作）や preview で確認できない項目（SNS カード・本番 apex のヘッダ等）が条件に含まれるときは、誰が何で確認するかを条件の行に書く
 8. **Gate PBI の申し送り棚卸し（必須）**：Retrospective Gate PBI の受け入れ条件には「当該 Phase 全 PBI の実装ログにある申し送り・積み残しを項目単位で列挙し、各項目を **PBI 化（起票先を明記）/ 持ち越し（本 Gate の申し送りセクションに記載）/ 破棄（理由を明記）** のいずれかに判定する」を必ず置く。前 Gate から持ち越された未消化項目も同じ表に含めて再判定する（どの Phase にも属さない項目——例：ダークモード実表示検証——が Gate の網から漏れる経路を塞ぐ）。これにより次 Phase の起票者は全実装ログを再走査せず、直前 Gate の棚卸し表を一次資料にできる。「全ログを読む」だけでは項目が黙って落ちる余地があった（2026-08-01 の棚卸しで、実装ログ内にのみ存在する申し送り 7 件が grep で初めて可視化された経験を規約化）
+9. **テスト追加（必須・常設）**：受け入れ条件に「テスト追加」の行を必ず置く（テンプレ §3 に常設済み）。新しい振る舞い——UI 操作・分岐・データ変換・エンドポイント——を足す PBI は `tests/e2e/` か vitest に検証を足し、**追加・更新したテストファイル名を条件の行に書く**。既存テストが通る確認（`yarn test:run` がエラーなし）は別行で、**テスト追加の代わりにならない**（既存テストは新しい振る舞いを何も見ていない）。記事・docs のみの PBI や、運営者の外部操作だけの PBI は行を削除せず `[x] テスト追加：N/A（理由）` と明記する。INDEX.md のセッション開始チェックがこの行の有無と未 check 残りを機械検出する。（規約化の経緯：PHASE1E-010「記事内画像のクリック拡大」は新しい対話機能なのに受け入れ条件にテスト追加の行が無く、`tests/e2e/blog.spec.ts` への検証追加は実装時の判断で入っただけだった。テスト行がテンプレの「テスト・Lint・型チェック等の自動検証条件」という曖昧な 1 行しか無く、実際の PBI では `yarn test:run` がエラーなしに落ちて、テストを書いたかどうかが条件から消えていた）
+
 
 ### 4.7 技術メモ
 
@@ -447,3 +450,4 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 | 2026-08-12 | v3.10 | §10.4〜§10.6 を draft PR 前提の手順に変更（PHASE1E-002）：CI（`quality` / `e2e`）の `push` trigger を `main` だけに絞り、短命ブランチの検査は `pull_request` に一本化した。PR が開いている間は push と pull_request の両方が発火し、同じコミットに check-run が 2 本ずつ付いていたため（PR #39 の head `7bdd828` で実測）。`pull_request` 側を残したのは、(1) main とマージした結果（merge ref）を検査するので push 側より強い、(2) `dependabot/*` `archive/*` は push フィルタに入らずこの trigger が唯一の経路、の 2 点。代わりに **最初の push の直後に draft PR を作る**ことを §10.4 に明記し、作業ブランチの CI と CF preview が同時に始まる形にした（PR #38 が push trigger 拡張で塞いだ「PR 作成まで検証が詰まる」穴は、これで満たされる）。§10.6 は `gh pr create` → `gh pr ready` に置き換え、draft を外す操作を §7 検証完了の宣言と位置づけた。あわせて `quality.yml` に concurrency（`cancel-in-progress`）を追加。CLAUDE.md §7 も連動更新 |
 | 2026-08-13 | v3.11 | §5.3 に手順 8（push → §10.6 の ready → merge まで実行）を追加。完了フローの要約が「コミット」で終わっており、§10.5-10.6 の本則（Done 化 → main へマージ）への導線が無かったため、PHASE1E-004 で Done コミット後にマージを運営者判断へ委ねるフロー違反が発生。要約と本則のずれを是正し、マージ委ねの禁止を明記。CLAUDE.md「How to start work」手順 8 も連動更新 |
 | 2026-08-23 | v3.12 | §9 に起票後のセルフチェックを追加：PBI を書き終えたら commit 前に `/pbi-review`（`.claude/skills/pbi-review`、新設）で全軸点検する。skill は monotrip.jp の同名 skill を本 repo の規約（README / CLAUDE.md の各節）に置き換えた copy で、repo ごとに個別進化させる（ユーザーレベル共通化は規約差が構造的なため見送り）。規約の本文は README / CLAUDE.md が正、skill は照合手順のみ。skill にだけあったルールを README 側へ移した：§4.6 ルール 1（運営者判断の記録先）/ ルール 7（手作業・preview 不可項目の確認方法）/ §4.8（範囲外項目の行き先）/ §7（判断と実装の同居は分割）。§2 の PHASE 列挙に 1D / 1E を追加。CLAUDE.md「How to draft next-Phase PBIs」と site-plan §12 の README 参照も連動更新 |
+| 2026-08-30 | v3.13 | §4.6 にルール 9「テスト追加（必須・常設）」を追加し、§3 テンプレの `テスト・Lint・型チェック等の自動検証条件` 1 行を **「既存テストが通る」と「テスト追加」の 2 行**に分割。曖昧な 1 行が実際の PBI では `yarn test:run` がエラーなしだけに落ち、**テストを書いたかどうかが受け入れ条件から消えていた**ため（PHASE1E-010 は新しい対話機能なのにテスト追加の条件が無く、`tests/e2e/blog.spec.ts` への追加は実装時の判断で入っただけ。監査で main のマージ 7 件が `src/` を触ってテストを触っていないことも確認）。INDEX.md「セッション開始時の必須チェック」(2)(3) に `テスト追加` の grep を追加し、起票漏れと未 check のまま Done を機械検出する。CLAUDE.md §7（テスト追加の項目 + 検証報告テンプレの行）と pbi-review skill の照合軸（受け入れ条件 / 表記と同期）も連動更新 |
