@@ -33,6 +33,12 @@ sync_claude_config() {
     mkdir -p "$CONFIG_DIR/output-styles"
     cp "$HOST_CLAUDE/output-styles/"*.md "$CONFIG_DIR/output-styles/"
   fi
+  # bin/（ci-status.sh 等の共通スクリプト）も毎起動コピーで最新化
+  if [ -d "$HOST_CLAUDE/bin" ]; then
+    mkdir -p "$CONFIG_DIR/bin"
+    cp "$HOST_CLAUDE/bin/"*.sh "$CONFIG_DIR/bin/"
+    chmod +x "$CONFIG_DIR/bin/"*.sh
+  fi
   # worktree 運用 hook（スクリプト + settings への登録）も dotfiles から毎起動同期。
   # 登録は hooks.json の event ごとに「旧 worktree 登録を除いて追記」する冪等マージ
   if [ -d "$HOST_CLAUDE/hooks" ]; then
