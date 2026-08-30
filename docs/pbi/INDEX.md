@@ -1,6 +1,6 @@
 # PBI Index
 
-最終更新: 2026-08-29（PHASE1E-010 完了）
+最終更新: 2026-08-30（セッション開始チェックにテスト追加の検出を追加）
 
 ## 次にやること
 
@@ -50,20 +50,22 @@ for f in $(grep -l "^Status: InProgress" docs/pbi/*.md); do
   fi
 done
 
-# (2) §7 検証ゲート（README §4.6 ルール 7）：着手対象 PBI に検証 3 行が無い＝起票漏れ
+# (2) 常設条件（README §4.6 ルール 7 / 9）：着手対象 PBI に検証 3 行 + テスト追加行が無い＝起票漏れ
 for f in $(grep -lE "^Status: (NotStarted|InProgress)" docs/pbi/*PHASE*.md); do
   grep -q "スクショ確認" "$f" || echo "WARNING: §7 スクショ検証が受け入れ条件に無い（テンプレ常設漏れ）→ $f"
   grep -q "ci-status" "$f"     || echo "WARNING: §7 E2E/CI 検証が受け入れ条件に無い（テンプレ常設漏れ）→ $f"
+  grep -q "テスト追加" "$f"     || echo "WARNING: テスト追加が受け入れ条件に無い（README §4.6 ルール 9）→ $f"
 done
 
-# (3) §7 検証ゲート：Done なのに検証行が未 check [ ] のまま＝検証せず Done 化
+# (3) 常設条件：Done なのに常設行が未 check [ ] のまま＝検証せず Done 化
 for f in $(grep -l "^Status: Done" docs/pbi/*PHASE*.md); do
   grep -qE '^- \[ \].*スクショ確認' "$f" && echo "WARNING: §7 スクショ検証が未 check のまま Done → $f"
   grep -qE '^- \[ \].*ci-status'   "$f" && echo "WARNING: §7 E2E/CI 検証が未 check のまま Done → $f"
+  grep -qE '^- \[ \].*テスト追加'   "$f" && echo "WARNING: テスト追加が未 check のまま Done → $f"
 done
 ```
 
-(1) に該当があれば、運営者に「<該当 PBI> が InProgress ですが実装ログが空です。前回の状況を覚えていますか？」と確認してから再開する（運営者操作の詳細は [docs/operation-manual.md](../operation-manual.md) §2 参照）。(2)(3) に該当があれば、受け入れ条件に §7 検証 3 項目（ローカル / CF preview スクショ + E2E/CI green）を追加（非該当なら `[x] …：N/A（理由）`）してから着手・完了する。
+(1) に該当があれば、運営者に「<該当 PBI> が InProgress ですが実装ログが空です。前回の状況を覚えていますか？」と確認してから再開する（運営者操作の詳細は [docs/operation-manual.md](../operation-manual.md) §2 参照）。(2)(3) に該当があれば、受け入れ条件に §7 検証 3 項目（ローカル / CF preview スクショ + E2E/CI green）とテスト追加（README §4.6 ルール 9）を追加（非該当なら `[x] …：N/A（理由）`）してから着手・完了する。
 
 ---
 

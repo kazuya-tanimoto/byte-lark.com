@@ -55,8 +55,10 @@
      - Branch alias URL は作業ブランチ名から決まる：`https://<ブランチ名の / と英数字以外を - に置換>-byte-lark.tanimoto-a49.workers.dev`（例：`fix/rss-alternate` → `https://fix-rss-alternate-byte-lark.tanimoto-a49.workers.dev`）。preview ビルドはブランチ名を問わず走る（PR #34 の `chore/article-ideas-2026-08` で実測）
      - ※ version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行に記載される
    - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。CI は `push` では main しか見ないので、**draft PR を作っていないと 1 度も走らない**（PHASE1E-002）。`bash ~/.claude/bin/ci-status.sh`（完了まで待つなら `--wait`）で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）。修正が要る場合は同じブランチに push し直せば PR がそのまま拾う（PR を作り直さない）
+   - **テスト追加**: 新しい振る舞いを足したなら `tests/e2e/` か vitest に検証を追加する（docs/pbi/README.md §4.6 ルール 9）。既存テストが通ることは追加の代わりにならない。UI 変更が無くても、振る舞いが変われば対象
    ```
    ## 検証報告
+   - テスト追加: （追加・更新した spec ファイルと件数 / 不要なら N/A の理由）
    - ローカル確認: （dev server で確認した内容）
    - CF preview 確認: （作業ブランチの branch alias URL）（スクリーンショットまたは観察事実）
    - E2E/CI 確認: `~/.claude/bin/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
@@ -111,7 +113,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.17)
 - docs/site-plan-decisions.md Decision Log 本体（site-plan §8 は誘導スタブ。改訂履歴は site-plan-history.md / pbi/INDEX-history.md に分割）
-- docs/pbi/README.md          PBI format spec (v3.12) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.13) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）
