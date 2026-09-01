@@ -141,6 +141,7 @@
 | `/robots.txt` | クローラー制御 | 1a |
 | `*` | NotFound | 1a |
 | `/blog/tech`, `/blog/life` | カテゴリ別一覧 | 1c |
+| `/credits` | アイコン・書体の出典 | 1d |
 | `/legal/tokutei` | 特商法表記（直案件で対価を受ける時） | 法人化後 |
 
 ### 6.3 コンテンツモデル（Blog Post Frontmatter スキーマ）
