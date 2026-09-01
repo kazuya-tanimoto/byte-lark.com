@@ -1,7 +1,8 @@
 # Claude は RSS・sitemap・OGP の壊れを CI で気づける
 
-Status: InProgress
+Status: Done
 Started: 2026-09-01
+Completed: 2026-09-01
 
 ## 誰が
 
@@ -67,7 +68,7 @@ Started: 2026-09-01
 - [x] ローカル スクショ確認（desktop + mobile）：N/A（画面を変えない。テストの追加と
       docs 1 行だけで、`src/` と `worker/` の実装には触らない）（CLAUDE.md §7）
 - [x] CF preview スクショ確認（branch alias URL）：N/A（同上）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 
@@ -164,4 +165,5 @@ Started: 2026-09-01
   検証できない」と拒否することがある。1 コマンド 1 実行に割ると通る
 - 想定外：`src/content/posts/e2e-draft-fixture.md` はフォルダ形式（CLAUDE.md の
   `<slug>/index.md` 規約）ではなくフラット配置のまま。本 PBI では触らない（fixture として動いている）
-- 残タスク：draft PR の CI green を待って Done 化 → `gh pr ready` → `gh pr merge`
+- CI（PR #76、head `8487168`）：`bash ~/.claude/bin/ci-status.sh --wait` で Quality Checks / UI Tests とも
+  completed/success。Done 化して `gh pr ready` → `gh pr merge --merge --delete-branch`
