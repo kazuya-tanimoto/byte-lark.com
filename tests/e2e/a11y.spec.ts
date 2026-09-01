@@ -14,6 +14,8 @@ const targets: { path: string; expectedStatus: number }[] = [
   { path: "/blog/claude-code-devcontainer-tuning", expectedStatus: 200 },
   { path: "/contact", expectedStatus: 200 },
   { path: "/privacy", expectedStatus: 200 },
+  // アイコン・書体の出典。表と外部リンクが多いページなので axe の対象に入れる（PHASE1E-011）
+  { path: "/credits", expectedStatus: 200 },
   { path: "/this-page-does-not-exist", expectedStatus: 404 },
 ];
 
