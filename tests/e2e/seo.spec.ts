@@ -108,6 +108,14 @@ test.describe("OGP と canonical", () => {
         "content",
         (await canonical.getAttribute("href")) ?? "",
       );
+
+      // RSS 自動発見リンク（PHASE1E-001 導入、BaseLayout で全ページ共通）。
+      // 壊れても画面に出ず、気づくのは購読ツール側になるので機械で見張る（011 追補）
+      const alternate = page.locator(
+        'head link[rel="alternate"][type="application/rss+xml"]',
+      );
+      await expect(alternate).toHaveCount(1);
+      await expect(alternate).toHaveAttribute("href", `${SITE}/rss.xml`);
     });
   }
 });
