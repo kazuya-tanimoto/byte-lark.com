@@ -167,3 +167,26 @@ Completed: 2026-09-01
   `<slug>/index.md` 規約）ではなくフラット配置のまま。本 PBI では触らない（fixture として動いている）
 - CI（PR #76、head `8487168`）：`bash ~/.claude/bin/ci-status.sh --wait` で Quality Checks / UI Tests とも
   completed/success。Done 化して `gh pr ready` → `gh pr merge --merge --delete-branch`
+
+### 2026-09-02 追補（RSS 自動発見リンクの見張り）
+- 経緯：Done 後の運営者との振り返りで「監査外だが同種の穴」を点検し、残り 1 件を特定。
+  `src/layouts/BaseLayout.astro:54` の RSS 自動発見リンク
+  （`<link rel="alternate" type="application/rss+xml">`、PHASE1E-001 導入）が無検証だった。
+  壊れても画面に出ず、気づくのが購読ツール側になる性質は本 PBI の 4 項目と同じ
+- 対応：`tests/e2e/seo.spec.ts` の「OGP と canonical」のページ別テストに assertion 2 つを追加
+  （存在 1 件 + `href` が `https://byte-lark.com/rss.xml`）。トップと記事詳細の 2 ページで検証。
+  実装（`src/`）には触っていない
+- 赤くなる確認：BaseLayout の該当 6 行を削除 → `yarn build`（`dist/index.html` の
+  `application/rss+xml` が 0 件）→ 対象 2 件が赤（`toHaveCount` Expected 1 / Received 0）。
+  `git checkout -- src/layouts/BaseLayout.astro` → build → `yarn test:e2e` 54 件すべて緑
+- 検証：`yarn check` No fixes / `yarn check:ts` 0 errors / `yarn test:run` 31 passed /
+  `yarn test:e2e` 54 passed
+- 作業場所：worktree `.claude/worktrees/test+rss-alternate-link`、
+  ブランチ `test/rss-alternate-link`（main `2a92ecd` から分岐）
+- PR #78（draft）。CI 結果は green 確認後にこの下へ追記
+- CI 初回 run は Quality Checks が Audit dependencies で failure（UI Tests は success）。
+  原因は browserslist 4.28.2 への新規 high 勧告 2 件（GHSA-c83g-rgw3-j3cx / GHSA-73wf-gq98-2v4g、
+  `<=4.28.6` 対象）で、本追補の変更とは無関係（同じ yarn.lock で前日の run 33499364741 は success）。
+  `yarn up -R browserslist` で 4.28.8 へ（yarn.lock のみ、依存元 2 経路とも range 内）。
+  ローカルで CI と同じ `yarn npm audit --all --recursive --severity high --environment production` が
+  exit 0 になることを確認し、本 PR に同梱した
