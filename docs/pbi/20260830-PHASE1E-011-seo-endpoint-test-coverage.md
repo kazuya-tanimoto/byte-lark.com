@@ -183,3 +183,10 @@ Completed: 2026-09-01
   `yarn test:e2e` 54 passed
 - 作業場所：worktree `.claude/worktrees/test+rss-alternate-link`、
   ブランチ `test/rss-alternate-link`（main `2a92ecd` から分岐）
+- PR #78（draft）。CI 結果は green 確認後にこの下へ追記
+- CI 初回 run は Quality Checks が Audit dependencies で failure（UI Tests は success）。
+  原因は browserslist 4.28.2 への新規 high 勧告 2 件（GHSA-c83g-rgw3-j3cx / GHSA-73wf-gq98-2v4g、
+  `<=4.28.6` 対象）で、本追補の変更とは無関係（同じ yarn.lock で前日の run 33499364741 は success）。
+  `yarn up -R browserslist` で 4.28.8 へ（yarn.lock のみ、依存元 2 経路とも range 内）。
+  ローカルで CI と同じ `yarn npm audit --all --recursive --severity high --environment production` が
+  exit 0 になることを確認し、本 PR に同梱した
