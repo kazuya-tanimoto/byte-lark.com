@@ -64,7 +64,10 @@
    - E2E/CI 確認: `~/.claude/bin/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
    - 未検証項目: （あれば正直に書く）
    ```
-8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit → push → **README §10.6 のとおり `gh pr ready` → `gh pr merge --merge --delete-branch` まで実行**（マージまでが完了フロー。マージだけを運営者判断に委ねない）
+8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit → push → **README §10.6 のとおり `gh pr ready` → `gh pr merge --merge` まで実行**（マージまでが完了フロー。マージだけを運営者判断に委ねない）
+   - 完了フロー：CI green を確認 → `gh pr ready` → `gh pr merge --merge` → worktree を片付ける → `git branch -d <ブランチ名>`
+   - **`--delete-branch` は付けない**。head ブランチのリモート削除は repo 設定「Automatically delete head branches」に任せている（Settings → General → Pull Requests）。`--delete-branch` はローカルも消そうとするため、worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まり、リモート削除まで到達しない
+   - ローカルブランチは merge 後に自分で消す。worktree を消しても残るため、1 PR ごとに溜まる。`-d` はマージ済みでないと拒否するので `-D` は使わない
 
 ### How to end this session
 - If a PBI is InProgress: append to `## 実装ログ` (やったこと/残タスク/学び/想定外)
@@ -113,7 +116,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.17)
 - docs/site-plan-decisions.md Decision Log 本体（site-plan §8 は誘導スタブ。改訂履歴は site-plan-history.md / pbi/INDEX-history.md に分割）
-- docs/pbi/README.md          PBI format spec (v3.13) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.14) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）

@@ -1,4 +1,4 @@
-# PBI フォーマット規約 (v3.13)
+# PBI フォーマット規約 (v3.14)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
@@ -194,7 +194,7 @@ PBI を更新する時は、必ず以下を**同一コミット内**で同期：
 5. 実装する
 6. 完了：受け入れ条件全 check → Status: Done + Completed 追記 → INDEX.md 同期
 7. コミット（後述のメッセージ規約に従う）
-8. push → **§10.6 に従い main へマージまで実行する**（`gh pr ready` → `gh pr merge --merge --delete-branch`）。コミットで完了フローは終わらない。マージ＝本番公開だが、§7 検証ゲート通過が公開判断そのものであり、マージだけを運営者判断に委ねない（委ねてフロー違反となった実例：PHASE1E-004）
+8. push → **§10.6 に従い main へマージまで実行する**（`gh pr ready` → `gh pr merge --merge` → `git branch -d <type>/<short>`）。コミットで完了フローは終わらない。マージ＝本番公開だが、§7 検証ゲート通過が公開判断そのものであり、マージだけを運営者判断に委ねない（委ねてフロー違反となった実例：PHASE1E-004）
 
 ### 5.4 中断時の手順
 
@@ -373,10 +373,15 @@ git push origin <type>/<short>
 
 # CI green + §7 の検証が済んでから draft を外す → マージ
 gh pr ready
-gh pr merge --merge --delete-branch   # merge commit を残す（--no-ff 相当）
+gh pr merge --merge   # merge commit を残す（--no-ff 相当）
+
+# マージ後：worktree を片付けてからローカルブランチを消す
+git branch -d <type>/<short>
 ```
 
 - `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash ~/.claude/bin/ci-status.sh`（`--wait` で完了待ち）で確認してから実行する
+- **`--delete-branch` は付けない**。head ブランチのリモート削除は repo 設定「Automatically delete head branches」に任せている（Settings → General → Pull Requests。`gh api repos/kazuya-tanimoto/byte-lark.com --jq .delete_branch_on_merge` で確認できる）。`--delete-branch` はローカルも消そうとするため、worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まる。GitHub 側のマージは成功するがリモート削除まで到達せず、壊れ方がメイン作業ツリーの HEAD 状態に依存して非決定的になる
+- ローカルブランチは merge 後に自分で消す。worktree を消しても残るため、1 PR ごとに溜まる。`-d` はマージ済みでないと拒否するので `-D` は使わない
 - draft のままではマージできない。`gh pr ready` は「§7 の検証を全部終えた」という宣言として使う
 - コンテナから実行する場合、PAT に Pull requests: Read and write が必要（PHASE1D-011 で付与済み）
 - **main へのマージ＝ byte-lark.com への公開**。マージした時点で本番が入れ替わる
@@ -451,3 +456,4 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 | 2026-08-13 | v3.11 | §5.3 に手順 8（push → §10.6 の ready → merge まで実行）を追加。完了フローの要約が「コミット」で終わっており、§10.5-10.6 の本則（Done 化 → main へマージ）への導線が無かったため、PHASE1E-004 で Done コミット後にマージを運営者判断へ委ねるフロー違反が発生。要約と本則のずれを是正し、マージ委ねの禁止を明記。CLAUDE.md「How to start work」手順 8 も連動更新 |
 | 2026-08-23 | v3.12 | §9 に起票後のセルフチェックを追加：PBI を書き終えたら commit 前に `/pbi-review`（`.claude/skills/pbi-review`、新設）で全軸点検する。skill は monotrip.jp の同名 skill を本 repo の規約（README / CLAUDE.md の各節）に置き換えた copy で、repo ごとに個別進化させる（ユーザーレベル共通化は規約差が構造的なため見送り）。規約の本文は README / CLAUDE.md が正、skill は照合手順のみ。skill にだけあったルールを README 側へ移した：§4.6 ルール 1（運営者判断の記録先）/ ルール 7（手作業・preview 不可項目の確認方法）/ §4.8（範囲外項目の行き先）/ §7（判断と実装の同居は分割）。§2 の PHASE 列挙に 1D / 1E を追加。CLAUDE.md「How to draft next-Phase PBIs」と site-plan §12 の README 参照も連動更新 |
 | 2026-08-30 | v3.13 | §4.6 にルール 9「テスト追加（必須・常設）」を追加し、§3 テンプレの `テスト・Lint・型チェック等の自動検証条件` 1 行を **「既存テストが通る」と「テスト追加」の 2 行**に分割。曖昧な 1 行が実際の PBI では `yarn test:run` がエラーなしだけに落ち、**テストを書いたかどうかが受け入れ条件から消えていた**ため（PHASE1E-010 は新しい対話機能なのにテスト追加の条件が無く、`tests/e2e/blog.spec.ts` への追加は実装時の判断で入っただけ。監査で main のマージ 7 件が `src/` を触ってテストを触っていないことも確認）。INDEX.md「セッション開始時の必須チェック」(2)(3) に `テスト追加` の grep を追加し、起票漏れと未 check のまま Done を機械検出する。CLAUDE.md §7（テスト追加の項目 + 検証報告テンプレの行）と pbi-review skill の照合軸（受け入れ条件 / 表記と同期）も連動更新 |
+| 2026-09-03 | v3.14 | §10.6 の main マージ手順から `--delete-branch` を外した：worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まり、GitHub 側のマージは成功するのにリモートブランチの削除まで到達しない（メイン作業ツリーが detached HEAD なら成功、main を checkout していれば失敗と、壊れ方が HEAD 状態に依存して非決定的）。リモート削除は repo 設定「Automatically delete head branches」（`delete_branch_on_merge: true`）に任せ、ローカルブランチは merge 後に `git branch -d <type>/<short>` で自分で消す運用に変更。worktree を消してもローカルブランチは残り 1 PR ごとに 1 本溜まるため。初出は monotrip.jp（PR #61、2026-09-01）で踏んだ事象。CLAUDE.md 手順 8 / operation-manual §1 も連動更新 |
