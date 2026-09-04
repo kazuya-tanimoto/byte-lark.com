@@ -1,4 +1,4 @@
-# PBI フォーマット規約 (v3.15)
+# PBI フォーマット規約 (v3.16)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
@@ -305,10 +305,11 @@ devcontainer はボリューム名が devcontainerId（clone パス由来）で�
 ```
 main                          正本かつ本番。ruleset で保護（§10.9）。公開（2026-08-08）以降はここが起点
 ├── <短命ブランチ>            作業ごとに main から切り、PR でマージして削除（§10.3）
-├── feat/phase-0              Phase 0 ブランチ（完了・main マージ済み）
-├── feat/phase-1              Phase 1a〜1d の作業を集約（公開前の遅延マージ用。1d Gate で役割終了）
 └── archive/vite-react-chakra 旧版退避（Phase 0 開始時に切った）。**削除しない**
 ```
+
+Phase ブランチ（`feat/phase-0` / `feat/phase-1`）はリモートに存在しない。
+どちらも役割を終えて削除済み。中身は main の履歴にある（経緯は §10.6 の歴史節）。
 
 ### 10.2 命名規則
 
@@ -324,7 +325,7 @@ main                          正本かつ本番。ruleset で保護（§10.9）
 `git checkout archive/vite-react-chakra -- <path>`（PHASE0-001）。
 main にマージ済みのため `git branch --merged main` や
 「マージ済みブランチの掃除」では削除候補に見えるが、対象外とする。
-`feat/phase-0` も歴史の目印として残す。
+残すのは `archive/*` だけ。他はマージ後に消す。
 
 公開前に使っていた Phase ブランチ（`feat/phase-<phase>`）は、1 Phase を丸ごと 1 本に集約して main マージを遅らせるための仕組みだった。公開後はその必要がないので、粒度は「1 作業 1 ブランチ」に戻す。
 
@@ -465,3 +466,4 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 | 2026-08-30 | v3.13 | §4.6 にルール 9「テスト追加（必須・常設）」を追加し、§3 テンプレの `テスト・Lint・型チェック等の自動検証条件` 1 行を **「既存テストが通る」と「テスト追加」の 2 行**に分割。曖昧な 1 行が実際の PBI では `yarn test:run` がエラーなしだけに落ち、**テストを書いたかどうかが受け入れ条件から消えていた**ため（PHASE1E-010 は新しい対話機能なのにテスト追加の条件が無く、`tests/e2e/blog.spec.ts` への追加は実装時の判断で入っただけ。監査で main のマージ 7 件が `src/` を触ってテストを触っていないことも確認）。INDEX.md「セッション開始時の必須チェック」(2)(3) に `テスト追加` の grep を追加し、起票漏れと未 check のまま Done を機械検出する。CLAUDE.md §7（テスト追加の項目 + 検証報告テンプレの行）と pbi-review skill の照合軸（受け入れ条件 / 表記と同期）も連動更新 |
 | 2026-09-03 | v3.14 | §10.6 の main マージ手順から `--delete-branch` を外した：worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まり、GitHub 側のマージは成功するのにリモートブランチの削除まで到達しない（メイン作業ツリーが detached HEAD なら成功、main を checkout していれば失敗と、壊れ方が HEAD 状態に依存して非決定的）。リモート削除は repo 設定「Automatically delete head branches」（`delete_branch_on_merge: true`）に任せ、ローカルブランチは merge 後に `git branch -d <type>/<short>` で自分で消す運用に変更。worktree を消してもローカルブランチは残り 1 PR ごとに 1 本溜まるため。初出は monotrip.jp（PR #61、2026-09-01）で踏んだ事象。CLAUDE.md 手順 8 / operation-manual §1 も連動更新 |
 | 2026-09-04 | v3.15 | §10.1 / §10.2 に `archive/*` の削除禁止を明記：`archive/vite-react-chakra` は旧 Vite/React/Chakra 実装の参照元で、取り戻し手順（`git checkout archive/vite-react-chakra -- <path>`）が PHASE0-001 に書かれている。ただし main にマージ済みのため `git branch --merged main` では削除候補に見え、実際に v3.14 の作業中、残骸ブランチの点検で削除候補として挙がった。役割は site-plan §2 / §6.7 と PHASE0-001 / 003 に散在していたが、ブランチ運用の節に「消さない」が無かったのが原因。`feat/phase-0` も同様に残す |
+| 2026-09-04 | v3.16 | `feat/phase-0` をリモートから削除し（`c12e0d3`）、§10.1 のブランチ階層を実在するブランチだけに整理。v3.15 で「歴史の目印として残す」と書いたが、`archive/*` と違って参照手順がどこにも無く、中身は main の履歴にあるため残す理由が無い。`feat/phase-1` はすでにリモートに無いのに階層図へ残っており、図が実態とずれていた。残すのは `archive/*` だけと §10.2 に明記。経緯は §10.6 の歴史節に残る |
