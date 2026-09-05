@@ -96,13 +96,13 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 ## Sandbox 制約
 - git 操作は worktree 不使用。公開後は main から短命ブランチを切って作業し、PR でマージする（main は ruleset で保護され直接 push できない。詳細: docs/pbi/README.md §10.3-10.6）
 - `yarn up` / `yarn add` 等レジストリアクセスが必要なコマンドは、Bash ツールでも `!` プレフィックスでも DNS 解決が失敗する。運営者に別ターミナル（Claude Code 外）での実行を依頼する
-- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、draft PR を作って CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `bash ~/.claude/bin/ci-status.sh` で合否を読む。UI スクショ確認は MCP Playwright で行う
+- E2E スイート（Playwright test runner）は Bash サンドボックスで Chromium 起動不可（Mach port 権限拒否で即 FATAL）。ローカルで `yarn test:e2e` を叩かず、draft PR を作って CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証し `bash ~/.claude/bin/ci-status.sh` で合否を読む。UI スクショ確認は母艦では MCP Playwright で行う（コンテナは次節の住み分けどおり `scripts/capture-screenshots.mjs`）
 - gh CLI は使える：運営者のユーザー設定（dotfiles の `sandbox.excludedCommands`、2026-07-04 導入）で gh のみ sandbox 外実行になるため。`ci-status.sh` は `command -v gh` で経路を決め、gh があれば gh api 一本。gh が失敗しても無認証 curl に落ちず、stderr を出して exit 1 する（curl は gh 不在時のみ）
 - 上記の yarn / E2E 制約は母艦（macOS Seatbelt sandbox）のもの。devcontainer 内のセッションには適用されない（次節）
 
 ## Devcontainer 自走環境
 - `.devcontainer/` は Claude Code をコンテナ内で全権限自走させる環境（PHASE1B-016 導入。設計・実施手順: docs/devcontainer-plan.md）。今いる環境の見分け方：作業ディレクトリが `/workspace` ならコンテナ内、`/Users/kazuya/...` なら母艦
-- 住み分け：コンテナ = yarn ネットワーク系 / `yarn test:e2e` ローカル実行 / `--dangerously-skip-permissions` 放置自走。母艦 = MCP Playwright スクショ確認・ブラウザ系 MCP・プロジェクトメモリ。コンテナ内では Sandbox 制約節の回避策は不要（直接実行してよい）
+- 住み分け：コンテナ = yarn ネットワーク系 / `yarn test:e2e` ローカル実行 / スクショ確認（`scripts/capture-screenshots.mjs`、コンテナ内 headless Chromium。MCP Playwright は入れていない） / `--dangerously-skip-permissions` 放置自走。母艦 = ブラウザ系 MCP（MCP Playwright・claude-in-chrome 等）・プロジェクトメモリ。コンテナ内では Sandbox 制約節の回避策は不要（直接実行してよい）
 - 書き戻し禁止：コンテナから母艦の設定（`~/dotfiles`、`~/.claude`）に書き戻さない。グローバル CLAUDE.md は read-only mount からのコピー持ち込みのみ（.devcontainer/setup-container.sh）、コンテナ内の Claude 設定は専用 volume に閉じる
 - push 認証は fine-grained PAT（この repo 限定。権限は Contents read+write を起点に、運用上必要になった分のみ追加）。コンテナ内 `gh auth login` で専用 volume に永続化済み。PAT を repo / イメージ / 環境変数に書かない
 - 起動は fish 関数 `ccd`（dotfiles 管理、firewall 有効チェック付き。`ccd --auto` = 放置自走）。運営者向け手順は docs/operation-manual.md §5
@@ -114,7 +114,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 - wip(pbi): PHASE0-NNN <note>    # 中間コミット
 
 ## Related Docs
-- docs/site-plan.md           Site construction plan (current: v3.17)
+- docs/site-plan.md           Site construction plan (current: v3.18)
 - docs/site-plan-decisions.md Decision Log 本体（site-plan §8 は誘導スタブ。改訂履歴は site-plan-history.md / pbi/INDEX-history.md に分割）
 - docs/pbi/README.md          PBI format spec (v3.16) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
