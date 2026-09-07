@@ -32,6 +32,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 3. **作業の住み分け**：
    - コンテナ：コーディング・ビルド・テスト・E2E・push・放置自走
    - 母艦：ブラウザ絡みの運用作業（claude-in-chrome での CF ダッシュボード操作、claude.ai コネクタ MCP 等。これらはコンテナから使えない）
+   - **運用変更（2026-08-09、PHASE1D-012 以降。2026-09-05 記録）**：スクショ確認はコンテナ側で行う。`scripts/capture-screenshots.mjs` がコンテナ内の headless Chromium を Playwright（`@playwright/test`）から起動して撮る（PHASE1E-001 / PHASE1E-003 の §7 検証で実績）。MCP Playwright はコンテナに入れていない（§7）。母艦の担当はブラウザ系 MCP（MCP Playwright・claude-in-chrome 等）を使う作業に限る
 
 ---
 
@@ -164,6 +165,7 @@ macOS の Bash sandbox（Seatbelt）上で Claude Code を動かしていると�
 - PAT の渡し方：**コンテナ内 `gh auth login`（初回 1 回、PAT 貼り付け）を採用**。gh 設定用 named volume で永続化し、毎起動 `gh auth setup-git` で git credential helper を張り直す。PAT は母艦のディスク・環境変数・イメージ・repo のいずれにも残らない（必須条件を満たす）。containerEnv（localEnv 参照）案は母艦側に PAT を平文で常駐させるため不採用
 - raw.githubusercontent.com：**GitHub meta の web / api / git に含まれる**（185.199.108.0/22）。ただし将来の帯変更に備え allowed-domains.conf にも明示追加（-exist 化により重複は無害）
 - MCP Playwright：**コンテナには入れない**。スクショ確認は母艦セッションの担当（§1.3-3 の住み分けどおり）、コンテナ側の UI 検証は E2E スイートで行う
+  - **運用変更（2026-08-09、PHASE1D-012 以降。2026-09-05 記録）**：MCP Playwright を入れない点は変わらないが、スクショ確認はコンテナ内で行うようになった。`scripts/capture-screenshots.mjs`（PHASE1D-012 で追加）がコンテナ内の headless Chromium を Playwright（`@playwright/test`）から起動して主要ページを 2 幅で撮る。PHASE1E-001（2026-08-11）以降の §7 検証はこの方式で実施。母艦セッションの担当は MCP Playwright・claude-in-chrome 等のブラウザ系 MCP を使う作業に限る（§1.3-3 の追記どおり）
 
 ---
 

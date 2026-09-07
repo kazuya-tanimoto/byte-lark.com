@@ -33,8 +33,14 @@ sync_claude_config() {
     mkdir -p "$CONFIG_DIR/output-styles"
     cp "$HOST_CLAUDE/output-styles/"*.md "$CONFIG_DIR/output-styles/"
   fi
-  # worktree 運用 hook（スクリプト + settings への登録）も dotfiles から毎起動同期。
-  # 登録は hooks.json の event ごとに「旧 worktree 登録を除いて追記」する冪等マージ
+  # bin/（ci-status.sh 等の共通スクリプト）も毎起動コピーで最新化
+  if [ -d "$HOST_CLAUDE/bin" ]; then
+    mkdir -p "$CONFIG_DIR/bin"
+    cp "$HOST_CLAUDE/bin/"*.sh "$CONFIG_DIR/bin/"
+    chmod +x "$CONFIG_DIR/bin/"*.sh
+  fi
+  # dotfiles 管理の hook（スクリプト + settings への登録）も毎起動同期。
+  # 登録は hooks.json の event ごとに「.claude/hooks/ 配下を指す旧登録を除いて追記」する冪等マージ
   if [ -d "$HOST_CLAUDE/hooks" ]; then
     mkdir -p "$CONFIG_DIR/hooks"
     cp "$HOST_CLAUDE/hooks/"*.sh "$CONFIG_DIR/hooks/"
@@ -46,7 +52,7 @@ sync_claude_config() {
           ($s.hooks // {}) as $sh | ($f.hooks // {}) as $fh |
           $sh + ($fh | with_entries(
             .value = (
-              (($sh[.key] // []) | map(select(tojson | contains("worktree-") | not)))
+              (($sh[.key] // []) | map(select(tojson | contains(".claude/hooks/") | not)))
               + .value
             )
           ))

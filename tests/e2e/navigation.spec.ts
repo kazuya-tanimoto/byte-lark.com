@@ -8,6 +8,8 @@ const pages = [
   { path: "/blog", heading: "Blog" },
   { path: "/contact", heading: "Contact" },
   { path: "/privacy", heading: "プライバシーポリシー" },
+  // アイコン・書体の出典（PHASE1D-001 新設・PHASE1D-010 拡張）。PHASE1E-011 で対象に追加
+  { path: "/credits", heading: "アイコン・書体の出典" },
 ];
 
 test.describe("主要ページへの遷移", () => {

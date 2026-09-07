@@ -1,7 +1,9 @@
-// 主要ページのスクリーンショットをデスクトップ幅とモバイル幅で撮る。
-// CI（.github/workflows/ui-tests.yml）から実行して成果物として持ち出す用途。
-// コンテナ内のセッションは firewall の都合でブラウザを取得できないことがあり、
-// そのときでも実ブラウザの見た目を確認できるようにするための逃げ道（PHASE1D-012）。
+// 主要ページのスクリーンショットをデスクトップ幅とモバイル幅で撮る。用途は 2 つ。
+// 1. コンテナ内セッションのローカル / CF preview スクショ確認（CLAUDE.md §7）。
+//    コンテナには MCP Playwright が無いので、コンテナ内の headless Chromium で撮り、
+//    出力画像を Read で確認する（PHASE1E-001 以降の運用）。
+// 2. CI（.github/workflows/ui-tests.yml）から実行して成果物として持ち出す逃げ道。
+//    コンテナが firewall の都合でブラウザを取得できない回に使う（PHASE1D-012）。
 //
 // 使い方:
 //   node scripts/capture-screenshots.mjs                     # http://localhost:4321 を撮る

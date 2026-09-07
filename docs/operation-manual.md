@@ -17,7 +17,7 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 | **再開（同一 PBI を続行）** | `続き進めて` / `再開して` | 該当 PBI の実装ログを読んで状況把握 → 続行 |
 | **Gate 通過後の次 Phase PBI 起票** | `Retrospective Gate の申し送りに従って次の Phase の PBI を起票して` | Gate PBI の「次 Phase への申し送り」セクション + 直前 Phase 各 PBI の実装ログを読み、次 Phase PBI をドラフト |
 | **並行 PBI 開始指示** | `記事執筆と PHASE1E の PBI を並行で進めたい。手順教えて` | **別名でローカルに clone した別作業ツリー**で 2 つ目のセッションを起動（例：`git clone <repo> byte-lark-articles` → その中で `ccd`。初回のみ `gh auth login` と `yarn install`）。同一作業ツリーでの 2 セッション同時作業は禁止（1 ツリー 1 セッション、README §9 並行運用）。それぞれ別の短命ブランチを main から切るので push は競合しない。main が進んで PR が古くなったら `git rebase origin/main`（下記 Q6 / README §10.7） |
-| **本番反映（main マージ）の承認** | `この PBI の PR を main にマージしていい？` | PBI の受け入れ条件と CI green を再確認 → OK なら `gh pr merge --merge --delete-branch`。**main へのマージ＝ byte-lark.com への公開**で、マージした時点で本番が入れ替わる（README §10.6） |
+| **本番反映（main マージ）の承認** | `この PBI の PR を main にマージしていい？` | PBI の受け入れ条件と CI green を再確認 → OK なら `gh pr merge --merge`（`--delete-branch` は付けない）。**main へのマージ＝ byte-lark.com への公開**で、マージした時点で本番が入れ替わる（README §10.6） |
 | **計画書のレビュー依頼** | （別セッションでレビュープロンプトを使用） | レビュー結果を別セッションから持ち込み、本セッションで反映 |
 | **その他全部** | （特に何もしない、Claude 任せ） | プロトコル通りに自動進行 |
 

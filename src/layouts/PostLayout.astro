@@ -1,6 +1,7 @@
 ---
-import BaseLayout from "./BaseLayout.astro";
+import ImageLightbox from "../components/ImageLightbox.astro";
 import { buildArticleJsonLd } from "../lib/jsonld";
+import BaseLayout from "./BaseLayout.astro";
 
 interface Heading {
   depth: number;
@@ -160,6 +161,10 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
       )
     }
   </main>
+
+  {/* 本文画像のクリック拡大（PHASE1E-010）。記事ページだけの仕掛けなので
+      全ページ共通の BaseLayout ではなくここに置く */}
+  <ImageLightbox />
 </BaseLayout>
 
 <script>

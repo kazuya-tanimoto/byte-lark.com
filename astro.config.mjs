@@ -77,6 +77,18 @@ export default defineConfig({
     },
   ],
 
+  // 本文画像に画面幅別の縮小版と srcset を出させる（PHASE1E-010）。既定は layout 無しで、
+  // markdown の `![]()` 由来の画像は `srcset=""` のまま元解像度 1 本をスマホにも配っていた
+  // （2026-08-29 実測: statusline スクショが 1310px のまま）。
+  //
+  // responsiveStyles は既定の false のままにする。有効にすると Astro が img へグローバル CSS を
+  // 足すが、本文画像は Tailwind preflight の max-width:100%、カバーは自前の
+  // aspect / object-cover で既に整っており、上書きの手当てを増やす理由が無い
+  // （公式: https://docs.astro.build/en/guides/images/#responsive-image-styles ）
+  image: {
+    layout: "constrained",
+  },
+
   markdown: {
     shikiConfig: {
       // 旧 github-light は変数名に #e36209 を使い白地で 3.49:1 と AA 未達だった（PHASE1C-011）。

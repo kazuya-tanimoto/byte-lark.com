@@ -1,8 +1,8 @@
-# byte-lark.com サイト構築計画書 (v3.17)
+# byte-lark.com サイト構築計画書 (v3.18)
 
-最終更新: 2026-08-25
+最終更新: 2026-09-05
 
-> v3.16 → v3.17 主な変更：**「先頭へ戻る」ボタンの本番不具合修正（PHASE1E-009 追修正）**。出現しきい値を「1 画面ぶん」から固定 300px へ（大画面の短いページで一度も出なかった）。追従目次の判定を「その画面幅で描画されるか」から「いま画面内に見えているか」へ（低い窓では記事末尾で目次が画面外へ抜け、先頭へ戻る手段が消えていた）。Decision #33 を追修正、CLAUDE.md 連動更新。
+> v3.17 → v3.18 主な変更：**devcontainer の住み分け記録を実運用に合わせた（Decision #34 追記）**。コンテナ内セッションのスクショ確認は `scripts/capture-screenshots.mjs`（コンテナ内 headless Chromium）で行い、MCP Playwright は母艦のみ、という 2026-08-09（PHASE1D-012）以降の運用を devcontainer-plan §1.3-3 / §7、CLAUDE.md（Sandbox 制約・Devcontainer 自走環境）、pbi-review skill、Stop hook プロンプト、スクリプト冒頭コメントに反映。運用自体の変更はなし。
 >
 > 過去の「版ごとの主な変更」と改訂履歴表は [docs/site-plan-history.md](site-plan-history.md) を参照。
 
@@ -86,7 +86,7 @@
 | NFR-03 | TypeScript strict、ビルド時型チェック通過 | |
 | NFR-04 | Lint 通過（Biome 2 を採用） | `.astro` 対応のため override 設定で対象範囲調整 |
 | NFR-05 | 単体テスト：React Island 部分 (.tsx) と lib/ ロジックを Vitest でカバー | `.astro` は SSR 専用テンプレで Vitest 直接対象外、Playwright で担保 |
-| NFR-06 | E2E テスト：主要画面遷移と挙動を Playwright で検証 | 既存 tests/ は Playwright 公式デモのテンプレ 2 本のみ。**自プロジェクト用は新規作成**。設定（playwright.config.ts）は流用。**実行・検証は CI（`.github/workflows/ui-tests.yml`、Playwright 公式コンテナ）で自動化**——Bash サンドボックスは Chromium 起動不可のため `yarn test:e2e` のローカル実行不可、`scripts/ci-status.sh` で合否確認（Decision #27） |
+| NFR-06 | E2E テスト：主要画面遷移と挙動を Playwright で検証 | 既存 tests/ は Playwright 公式デモのテンプレ 2 本のみ。**自プロジェクト用は新規作成**。設定（playwright.config.ts）は流用。**実行・検証は CI（`.github/workflows/ui-tests.yml`、Playwright 公式コンテナ）で自動化**——Bash サンドボックスは Chromium 起動不可のため `yarn test:e2e` のローカル実行不可、`~/.claude/bin/ci-status.sh` で合否確認（Decision #27。スクリプトは dotfiles 正本に一本化、2026-08-30） |
 | NFR-07 | Lighthouse スコア：Performance / Accessibility / SEO すべて 90+ | SSG なので達成容易 |
 | NFR-08 | 依存追加は最小限 | |
 | NFR-09 | OGP / SEO メタは SSG 時に静的生成（クライアント JS 非依存） | Astro の標準機能で担保 |
@@ -141,6 +141,7 @@
 | `/robots.txt` | クローラー制御 | 1a |
 | `*` | NotFound | 1a |
 | `/blog/tech`, `/blog/life` | カテゴリ別一覧 | 1c |
+| `/credits` | アイコン・書体の出典 | 1d |
 | `/legal/tokutei` | 特商法表記（直案件で対価を受ける時） | 法人化後 |
 
 ### 6.3 コンテンツモデル（Blog Post Frontmatter スキーマ）
@@ -355,7 +356,7 @@ Astro の標準機能で完全対応：
 | `src/dev/`、`@react-buddy/*` 依存 | 削除 | — |
 | `src/stories/` Storybook 公式テンプレ | 削除 | — |
 | `CLAUDE.md`（プロジェクト規約） | **書き換え**（PHASE0-005、Astro/Tailwind/shadcn + 多セッション運用プロトコル） | 同パス |
-| `docs/site-plan.md` | 上書き（v2 → v3.17） | 本ファイル |
+| `docs/site-plan.md` | 上書き（v2 → v3.18） | 本ファイル |
 | `docs/operation-manual.md` | **新規作成済**（v3.6 連動、運営者向けプロトコル） | 同パス |
 | `.github/workflows/codeql.yml` | 流用（言語自動検出で Astro 対応） | 同パス |
 | `.github/dependabot.yml` | 内容確認の上、依存先パッケージ名を更新（PHASE0-007） | 同パス |
@@ -480,7 +481,7 @@ Phase 0 〜 1d は完了（2026-08-08 公開、1d Gate は 2026-08-10 通過）�
 3. 記事が 10 本に届いたらカテゴリ別一覧 + 前後記事リンクを Phase 1e に追加起票（FR-19）
 4. 記事 30 本以上で Phase 2（広告収益化）を起票
 
-PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.12 を参照。
+PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.16 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
 **運営者向け運用マニュアル**（シーン別フレーズ / リカバリー / トラブルシューティング）は `docs/operation-manual.md` を参照。
 
