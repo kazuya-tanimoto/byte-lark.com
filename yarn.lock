@@ -179,6 +179,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@astrojs/internal-helpers@npm:0.11.0":
+  version: 0.11.0
+  resolution: "@astrojs/internal-helpers@npm:0.11.0"
+  dependencies:
+    "@types/hast": "npm:^3.0.4"
+    "@types/mdast": "npm:^4.0.4"
+    js-yaml: "npm:^4.3.0"
+    picomatch: "npm:^4.0.4"
+    retext-smartypants: "npm:^6.2.0"
+    shiki: "npm:^4.0.2"
+    smol-toml: "npm:^1.6.0"
+    unified: "npm:^11.0.5"
+  checksum: 10c0/ec7bf3dcd81ee1c6b1baa4d599a92c3aa97da21c875c1527576812f5bfa84db3d459726443467933a7e243efb8ff6ac32265f5971f314a8b5ff7a73eef451289
+  languageName: node
+  linkType: hard
+
 "@astrojs/language-server@npm:^2.16.7":
   version: 2.16.7
   resolution: "@astrojs/language-server@npm:2.16.7"
@@ -240,15 +256,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@astrojs/markdown-satteri@npm:0.3.8":
-  version: 0.3.8
-  resolution: "@astrojs/markdown-satteri@npm:0.3.8"
+"@astrojs/markdown-satteri@npm:0.4.0":
+  version: 0.4.0
+  resolution: "@astrojs/markdown-satteri@npm:0.4.0"
   dependencies:
-    "@astrojs/internal-helpers": "npm:0.10.4"
+    "@astrojs/internal-helpers": "npm:0.11.0"
     "@astrojs/prism": "npm:4.0.2"
     github-slugger: "npm:^2.0.0"
     satteri: "npm:^0.10.3"
-  checksum: 10c0/58dc4567a795d19a8cf94d3cdf98b42189b6d71de25e05bb5bc8ca8bf201a30920ee067ecf6b7999035f30f2ec0f7d1525346d5580ae03c8c29545d113ac311c
+  checksum: 10c0/eacaaf65b8316a6d3d2441a341d64ca850a40d18a9c3a21faa90c4d7c6c134fb27f2315676b647df9207aa37b76b51059baf73308cc58330d2a0fce641fc55be
   languageName: node
   linkType: hard
 
@@ -289,11 +305,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@astrojs/react@npm:^6.0.4":
-  version: 6.0.4
-  resolution: "@astrojs/react@npm:6.0.4"
+"@astrojs/react@npm:^6.0.5":
+  version: 6.0.5
+  resolution: "@astrojs/react@npm:6.0.5"
   dependencies:
-    "@astrojs/internal-helpers": "npm:0.10.4"
+    "@astrojs/internal-helpers": "npm:0.11.0"
     "@vitejs/plugin-react": "npm:^5.2.0"
     devalue: "npm:^5.8.1"
     ultrahtml: "npm:^1.6.0"
@@ -303,7 +319,7 @@ __metadata:
     "@types/react-dom": ^17.0.17 || ^18.0.6 || ^19.0.0
     react: ^17.0.2 || ^18.0.0 || ^19.0.0
     react-dom: ^17.0.2 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/b619955c586de3395e786cf42e2bf52ad1275237b0b386837f202190352da3bd33e42a7d9a780f5bb579f65a3ce011ecce91adffac8547b2502ae01b3b3cdfac
+  checksum: 10c0/d5c68b8212cafbeacd5153d1260dc5279930f3718f10aa48fa331af6676316bd3204e99526aa6b4db5ec8e0272ac8b0b757a80f7d98b4e85eddf45b9d1d425bf
   languageName: node
   linkType: hard
 
@@ -318,14 +334,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@astrojs/sitemap@npm:^3.7.3":
-  version: 3.7.3
-  resolution: "@astrojs/sitemap@npm:3.7.3"
+"@astrojs/sitemap@npm:^3.7.4":
+  version: 3.7.4
+  resolution: "@astrojs/sitemap@npm:3.7.4"
   dependencies:
     sitemap: "npm:^9.0.0"
-    stream-replace-string: "npm:^2.0.0"
     zod: "npm:^4.3.6"
-  checksum: 10c0/99c0240586ea2ab1868903341a302ff4bd909b53c49c1c8be476921593fbee838623207c4fa88522264d79291f074ea536aef614d6b1fb286f29a1a5d244ec21
+  checksum: 10c0/6aff00b6963f00a44e14db1cf26c4682702b43417c145d8d7a6871508ecbf80ba8db689b92acb9ab3b3ca9a14f1a1576b57c54d5c70e9e0e7acf477851329d29
   languageName: node
   linkType: hard
 
@@ -826,18 +841,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@biomejs/biome@npm:^2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/biome@npm:2.5.11"
+"@biomejs/biome@npm:^2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/biome@npm:2.5.12"
   dependencies:
-    "@biomejs/cli-darwin-arm64": "npm:2.5.11"
-    "@biomejs/cli-darwin-x64": "npm:2.5.11"
-    "@biomejs/cli-linux-arm64": "npm:2.5.11"
-    "@biomejs/cli-linux-arm64-musl": "npm:2.5.11"
-    "@biomejs/cli-linux-x64": "npm:2.5.11"
-    "@biomejs/cli-linux-x64-musl": "npm:2.5.11"
-    "@biomejs/cli-win32-arm64": "npm:2.5.11"
-    "@biomejs/cli-win32-x64": "npm:2.5.11"
+    "@biomejs/cli-darwin-arm64": "npm:2.5.12"
+    "@biomejs/cli-darwin-x64": "npm:2.5.12"
+    "@biomejs/cli-linux-arm64": "npm:2.5.12"
+    "@biomejs/cli-linux-arm64-musl": "npm:2.5.12"
+    "@biomejs/cli-linux-x64": "npm:2.5.12"
+    "@biomejs/cli-linux-x64-musl": "npm:2.5.12"
+    "@biomejs/cli-win32-arm64": "npm:2.5.12"
+    "@biomejs/cli-win32-x64": "npm:2.5.12"
   dependenciesMeta:
     "@biomejs/cli-darwin-arm64":
       optional: true
@@ -857,62 +872,62 @@ __metadata:
       optional: true
   bin:
     biome: bin/biome
-  checksum: 10c0/6d76d2b2e2fcf01e40e0e65dd249b6a6e003b7db716fb3bcb17789bef644fa7353be62c595ae7a25831d80515b5b311b22f4660f82446f55843a0fdd3458f32a
+  checksum: 10c0/2433c73b3a3e2a1405ebe04f8fa54185fa33097f199c2527ee259525c223998d26d6bcf0ee6bfca4164c6dda5e7d975cbd38a42f57ab38dc1c1f91f9fea2b957
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-arm64@npm:2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/cli-darwin-arm64@npm:2.5.11"
+"@biomejs/cli-darwin-arm64@npm:2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/cli-darwin-arm64@npm:2.5.12"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-x64@npm:2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/cli-darwin-x64@npm:2.5.11"
+"@biomejs/cli-darwin-x64@npm:2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/cli-darwin-x64@npm:2.5.12"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64-musl@npm:2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/cli-linux-arm64-musl@npm:2.5.11"
+"@biomejs/cli-linux-arm64-musl@npm:2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/cli-linux-arm64-musl@npm:2.5.12"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64@npm:2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/cli-linux-arm64@npm:2.5.11"
+"@biomejs/cli-linux-arm64@npm:2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/cli-linux-arm64@npm:2.5.12"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64-musl@npm:2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/cli-linux-x64-musl@npm:2.5.11"
+"@biomejs/cli-linux-x64-musl@npm:2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/cli-linux-x64-musl@npm:2.5.12"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64@npm:2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/cli-linux-x64@npm:2.5.11"
+"@biomejs/cli-linux-x64@npm:2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/cli-linux-x64@npm:2.5.12"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-arm64@npm:2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/cli-win32-arm64@npm:2.5.11"
+"@biomejs/cli-win32-arm64@npm:2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/cli-win32-arm64@npm:2.5.12"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-x64@npm:2.5.11":
-  version: 2.5.11
-  resolution: "@biomejs/cli-win32-x64@npm:2.5.11"
+"@biomejs/cli-win32-x64@npm:2.5.12":
+  version: 2.5.12
+  resolution: "@biomejs/cli-win32-x64@npm:2.5.12"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3823,12 +3838,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^19.2.5":
-  version: 19.2.5
-  resolution: "@types/react-dom@npm:19.2.5"
+"@types/react-dom@npm:^19.2.7":
+  version: 19.2.7
+  resolution: "@types/react-dom@npm:19.2.7"
   peerDependencies:
     "@types/react": ^19.2.0
-  checksum: 10c0/7a59467b043debf392d109daa1ba672e791f20ce6f24ae81fb54715f890f8119d24967e61e3644b6307428603b695b7d59e69eaf531bd1963a74a6cb462f5f49
+  checksum: 10c0/226ab7e2b62114125e2276b3dcc3a25060177a673f8abadb7e31f395003de72ad68075c6edc5f51b02dd1e47443920ee030239c474c47fad075ded7410836909
   languageName: node
   linkType: hard
 
@@ -4260,13 +4275,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro@npm:^7.2.9":
-  version: 7.2.9
-  resolution: "astro@npm:7.2.9"
+"astro@npm:^7.3.1":
+  version: 7.3.1
+  resolution: "astro@npm:7.3.1"
   dependencies:
     "@astrojs/compiler-rs": "npm:^0.4.0"
-    "@astrojs/internal-helpers": "npm:0.10.4"
-    "@astrojs/markdown-satteri": "npm:0.3.8"
+    "@astrojs/internal-helpers": "npm:0.11.0"
+    "@astrojs/markdown-satteri": "npm:0.4.0"
     "@astrojs/telemetry": "npm:3.3.3"
     "@capsizecss/unpack": "npm:^4.0.0"
     "@clack/prompts": "npm:^1.1.0"
@@ -4317,9 +4332,9 @@ __metadata:
     vitefu: "npm:^1.1.2"
     xxhash-wasm: "npm:^1.1.0"
     yargs-parser: "npm:^22.0.0"
-    zod: "npm:^4.3.6"
+    zod: "npm:^4.5.4"
   peerDependencies:
-    "@astrojs/markdown-remark": 7.2.4
+    "@astrojs/markdown-remark": ^7.3.0
   dependenciesMeta:
     sharp:
       optional: true
@@ -4328,7 +4343,7 @@ __metadata:
       optional: true
   bin:
     astro: ./bin/astro.mjs
-  checksum: 10c0/962e229c8d364152b6354bb803307aa0f755bb9ad3c84fc5efe42901afd013f172a8d3a4abfbb05cb6bde4fddef2456a1d9217c374bd4e4a49b6d784beb8c671
+  checksum: 10c0/5ec958fb61598c716bd5b4ac7ee80ee1c77eca355aea1be1c619048ad5c8f63bde2a7f643d3605133124828527868556ba72f9ae09d78e958e9e75a58ee39c8a
   languageName: node
   linkType: hard
 
@@ -4620,6 +4635,15 @@ __metadata:
   version: 2.1.1
   resolution: "clsx@npm:2.1.1"
   checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
+  languageName: node
+  linkType: hard
+
+"cn@npm:^0.2.4":
+  version: 0.2.5
+  resolution: "cn@npm:0.2.5"
+  bin:
+    cn: bin/cn.mjs
+  checksum: 10c0/16d104653495f834a7aada7acb02714685bcebcf39d4038353e63c0222085ddfdabbb1c14080f227d2e86dca7e75bd79bf819375416649893d22d303b9d88684
   languageName: node
   linkType: hard
 
@@ -6623,90 +6647,90 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lefthook-darwin-arm64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-darwin-arm64@npm:2.1.10"
+"lefthook-darwin-arm64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-darwin-arm64@npm:2.1.12"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"lefthook-darwin-x64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-darwin-x64@npm:2.1.10"
+"lefthook-darwin-x64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-darwin-x64@npm:2.1.12"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"lefthook-freebsd-arm64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-freebsd-arm64@npm:2.1.10"
+"lefthook-freebsd-arm64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-freebsd-arm64@npm:2.1.12"
   conditions: os=freebsd & cpu=arm64
   languageName: node
   linkType: hard
 
-"lefthook-freebsd-x64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-freebsd-x64@npm:2.1.10"
+"lefthook-freebsd-x64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-freebsd-x64@npm:2.1.12"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
-"lefthook-linux-arm64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-linux-arm64@npm:2.1.10"
+"lefthook-linux-arm64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-linux-arm64@npm:2.1.12"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"lefthook-linux-x64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-linux-x64@npm:2.1.10"
+"lefthook-linux-x64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-linux-x64@npm:2.1.12"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"lefthook-openbsd-arm64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-openbsd-arm64@npm:2.1.10"
+"lefthook-openbsd-arm64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-openbsd-arm64@npm:2.1.12"
   conditions: os=openbsd & cpu=arm64
   languageName: node
   linkType: hard
 
-"lefthook-openbsd-x64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-openbsd-x64@npm:2.1.10"
+"lefthook-openbsd-x64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-openbsd-x64@npm:2.1.12"
   conditions: os=openbsd & cpu=x64
   languageName: node
   linkType: hard
 
-"lefthook-windows-arm64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-windows-arm64@npm:2.1.10"
+"lefthook-windows-arm64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-windows-arm64@npm:2.1.12"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"lefthook-windows-x64@npm:2.1.10":
-  version: 2.1.10
-  resolution: "lefthook-windows-x64@npm:2.1.10"
+"lefthook-windows-x64@npm:2.1.12":
+  version: 2.1.12
+  resolution: "lefthook-windows-x64@npm:2.1.12"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"lefthook@npm:^2.1.10":
-  version: 2.1.10
-  resolution: "lefthook@npm:2.1.10"
+"lefthook@npm:^2.1.12":
+  version: 2.1.12
+  resolution: "lefthook@npm:2.1.12"
   dependencies:
-    lefthook-darwin-arm64: "npm:2.1.10"
-    lefthook-darwin-x64: "npm:2.1.10"
-    lefthook-freebsd-arm64: "npm:2.1.10"
-    lefthook-freebsd-x64: "npm:2.1.10"
-    lefthook-linux-arm64: "npm:2.1.10"
-    lefthook-linux-x64: "npm:2.1.10"
-    lefthook-openbsd-arm64: "npm:2.1.10"
-    lefthook-openbsd-x64: "npm:2.1.10"
-    lefthook-windows-arm64: "npm:2.1.10"
-    lefthook-windows-x64: "npm:2.1.10"
+    lefthook-darwin-arm64: "npm:2.1.12"
+    lefthook-darwin-x64: "npm:2.1.12"
+    lefthook-freebsd-arm64: "npm:2.1.12"
+    lefthook-freebsd-x64: "npm:2.1.12"
+    lefthook-linux-arm64: "npm:2.1.12"
+    lefthook-linux-x64: "npm:2.1.12"
+    lefthook-openbsd-arm64: "npm:2.1.12"
+    lefthook-openbsd-x64: "npm:2.1.12"
+    lefthook-windows-arm64: "npm:2.1.12"
+    lefthook-windows-x64: "npm:2.1.12"
   dependenciesMeta:
     lefthook-darwin-arm64:
       optional: true
@@ -6730,7 +6754,7 @@ __metadata:
       optional: true
   bin:
     lefthook: bin/index.js
-  checksum: 10c0/be812e1517a967977750a41f15a2070cea63e1774137737426f636e1bd379f4dfc73482fa7f07df6b9a1413ee50c6e2d790936d7986bdcafd46255d871c17b76
+  checksum: 10c0/f1d8c88ba58597336dbdee1f4b7b3bf231bf6cf2e8f7ead458705f7d362ae7a8adf4074dfeb767adad84f86b1b9961376095b34feb0b23d6d6afd430fca24c4d
   languageName: node
   linkType: hard
 
@@ -6981,13 +7005,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.21":
-  version: 4.18.1
-  resolution: "lodash@npm:4.18.1"
-  checksum: 10c0/757228fc68805c59789e82185135cf85f05d0b2d3d54631d680ca79ec21944ec8314d4533639a14b8bcfbd97a517e78960933041a5af17ecb693ec6eecb99a27
-  languageName: node
-  linkType: hard
-
 "log-symbols@npm:^6.0.0":
   version: 6.0.0
   resolution: "log-symbols@npm:6.0.0"
@@ -7028,12 +7045,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^1.35.0":
-  version: 1.35.0
-  resolution: "lucide-react@npm:1.35.0"
+"lucide-react@npm:^1.40.0":
+  version: 1.40.0
+  resolution: "lucide-react@npm:1.40.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/03d8833fc4293ff566d6c56d6efcac7539b72a725b5344a8ffedce4889267a852b9f94b18bf886d3771c90664ea3275a66f8f3b8cd658b33182b664f85e0d643
+  checksum: 10c0/1476dc55fb8775152f535d1155bd2c7f62eb723ad63e3b1548dfb80be4a4984a979eda0023da49ea221014a8884321b40b2716c60f517b4089ff3d8f8521bb08
   languageName: node
   linkType: hard
 
@@ -8643,30 +8660,30 @@ __metadata:
   dependencies:
     "@astrojs/check": "npm:^0.9.10"
     "@astrojs/mdx": "npm:^7.0.8"
-    "@astrojs/react": "npm:^6.0.4"
+    "@astrojs/react": "npm:^6.0.5"
     "@astrojs/rss": "npm:^4.0.19"
-    "@astrojs/sitemap": "npm:^3.7.3"
+    "@astrojs/sitemap": "npm:^3.7.4"
     "@axe-core/playwright": "npm:^4.13.0"
-    "@biomejs/biome": "npm:^2.5.11"
+    "@biomejs/biome": "npm:^2.5.12"
     "@playwright/test": "npm:^1.62.1"
     "@tailwindcss/vite": "npm:^4.3.3"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/react": "npm:^16.3.3"
     "@types/react": "npm:^19.2.18"
-    "@types/react-dom": "npm:^19.2.5"
-    astro: "npm:^7.2.9"
+    "@types/react-dom": "npm:^19.2.7"
+    astro: "npm:^7.3.1"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
     jsdom: "npm:^30.0.1"
-    lefthook: "npm:^2.1.10"
-    lucide-react: "npm:^1.35.0"
+    lefthook: "npm:^2.1.12"
+    lucide-react: "npm:^1.40.0"
     pixelmatch: "npm:^7.2.0"
     pngjs: "npm:^7.0.0"
     radix-ui: "npm:^1.6.7"
     react: "npm:^19.2.8"
     react-dom: "npm:^19.2.8"
-    shadcn: "npm:^4.19.0"
-    subset-font: "npm:^2.6.0"
+    shadcn: "npm:^4.21.0"
+    subset-font: "npm:^2.7.0"
     tailwind-merge: "npm:^3.6.0"
     tailwindcss: "npm:^4.3.3"
     tw-animate-css: "npm:^1.4.0"
@@ -9281,9 +9298,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shadcn@npm:^4.19.0":
-  version: 4.19.0
-  resolution: "shadcn@npm:4.19.0"
+"shadcn@npm:^4.21.0":
+  version: 4.21.0
+  resolution: "shadcn@npm:4.21.0"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/parser": "npm:^7.28.0"
@@ -9293,6 +9310,7 @@ __metadata:
     "@modelcontextprotocol/sdk": "npm:^1.26.0"
     "@types/validate-npm-package-name": "npm:^4.0.2"
     browserslist: "npm:^4.26.2"
+    cn: "npm:^0.2.4"
     commander: "npm:^14.0.0"
     cosmiconfig: "npm:^9.0.0"
     dedent: "npm:^1.6.0"
@@ -9311,7 +9329,6 @@ __metadata:
     recast: "npm:^0.23.11"
     socks: "npm:^2.8.8"
     stringify-object: "npm:^5.0.0"
-    tailwind-merge: "npm:^3.0.1"
     ts-morph: "npm:^26.0.0"
     tsconfig-paths: "npm:^4.2.0"
     undici: "npm:^7.27.2"
@@ -9320,7 +9337,7 @@ __metadata:
     zod-to-json-schema: "npm:^3.24.6"
   bin:
     shadcn: dist/index.js
-  checksum: 10c0/8a640134113c8e3f7583e4217867f27a607cda1e9ed71d7b11a385d395a1bf27cb26c6a08f023fb9cfad6890576b093423848f70e661bab86662f7f3de237491
+  checksum: 10c0/b7025420b02db1f84f55d4f9d12637a2fd940bc41cca55bbcdb0acb3c29fbfc7b9badf5513a9786ca54fd6a848d01f99502d1514eab2d03b77168db546044bc3
   languageName: node
   linkType: hard
 
@@ -9616,20 +9633,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream-replace-string@npm:2.0.0":
-  version: 2.0.0
-  resolution: "stream-replace-string@npm:2.0.0"
-  checksum: 10c0/6cdf6108c57a869c1282dece0728bd7a8e314855bee71992436460192cdf46b3c976451e1e114716af209b2bfefa0e7e4581ca0eebc330d9dfcde341a72d50af
-  languageName: node
-  linkType: hard
-
-"stream-replace-string@patch:stream-replace-string@npm%3A2.0.0#~/.yarn/patches/stream-replace-string-npm-2.0.0-2e7e10c117.patch":
-  version: 2.0.0
-  resolution: "stream-replace-string@patch:stream-replace-string@npm%3A2.0.0#~/.yarn/patches/stream-replace-string-npm-2.0.0-2e7e10c117.patch::version=2.0.0&hash=eb2723"
-  checksum: 10c0/fd3bf2bd32722f1aea4e00969021eb053c7521062286b8c700511d559879c11d1cf2ba02247c01a5ff00b744c165e34505ed331c05f84c9f08463dbed214ac7a
-  languageName: node
-  linkType: hard
-
 "string-width@npm:^7.0.0, string-width@npm:^7.2.0":
   version: 7.2.0
   resolution: "string-width@npm:7.2.0"
@@ -9727,15 +9730,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"subset-font@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "subset-font@npm:2.6.0"
+"subset-font@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "subset-font@npm:2.7.0"
   dependencies:
     fontverter: "npm:^2.0.0"
     harfbuzzjs: "npm:^0.10.3"
-    lodash: "npm:^4.17.21"
     p-limit: "npm:^3.1.0"
-  checksum: 10c0/592000629df2de9499450a9c24cd88f613d08c32d552d9934586182055c53d360f98d6c16e03297b206c5b9f228e8f4476f99142af27c7628d71e02f3a22bb96
+  checksum: 10c0/707cb4597103e9ac6b60271e51b9efc15e2958c771a034cc11a7f483ad23dad5d713d6229b1faf3eb468613b776a8b7beed8b0efce28a9eca6f1c3af6035e027
   languageName: node
   linkType: hard
 
@@ -9760,13 +9762,6 @@ __metadata:
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
   checksum: 10c0/dfbe201ae09ac6053d163578778c53aa860a784147ecf95705de0cd23f42c851e1be7889241495e95c37cabb058edb1052f141387bef68f705afc8f9dd358509
-  languageName: node
-  linkType: hard
-
-"tailwind-merge@npm:^3.0.1":
-  version: 3.5.0
-  resolution: "tailwind-merge@npm:3.5.0"
-  checksum: 10c0/4dc588f5b5296ba3f38e1ebb41f02b6d24a8c5bb45e44b33748c118fb4b5767dd0efc464431ca3e75404056b618b5f67bec3708158baa65fed8a2fc9201e0c53
   languageName: node
   linkType: hard
 
@@ -11028,6 +11023,13 @@ __metadata:
   version: 4.4.3
   resolution: "zod@npm:4.4.3"
   checksum: 10c0/7ea31b558e88f9faf44f31dd185e2e1cbf51fed3081787fb96cc2534749b50c0acfc6da7f0922a7353ed092dd358c7d50c28ea96c94d04af64191bd33152eca3
+  languageName: node
+  linkType: hard
+
+"zod@npm:^4.5.4":
+  version: 4.5.4
+  resolution: "zod@npm:4.5.4"
+  checksum: 10c0/511a2a4d1a6f875dfdd70a1586989a8b14ef126776cd6218a2c760b9f65f14ef389ec20d92ee1aa4fcb4566d4ff3fa012956044f9dc503510d82e4c756a8ba92
   languageName: node
   linkType: hard
 
