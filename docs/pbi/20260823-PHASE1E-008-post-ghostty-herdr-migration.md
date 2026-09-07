@@ -51,3 +51,21 @@ Started: 2026-08-23
 ### 2026-08-23 セッション 1
 - やったこと：起票（/pbi-review セルフチェック 5 件反映：cover 暫定方針の継続確認 / 公開コミットと Done 化の同セッション / コンテナでの検証経路と imagegen 基盤 / 運営者向け依頼文の形式 / herdr version 未確認の明記）→ 着手。前提確認：既存記事に herdr / ghostty の記述なし（grep）、`tools/imagegen/.venv` あり、T8 専用の取材メモなし（`docs/article-interviews/` に該当ファイルなし）。ヒアリング 1 巡目の質問を運営者に提示
 - 残タスク：ヒアリング回答待ち → 深掘り → ドラフト → /article-review 1 回目
+
+### 2026-08-25〜09-07 セッション 2（ヒアリング 1〜2 巡目）
+- やったこと：ヒアリング 1 巡目・2 巡目の回答を受領し、取材メモ
+  `docs/article-interviews/ghostty-herdr-migration.md`（gitignore 対象）に記録。
+  Web 一次情報で裏取り（Zenn 記事 7/2 公開 / herdr 最新 0.8.0・#1221 Open /
+  ghostty 1.4.0 未リリース・PR #12547 マージ済み / alacritty は OSC 通知未対応 #7105・
+  ghostty は OSC 9/777 対応）。dotfiles git log で時期を特定
+  （2024-01 alacritty+tmux 開始 → 2026-07-11 alacritty+herdr 試用 → 07-26 ghostty+herdr 本格移行）。
+  裏取り用に `.devcontainer/allowed-domains.conf` へ herdr.dev を追加（要コンテナ再起動）。
+  途中で main を 2 回マージ（009 完了分 / 010 完了ほか 37 コミット分。INDEX 衝突は
+  main 側 + 008 行復元で解消）。派生提案から PHASE1E-010 を起票（その後 main 側で実装済み）
+- 残タスク：運営者の確認 2 件（T12 の線引き / Ctrl+K の扱い）とタイムラインの読み合わせ
+  → スクショ受領（別途提供と回答あり）→ ドラフト → /article-review 1 回目。
+  ドラフト時の裏取り事項：herdr の spaces→tabs→agents の思想（herdr.dev docs）/
+  herdr の通知が OSC 経由かの確認 / 記事は「手元 0.7.3 時点」と明記（最新 0.8.0）
+- 学び・つまずき：作業ツリーがセッション跨ぎで main に戻っていることがある。
+  ブランチ確認をしてから編集する（今回 allowed-domains.conf を main 上で編集しかけ、
+  stash で退避して復旧）
