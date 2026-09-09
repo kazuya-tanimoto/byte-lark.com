@@ -90,3 +90,16 @@ Started: 2026-08-23
   → chore/audit-jsyaml-svgo（PR #89）で lockfile を修正版へ更新し、CLAUDE.md 手順 6 に
   「push のたびに ci-status.sh で確認」をルール化してマージ。本受け入れ条件の
   `scripts/ci-status.sh` は誤記だったため正パスに修正
+
+### 2026-09-09 セッション 3 続き（AI 臭指摘と全面リライト）
+- 想定外：レビュー 1 回目「公開可能」のドラフトを運営者が「一見して AI くさい」と指摘
+  （「決め手は2つでした。」等の前振り・種明かしのキメ文、「私はこう使っています。→箇条書き」
+  の教科書的な運び）。原因は 3 つ：(1) 執筆直前に profile.md・過去記事を読み直さず
+  記憶で書いた（骨組み時 9/7 に読んだきり）(2) 導入済み（9/5）の natural-japanese
+  スキルを使わなかった (3) profile.md を 1 項目ずつ照合する工程が無く、明文化済みの
+  「断言の短文でキメる」が再発した
+- 対応：chore/writing-ai-smell-gate（PR #91）で再発防止をルール化してマージ
+  （writing-workflow §6/§8 に natural-japanese 検査の必須化 + 執筆直前の読み直し、
+  article-review に 9 軸目「AI 臭」、profile.md に運営者指摘の原文つき 5 項目、
+  CLAUDE.md に導線）。本文は natural-japanese のフル工程で全面リライト
+  （lint --genre tech 0 件 + subagent 3 本のレビューで収束）
