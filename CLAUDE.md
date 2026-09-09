@@ -49,6 +49,7 @@
 4. Update PBI Status: NotStarted → InProgress + Started date
 5. Sync INDEX.md
 6. Implement（最初の push の直後に **draft PR** を作る。CI は短命ブランチへの push では走らず、PR がある状態でのみ走る。README §10.4）
+   - **push のたびに `bash ~/.claude/bin/ci-status.sh --wait` で結果を確認し、赤なら次の工程より先に原因を特定・報告する**。§7（Done 直前）の確認だけでは遅い。audit のように commit 内容と無関係に新しい勧告で落ちる検査があり、放置すると失敗が積もってから発覚する（PHASE1E-008 で 2 push 分を見落とした実測）
 7. Verify: PBI を Done にする前に以下を**すべて**実施して出力する（必須）。スクショ 2 種は UI/フロントエンド変更がある場合、テスト追加は振る舞いが変わる場合に必須。非該当なら受け入れ条件に `N/A（理由）` を書く:
    - **ローカル検証**: `yarn dev` を起動し Playwright でスクリーンショット確認（デスクトップ + モバイル幅）
    - **CF preview 検証**: push 後に Playwright で CF branch alias URL を開いてスクリーンショット確認
