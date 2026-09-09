@@ -69,3 +69,18 @@ Started: 2026-08-23
 - 学び・つまずき：作業ツリーがセッション跨ぎで main に戻っていることがある。
   ブランチ確認をしてから編集する（今回 allowed-domains.conf を main 上で編集しかけ、
   stash で退避して復旧）
+
+### 2026-09-09 セッション 3（ドラフト + レビュー 1 回目）
+- やったこと：スクショ 3 枚を受領・保管（全体像は「この記事を書いているセッションが
+  写っている」形で運営者が採用決定、コスト表示の写り込みも承認）。herdr.dev docs で
+  裏取り（workspace の推奨単位 / agent 状態の定義 / toast の配送 3 種。`delivery = "system"`
+  は terminal-notifier / osascript 経由と判明し、OSC メカニズムは記事に書かない形へ訂正）。
+  ドラフト執筆（約 3000 字 + スクショ 3 枚 + 設定引用、`yarn build` 成功）。
+  /article-review 1 回目を subagent で実施 → 要修正 7 件を全反映 + 任意の磨き 2 件も反映
+  → 再判定「公開可能」。設定引用はヒアリング 1 巡目の cat 出力と突き合わせて実物一致を確認
+- 残タスク：運営者リライト（workflow 手順 8）→ /article-review 2 回目 → cover（生成前に
+  暫定方針の継続確認）→ `yarn fonts` → publishedAt 更新 + draft: false → §7 検証 →
+  Done 化 + マージ + backlog T8 行削除・T11 行の Ctrl+K 書き換え
+- 学び・つまずき：draft: true の記事はビルドされない（dist/blog/ に出ない）ため、
+  リライトは index.md の直接編集で行う。CF preview では見えない。公開直前に herdr 最新版
+  （執筆時 0.9.0）と ghostty 1.4.0 リリース状況を再確認する（レビュー指摘）
