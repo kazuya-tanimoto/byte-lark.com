@@ -112,3 +112,23 @@ Started: 2026-08-23
 - 受け入れ条件③の「症状 +『原因は herdr の設定だった』までに留める」は、
   確定事項（2026-09-07 運営者決定：症状 + 設定名 + false で解消 + 副作用まで）が
   上書きしており、本文はそちらに従っている（Done 判定時はこの行を根拠にする）
+
+### 2026-09-09 セッション 3 続き（運営者レビュー序盤の FB 反映）
+- 運営者が序盤（〜作業の型）を確認し FB。運営者自身のリライト（「導入のきっかけ」見出し、
+  「付いてきました」除去、「これはいいぞ！」等）を先に wip コミットで確定（5375a84）
+- 「いま使っているターミナルの中でそのまま動きます」は意図不明の指摘 → 公式トップの
+  「Herdr is where your coding agents live.」の引用に差し替え（herdr.dev を curl し原文確認）
+- workspace 分割の勧めは公式 docs で裏取り：herdr.dev/docs/concepts の
+  「Use one workspace per repo, task, or investigation.」を引用しリンクを貼った
+- repo → リポジトリ（地の文のみ。keys 設定引用内の「repo=space」コメントは原本どおり残置）
+- 画像 3 枚にキャプション追加。記法は「![alt](./x.png)*キャプション*」で、PostLayout に
+  img + em のスタイルを追加。draft を一時 false にしてローカル dev + Playwright で
+  描画確認後、戻した
+- 「### 巡回がなくなった」以降へ同種 FB を反映：見出しへ主語追加（エージェントの巡回）、
+  「失ったもの」→「乗り換えで失ったもの」、「向こうから知らせてくる」「記録にも記憶にも」の
+  擬人化・対句を除去、まとめの総括キメ構文を平叙へ。締めは運営者リライトの温度
+  （「これはいいぞ！」）に合わせ「herdrはいいぞ！」とし、！の申し送りは判断確定とみなした
+- 運営者依頼で AI 臭リライト事例集を新設：docs/writing-style/rewrite-examples.md
+  （指摘原文 + before / after。profile.md「避ける表現」と article-review 手順 1 から参照）
+- 検査：natural-japanese lint --genre tech 0 件、profile.md 全項目照合、yarn build 成功
+- 残：運営者の続き確認 → レビュー 2 回目 → cover → fonts → draft: false → §7 検証 → Done

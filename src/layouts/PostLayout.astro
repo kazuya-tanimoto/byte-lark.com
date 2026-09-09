@@ -332,4 +332,13 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
     margin-block: 1.5rem;
     border-radius: 0.5rem;
   }
+  /* 画像キャプション。記事側は「![alt](./x.png)*キャプション*」と画像の直後に斜体で書く */
+  .post-body :global(img + em) {
+    display: block;
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.8125rem;
+    font-style: normal;
+    color: var(--color-muted-foreground);
+  }
 </style>
