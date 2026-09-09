@@ -27,7 +27,7 @@ Started: 2026-08-23
 - [ ] `yarn build` 成功 / `yarn check` / `yarn check:ts` エラーなし
 - [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
 - [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `scripts/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 - [ ] `draft: false` のコミットを打つセッションで Done 化（Status + INDEX 同期 + マージ）まで終える（README §5.4 外形が変わるコミットの例外）
 - [ ] 公開後、docs/article-backlog.md から T8 の行を削除（backlog「使い方」のルール）
 
@@ -84,3 +84,9 @@ Started: 2026-08-23
 - 学び・つまずき：draft: true の記事はビルドされない（dist/blog/ に出ない）ため、
   リライトは index.md の直接編集で行う。CF preview では見えない。公開直前に herdr 最新版
   （執筆時 0.9.0）と ghostty 1.4.0 リリース状況を再確認する（レビュー指摘）
+- 想定外：Quality Checks が eeb7d34 以降 failure（js-yaml / svgo の新勧告公開による
+  audit 失敗。記事内容とは無関係で、draft: true のため fonts:check は通っていた）。
+  push 後の CI 確認を怠り 2 push 分見落とし、運営者の指摘で発覚
+  → chore/audit-jsyaml-svgo（PR #89）で lockfile を修正版へ更新し、CLAUDE.md 手順 6 に
+  「push のたびに ci-status.sh で確認」をルール化してマージ。本受け入れ条件の
+  `scripts/ci-status.sh` は誤記だったため正パスに修正
