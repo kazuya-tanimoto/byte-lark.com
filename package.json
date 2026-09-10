@@ -50,7 +50,7 @@
     "shadcn": "^4.19.0",
     "subset-font": "^2.6.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.0"
   },
   "resolutions": {
     "stream-replace-string@npm:^2.0.0": "patch:stream-replace-string@npm%3A2.0.0#~/.yarn/patches/stream-replace-string-npm-2.0.0-2e7e10c117.patch",
