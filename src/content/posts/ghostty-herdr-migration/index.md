@@ -71,7 +71,7 @@ delivery = "system"
 
 ## 端末もalacrittyからghosttyへ
 
-herdrは、いま使っているターミナルをそのまま使えます。実際、最初はalacritty + herdrで試していました。  
+herdrの導入に、ターミナルを替える必要はありません。実際、最初はalacritty + herdrで試していました。  
 dotfilesのコミットログでは、alacrittyの起動をherdrに切り替えたのが最初で、その約2週間後にghosttyでも同じ切り替えをしています。
 
 ghosttyに替えた理由は、コミットログにも残っておらず、自分でも覚えていません。  
