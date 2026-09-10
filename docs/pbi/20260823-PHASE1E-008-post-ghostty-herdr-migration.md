@@ -132,3 +132,18 @@ Started: 2026-08-23
   （指摘原文 + before / after。profile.md「避ける表現」と article-review 手順 1 から参照）
 - 検査：natural-japanese lint --genre tech 0 件、profile.md 全項目照合、yarn build 成功
 - 残：運営者の続き確認 → レビュー 2 回目 → cover → fonts → draft: false → §7 検証 → Done
+
+### 2026-09-10 セッション 3 続き（前回対応への再指摘 3 件）
+- 公式タグライン「where your coding agents live」の引用は「売り・機能の訴求ではない」と
+  再指摘 → 引用を削除し、冒頭を「Rust製のターミナルマルチプレクサで〜」に統合
+  （機能の訴求は直後のサイドバー・状態・通知の文に任せる）
+- 「これに倣って」は公式とずれ：公式が単位を勧めるのは workspace のみ
+  （repo / task / investigation）。タブの公式説明は「ビュー（agents、logs、server、
+  review）の分離用」で、タスク = タブは運営者独自の使い方（concepts / agents ページを
+  curl で確認）→ 倣う主張をやめる。言い回しは Claude 案（「私はこのうち〜の形で」）が
+  AI 臭いと再々指摘され、運営者リライト文から「もこれに倣って」だけ外した形に確定
+  （「私はリポジトリごとにspaceを分け、その中でタスクごとにタブを作成し〜」）
+- 画像の脈絡：キャプションだけでは「説明なく画像が出る」への対応として不足の再指摘
+  → 3 枚に本文からの導入（「普段の画面はこんな感じです。」「下のように状態が並ぶ」
+  「届くのはこんなバナーです。」）を追加し、キャプションの重複を調整
+- 検査：natural-japanese lint --genre tech 0 件、yarn build 成功
