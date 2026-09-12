@@ -20,12 +20,12 @@ alacritty + tmuxは2年半ほど使っていましたが、ここ2ヶ月ほどgh
 
 ## herdrとは
 
-[herdr](https://herdr.dev/)は、Rust製のターミナルマルチプレクサで、tmuxのようにペインとタブを持ちます。  
+[herdr](https://herdr.dev/)は、Rust製のターミナルマルチプレクサで、ペインとタブ（tmuxのウインドウ相当）を持ちます。  
 tmuxに無いのは左サイドバーで、spaces（作業スペースの一覧）とagents（動いているAIエージェントの一覧）が並びます。  
 agentsの行には状態（working / blockedなど）が表示され、承認待ちや完了でmacOSの通知も出せます。  
 一言でいうと、tmuxをAIエージェント向けに再構築したもの、というイメージかと思います。
 
-手元のバージョンはherdr 0.7.3です（執筆時点の最新は0.9.0）。
+手元のバージョンはherdr 0.9.0で、執筆時点の最新です。
 
 インストールは公式のスクリプトか、Homebrewでできます。
 
@@ -77,7 +77,7 @@ herdrではサイドバーのagentsに下のように状態が並ぶので、見
 
 ![エージェントの作業完了を知らせるmacOSの通知バナー](./notification-claude-finished.png)*作業完了を知らせるmacOSの通知*
 
-設定は次のとおりです。  
+herdrの設定ファイル（`~/.config/herdr/config.toml`）に次を書いています。  
 配送先はOSの通知サービスのほか、herdr内のトーストや端末経由も選べます。
 
 ```toml
@@ -95,12 +95,6 @@ ghosttyに替えた理由は、コミットログにも残っておらず、自�
 この記事を書くにあたって試し直したところ、alacrittyではエージェントの通知が音だけで、デスクトップ通知が出ませんでした。ghosttyだけを起動し直すと通知が届きます。  
 仕組みの違いまでは追えていませんが、当時もこれに気づいて替えたのだろうと思います。  
 いまの使い方は通知が前提なので、選び直すとしてもghosttyにします。
-
-ghostty自体は過去にも一度試して、そのときはalacritty + tmuxに戻っています。  
-ターミナルはiTerm2、wezterm、warpも使ってきました。  
-iTerm2は完成度が高くて不満らしい不満は出ないのですが、設定がバイナリ形式で、gitでの管理がしっくりこず、何往復もしては離れています。  
-warpは日本語変換に難があり、weztermはlua設定など良い点もあったのですが、どこがとは言えないまま合わず、どちらも定着しませんでした。  
-herdrとの組み合わせになって、ようやくghosttyに落ち着きました。
 
 ## 乗り換えで失ったもの
 
@@ -126,7 +120,7 @@ prefixキーを使っている間だけ、入力ソースをASCIIに切り替え
 ```toml
 [experimental]
 # prefix 操作中だけ macOS の入力ソースを ASCII に自動切替（日本語 IME の prefix 誤爆対策）。
-# 元の入力ソースに戻し損ねて日本語入力できなくなる不具合（herdr #1221、0.7.3 で未修正）を
+# 元の入力ソースに戻し損ねて日本語入力できなくなる不具合（herdr #1221、0.9.0 で未修正）を
 # 頻繁に踏むため無効化。修正が入ったら再検討する
 switch_ascii_input_source_in_prefix = false
 ```
@@ -232,9 +226,6 @@ keybind = super+digit_6=unbind
 keybind = super+digit_7=unbind
 keybind = super+digit_8=unbind
 ```
-
-なお、alacrittyとtmuxの設定はdotfilesに残したままにしています。  
-合わなければ戻れる状態で移行しました。
 
 ## 今後試したいもの
 
