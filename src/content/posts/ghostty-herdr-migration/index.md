@@ -62,8 +62,7 @@ herdrの[公式ドキュメント](https://herdr.dev/docs/concepts)には、work
 
 tmux時代はエージェントの実行状態を把握したいが為に、1画面に多い時は4〜6ペインを開いていました。  
 それでも1画面で収まらない場合は、複数ウインドウ×複数ペインでエージェントを起動していました。
-これが現在の型にしてからは主に1〜2ペイン、多くて3ペイン程度で足りています。  
-なお、画像ではエージェントをdevcontainerで動かしていますが、これは[以前の記事](/blog/claude-code-devcontainer)に書いています。
+これが現在の型にしてからは主に1〜2ペイン、多くて3ペイン程度で足りています。
 
 ### エージェントの巡回がなくなった
 
@@ -193,47 +192,14 @@ auto-update = check
 
 # ===== ghostty 内蔵の split / tab ショートカットを無効化 =====
 # 押すと同じ herdr セッションに 2 つ目のクライアントがつながってしまうため。
-# unbind はキーを pane 側へ素通しする（ignore と違い child command に届く）
-# split
+# unbind はキーの割り当てを解除する（ignore と違い、キーを握らない）
+# split（super+d ほか）
 keybind = super+d=unbind
 keybind = super+shift+d=unbind
-keybind = super+[=unbind
-keybind = super+]=unbind
-keybind = super+shift+enter=unbind
-keybind = super+ctrl+==unbind
-keybind = super+alt+up=unbind
-keybind = super+alt+down=unbind
-keybind = super+alt+left=unbind
-keybind = super+alt+right=unbind
-keybind = super+ctrl+up=unbind
-keybind = super+ctrl+down=unbind
-keybind = super+ctrl+left=unbind
-keybind = super+ctrl+right=unbind
-# tab
+# tab（super+t、super+1..9、ctrl+tab ほか）
 keybind = super+t=unbind
-keybind = super+alt+w=unbind
-keybind = super+shift+[=unbind
-keybind = super+shift+]=unbind
-keybind = ctrl+tab=unbind
-keybind = ctrl+shift+tab=unbind
 keybind = super+1=unbind
-keybind = super+2=unbind
-keybind = super+3=unbind
-keybind = super+4=unbind
-keybind = super+5=unbind
-keybind = super+6=unbind
-keybind = super+7=unbind
-keybind = super+8=unbind
-keybind = super+9=unbind
-# 数字は物理キー（W3C コード）のバインドが別に存在するので、そちらも消す
-keybind = super+digit_1=unbind
-keybind = super+digit_2=unbind
-keybind = super+digit_3=unbind
-keybind = super+digit_4=unbind
-keybind = super+digit_5=unbind
-keybind = super+digit_6=unbind
-keybind = super+digit_7=unbind
-keybind = super+digit_8=unbind
+# （同様に split / tab 系のキーを合計約 40 行 unbind）
 ```
 
 ## 今後試したいもの

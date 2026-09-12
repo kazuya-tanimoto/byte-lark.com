@@ -245,3 +245,19 @@ Started: 2026-08-23
 - 検査：natural-japanese lint --genre tech 0 件（86 文）、profile「避ける表現」照合済み
 - 確認待ち：出来上がりの見た目 / 統合版の写り込み（monotrip.jp）可否 /
   「画像ではエージェントをdevcontainerで動かしています」の 1 文が新画像でも正か
+
+### 2026-09-13 セッション 4 続き 5（承認 2 項目の反映と設定コメント検証）
+- 運営者 OK 2 項目を反映：devcontainer の 1 文（新画像は Mac ローカルのため）を削除、
+  ghostty の unbind 一覧 41 行を代表 4 行 + 省略コメントに短縮
+- 短縮に合わせ unbind の説明コメントを「キーの割り当てを解除する（ignore と違い、
+  キーを握らない）」へ差し替え（承認済み文面。素通しは printable 限定のため）
+- 設定コメントの全数検証（ghostty: Config.zig、herdr: 公式 docs）：
+  - herdr [keys] のコメントは全て正しい。全体版も --default-config / reload-config /
+    ui.toast=system / resume_agents_on_restore / cjk_ime 系の説明が docs と一致
+  - 未検証：prefix+shift+R での reload、sidebar_width 系・agent_panel_sort・
+    pane_history の現行名（docs の Config reference 別ページ、手元に写しなし）
+  - ghostty 追加発見：scrollback-limit は現行 scrollback-limit-bytes に改名
+- dotfiles 側の修正 + ファクトチェック依頼文を運営者に提出（コメント修正 2 点、
+  Spit Devider、super+digit 8 行の要否実機確認、herdr 側含む全コメント照合）
+- 検査：natural-japanese lint --genre tech 0 件、profile「避ける表現」照合済み
+- 判断待ち：縦長画像の表示上限（.post-body img への max-height 追加）の可否
