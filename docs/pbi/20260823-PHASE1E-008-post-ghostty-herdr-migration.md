@@ -261,3 +261,18 @@ Started: 2026-08-23
   Spit Devider、super+digit 8 行の要否実機確認、herdr 側含む全コメント照合）
 - 検査：natural-japanese lint --genre tech 0 件、profile「避ける表現」照合済み
 - 判断待ち：縦長画像の表示上限（.post-body img への max-height 追加）の可否
+
+### 2026-09-13 セッション 4 続き 6（本文画像の高さ上限とサイドバー画像の差し替え）
+- 運営者承認「CSS 上限追加 + 余白詰め版併用」を反映
+- PostLayout.astro の `.post-body :global(img)` に `max-height: 30rem` と
+  `width: auto` を追加。縦長画像が原寸のまま本文を押し広げるのを止める
+  （それまで効いていたのは Tailwind preflight の `max-width: 100%` だけで、
+  高さに上限が無かった。幅 411px の画像は本文幅 736px 未満のため横も縮まず、
+  高さ 1096px がそのまま出ていた）
+- herdr-sidebar-annotated.png を余白詰め版（411x850）へ差し替え。
+  上限適用後の表示は 232x480（デスクトップ / モバイルとも）
+- 影響範囲を確認：公開済み記事の本文画像で表示高 480px を超えるものは無し
+  （各画像の実寸から表示幅 min(w, 736) で算出）
+- テスト追加：tests/e2e/blog.spec.ts「本文画像の高さの上限」1 件。
+  算出値の max-height と、上限適用時に幅が追随して縦横比が保たれることを見る
+- 検査：yarn check / check:ts とも 0 件。ローカル dev のスクショで表示確認
