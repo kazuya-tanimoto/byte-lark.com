@@ -106,7 +106,8 @@ herdrとの組み合わせになって、ようやくghosttyに落ち着きま�
 
 ほとんどありません。alacrittyは速さが売りですが、ghostty + herdrにして遅いと感じたこともないです。  
 強いて挙げると2つあります。  
-tmuxのcopy-mode相当の画面で、`0`や`$`での行頭・行末ジャンプと`w`や`b`での単語移動の挙動が今ひとつです。  
+tmuxのcopy-mode相当の画面は、0.7.3では`$`での行末ジャンプと`w`や`b`での単語移動の挙動がtmuxと違いました。  
+0.9.0に更新したところ、手元では解消していました。  
 それと、tmuxでペインに番号を出して選ぶ機能（display-panes）に相当するものがありません。  
 ただ、先に書いた型でペインの数自体が減ったので、display-panesの方は困らなくなりました。
 
@@ -141,32 +142,12 @@ tip版が知らないうちに更新されて挙動が変わらないよう、�
 
 ## いま使っている設定
 
-設定の実物を載せておきます。
+設定の実物から、記事で触れた部分を抜粋して載せておきます。
 
 herdrのキーバインドは、tmuxで使っていた操作に合わせています。  
 設定ファイルは`~/.config/herdr/config.toml`です。
 
 ```toml
-onboarding = false
-# ------------------------------
-# herdr configuration
-# ------------------------------
-# Reference:
-#   https://herdr.dev/docs/configuration/
-#   herdr --default-config （全項目とデフォルト値）
-# 反映: herdr server reload-config （または prefix+shift+R）
-
-[theme]
-name = "dracula"
-
-[theme.custom]
-# 非アクティブの自動命名タブは overlay0 + DIM 描画で、dracula の #6272a4 は
-# Alacritty の DIM (x0.66) 後に背景 #44475a とほぼ同化するため明るめに上書き
-overlay0 = "#98a8d8"
-
-[terminal]
-default_shell = "/opt/homebrew/bin/fish"
-
 [keys]
 # tmux と同じ prefix
 prefix = "ctrl+a"
@@ -189,103 +170,23 @@ switch_tab = "prefix+shift+1..9"
 # 作成系：c=space（tmux の c=new-window の手癖を space に引っ越し）、t=tab
 new_workspace = "prefix+c"
 new_tab = "prefix+t"
-
-# 高さを均等化（tmux 時代の ^w=幅/^v=高さ から入れ替え。v=縦の仕切り、の直感に合わせる）
-[[keys.command]]
-key = "prefix+ctrl+w"
-type = "shell"
-command = "~/dotfiles/bin/herdr-even vertical"
-
-# 幅を均等化（縦の仕切りが均等になる）
-[[keys.command]]
-key = "prefix+ctrl+v"
-type = "shell"
-command = "~/dotfiles/bin/herdr-even horizontal"
-
-[ui]
-# サイドバー幅は sidebar_width で決まる固定値（herdr 0.7.3 に名前長による自動拡大は無い）。
-# sidebar_max_width は sidebar_width がそれを超えた時だけ効く天井。長い repo 名向けに実幅を拡大。
-sidebar_width = 40
-# 下限。reload 時に source を無視して必ず再適用されるので、session.json に保存された
-# 過去の幅(Persisted)が残っていても、実幅を最低40に強制できる（実質これが効くレバー）
-sidebar_min_width = 40
-sidebar_max_width = 66
-
-agent_panel_sort = "spaces"
-[ui.toast]
-# エージェントが承認待ち・完了になったら macOS 通知
-delivery = "system"
-
-[session]
-# サーバー再起動後、対応エージェント（Claude Code 等）の会話を自動復元
-# デフォルト true。integration 導入が前提
-resume_agents_on_restore = true
-
-[experimental]
-# サーバー再起動をまたいで pane の画面履歴を保存
-pane_history = true
-# prefix 操作中だけ macOS の入力ソースを ASCII に自動切替（日本語 IME の prefix 誤爆対策）。
-# 元の入力ソースに戻し損ねて日本語入力できなくなる不具合（herdr #1221、0.7.3 で未修正）を
-# 頻繁に踏むため無効化。修正が入ったら再検討する
-switch_ascii_input_source_in_prefix = false
-# Claude Code など自前カーソル描画の TUI で IME 変換窓を追従させたい場合は以下を有効化
-# reveal_hidden_cursor_for_cjk_ime = true
-# cjk_ime_agents = ["claude"]
 ```
 
 ghostty側は、起動コマンドをherdrにして、ghostty内蔵の分割・タブのキーを無効化しています。  
 理由や補足は設定内のコメントに書いてあります。
 
 ```
-# ==========================================
-# Ghostty Configuration
-# Migrated from Alacritty + Tmux setup (multiplexer is now herdr)
-# ==========================================
-
-# ------ Visual & Theme ------
-theme = Dracula
-
-# ------ Window ------
-window-width = 200
-window-height = 100
-window-padding-x = 5
-window-padding-y = 0
-
-# ------ Transparency ------
-background-opacity = 0.92
-
-# ------ Font ------
-font-family = "UDEV Gothic 35NFLG"
-font-size = 16
-
-# ------ Cursor ------
-cursor-style = block
-cursor-style-blink = true
-shell-integration-features = no-cursor
-
-# ------ Scrollback ------
-# 10,000 lines of history (~2.6MB depending on line length)
-# scrollback-limit = 2700000
-
 # ------ Shell ------
 # Launch herdr (attaches to the persistent session, creates it if missing)
 # Fish is spawned by herdr itself via [terminal] default_shell in herdr/config.toml
 command = /opt/homebrew/bin/herdr
 
-# ------ macOS Settings ------
-macos-titlebar-style = tabs
-
 # tip チャンネルは既定で自動更新されるため、通知のみに留める（off / check / download）
 auto-update = check
 
 # ------ Keybindings ------
-# Format: keybind = trigger=action
-#
 # 分割・タブ操作は herdr（prefix+h/j/k/l、prefix+|、prefix+t など）に一本化したので
 # ghostty 側では持たない。alt+... は握らず pane（nvim 等）にそのまま流す
-
-# ===== Terminal Control (Alt+Shift) =====
-keybind = alt+shift+q=close_window
 
 # ===== ghostty 内蔵の split / tab ショートカットを無効化 =====
 # 押すと同じ herdr セッションに 2 つ目のクライアントがつながってしまうため。
@@ -330,22 +231,6 @@ keybind = super+digit_5=unbind
 keybind = super+digit_6=unbind
 keybind = super+digit_7=unbind
 keybind = super+digit_8=unbind
-
-# ===== Spit Devider =====
-split-divider-color = "#666666"
-
-# ===== Restore Window State =====
-window-save-state = always
-
-
-clipboard-trim-trailing-spaces = true
-clipboard-paste-protection = true
-
-copy-on-select = clipboard
-
-# ===== Quick Terminal =====
-keybind = global:cmd+alt+backquote=toggle_quick_terminal
-quick-terminal-size = 50%, 40%
 ```
 
 なお、alacrittyとtmuxの設定はdotfilesに残したままにしています。  
