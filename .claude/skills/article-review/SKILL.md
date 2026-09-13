@@ -24,6 +24,7 @@ description: Use when reviewing, proofreading, or quality-checking a blog articl
 - 記事が引用・言及する実装ファイル（worker/、src/components/、wrangler.jsonc 等）。記事内のコードは省略・改変されていることがあるため、必ず原本を開いて突き合わせる
 - 記事が根拠にする公式ドキュメント・一次情報（URL）。記事内のエラー文・パス・コマンド出力の原本（ログ・実ファイル）
 - docs/writing-style/profile.md（文体ルール・避ける表現）
+- docs/writing-style/rewrite-examples.md（AI 臭リライトの before / after 事例集。before 側に似た表現がないか照合する）
 - 該当 PBI（ヒアリング結果＝読者像・トーン・分量の合意、受け入れ条件、技術メモの禁止事項）
 - 記事タイプ（T1 エッセイ型 / T2 検索型など。定義は PHASE1B-007 / docs/article-backlog.md）
 - 既存の公開記事（`draft: false`）から直近 1-2 本（統一感軸の比較対象）
