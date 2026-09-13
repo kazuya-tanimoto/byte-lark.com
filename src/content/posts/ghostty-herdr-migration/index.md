@@ -151,7 +151,7 @@ herdrのキーバインドは、tmuxで使っていた操作に合わせてい�
 
 ```toml
 [keys]
-# tmux と同じ prefix
+# tmux で使っていた prefix と同じ
 prefix = "ctrl+a"
 # tmux の bind C-d detach-client 相当（herdr デフォルトは prefix+q）
 detach = "prefix+ctrl+d"
@@ -183,16 +183,17 @@ ghostty側は、起動コマンドをherdrにして、ghostty内蔵の分割・�
 # Fish is spawned by herdr itself via [terminal] default_shell in herdr/config.toml
 command = /opt/homebrew/bin/herdr
 
-# tip チャンネルは既定で自動更新されるため、通知のみに留める（off / check / download）
+# 手元では自動更新されて挙動が変わったため、通知のみに留める（off / check / download）
 auto-update = check
 
 # ------ Keybindings ------
 # 分割・タブ操作は herdr（prefix+h/j/k/l、prefix+|、prefix+t など）に一本化したので
-# ghostty 側では持たない。alt+... は握らず pane（nvim 等）にそのまま流す
+# ghostty 側では持たない。alt+... は ghostty で処理せず、pane 内のアプリ（nvim 等）にそのまま渡す
+# （ghostty 既定の alt+←/→ = esc:b / esc:f だけは残る）
 
 # ===== ghostty 内蔵の split / tab ショートカットを無効化 =====
 # 押すと同じ herdr セッションに 2 つ目のクライアントがつながってしまうため。
-# unbind はキーの割り当てを解除する（ignore と違い、キーを握らない）
+# unbind は割り当てを外すだけで、キーはアプリに届く（ignore はキー入力を捨てる）
 # split（super+d ほか）
 keybind = super+d=unbind
 keybind = super+shift+d=unbind
