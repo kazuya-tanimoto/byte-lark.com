@@ -281,3 +281,26 @@ Started: 2026-08-23
 - テスト追加：tests/e2e/blog.spec.ts「本文画像の高さの上限」1 件。
   算出値の max-height と、上限適用時に幅が追随して縦横比が保たれることを見る
 - 検査：yarn check / check:ts とも 0 件。ローカル dev のスクショで表示確認
+
+### 2026-09-13 セッション 4 続き 7（dotfiles 側の修正・ファクトチェック回答の記録）
+- 運営者経由で dotfiles セッションの回答を受領（環境: Ghostty 1.3.2 tip、herdr 0.9.0。
+  dotfiles の commit 07cbbef / d8f9a82 / c2f9c94、origin/main に push 済み）
+- 依頼 5 点は全て反映済み：Spit Devider → Split Divider、ghostty unbind と
+  auto-update のコメント、herdr prefix のコメント、#1221 の「0.9.0 で未修正」
+- 実機確認：super+digit_1..8 の 8 行は必要（`ghostty +list-keybinds` で、無いと
+  goto_tab が 8 本残る。Config.zig の docs は「physical: も外す」と書くが実装
+  Binding.zig の removeExact は完全一致しか消さない）。記事で「不要」と書かない
+- prefix+shift+R：0.9.0 の既定値 reload_config = "prefix+shift+r"（--default-config と
+  docs）。キー押下の実機確認は未実施（sandbox からソケットに届かない）
+- 事実確認：sidebar_width / min / max・agent_panel_sort・pane_history・focus_agent
+  "alt+1..9"・status_indicators "symbols" は 0.9.0 に存在。手動幅の保存先は
+  session.json ではなく ~/.local/state/herdr/client-shell/（コメント修正済み）。
+  herdr #1221 は open のまま（0.8.0〜0.9.0 の CHANGELOG に修正なし）。
+  ghostty scrollback-limit は 1.4 で scrollback-limit-bytes に改名、既定 50 MB で
+  十分なため Scrollback 節ごと削除。cjk_ime の 3 行も未使用のため削除。
+  `ghostty +validate-config` 成功
+- 記事側の照合（scratchpad の check-excerpts.mjs で抜粋の全行を実物と突き合わせ）：
+  一致しないコメントは 4 行（herdr prefix、ghostty auto-update・alt+... の説明・
+  unbind の説明）。本文に scrollback / cjk_ime / session.json / 8 行不要の記述は無し。
+  ghostty の `=unbind` 行は実物 37 行（記事の省略コメントは「約 40 行」）
+- 次：4 行の差し替え文面を運営者に提案し、OK を待つ（writing-workflow §8）
