@@ -331,10 +331,12 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
   .post-body :global(img) {
     margin-block: 1.5rem;
     border-radius: 0.5rem;
-    /* 縦長の画像が原寸のまま本文を押し広げないよう高さに上限を置く。
-       幅は auto のままにして縦横比を保つ（原寸はクリック拡大で見せる） */
+    /* 縦長の画像が原寸のまま本文を押し広げないよう高さに上限を置く（原寸はクリック拡大で見せる）。
+       幅は img の width 属性で決まる。width: auto にすると読み込み前の遅延画像が 0x0 に
+       潰れるので触らず、上限に当たったときは object-fit で縦横比を保って左端に寄せる */
     max-height: 30rem;
-    width: auto;
+    object-fit: contain;
+    object-position: left center;
   }
   /* 画像キャプション。記事側は「![alt](./x.png)*キャプション*」と画像の直後に斜体で書く */
   .post-body :global(img + em) {

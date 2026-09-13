@@ -265,10 +265,15 @@ Started: 2026-08-23
 ### 2026-09-13 セッション 4 続き 6（本文画像の高さ上限とサイドバー画像の差し替え）
 - 運営者承認「CSS 上限追加 + 余白詰め版併用」を反映
 - PostLayout.astro の `.post-body :global(img)` に `max-height: 30rem` と
-  `width: auto` を追加。縦長画像が原寸のまま本文を押し広げるのを止める
+  `object-fit: contain` / `object-position: left center` を追加。
+  縦長画像が原寸のまま本文を押し広げるのを止める
   （それまで効いていたのは Tailwind preflight の `max-width: 100%` だけで、
   高さに上限が無かった。幅 411px の画像は本文幅 736px 未満のため横も縮まず、
   高さ 1096px がそのまま出ていた）
+- 想定外：最初は `width: auto` を併記したが、UI Tests が落ちた。
+  本文画像の幅は img の width 属性（presentational hint）で決まっており、
+  auto で奪うと読み込み前の遅延画像が 0x0 に潰れてクリックできなくなる。
+  幅は触らず object-fit に縦横比を任せる形へ変更（ローカル E2E 55 件 pass）
 - herdr-sidebar-annotated.png を余白詰め版（411x850）へ差し替え。
   上限適用後の表示は 232x480（デスクトップ / モバイルとも）
 - 影響範囲を確認：公開済み記事の本文画像で表示高 480px を超えるものは無し
