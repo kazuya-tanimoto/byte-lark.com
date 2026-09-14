@@ -40,6 +40,10 @@ jobs:
         run: yarn check:ts
       - name: Unit tests (Vitest)
         run: yarn test:run
+      # 【要確認】の書式・件数と、公開記事への残留を検査する（writing-workflow「材料に無いことの扱い」節）。
+      # 確かめていない細部を書いて質問だけ残す逃げ道を、書式と上限で塞ぐ
+      - name: Draft questions
+        run: yarn posts:check
       - name: Build
         run: yarn build
       # 配信しているフォントは「サイトに出てくる字だけ」に絞ってある（PHASE1D-010）。

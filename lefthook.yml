@@ -12,6 +12,8 @@ pre-push:
   commands:
     version-refs:
       run: bash scripts/check-version-refs.sh
+    draft-questions:
+      run: yarn posts:check
     typecheck:
       run: yarn check:ts
     vitest:
