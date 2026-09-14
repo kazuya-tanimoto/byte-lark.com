@@ -201,7 +201,7 @@ keybind = super+shift+d=unbind
 # tab（super+t、super+1..9、ctrl+tab ほか）
 keybind = super+t=unbind
 keybind = super+1=unbind
-# （同様に split / tab 系のキーを合計約 40 行 unbind）
+# （同様に split / tab 系のキーを合計 37 行 unbind）
 ```
 
 ## 今後試したいもの
