@@ -14,6 +14,8 @@ const fm = (draft: "true" | "false" | null) =>
     ? "---\ntitle: t\n---\n"
     : `---\ntitle: t\ndraft: ${draft}\n---\n`;
 
+const photo = () => "【要写真：撮影リスト No.1（ghostty の設定画面）】";
+
 const block = (kind = "事実") =>
   [
     `> 【要確認｜${kind}】`,
@@ -45,8 +47,8 @@ describe("checkPost", () => {
     expect(checkPost(`${fm("true")}\n本文\n`)).toEqual([]);
   });
 
-  it("下書きの 4 行書式は OK（3 種すべて）", () => {
-    const body = ["事実", "主張", "画像"].map((k) => block(k)).join("\n\n");
+  it("下書きの 4 行書式は OK（2 種とも）", () => {
+    const body = ["事実", "主張"].map((k) => block(k)).join("\n\n");
     expect(checkPost(`${fm("true")}\n本文\n\n${body}\n`)).toEqual([]);
   });
 
@@ -73,10 +75,12 @@ describe("checkPost", () => {
     expect(errors[0]).toContain("質問");
   });
 
-  it("種別が 事実／主張／画像 以外なら NG", () => {
-    const errors = checkPost(`${fm("true")}\n${block("感想")}\n`);
-    expect(errors).toHaveLength(1);
-    expect(errors[0]).toContain("種別");
+  it("種別が 事実／主張 以外なら NG（画像は【要写真】に分けたので NG）", () => {
+    for (const kind of ["感想", "画像"]) {
+      const errors = checkPost(`${fm("true")}\n${block(kind)}\n`);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toContain("種別");
+    }
   });
 
   it("旧書式（本文中の【要確認】）は NG", () => {
@@ -89,6 +93,43 @@ describe("checkPost", () => {
 
   it("NG には行番号が付く", () => {
     const errors = checkPost(`${fm("true")}\n本文\n\n${block("感想")}\n`);
+    expect(errors[0]).toMatch(/^L8:/);
+  });
+});
+
+describe("checkPost（【要写真】）", () => {
+  it("下書きの 1 行書式は OK で、件数は上限に数えない", () => {
+    const photos = Array.from(
+      { length: MAX_QUESTIONS + 5 },
+      (_, i) => `【要写真：撮影リスト No.${i + 1}（設定画面）】`,
+    ).join("\n\n");
+    const questions = Array.from({ length: MAX_QUESTIONS }, () => block()).join(
+      "\n\n",
+    );
+    expect(checkPost(`${fm("true")}\n${photos}\n\n${questions}\n`)).toEqual([]);
+  });
+
+  it("公開記事に【要写真】が残っていれば NG", () => {
+    const errors = checkPost(`${fm("false")}\n本文\n\n${photo()}\n`);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain("公開記事");
+    expect(errors[0]).toContain("【要写真】");
+  });
+
+  it("1 行書式でなければ NG（本文中に埋め込む・中身が空）", () => {
+    for (const bad of [
+      "ここに【要写真：設定画面】を入れる",
+      "【要写真：】",
+      "【要写真】設定画面",
+    ]) {
+      const errors = checkPost(`${fm("true")}\n${bad}\n`);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toContain("1 行書式");
+    }
+  });
+
+  it("NG には行番号が付く", () => {
+    const errors = checkPost(`${fm("true")}\n本文\n\n【要写真】設定画面\n`);
     expect(errors[0]).toMatch(/^L8:/);
   });
 });
