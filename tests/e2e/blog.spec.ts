@@ -242,3 +242,51 @@ test.describe("記事内画像の拡大表示", () => {
     });
   });
 });
+
+// PHASE1E-008：縦長の画像が原寸のまま本文を押し広げないよう、
+// .post-body img に高さの上限を置いた（PostLayout.astro）。
+// 幅は width 属性で決まるので、上限に当たった分は object-fit: contain が縦横比を保つ。
+// width: auto で幅を奪うと読み込み前の遅延画像が 0x0 に潰れるため、そこも一緒に見る。
+// 公開済み記事の画像はいずれも上限より低いので、上限値そのものは算出値で確かめる
+test.describe("本文画像の高さの上限", () => {
+  const MAX_HEIGHT_PX = 480; // 30rem
+
+  test("上限を超えず、上限未満の画像は縦横比のまま出る", async ({ page }) => {
+    await page.goto(`/blog/${POST_WITH_IMAGE_SLUG}/`);
+    const images = page.locator(".post-body img[data-zoomable]");
+    await expect(images.first()).toBeVisible();
+    // 画像は遅延読み込みなので、末尾まで送って naturalWidth が入るのを待つ
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect
+      .poll(() =>
+        images.evaluateAll((els) =>
+          (els as HTMLImageElement[]).every(
+            (el) => el.complete && el.naturalWidth > 0,
+          ),
+        ),
+      )
+      .toBe(true);
+
+    const boxes = await images.evaluateAll((els) =>
+      (els as HTMLImageElement[]).map((el) => ({
+        maxHeight: getComputedStyle(el).maxHeight,
+        objectFit: getComputedStyle(el).objectFit,
+        width: el.getBoundingClientRect().width,
+        height: el.getBoundingClientRect().height,
+        ratio: el.naturalWidth / el.naturalHeight,
+      })),
+    );
+    expect(boxes.length).toBeGreaterThan(0);
+    for (const box of boxes) {
+      expect(box.maxHeight).toBe(`${MAX_HEIGHT_PX}px`);
+      expect(box.objectFit).toBe("contain");
+      expect(box.width).toBeGreaterThan(0);
+      expect(box.height).toBeGreaterThan(0);
+      expect(box.height).toBeLessThanOrEqual(MAX_HEIGHT_PX + 1);
+      // 上限に当たっていない画像は、そのまま縦横比どおりに出ている
+      if (box.height < MAX_HEIGHT_PX - 1) {
+        expect(box.width / box.height).toBeCloseTo(box.ratio, 1);
+      }
+    }
+  });
+});
