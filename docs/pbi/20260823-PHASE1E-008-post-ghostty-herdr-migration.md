@@ -1,7 +1,8 @@
 # 訪問者は「alacritty + tmux から ghostty + herdr へ乗り換えた話」（tech）を読める
 
-Status: InProgress
+Status: Done
 Started: 2026-08-23
+Completed: 2026-09-16
 
 ## 誰が
 - 訪問者
@@ -14,22 +15,22 @@ Started: 2026-08-23
 - 関連: docs/article-backlog.md T8 / docs/writing-workflow.md / site-plan Phase 1e
 
 ## 受け入れ条件
-- [ ] 運営者 + Claude でヒアリング（writing-workflow §3〜5）→ 回答と深掘りを `docs/article-interviews/ghostty-herdr-migration.md`（gitignore 対象）に残す → Claude が Markdown ドラフト生成（`draft: true`、`src/content/posts/ghostty-herdr-migration/index.md`）
-- [ ] 本文に次の 3 点を含める：① 乗り換えの動機（alacritty + tmux で何に困っていたか）② herdr の spaces / agents で作業の何がどう変わったか（場面つき。形容詞だけの評価にしない）③ ハマりどころとして T12（日本語入力が直接入力のまま戻らない件）に触れる。詳細は T12 記事側が持つので、本記事では症状と「原因は herdr の設定だった」までに留める
-- [ ] 連作の位置づけを本文で示す：T9 前編 `/blog/claude-code-devcontainer` への内部リンクを張る。T10（未公開）の予告は書かない（profile.md「避ける表現」の未公開予告禁止）
-- [ ] frontmatter 完備：title（`| byte-lark.com` サフィックス無し）/ description（80-120 字・OGP 兼用）/ category: tech / tags / publishedAt（公開当日の日付に更新してからマージ）/ slug。本文冒頭に `# タイトル` を重複させない
-- [ ] レビュー 1 回目：Claude が subagent で `/article-review` を実行し、指摘を自分で反映して総評「公開可能」にしてから運営者に渡す（writing-workflow §7）
-- [ ] 運営者がレビュー・リライト（writing-workflow §8）
-- [ ] レビュー 2 回目：`/article-review` を実行し、運営者が承認した指摘だけを反映（writing-workflow §9）。承認内容を実装ログに記録
-- [ ] cover 画像を cover-image skill で生成・配置（`cover: ./cover.png`、2000×1050）。生成前に暫定デザイン方針（設計図調 + 雲雀署名、アクセント色ローテーション）を継続するか運営者に確認（skill の毎回手順）。アクセント色は使用済み（橙・桜色・紫）以外から選び、400px で既存 5 本と並べて区別できることを確認。候補の選定は運営者（実装ログに記録）
-- [ ] `draft: false` の直前に `yarn fonts` でフォントを作り直し、生成物も一緒にコミット（writing-workflow §10）
-- [ ] OGP / Article JSON-LD が記事ページで正しく出力される（`buildArticleJsonLd()`、headline 汚染なし）
-- [ ] `yarn build` 成功 / `yarn check` / `yarn check:ts` エラーなし
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
-- [ ] `draft: false` のコミットを打つセッションで Done 化（Status + INDEX 同期 + マージ）まで終える（README §5.4 外形が変わるコミットの例外）
-- [ ] 公開後、docs/article-backlog.md から T8 の行を削除（backlog「使い方」のルール）
+- [x] 運営者 + Claude でヒアリング（writing-workflow §3〜5）→ 回答と深掘りを `docs/article-interviews/ghostty-herdr-migration.md`（gitignore 対象）に残す → Claude が Markdown ドラフト生成（`draft: true`、`src/content/posts/ghostty-herdr-migration/index.md`）
+- [x] 本文に次の 3 点を含める：① 乗り換えの動機（alacritty + tmux で何に困っていたか）② herdr の spaces / agents で作業の何がどう変わったか（場面つき。形容詞だけの評価にしない）③ ハマりどころとして T12（日本語入力が直接入力のまま戻らない件）に触れる。詳細は T12 記事側が持つので、本記事では症状と「原因は herdr の設定だった」までに留める
+- [x] 連作の位置づけを本文で示す：T9 前編 `/blog/claude-code-devcontainer` への内部リンクを張る。T10（未公開）の予告は書かない（profile.md「避ける表現」の未公開予告禁止）。→ T9 前編へのリンクは張らない（devcontainer の 1 文を運営者リライトで削除したため張る箇所が無い。レビュー 2 回目の確認 3 件の 1 つ、2026-09-13 続き 8）。T10 予告は無し
+- [x] frontmatter 完備：title（`| byte-lark.com` サフィックス無し）/ description（80-120 字・OGP 兼用）/ category: tech / tags / publishedAt（公開当日の日付に更新してからマージ）/ slug。本文冒頭に `# タイトル` を重複させない
+- [x] レビュー 1 回目：Claude が subagent で `/article-review` を実行し、指摘を自分で反映して総評「公開可能」にしてから運営者に渡す（writing-workflow §7）
+- [x] 運営者がレビュー・リライト（writing-workflow §8）
+- [x] レビュー 2 回目：`/article-review` を実行し、運営者が承認した指摘だけを反映（writing-workflow §9）。承認内容を実装ログに記録
+- [x] cover 画像を cover-image skill で生成・配置（`cover: ./cover.png`、2000×1050）。生成前に暫定デザイン方針（設計図調 + 雲雀署名、アクセント色ローテーション）を継続するか運営者に確認（skill の毎回手順）。アクセント色は使用済み（橙・桜色・紫）以外から選び、400px で既存 5 本と並べて区別できることを確認。候補の選定は運営者（実装ログに記録）。→ 暫定方針は継続せず改定（2026-09-16。共通は線画の様式だけ、背景色・構図・雲雀の有無は記事ごと。理由：既存 4 本の濃紺背景が 400px で見分けにくく、署名雲雀は不可視）。構図 3 案から運営者が C（AGENTS 掲示板 + 鐘 + 羊、灰白紙）を選定。herdr ロゴは合成後に運営者判断で不採用
+- [x] `draft: false` の直前に `yarn fonts` でフォントを作り直し、生成物も一緒にコミット（writing-workflow §10）
+- [x] OGP / Article JSON-LD が記事ページで正しく出力される（`buildArticleJsonLd()`、headline 汚染なし）
+- [x] `yarn build` 成功 / `yarn check` / `yarn check:ts` エラーなし
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）。→ 2026-09-16 dev（4321）で /blog/ と記事ページを desktop 1280 / iPhone 13 幅で撮影（screenshots/publish-local-*.jpg）
+- [x] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7）。→ https://post-ghostty-herdr-migration-publish-byte-lark.tanimoto-a49.workers.dev/blog/ghostty-herdr-migration/ を撮影（screenshots/publish-cf-*.jpg）
+- [x] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）。→ PR #96 で UI Tests / Quality Checks とも success
+- [x] `draft: false` のコミットを打つセッションで Done 化（Status + INDEX 同期 + マージ）まで終える（README §5.4 外形が変わるコミットの例外）
+- [x] 公開後、docs/article-backlog.md から T8 の行を削除（backlog「使い方」のルール）
 
 ## 技術メモ
 - 想定セッション数: 1（ヒアリング → ドラフト → レビュー 1 回目。運営者リライト待ちは実装フェーズ外）
@@ -333,3 +334,46 @@ Started: 2026-08-23
 - cover 用プロンプト tools/imagegen/prompt_ghostty-herdr-migration.txt を作成
   （菜の花色、未生成。生成は運営者承認待ち）
 - 検査：natural-japanese lint --genre tech 0 件
+
+### 2026-09-14〜15 セッション 5（決まりの追加と画像の修正）
+- レビュー 2 回目の想定外から出した決まりを別 PR で main へ：材料に無いことは書かない
+  決まりと【要確認】の機械検査（PR #93、`yarn posts:check`）、写真・スクショの依頼を
+  【要写真】に分ける（PR #95）。記事ブランチへ main を取り込み
+- tmux スクショが白く浮く原因は PNG の gAMA チャンク。除去して差し替え（35152a8）
+- ghostty `=unbind` の行数を実物どおり 37 行に修正（ec78b84）
+- 運営者リライト（導入・困ったこと・日本語入力・今後・まとめ。e6aca8d）の後、
+  誤字脱字・表記揺れ・改行記法を修正（ca60824）
+- レビュー 3 回目の承認分 4 件を反映。キャプションは運営者の記法
+  「![alt](./x.png)*キャプション*」をそのまま効かせる CSS で受けた（6ae69e8）。
+  運営者の記法を表示側の都合で書き換えない
+
+### 2026-09-16 セッション 6（カバー画像・draft 表示・マージ）
+- カバー方針の見直し。運営者指摘「毎回雲雀を入れるのは単調」に対し、過去ログ
+  （8/18「色調と雲雀はブランド側で固定」）と既存 4 本の 400px 実物を比較し、
+  濃紺背景が同じに見え署名雲雀は見えないことを確認。以前の主張を訂正し、
+  cover-image skill を改定（共通は線画の様式だけ、進め方は構図 3 案 → 選定 → 深掘り要否）
+- herdr ロゴの扱いを裏取り：Apache-2.0 §6 は商標使用を許諾せず、別途の商標ポリシー無し。
+  実物ロゴ（assets/logo.png）を右下に合成して見せたうえで、運営者判断で不採用
+- 構図 3 案（A 端末画面、B 羊の群れ、C AGENTS 掲示板 + 鐘 + 羊）を各 1 枚生成し
+  400px で比較。運営者が C を選定、深掘りなし。プロンプトの「隅を空ける」指示が白い
+  矩形として描かれたため Pillow で紙をミラー貼りして埋めた（学びを skill に記録）。
+  cover.png 2000×1050 を配置（23ba95c）
+- dev サーバーで draft 記事も表示する `isVisiblePost()`（src/lib/posts.ts）を追加し、
+  一覧・記事ページに「draft」チップを出す。build では従来どおり除外。vitest 3 件追加
+  （6431bcf）。運営者確認は dev サーバー URL（コンテナ 0.0.0.0:4321）で実施
+- PR #64 をマージ（69307e4）。記事は draft のまま main へ
+- 公開：main から `post/ghostty-herdr-migration-publish` を切り、`draft: false`・
+  publishedAt 2026-09-16・`yarn fonts` 再生成・backlog の T8 行削除を PR #96 で反映
+- 想定外：`pgrep -f "astro dev"` が自分のシェルに一致し kill で exit 144。
+  `ps -eo pid,args | grep "astro.mjs dev"` で pid を取る
+
+## 検証報告
+- テスト追加: src/lib/posts.test.ts 3 件（draft の表示判定、PR #64）。
+  公開コミット自体は振る舞いの変更なし（frontmatter とフォント生成物のみ）
+- ローカル確認: dev（4321）で /blog/ 一覧に 9/16 付で先頭表示、記事ページのカバー・
+  日付・目次を desktop / mobile で確認（screenshots/publish-local-*.jpg）
+- CF preview 確認: https://post-ghostty-herdr-migration-publish-byte-lark.tanimoto-a49.workers.dev/blog/ghostty-herdr-migration/
+  （screenshots/publish-cf-*.jpg）
+- E2E/CI 確認: PR #96 で UI Tests / Quality Checks とも success（ci-status.sh --wait）
+- 未検証項目: herdr の prefix+shift+R キー押下の実機確認（続き 7 のまま）。
+  SNS カードの実物（metatags.io）は公開後に運営者確認
