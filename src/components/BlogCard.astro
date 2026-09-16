@@ -13,7 +13,8 @@ interface Props {
 }
 
 const { post, headingLevel = "h3", priority = false } = Astro.props;
-const { title, description, category, publishedAt, cover, slug } = post.data;
+const { title, description, category, publishedAt, cover, slug, draft } =
+  post.data;
 const href = `/blog/${slug ?? post.id}/`;
 // 見た目のサイズはタグと独立（クラス側で吸収）。タグだけ切り替える
 const Heading = headingLevel;
@@ -53,6 +54,7 @@ const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
         <span class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}>
           {categoryLabel}
         </span>
+        {draft && <span class="rounded-full bg-hibari-amber-chip px-2.5 py-0.5 font-bold text-hibari-amber-chip-text">draft</span>}
         <time datetime={publishedAt.toISOString().slice(0, 10)}>
           {dateFormatter.format(publishedAt)}
         </time>

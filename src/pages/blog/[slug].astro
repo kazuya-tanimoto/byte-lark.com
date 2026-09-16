@@ -3,9 +3,10 @@ import { getImage, Image } from "astro:assets";
 import { getCollection, render } from "astro:content";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import PostLayout from "../../layouts/PostLayout.astro";
+import { isVisiblePost } from "../../lib/posts";
 
 export const getStaticPaths = (async () => {
-  const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+  const posts = await getCollection("posts", ({ data }) => isVisiblePost(data));
   return posts.map((post) => ({
     params: { slug: post.data.slug ?? post.id },
     props: { post },
@@ -33,6 +34,7 @@ const ogImage = cover
   updatedAt={updatedAt}
   category={category}
   tags={tags}
+  draft={post.data.draft}
   ogImage={ogImage}
   headings={headings}
 >

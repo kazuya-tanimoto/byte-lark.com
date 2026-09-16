@@ -3,9 +3,10 @@ import { getCollection } from "astro:content";
 import BlogCard from "../../components/BlogCard.astro";
 import { CategoryFilter } from "../../components/CategoryFilter";
 import PageLayout from "../../layouts/PageLayout.astro";
+import { isVisiblePost } from "../../lib/posts";
 
 const posts = (
-  await getCollection("posts", ({ data }) => data.draft !== true)
+  await getCollection("posts", ({ data }) => isVisiblePost(data))
 ).sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 ---
 
