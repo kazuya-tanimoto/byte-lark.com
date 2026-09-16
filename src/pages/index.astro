@@ -6,10 +6,11 @@ import { Career } from "../data/career";
 import { qualifications } from "../data/qualifications";
 import { skills } from "../data/skills";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { isVisiblePost } from "../lib/posts";
 
 // 最新記事 N=3（実データを見て決定: 現状 1 件でもレイアウトが崩れない構造にする）
 const latestPosts = (
-  await getCollection("posts", ({ data }) => data.draft !== true)
+  await getCollection("posts", ({ data }) => isVisiblePost(data))
 )
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
   .slice(0, 3);

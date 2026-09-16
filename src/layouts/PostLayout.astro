@@ -16,6 +16,8 @@ interface Props {
   updatedAt?: Date;
   category: "tech" | "life";
   tags: string[];
+  /** 下書き。dev サーバーでのみ表示され、目印のチップを付ける（src/lib/posts.ts） */
+  draft?: boolean;
   /** cover 画像の解決済み src。未指定時は BaseLayout がデフォルト OGP 画像へフォールバック */
   ogImage?: string;
   canonical?: string;
@@ -30,6 +32,7 @@ const {
   updatedAt,
   category,
   tags,
+  draft,
   ogImage,
   canonical,
   headings,
@@ -83,6 +86,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
           <span
             class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}
           >{categoryLabel}</span>
+          {draft && <span class="rounded-full bg-hibari-amber-chip px-2.5 py-0.5 font-bold text-hibari-amber-chip-text">draft</span>}
           <time datetime={isoDate(publishedAt)}>{dateFormatter.format(publishedAt)} 公開</time>
           {
             updatedAt && (
@@ -331,5 +335,26 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
   .post-body :global(img) {
     margin-block: 1.5rem;
     border-radius: 0.5rem;
+    /* 縦長の画像が原寸のまま本文を押し広げないよう高さに上限を置く（原寸はクリック拡大で見せる）。
+       幅は img の width 属性で決まる。width: auto にすると読み込み前の遅延画像が 0x0 に
+       潰れるので触らず、上限に当たったときは object-fit で縦横比を保って左端に寄せる */
+    max-height: 30rem;
+    object-fit: contain;
+    object-position: left center;
+  }
+  /* 画像キャプション。記事側は画像の次の行に斜体で書く（画像行の末尾は 2 スペースで改行）。
+     改行すると img と em の間に br が入り 1 行ぶん空くので br を消し、同一行の img + em と
+     同じ見た目にする */
+  .post-body :global(img + br) {
+    display: none;
+  }
+  .post-body :global(img + em),
+  .post-body :global(img + br + em) {
+    display: block;
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.8125rem;
+    font-style: normal;
+    color: var(--color-muted-foreground);
   }
 </style>
