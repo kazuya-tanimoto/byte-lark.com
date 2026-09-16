@@ -27,7 +27,8 @@ agentsの行には状態（working / blockedなど）が表示され、承認待
 実際のサイドバーはこうなっています。  
 （作業スペースの一番下は業務のリポジトリのためモザイクを入れています）
 
-![herdrのサイドバー。上の赤枠が作業スペースの一覧（spaces）、下の赤枠がエージェントの一覧（agents）](./herdr-sidebar-annotated.png)*herdrのサイドバー*
+![herdrのサイドバー。上の赤枠が作業スペースの一覧（spaces）、下の赤枠がエージェントの一覧（agents）](./herdr-sidebar-annotated.png)  
+*herdrのサイドバー*
 
 手元のバージョンはherdr 0.9.0で、執筆時点の最新です。
 
@@ -58,9 +59,10 @@ herdrの[公式ドキュメント](https://herdr.dev/docs/concepts)には、work
 一時的なコマンド実行やメモなどが必要な場合はタブ内を複数ペインに分割して行っています。  
 普段の画面はこんな感じです。
 
-![普段の作業画面。左にspacesとagentsのサイドバー、中央にエージェントのセッション、右にコマンド実行用のペイン](./herdr-overview.png)*左がspacesとagentsのサイドバー、右がコマンド実行用のペイン*
+![普段の作業画面。左にspacesとagentsのサイドバー、中央にエージェントのセッション、右にコマンド実行用のペイン](./herdr-overview.png)  
+*左がspacesとagentsのサイドバー、右がコマンド実行用のペイン*
 
-tmux時代はエージェントの実行状態を把握したいために、1画面に多い時は4〜6ペインを開いていました。  
+tmux時代はエージェントの実行状態を把握したいが為に、1画面に多い時は4〜6ペインを開いていました。  
 それでも1画面で収まらない場合は、複数ウインドウ×複数ペインでエージェントを起動していました。  
 これが現在の型にしてからは主に1〜2ペイン、多くて3ペイン程度で足りています。
 
@@ -70,7 +72,8 @@ tmuxでエージェントを複数走らせていたころは、ウインドウ�
 herdrではサイドバーのagentsに下のように状態が並ぶので、見て回る必要がなくなりました。  
 これだけでも導入の価値があったと思います。
 
-![agentsサイドバーの拡大。blocked（入力や承認の待ち）、idle（確認済み）、working（作業中）、done（完了・未確認）の4状態が並んでいる](./herdr-agents-sidebar.png)*agentsサイドバーの拡大*
+![agentsサイドバーの拡大。blocked、idle、working、doneの4状態が並んでいる](./herdr-agents-sidebar.png)  
+*agentsサイドバーの拡大*
 
 ### 通知で気づけるようになった
 
@@ -78,7 +81,8 @@ herdrではサイドバーのagentsに下のように状態が並ぶので、見
 こちらから見に行かなくてもよくなり、待ち時間に別の作業へ移りやすくなりました。  
 届くのはこんなバナーです。
 
-![エージェントの作業完了を知らせるmacOSの通知バナー](./notification-claude-finished.png)*作業完了を知らせるmacOSの通知*
+![エージェントの作業完了を知らせるmacOSの通知バナー](./notification-claude-finished.png)  
+*作業完了を知らせるmacOSの通知*
 
 herdrの設定ファイル（`~/.config/herdr/config.toml`）に次を書いて設定しています。  
 配送先はOSの通知サービスのほか、herdr内のトーストや端末経由も選べるようです。
@@ -110,13 +114,14 @@ tmuxのcopy-mode相当の画面は、0.7.3では`$`での行末ジャンプと`w
 prefix+qで各ペインに大きな番号が表示され、番号キーを押すとそのペインへ移動できる機能です。  
 tmuxではこんな表示になります。
 
-![tmuxのdisplay-panes。4分割した各ペインに大きな番号が重なって表示されている](./tmux-display-panes.png)*tmuxのdisplay-panes。番号キーでそのペインへ移動できる*
+![tmuxのdisplay-panes。4分割した各ペインに大きな番号が重なって表示されている](./tmux-display-panes.png)  
+*tmuxのdisplay-panes。番号キーでそのペインへ移動できる*
 
 ただこちらも、先に書いた作業の型ができたことで、ペインの数自体が減り、無くても困らなくなりました。
 
 ## ハマりどころ2件（どちらも日本語入力）
 
-herdr移行時にハマったことが2件あるので、以下に記載します。
+乗り換え時にハマったことが2件あるので、以下に記載します。
 
 ### 日本語が打てなくなる
 
@@ -168,7 +173,7 @@ herdrのキーバインドは、tmuxで使っていた操作に合わせてい�
 prefix = "ctrl+a"
 # tmux の bind C-d detach-client 相当（herdr デフォルトは prefix+q）
 detach = "prefix+ctrl+d"
-# tmux の prefix+{/}（swap-pane、キーボード layer+b/f）を agent 切替に転用
+# tmux の prefix+{/}（swap-pane）を agent 切替に転用
 previous_agent = "prefix+{"
 next_agent = "prefix+}"
 # alt+番号でサイドバーの agent 行 n 番目へ直接ジャンプ
@@ -218,7 +223,7 @@ keybind = super+1=unbind
 
 ## 今後試したいもの
 
-まだまだ使いこなしているとはいえず、試せていない機能があるのですが、以下の機能は順に試してみるつもりです。
+まだまだ使いこなしているとはいえず、試せていない機能があるのですが、以下は順に試してみるつもりです。
 
 - [agent skill](https://herdr.dev/docs/agent-skill/)：ペインの中のエージェントにherdrの操作方法を教える公式のスキルで、エージェント自身がherdrを操作できるようになります
 - [マーケットプレイス](https://herdr.dev/plugins/)：コミュニティのプラグインを検索して導入できます
