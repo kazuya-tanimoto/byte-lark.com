@@ -6,6 +6,7 @@ tags: ["ghostty", "herdr", "tmux", "terminal", "claude code"]
 publishedAt: 2026-09-09
 draft: true
 slug: ghostty-herdr-migration
+cover: ./cover.png
 ---
 
 こんにちは。今回はターミナル環境を乗り換えた話です。  
