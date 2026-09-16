@@ -3,8 +3,8 @@ title: "alacritty + tmuxからghostty + herdrへ乗り換えた"
 description: "2年半使ったalacritty + tmuxからghostty + herdrへ乗り換えました。エージェントを並走させる作業がspacesとagentsでどう変わったか、日本語入力のハマりどころ2件と設定の実物を書きます。"
 category: tech
 tags: ["ghostty", "herdr", "tmux", "terminal", "claude code"]
-publishedAt: 2026-09-09
-draft: true
+publishedAt: 2026-09-16
+draft: false
 slug: ghostty-herdr-migration
 cover: ./cover.png
 ---
