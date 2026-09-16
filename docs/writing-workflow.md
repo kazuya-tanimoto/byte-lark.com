@@ -194,12 +194,14 @@ yarn fonts
 - 記事は画像の有無によらず常にフォルダ形式で作る: `src/content/posts/<slug>/index.md`（`yarn new-post` がこの形式で生成。posts 直下にフラットな `<slug>.md` を置かない）。画像は同じフォルダに同居（loader は `**/*.{md,mdx}` なのでフォルダ化しても収集される。URL は frontmatter の `slug` で決まるため変わらない）
 - 本文からは相対パスで参照する（`![説明](./figure.png)`）。Astro のビルド時最適化（圧縮・ハッシュ名・width/height 自動付与）が効く。`public/` 置きは最適化が効かないため記事画像には使わない
 - アイキャッチは frontmatter の `cover: ./cover.png`。ブログ一覧カード・記事ページ冒頭・og:image（1200×630 に自動変換）の 3 か所に自動反映される。元画像は縦横比 40:21（1200×630 以上）で作る
-- AI 生成イラストを使う場合は、確定パレット「春空」（docs/design-direction.md §2）とブランドトーン（ヒバリ意匠）に寄せ、記事間で作風を揃える
+- AI 生成イラストを使う場合は、確定パレット「春空」（docs/design-direction.md §2）の世界観に寄せる。描き方は記事ごとに変え、直近の記事と同じテイストにしない（正本は `.claude/skills/cover-image/SKILL.md` のデザイン方針。2026-09-16 改定）
 - PDF など画像以外の添付は最適化対象外のため `public/files/<slug>/` に置き、絶対パスでリンクする（`[資料](/files/<slug>/xxx.pdf)`）
 
 ## 記事テンプレート
 
 `docs/templates/post-template.md` を参照。
+
+- `publishedAt` は日付だけでよい。同じ日に複数本を公開したときは時刻を付けて並びを決める（`2026-08-08T09:00:00+09:00` の形。一覧は publishedAt の降順だけで並び、同値だとファイル名順になる。表示は日付のみで、09:00〜23:00 JST の範囲なら UTC でも同じ日付になる。2026-08-08 の 3 本で実施）
 
 ## 雛形生成
 
