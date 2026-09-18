@@ -32,7 +32,7 @@
 ## Article Writing
 - 記事本文に関わる作業（ドラフト作成・リライト・レビュー・部分修正）の前に docs/writing-style/profile.md を必読し、そのルールに従う
 - 執筆・リライトの**直前**に profile.md と直近公開記事 1〜2 本を読み直す。セッション前半で読んだ記憶だけで書かない
-- Claude が本文を書いた・直した後は、**natural-japanese スキル（プラグイン）の検査を必須で通し**、profile.md「避ける表現」を 1 項目ずつ照合してから運営者に出す（writing-workflow 手順 6 / 8。AI 臭が残っていない自信を持てるまで提出しない）
+- 本文の初稿ができた後（別プロセスのモデルが書いたものを含む）と、Claude が本文を直した後は、**natural-japanese スキル（プラグイン）の検査を必須で通し**、profile.md「避ける表現」を 1 項目ずつ照合してから運営者に出す（writing-workflow 手順 6 / 8。AI 臭が残っていない自信を持てるまで提出しない）
 - レビューは 2 回（Claude が subagent で `/article-review`。手順 7 / 9）。公開（`draft: false`）は 2 回目の後。材料に無いことの扱い（調べる → 削る → 聞く、【要確認】／【要写真】の書式と上限）は docs/writing-workflow.md「材料に無いことの扱い」節、運営者フィードバックへの対応順（回答 → 提案 → OK 後に反映）は手順 8 が正本
 
 ## Code Style
