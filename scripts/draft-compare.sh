@@ -6,15 +6,22 @@
 # - 出力先は docs/article-interviews/（git 管理外）。posts 以下に .md を置くと記事として
 #   読み込まれ、frontmatter が無いので yarn build が InvalidContentEntryDataError で止まる
 # - モデルは記事のフォルダから呼ぶ。agy は実行ディレクトリを索引するので repo 直下だと遅い
-# - 4 つのモデルに同じプロンプトを渡す。文体の指示は gemini-draft.sh が docs/writing-style/*.md
-#   から入れる
+# - 4 つのモデルに同じプロンプトを渡す。文体の指示として、natural-japanese スキルの執筆時の決まり
+#   （writing-constitution.md の 12 条）と docs/writing-style/*.md を、この順で入れる。12 条を書く段階で
+#   渡すのは、スキル自身が「事後修正より生成時制約」を設計思想にしているため。12 条と食い違う箇所は
+#   profile.md を優先する（profile.md の冒頭に書いてある）
 # - claude -p のオプション。--setting-sources local と --system-prompt は、Claude Code の設定を
 #   モデルへの入力に混ぜないためのもの。MCP を外すオプション（--strict-mcp-config・--safe-mode）は
 #   足さない。足すと思考のトークンが 0 になり、Fable が考えた過程を本文の前に書く（2026-09-17 に 7 回中 7 回）
+# - 考える量。Claude の 2 本は --effort high（公式の既定と同じ段階）を明示する。環境変数
+#   CLAUDE_CODE_EFFORT_LEVEL は --effort より優先されるので外して呼ぶ（2026-09-19 に API への要求の中身で確認）。
+#   Gemini の 2 本は -high の版を使う。Pro には medium の版が無く、Flash と段階をそろえるため
+# - Claude の 2 本は、応答したモデルの名前を確かめる。頼んだモデルが JSON の modelUsage に無ければ失敗にする
 # - 1 行目が「## 」の見出しでない出力は採用しない（前置きや考えた過程が入っている）
 # - 対応表（<slug>.mapping.txt）の中身は画面に出さない。運営者が選ぶまで開かない
 #
 # 前提: コンテナの中で、作業中の worktree から呼ぶ。agy と claude が PATH にあること。
+# natural-japanese プラグインが入っていること。
 # <slug>.outline.md と <slug>.notes.md を docs/article-interviews/ に置いておく。
 #
 # 使い方:
@@ -28,6 +35,7 @@ set -euo pipefail
 
 MODELS=(gemini-pro gemini-flash opus fable)
 GEMINI_DRAFT="${HOME}/.claude/bin/gemini-draft.sh"
+PLUGINS_JSON="${HOME}/.claude/plugins/installed_plugins.json"
 
 only=""
 dry_run=0
@@ -69,12 +77,24 @@ prompt="$dir/$slug.prompt.md"
 for f in "$outline" "$notes" "$GEMINI_DRAFT"; do
   [ -f "$f" ] || { echo "ERROR: ファイルが無い: $f" >&2; exit 2; }
 done
-for c in agy claude shuf; do
+for c in agy claude shuf jq; do
   command -v "$c" >/dev/null 2>&1 || { echo "ERROR: $c が PATH に無い" >&2; exit 1; }
 done
 
+# 版が上がるとフォルダ名が変わるので、入っている版のパスをプラグインの一覧から引く
+nj_root="$(jq -r '.plugins["natural-japanese@natural-japanese"][0].installPath // empty' "$PLUGINS_JSON" 2>/dev/null || true)"
+constitution="$nj_root/skills/natural-japanese/references/writing-constitution.md"
+[ -n "$nj_root" ] && [ -f "$constitution" ] || {
+  echo "ERROR: natural-japanese の 12 条が見つからない: ${nj_root:-（$PLUGINS_JSON に natural-japanese が無い）}" >&2
+  exit 2
+}
+
+# gemini-draft.sh は --style を 1 つでも渡すと docs/writing-style/*.md を自動で足さないので、ここで全部渡す
+styles=(--style "$constitution")
+while IFS= read -r f; do styles+=(--style "$f"); done < <(find "$root/docs/writing-style" -maxdepth 1 -name '*.md' | sort)
+
 cd "$post"
-bash "$GEMINI_DRAFT" --dry-run --notes "$notes" "$outline" > "$prompt"
+bash "$GEMINI_DRAFT" --dry-run "${styles[@]}" --notes "$notes" "$outline" > "$prompt"
 echo "INFO: プロンプトを書き出した: $prompt（$(wc -c < "$prompt") バイト）" >&2
 
 if [ "$dry_run" -eq 1 ]; then
@@ -85,9 +105,16 @@ fi
 # $1 = Claude のモデル ID, $2 = 出力先。gemini-draft.sh の --out と同じ扱いにする
 # （成功してから所定の名前にする。前回の出力は .prev に 1 世代だけ残す）
 run_claude() {
-  local tmp="$2.partial"
-  claude -p --model "$1" --tools "" --no-session-persistence --setting-sources local \
-    --system-prompt "ユーザーの依頼に答えてください。" < "$prompt" > "$tmp" || return 1
+  local tmp="$2.partial" json="$2.json.partial"
+  env -u CLAUDE_CODE_EFFORT_LEVEL claude -p --model "$1" --effort high --tools "" --no-session-persistence \
+    --setting-sources local --system-prompt "ユーザーの依頼に答えてください。" --output-format json \
+    < "$prompt" > "$json" || { rm -f "$json"; return 1; }
+  if ! jq -e --arg m "$1" '.is_error == false and (.modelUsage | has($m))' "$json" > /dev/null; then
+    echo "ERROR: $1 が書いたと確かめられない。$(jq -r '"is_error=\(.is_error) 応答したモデル: \(.modelUsage // {} | keys | join(", "))"' "$json")" >&2
+    rm -f "$json"; return 1
+  fi
+  jq -r '.result' "$json" > "$tmp"
+  rm -f "$json"
   [ -s "$tmp" ] || { echo "ERROR: $1 の出力が空だった" >&2; rm -f "$tmp"; return 1; }
   [ -f "$2" ] && mv "$2" "$2.prev"
   mv "$tmp" "$2"
@@ -99,8 +126,8 @@ run_model() {
   rm -f "$failed"
   start=$(date +%s)
   case "$name" in
-    gemini-pro) bash "$GEMINI_DRAFT" --model gemini-3.1-pro-high --notes "$notes" --out "$out" "$outline" || rc=$? ;;
-    gemini-flash) bash "$GEMINI_DRAFT" --model gemini-3.8-flash-high --notes "$notes" --out "$out" "$outline" || rc=$? ;;
+    gemini-pro) bash "$GEMINI_DRAFT" --model gemini-3.1-pro-high "${styles[@]}" --notes "$notes" --out "$out" "$outline" || rc=$? ;;
+    gemini-flash) bash "$GEMINI_DRAFT" --model gemini-3.8-flash-high "${styles[@]}" --notes "$notes" --out "$out" "$outline" || rc=$? ;;
     opus) run_claude claude-opus-5 "$out" || rc=$? ;;
     fable) run_claude claude-fable-5-1 "$out" || rc=$? ;;
   esac
