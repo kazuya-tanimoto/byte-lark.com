@@ -82,57 +82,39 @@ Claude は回答を見て、浅い・具体性が足りない箇所に追加質�
 
 本文の初稿は、記事のセッションとは別のプロセスで動かすモデルに書かせる。記事のセッションの Claude は構成と材料を用意し、出てきた本文を検査する。別のプロセスにするのは、渡した材料だけで書かせるため（記事のセッションはヒアリングの中身を知っていて、材料に無いことを補ってしまう）。
 
-主力のモデルはまだ決めていない。次に書く 2 本は 4 つのモデル（Gemini Pro・Gemini Flash・Opus・Fable）で本文を作り、比べて 1 本を採用する。2 本目の後に運営者が主力を決める（2026-09-17 運営者決定）。決まったら Decision Log（`docs/site-plan-decisions.md`）に記録し、この節の手順 3〜7 を「そのモデルで 1 本作る」形に書き換える。フロー概要の [6] と手順 9 もあわせて見直す。
+主力のモデルはまだ決めていない。次に書く 2 本は 4 つのモデル（Gemini Pro・Gemini Flash・Opus・Fable）で本文を作り、比べて 1 本を採用する。2 本目の後に運営者が主力を決める（2026-09-17 運営者決定）。決まったら Decision Log（`docs/site-plan-decisions.md`）に記録し、この節の手順 3〜6 と `scripts/draft-compare.sh` を「そのモデルで 1 本作る」形に書き換える。フロー概要の [6] と手順 8 もあわせて見直す。
 
-Gemini は `~/.claude/bin/gemini-draft.sh`（Antigravity CLI の `agy` を呼ぶ。使い方はスクリプト冒頭のコメント）で、Claude は `claude -p` で動かす。
-
-worktree の中のセッションでは、コマンドを 1 つずつ、単純な形で実行する。`$(git …)` を含む代入や、パイプでつないだ形は実行を拒否される。手順 3 と 4 のコマンドは、書いてある形のまま実行できる。
+4 本を作ってモデル名を伏せるまでは `scripts/draft-compare.sh` が行う。出力先・実行する場所・モデルに渡すオプションはスクリプトが固定しているので、手順には書かない（理由はスクリプト冒頭のコメント）。
 
 1. 雛形と frontmatter：今までどおり Claude が `yarn new-post --slug <slug>` で雛形を生成し、frontmatter を埋める（`draft: true`）
 2. 構成と材料：Claude が §2〜§5 の結果から次の 2 つを作り、作業中の worktree の `docs/article-interviews/`（git 管理外）に置く。worktree にはこのフォルダが無いので作る
    - `<slug>.outline.md`：記事の構成（見出しの並び）
    - `<slug>.notes.md`：材料。「材料に無いことの扱い」節でいう材料から確かめた事実を、記事に要る分すべて入れる。モデルに渡る材料はこのファイルだけなので、ここに無い事実は本文に入らない。調べて分からないことは入れない
    - 取材メモは main 側（`/workspace/docs/article-interviews/`）のものを読む。worktree の中のセッションからは main 側に書き込めない
-   - このフォルダのファイルは worktree を消すと一緒に消える。残すものは手順 7 で記事 PBI に写す
-3. 4 本を作る：worktree の root から、1 行ずつ別のコマンドとして実行する。4 つのモデルに同じプロンプトを渡す
+   - このフォルダのファイルは worktree を消すと一緒に消える。残すものは手順 6 で記事 PBI に写す
+3. 4 本を作って伏せる：worktree の root で次を実行する。Bash ツールの timeout は最大にする
 
    ```bash
-   cd src/content/posts/<slug>
-   bash ~/.claude/bin/gemini-draft.sh --dry-run --notes ../../../../docs/article-interviews/<slug>.notes.md ../../../../docs/article-interviews/<slug>.outline.md > ../../../../docs/article-interviews/<slug>.prompt.md
-   bash ~/.claude/bin/gemini-draft.sh --model gemini-3.1-pro-high --notes ../../../../docs/article-interviews/<slug>.notes.md --out ../../../../docs/article-interviews/<slug>.gemini-pro.md ../../../../docs/article-interviews/<slug>.outline.md
-   bash ~/.claude/bin/gemini-draft.sh --model gemini-3.8-flash-high --notes ../../../../docs/article-interviews/<slug>.notes.md --out ../../../../docs/article-interviews/<slug>.gemini-flash.md ../../../../docs/article-interviews/<slug>.outline.md
-   claude -p --model claude-opus-5 --tools "" --no-session-persistence --setting-sources local --system-prompt "ユーザーの依頼に答えてください。" < ../../../../docs/article-interviews/<slug>.prompt.md > ../../../../docs/article-interviews/<slug>.opus.md
-   claude -p --model claude-fable-5-1 --tools "" --no-session-persistence --setting-sources local --system-prompt "ユーザーの依頼に答えてください。" < ../../../../docs/article-interviews/<slug>.prompt.md > ../../../../docs/article-interviews/<slug>.fable.md
+   bash scripts/draft-compare.sh <slug>
    ```
 
-   - 記事のフォルダで実行する（repo 直下だと agy が遅い）。`cd` は次のコマンドにも引き継がれるので、手順 4 もここから実行する
-   - 文体の指示（`docs/writing-style/*.md`）はスクリプトがプロンプトに入れるので、別に渡さない
-   - `--out` の出力先を記事のフォルダにしない。posts 以下の `.md` は記事として読み込まれ、`yarn build` が止まる
-   - `claude -p` のオプションは変えない。`--setting-sources local` と `--system-prompt` は、Claude Code の設定をモデルへの入力に混ぜないためのもの。MCP を外すオプション（`--strict-mcp-config`・`--safe-mode`）は足さない。足すと Fable が考えた過程を本文の前に書く
-   - 4 本とも、1 行目が `## ` の見出しで始まっていることを確かめる。前置きや考えた過程が入っていたら、そのモデルの行をやり直す
-   - かかった時間は、各コマンドの前後で `date +%s` を別のコマンドとして実行して測る。Bash ツールの timeout は長めに指定する
-4. 伏せる：どれがどのモデルかを伏せた A〜D のコピーを作る。1 行ずつ別のコマンドとして実行する。対応表 `<slug>.mapping.txt` は、運営者が選ぶまで開かない
-
-   ```bash
-   shuf -e gemini-pro gemini-flash opus fable > ../../../../docs/article-interviews/<slug>.order.txt
-   awk '{print substr("ABCD", NR, 1), $0}' ../../../../docs/article-interviews/<slug>.order.txt > ../../../../docs/article-interviews/<slug>.mapping.txt
-   while read -r label model; do cp "../../../../docs/article-interviews/<slug>.$model.md" "../../../../docs/article-interviews/<slug>.draft-$label.md"; done < ../../../../docs/article-interviews/<slug>.mapping.txt
-   ```
-
-5. 数える：新しい文脈の subagent（general-purpose）に `<slug>.draft-A.md`〜`draft-D.md`・notes.md・outline.md・profile.md のパスを渡し、次の 3 つを本文ごとに数えさせる。モデル名の付いたファイル・`order.txt`・対応表は開かせない。コマンドは 1 本ずつ実行するよう伝える
+   - 4 つのモデルに同じプロンプトを渡して本文を作り、かかった秒数を記録し、どれがどのモデルかを伏せた `<slug>.draft-A.md`〜`draft-D.md` を作る
+   - `NG` と出たモデルがあれば A〜D は作られない。`bash scripts/draft-compare.sh --only <モデル名> <slug>` でそのモデルだけ作り直す
+   - 対応表 `<slug>.mapping.txt` とモデル名の付いたファイルは、運営者が選ぶまで開かない
+4. 数える：新しい文脈の subagent（general-purpose）に `<slug>.draft-A.md`〜`draft-D.md`・notes.md・outline.md・profile.md のパスを渡し、次の 3 つを本文ごとに数えさせる。モデル名の付いたファイルと対応表は開かせない。コマンドは 1 本ずつ実行するよう伝える
    - 網羅：notes.md の項目のうち、本文に入っている数。抜けた項目は引用する
    - 余計：notes.md に無い記述の数。該当する文を引用する
    - 自然さ：natural-japanese スキルの検査の結果と、profile.md「避ける表現」に当たる箇所の数。該当する文を引用する
-6. 選ぶ：数えた結果を A〜D のまま、4 本のファイルのパスを添えて運営者に出す。運営者が本文を読んで 1 本を選んだら、その本文を雛形の frontmatter の下に入れる。【要写真】の行はこのとき Claude が足す
-7. 記録と片付け：数えた結果・かかった時間・運営者の選択・対応表を、記事 PBI の実装ログに残す。この節の決まりのうち、破ったもの・迷ったもの・読み飛ばしたものも同じ実装ログに書く（比較期間の後にこの節を書き直す材料にする）。残したら、`docs/article-interviews/` の `<slug>.prompt.md`・モデル名の付いた 4 本・`order.txt`・`mapping.txt`・`draft-A.md`〜`draft-D.md`・再実行で残った `.prev` を消す。outline と notes は、手順 8 からのやり直しに使うので worktree を消すまで残す
-8. 検査：採用した本文に、どのモデルが書いたものでも、Claude が書いた本文と同じ決まりと検査を当てる
+5. 選ぶ：数えた結果を A〜D のまま、4 本のファイルのパスを添えて運営者に出す。運営者が本文を読んで 1 本を選んだら、その本文を雛形の frontmatter の下に入れる。【要写真】の行はこのとき Claude が足す
+6. 記録と片付け：数えた結果・かかった秒数（`<slug>.<モデル名>.seconds`）・運営者の選択・対応表を、記事 PBI の実装ログに残す。この節の決まりのうち、破ったもの・迷ったもの・読み飛ばしたものも同じ実装ログに書く（比較期間の後にこの節を書き直す材料にする）。残したら、`docs/article-interviews/` の `<slug>.` で始まるファイルを、outline と notes を除いて消す。outline と notes は、手順 7 からのやり直しに使うので worktree を消すまで残す
+7. 検査：採用した本文に、どのモデルが書いたものでも、Claude が書いた本文と同じ決まりと検査を当てる
    - **検査の直前に profile.md と直近公開記事 1〜2 本を読み直す**。セッション前半で読んだ記憶だけで照合しない。Claude が手直しする文も、profile.md のトーン・「避ける表現」を守る（PHASE1E-008 で骨組み時に読んだきり執筆日に照合せず、AI 臭の再発を見逃した実測）
    - **運営者の回答・実装の現物から言えない経緯・感想・検討過程を残さない**。モデルにも「材料に無いことは書かない」と指示しているが、守られる保証は無いので、本文を notes.md と突き合わせる。notes.md に無い記述は「材料に無いことの扱い」節の順で扱う（調べて確かめられれば notes.md に足して残し、確かめられなければ削る）。「書いて【要確認】を付ける」は不可。運営者に聞くのは同節の条件に当たるときだけで、書式と上限（3 件）も同節に従う。実感・場面の材料が足りずに記述が薄くなるならそれはヒアリング不足であり、薄いまま出さずに §5 の深掘りへ戻って運営者に質問し、notes.md に足して手順 3 からやり直す
    - **natural-japanese スキル（プラグイン）の検査を必須で通す**：lint（`--genre` は記事に合わせる）と構造・読みやすさの点検を収束させ、profile.md「避ける表現」を 1 項目ずつ照合する。AI 臭が残っていない自信を持てるまで運営者に出さない
    - article-review スキルの 9 軸（事実照合〜AI 臭）で自己チェックしてから §7 に進む。レビューで初めて直すのではなく、初回ドラフトの段階で直す
-9. 失敗したとき
-   - agy が認証エラーで止まったら、運営者に `ccdsh` でコンテナに入って `agy` を起動し、ログインし直してもらう。済んだら手順 3 の Gemini の 2 行をやり直す
-   - agy が使えないとき（例：母艦の sandbox の中では agy は起動できない。スクリプトのコメント）は、従来どおり記事のセッションの Claude が本文を書く。その記事は比較の 2 本に数えない。このときも執筆の直前に profile.md と直近公開記事を読み直し、手順 8 の決まりと検査を通す
+8. 失敗したとき
+   - Gemini を呼ぶ `agy`（Antigravity CLI）が認証エラーで止まったら、運営者に `ccdsh` でコンテナに入って `agy` を起動し、ログインし直してもらう。済んだら手順 3 を `--only gemini-pro`、`--only gemini-flash` の順でやり直す
+   - agy が使えないとき（例：母艦の sandbox の中では agy は起動できない。`~/.claude/bin/gemini-draft.sh` のコメント）は、従来どおり記事のセッションの Claude が本文を書く。その記事は比較の 2 本に数えない。このときも執筆の直前に profile.md と直近公開記事を読み直し、手順 7 の決まりと検査を通す
 
 ## 7. レビュー 1 回目（/article-review）
 
@@ -147,7 +129,7 @@ worktree の中のセッションでは、コマンドを 1 つずつ、単純�
 
 運営者が内容を確認し、自分の言葉で仕上げる。誤字・表記は 1 回目で潰れている前提で、内容の判断に集中する。本文が固まったら次へ。
 
-リライトを Claude が代行する場合も §6 の手順 8 と同じゲートを通す（natural-japanese の検査 + profile.md 全項目照合を済ませてから運営者に出す）。
+リライトを Claude が代行する場合も §6 の手順 7 と同じゲートを通す（natural-japanese の検査 + profile.md 全項目照合を済ませてから運営者に出す）。
 
 運営者フィードバックへの対応手順（必須。PHASE1E-008 で無承認の修正が発生した実測から）:
 
