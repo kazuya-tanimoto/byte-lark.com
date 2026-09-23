@@ -111,3 +111,15 @@ Completed: -
 - 未確認：0.7.5 の Mac で実際に動くか。実機で確かめたのは 0.9.0 だけ
 - 決定（2026-09-22 運営者）：記事は公式の手段を主役にして作り直す。自作の話は短く残す。本文は `scripts/draft-compare.sh --single gemini-flash` で作る
 - 残タスク：材料と依頼を直す → Gemini Flash で作り直す → 検査 → `/article-review` 1 回目 → 【要写真】 → 運営者レビュー → カバー画像 → `/article-review` 2 回目 → 公開
+
+### 2026-09-22 セッション 2（続き）：公式の手段を主役にして作り直し
+- やったこと：`<slug>.notes.md` の聞き取りの部分に、公式の手段・実機確認の結果・対応バージョンを短い項目で足した。`<slug>.outline.md` は「主役は公式の手段、自作は短く」に直し、見出しと順序は渡していない。`bash scripts/draft-compare.sh --single gemini-flash herdr-container-agents` で 1 本作った（gemini-flash、52 秒、本文 3,404 字。コードと frontmatter を除き Python の `len()` で数えた）
+- やったこと：Claude が直した箇所は、材料に無い感想の締め（「約 7 週間は何だったのか」「やはり快適です」。運営者は切り替えていない）→ 削って【要確認｜主張】に置き換え／材料に無い思考の記述 2 か所／太字 → コード表記／【要写真】を書式どおりに／lint の指摘 2 件。natural-japanese の lint（`--genre tech`）は 0 件、`yarn posts:check` は合格
+- 決まりで迷ったもの：outline の「運営者の一言は原文のまま最後に置く」は外した。一言（「…カスタマイズはマストですね」）は公式の手段を知る前のもので、作り直した記事の結論と食い違うため。締めの言葉は【要確認】で運営者に聞く
+- やったこと：`/article-review` 1 回目を subagent で回し、17 件のうち 16 件を反映した。大きいのは原因の節で、Gemini Flash は 7 月の取材メモどおり「hook が herdr に申告する」を主に書いていたが、公式ドキュメント「Status authority」節では前面プロセスの検出が先。レビューの差し替え文に直した。title の変更案（キーワードを入れる）は運営者の判断に残した。反映後も lint 0 件、`yarn posts:check` 合格
+- 学び：取材メモの原文に、あとで誤りと分かった推測が残っていると、モデルはそれを事実として書く。聞き取りの項目で「記録のここは誤り」と名指しする必要があった
+- 残タスク：【要確認】1 件（`ccd` を切り替えるか）と締めの言葉 → 【要写真】 → 運営者レビュー・リライト → カバー画像 → `/article-review` 2 回目 → 公開
+- 運営者の質問（2026-09-22）：「ccd の機能も公式でそれに変わるやつを提供してるの？」→ 無い。`HERDR_AGENT` は `ccd` の中の `devcontainer exec` に付ける環境変数で、コンテナ起動・firewall 確認・後片付けは `ccd` に残る。切り替え＝`ccd` の中で `HERDR_AGENT=claude` を付け、見張りの起動とコンテナ側 hook を外すこと。本文の【要確認】の質問文をこの意味に直した
+- 運営者の指示（2026-09-22）：比較のため、Claude が見出しと構成を作り Gemini が本文だけ書く渡し方（2 回目と同じ）でもう 1 本作る。材料は `docs/article-interviews/herdr-container-agents-round4-outlined/` に用意した（outline は流れの目安 7 節、notes は Claude が短い項目に書き直したもの）。構成を任せた回の材料と本文は `-round4-free/` に控えた
+- 想定外：Gemini Flash・Gemini Pro とも「Individual quota reached. Resets in 28h」（429）で生成できなかった。比較用の 1 本は上限の回復後（2026-09-23 夕方以降）に `bash scripts/draft-compare.sh --single gemini-flash herdr-container-agents` で作る。作る前に `-round4-outlined/` の outline と notes を `docs/article-interviews/` に戻す
+- やったこと（2026-09-23）：上限の回復後、Claude が見出し 7 節と短い項目の材料を渡す形で gemini-flash 1 本を作った（42 秒、3,896 字）。構成を任せた回（52 秒、3,427 字）の生の出力と、伏せた 2 本 `docs/article-interviews/herdr-container-agents-round4-compare/draft-A.md`・`draft-B.md` にして運営者に出した。対応表は同じフォルダの `mapping.txt`（Claude は開いていない）。どちらも Claude の修正を入れる前の生の出力で比べる
