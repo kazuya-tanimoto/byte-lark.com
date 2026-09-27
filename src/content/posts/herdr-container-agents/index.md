@@ -42,12 +42,12 @@ Claude Code本体はコンテナの中で動いていて、Macのプロセス一
 
 ## 起動コマンドに`HERDR_AGENT=claude`を付ける
 
-公式ドキュメント（https://herdr.dev/docs/agents/ ）の「VMs and sandbox wrappers」節に、そのままの解決策がありました。  
+[公式ドキュメント](https://herdr.dev/docs/agents/)の「VMs and sandbox wrappers」節に、そのままの解決策がありました。  
 ドキュメントには次のように書かれています。
 
-> Set HERDR_AGENT=<agent> on the wrapper command… The hint applies only to that foreground process. Herdr cannot see it if you set it only inside a VM or container.
+> Set `HERDR_AGENT=<agent>` on the wrapper command… The hint applies only to that foreground process. Herdr cannot see it if you set it only inside a VM or container.
 
-対応は、Macのherdrのペインで、コンテナに入るコマンドの頭に `HERDR_AGENT=claude` を付けるだけです。  
+対応は、Macのherdrのペインで、コンテナに入るコマンドの頭に`HERDR_AGENT=claude`を付けるだけです。  
 fishでの実例は次のようになります。
 
 ```fish
@@ -87,7 +87,7 @@ Macのherdr 0.9.0で試したところ、自作の仕組みとまったく同じ
 
 ## 公式の手段を見落とした経緯
 
-いつから使えたのかを、herdrの変更履歴（CHANGELOG.md）で確認しました。  
+いつから使えたのかを、herdrの[変更履歴（CHANGELOG.md）](https://github.com/herdrdev/herdr/blob/master/CHANGELOG.md)で確認しました。  
 `HERDR_AGENT`が追加されたのは、Linux向けが0.7.1（2026-06-24）、macOS向けが0.7.5（2026-07-21）でした。
 
 私が自作の仕組みを作った2026年7月末の時点で、Macで使っていたherdrは0.7.3でした。  
