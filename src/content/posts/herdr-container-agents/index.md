@@ -6,6 +6,7 @@ tags: ["herdr", "claude code", "devcontainer"]
 publishedAt: 2026-09-20
 draft: true
 slug: herdr-container-agents
+cover: ./cover.png
 ---
 
 こんにちは。今回は、devcontainer（コンテナ）の中で動かしているClaude Codeを、herdrのサイドバーに出す話です。  
