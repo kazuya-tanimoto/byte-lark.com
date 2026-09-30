@@ -51,13 +51,13 @@
 4. Update PBI Status: NotStarted → InProgress + Started date
 5. Sync INDEX.md
 6. Implement（最初の push の直後に **draft PR** を作る。CI は短命ブランチへの push では走らず、PR がある状態でのみ走る。README §10.4）
-   - **push のたびに `bash ~/.claude/bin/ci-status.sh --wait` で結果を確認し、赤なら次の工程より先に原因を特定・報告する**。§7（Done 直前）の確認だけでは遅い。audit のように commit 内容と無関係に新しい勧告で落ちる検査があり、放置すると失敗が積もってから発覚する（PHASE1E-008 で 2 push 分を見落とした実測）
+   - **push のたびに `bash ~/.claude/bin/ci-status.sh --wait` で結果を確認し、赤なら次の工程より先に原因を特定・報告する**。§7（Done 直前）の確認だけでは遅い。audit のように commit 内容と無関係に新しい勧告で落ちる検査があり、放置すると失敗が積もってから発覚する
 7. Verify: PBI を Done にする前に以下を**すべて**実施して出力する（必須）。スクショ 2 種は UI/フロントエンド変更がある場合、テスト追加は振る舞いが変わる場合に必須。非該当なら受け入れ条件に `N/A（理由）` を書く:
    - **ローカル検証**: `yarn dev` を起動し Playwright でスクリーンショット確認（デスクトップ + モバイル幅）
    - **CF preview 検証**: push 後に Playwright で CF branch alias URL を開いてスクリーンショット確認
      - Branch alias URL は作業ブランチ名から決まる：`https://<ブランチ名の / と英数字以外を - に置換>-byte-lark.tanimoto-a49.workers.dev`（例：`fix/rss-alternate` → `https://fix-rss-alternate-byte-lark.tanimoto-a49.workers.dev`）。preview ビルドはブランチ名を問わず走る（PR #34 の `chore/article-ideas-2026-08` で実測）
      - ※ version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行に記載される
-   - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。CI は `push` では main しか見ないので、**draft PR を作っていないと 1 度も走らない**（PHASE1E-002）。`bash ~/.claude/bin/ci-status.sh`（完了まで待つなら `--wait`）で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）。修正が要る場合は同じブランチに push し直せば PR がそのまま拾う（PR を作り直さない）
+   - **E2E / CI 検証**: E2E スイート（`tests/e2e/`）は Bash サンドボックスで Chromium が起動できない（Mach port 権限拒否）。`yarn test:e2e` をローカルで叩かず、**CI（`.github/workflows/ui-tests.yml`）が ubuntu コンテナで自動実行**する。CI は `push` では main しか見ないので、**draft PR を作っていないと 1 度も走らない**。`bash ~/.claude/bin/ci-status.sh`（完了まで待つなら `--wait`）で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確認（緑になるまで Done 不可）。修正が要る場合は同じブランチに push し直せば PR がそのまま拾う（PR を作り直さない）
    - **テスト追加**: 新しい振る舞いを足したなら `tests/e2e/` か vitest に検証を追加する（docs/pbi/README.md §4.6 ルール 9）。既存テストが通ることは追加の代わりにならない。UI 変更が無くても、振る舞いが変われば対象
    ```
    ## 検証報告
@@ -84,7 +84,7 @@
 - Read the Gate PBI's "次 Phase への申し送り" section
 - Read all `## 実装ログ` from the just-completed Phase's PBIs (especially "想定外" / "学び・つまずき" 項)
 - Draft next-Phase PBIs reflecting the learnings
-- **All drafted PBIs MUST carry the §7 verification gate in 受け入れ条件** (ローカル / CF preview スクショ確認 + E2E/CI green 確認, テンプレ常設・非該当は `[x] …：N/A（理由）`). README §4.6 ルール 7。INDEX.md セッション開始チェックが起票漏れを機械検出する
+- 起票する PBI の受け入れ条件には §7 の検証ゲートを入れる (ローカル / CF preview スクショ確認 + E2E/CI green 確認, テンプレ常設・非該当は `[x] …：N/A（理由）`). README §4.6 ルール 7。INDEX.md セッション開始チェックが起票漏れを機械検出する
 - 起票した PBI は commit して運営者に出す前に `/pbi-review`（`.claude/skills/pbi-review`）で全軸セルフチェックし、指摘を潰してから出す（README §9）
 - Append to INDEX.md as Status: NotStarted
 - Commit on the working branch (docs-only)
