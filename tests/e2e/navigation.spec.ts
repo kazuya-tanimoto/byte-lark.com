@@ -97,3 +97,21 @@ test.describe("「先頭へ戻る」（記事ページ以外）", () => {
     await expect(button).toBeHidden();
   });
 });
+
+// /credits の書体の出典 URL が 390px 幅で 18px はみ出していた（空白の無い長い URL が
+// 折り返されなかった）。同じ種類の崩れを全ページで拾うため、モバイル幅で横スクロールが
+// 出ないことを見る
+test.describe("モバイル幅で横にはみ出さない", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  for (const path of ["/", ...pages.map((p) => p.path)]) {
+    test(`${path} に横スクロールが出ない`, async ({ page }) => {
+      await page.goto(path);
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+    });
+  }
+});
