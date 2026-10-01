@@ -73,3 +73,34 @@ Started: 2026-10-01
 - 出所：2026-09-30 のリファクタリング点検（PHASE1E-014 備考と同じ）
 
 ## 実装ログ（着手後に追記、中断時は必須）
+
+### 2026-10-01 セッション 1（コンテナ）
+- 作業場所：コンテナ内の worktree `.claude/worktrees/feat-toc-nav-career-dedup`、ブランチ `feat/toc-nav-career-dedup`（main `d3f54e4` から分岐）。
+  016 の `src/lib/posts.ts` などは触っていない
+- 目次：`src/components/TableOfContents.astro` を新設。props は `items`（見出し）・`variant`（`"mobile"` / `"sidebar"`）・`class`。
+  はじめは nav の属性を `{...attrs}` でそのまま渡す形にしたが、Astro は spread した要素の `class` の末尾に `astro-<印>` を足し、
+  親の印を `data-astro-cid-…="true"` として流し込み、`data-toc-mobile` も `="true"` 付きで出した
+  （`node_modules/astro/dist/runtime/server/index.js` の `spreadAttributes`）。出力を変えないため、`variant` から
+  `data-toc-mobile=""` / `data-toc-sidebar=""` を出す形に変えた（値が `""` だと属性名だけが出る。`render/util.js` の `addAttribute`）
+- 現在地の色付け：`[data-toc-sidebar] a[aria-current="location"]` の `<style>` を PostLayout から部品側へ移した。
+  スクリプトは PostLayout に残した（`document.querySelector` で探すので動きは同じ）
+- ヘッダーのナビ：判定と色のクラスを `Header.astro` の `stateClass(href)` 1 つにまとめ、PC 用・スマホ用の両方で使う
+- 経歴：`src/lib/career.ts` の `sortCareerByNewest`（新しい配列を返す）にまとめ、`index.astro` と `CareerTimeline.astro` が使う
+- `employmentClass` の型を `Record<Employment, string>` にした。`副業` の行を一時的に消すと `yarn check:ts` が
+  `ts(2741): Property '副業' is missing in type … but required in type 'Record<Employment, string>'` で 1 error・exit 1。
+  控えから戻して 0 errors を確かめてから commit した
+- ビルド結果の比較：変更前の `dist/` を scratchpad に保存し、変更前のまま 2 回ビルドして `diff -rq` が 0 件（astro-island の識別子は揺れなかった）。
+  変更後はファイル名のハッシュを正規化して比べ、差は記事ページ 7 本の HTML だけ。中身は、目次の要素（`nav`・`h2`・`ul`・`li`・`a`）に付く印が
+  PostLayout の `data-astro-cid-ssdmjifj` から部品の `data-astro-cid-p33bl5ka` に変わったことと、ページに埋め込まれた現在地のスタイルの
+  セレクタの印が同じく変わったことだけ。変更後の HTML の `p33bl5ka` を `ssdmjifj` に置き換えると 7 本とも変更前と完全に一致する。
+  PostLayout に残った scoped style は `.post-body[data-astro-cid-ssdmjifj] …` だけで目次に当たらないので、印が変わっても表示は変わらない。
+  トップ・`/career`・CSS・JS・`rss.xml`・sitemap は一致
+- テスト追加：`src/lib/career.test.ts` 新設 4 件（新しい順・同じ年の月順・同じ年月は渡した順・元の配列を変えない）。unit 74 → 78 件。
+  `tests/e2e/blog.spec.ts` に「記事を下へ送ると、追従目次の現在地のリンクが太字になる」1 件（現在地のリンクがちょうど 1 つで太さ 700、
+  他のリンクは 700 でない）。部品の `<style>` を一時的に消してビルドするとこの E2E が `Expected: "700" / Received: "400"` で落ち、
+  戻すと通ることを確かめた
+- 検証結果：`yarn check` 70 files / No fixes、`yarn check:ts` 0 errors、`yarn test:run` 10 files 78 passed、`yarn build` 成功、
+  `yarn test:e2e` 65 passed（コンテナ。1 回目は 015 / 016 と同じ「exited early」、2 回目で通過）
+- ローカル スクショ：`yarn dev` に対し、記事を下へ送って撮る一時スクリプト（scratchpad。`@playwright/test` の chromium、repo には置かない）で撮影。
+  xl（1280×900）で記事を半分まで送ると、右カラムの「手続きは詰まらなかった」が太字・sky-deep（`oklch(0.443 0.1 240.8)`）になる。
+  mobile（iPhone 14）で本文先頭の目次、スマホのメニューを開いた状態（`/career` で Career に色が付く）、`/career` の desktop / mobile 全体を確認

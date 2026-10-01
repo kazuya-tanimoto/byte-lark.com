@@ -1,5 +1,6 @@
 ---
-import type { CareerDetail, CareerItem } from "../types/career";
+import { sortCareerByNewest } from "../lib/career";
+import type { CareerDetail, CareerItem, Employment } from "../types/career";
 
 interface Props {
   items: CareerItem[];
@@ -8,12 +9,12 @@ interface Props {
 
 const { items, details } = Astro.props;
 
-// 新しい順に表示（from は YYYY/MM 形式のため文字列比較で時系列順になる）
-const sortedItems = [...items].sort((a, b) => b.from.localeCompare(a.from));
+const sortedItems = sortCareerByNewest(items);
 const detailMap = new Map(details.map((d) => [d.id, d]));
 
-// 雇用形態バッジの色。淡い sky 面上の sky 文字は 4.3:1 と AA 未達のため sky-deep を使う
-const employmentClass: Record<string, string> = {
+// 雇用形態バッジの色。淡い sky 面上の sky 文字は 4.3:1 と AA 未達のため sky-deep を使う。
+// Employment に種類を足して色を書き忘れると型チェックで落ちる
+const employmentClass: Record<Employment, string> = {
   フリーランス: "border-hibari-sky/40 bg-hibari-sky/10 text-hibari-sky-deep",
   会社員: "border-border bg-muted text-muted-foreground",
   副業: "border-hibari-amber/40 bg-hibari-amber/10 text-hibari-amber",
