@@ -7,6 +7,10 @@ import {
   useState,
 } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  checkContactFields,
+  contactFieldMessages,
+} from "@/lib/contact-validation";
 
 // Cloudflare Turnstile の公式テストキー（常に成功）。本番は CF ビルド環境変数
 // PUBLIC_TURNSTILE_SITE_KEY を設定すると差し替わる（コード変更不要 / 公開値なのでクライアント露出可）。
@@ -121,27 +125,11 @@ function useTurnstile() {
   return { containerRef, token, issuedOnce, loadFailed, reset };
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 // 入力 → 確認 → 送信の 2 画面。送信そのものの進行は SubmitState が持つ。
 type Step = "input" | "confirm";
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
-interface FieldErrors {
-  name?: string;
-  email?: string;
-  message?: string;
-}
-
-function validate(name: string, email: string, message: string): FieldErrors {
-  const errors: FieldErrors = {};
-  if (!name.trim()) errors.name = "お名前を入力してください。";
-  if (!email.trim()) errors.email = "メールアドレスを入力してください。";
-  else if (!EMAIL_RE.test(email.trim()))
-    errors.email = "メールアドレスの形式が正しくありません。";
-  if (!message.trim()) errors.message = "本文を入力してください。";
-  return errors;
-}
+type FieldErrors = ReturnType<typeof contactFieldMessages>;
 
 const inputClass =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
@@ -325,7 +313,11 @@ export function ContactForm() {
 
   const goConfirm = () => {
     setFormError("");
-    const errors = validate(name, email, message);
+    // サーバー（worker/contact.ts）と同じチェックを先に通す。上限超えを確認画面の先の
+    // 送信失敗で知らせると、原因が伝わらず「時間をおいて再度」の案内になってしまう
+    const errors = contactFieldMessages(
+      checkContactFields({ name, email, message }),
+    );
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       return;

@@ -371,7 +371,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 | PHASE1E-011 | [seo-endpoint-test-coverage](20260830-PHASE1E-011-seo-endpoint-test-coverage.md) | Done |
 | PHASE1E-013 | [post-herdr-container-agents](20260920-PHASE1E-013-post-herdr-container-agents.md) | Done |
 | PHASE1E-014 | [unused-deps-removal](20261001-PHASE1E-014-unused-deps-removal.md) | NotStarted |
-| PHASE1E-015 | [contact-validation-shared](20261001-PHASE1E-015-contact-validation-shared.md) | NotStarted |
+| PHASE1E-015 | [contact-validation-shared](20261001-PHASE1E-015-contact-validation-shared.md) | Done |
 | PHASE1E-016 | [post-helpers-dedup](20261001-PHASE1E-016-post-helpers-dedup.md) | NotStarted |
 | PHASE1E-017 | [toc-nav-career-dedup](20261001-PHASE1E-017-toc-nav-career-dedup.md) | NotStarted |
 
