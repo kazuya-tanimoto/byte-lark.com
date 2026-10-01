@@ -24,7 +24,7 @@ Status: NotStarted
 ## 受け入れ条件
 
 <!-- PBI 固有 -->
-- [ ] 着手は PHASE1E-017 のマージ後。017 でナビの「今いるページか」の判定が関数 1 つにまとまるので、`aria-current` はその 1 箇所で決める
+- [ ] `aria-current` は、PHASE1E-017（PR #125 でマージ済み）がまとめた判定の 1 箇所で決める。PC 用・スマホ用で別々に書かない
 - [ ] リンク先が今いるページそのものなら `aria-current="page"` を付ける（例：`/about` で About）
 - [ ] 下の階層にいるときは、親の項目に `aria-current="true"` を付ける（例：`/blog/<slug>` で Blog）。
       `page` は「このリンク先が今のページ」の意味で、`/blog` は記事ページそのものではないため（下の技術メモ）
@@ -52,7 +52,8 @@ Status: NotStarted
 - 実行環境：母艦・コンテナのどちらでもよい。スクショで見るのは色が変わっていないことだけで、
   `aria-current` の値は E2E とスクショ時の DOM で確かめる。母艦は E2E を draft PR の CI で回す
 - 対象ファイル：`src/components/Header.astro`（ナビの項目 `navItems` と、PC 用・スマホ用の 2 つのリスト）。
-  017 で判定を関数にまとめた後は、その関数（置き場所は 017 の実装で決まる）。行番号は 017 で変わるので、着手時に現物を開いて探す
+  017 で判定は frontmatter の `stateClass(href)` にまとまり、色のクラスだけを返している（2026-10-01 に main で確認）。
+  vitest で確かめるため、判定を `src/lib/` の関数に移し、`stateClass` と `aria-current` の両方がそれを使う形にする
 - 今の判定：`currentPath === href || (href !== "/" && currentPath.startsWith(href))`（`currentPath = Astro.url.pathname`）。
   前半が「そのページ」、後半が「下の階層」に当たるので、2 つを分けて返す形にする
 - `aria-current` の値の意味（MDN：https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-current）
@@ -67,6 +68,6 @@ Status: NotStarted
 ## 備考
 
 - 出所：PHASE1E-017 備考の範囲外項目（2026-09-30 のリファクタリング点検で発見）
-- 017 と並行で起票した。017 の作業中に `Header.astro` の形が変わるので、本文には行番号を書いていない
+- 017 と並行で起票し、起票の PR のマージ前に 017 がマージされた。本文には行番号を書いていない（関数名で探す）
 
 ## 実装ログ（着手後に追記、中断時は必須）

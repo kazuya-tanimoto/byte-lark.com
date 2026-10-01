@@ -114,6 +114,30 @@ test.describe("記事内の移動", () => {
     await expect(button).toBeHidden();
   });
 
+  // PHASE1E-017：現在地の色と太さは目次の部品（src/components/TableOfContents.astro）の
+  // scoped style が付ける。部品の外へスタイルを移すと届かなくなるので、太字になるところまで見る
+  test("記事を下へ送ると、追従目次の現在地のリンクが太字になる", async ({
+    page,
+  }) => {
+    await page.goto(`/blog/${PUBLISHED_SLUG}/`);
+    const sidebar = page.locator("[data-toc-sidebar]");
+    await expect(sidebar).toBeVisible();
+
+    await page.evaluate(() =>
+      window.scrollTo({
+        top: document.documentElement.scrollHeight / 2,
+        behavior: "instant",
+      }),
+    );
+    const current = sidebar.locator("a[aria-current='location']");
+    await expect(current).toHaveCount(1);
+    await expect(current).toHaveCSS("font-weight", "700");
+    // 現在地でないリンクは太字にならない
+    await expect(
+      sidebar.locator("a:not([aria-current])").first(),
+    ).not.toHaveCSS("font-weight", "700");
+  });
+
   test("低い窓で目次が画面外へ抜けたら「先頭へ戻る」を出す", async ({
     page,
   }) => {

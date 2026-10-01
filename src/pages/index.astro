@@ -6,6 +6,7 @@ import { Career } from "../data/career";
 import { qualifications } from "../data/qualifications";
 import { skills } from "../data/skills";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { sortCareerByNewest } from "../lib/career";
 import { isVisiblePost, sortPostsByNewest } from "../lib/posts";
 
 // 最新記事 N=3（実データを見て決定: 現状 1 件でもレイアウトが崩れない構造にする）
@@ -14,9 +15,7 @@ const latestPosts = sortPostsByNewest(
 ).slice(0, 3);
 
 // Career 抜粋 N=4: 新しい順（from の降順）。全件は /career のタイムラインで閲覧
-const topCareer = [...Career]
-  .sort((a, b) => b.from.localeCompare(a.from))
-  .slice(0, 4);
+const topCareer = sortCareerByNewest(Career).slice(0, 4);
 
 // Skills 抜粋 M=8: 全カテゴリを flatten し経験年数の降順（年数なし=AI 活用は抜粋から除外）
 const topSkills = skills

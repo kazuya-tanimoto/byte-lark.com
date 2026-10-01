@@ -1,0 +1,47 @@
+---
+interface Props {
+  /** 目次に並べる見出し（PostLayout が depth 2-3 に絞って渡す） */
+  items: { depth: number; slug: string; text: string }[];
+  /** 本文先頭に出す版（xl 未満）か、右カラムに出す版（xl 以上）か */
+  variant: "mobile" | "sidebar";
+  /** nav の置き方（幅による出し分け・追従）。呼び出し側の配置で決まるので外から受け取る */
+  class: string;
+}
+
+// data-toc / data-toc-mobile / data-toc-sidebar は PostLayout のスクリプトと
+// tests/e2e/blog.spec.ts が目次を探す目印。値を "" にすると属性名だけが出る
+const { items, variant, class: className } = Astro.props;
+---
+
+<nav
+  aria-label="目次"
+  data-toc
+  data-toc-mobile={variant === "mobile" ? "" : undefined}
+  data-toc-sidebar={variant === "sidebar" ? "" : undefined}
+  class={className}
+>
+  <h2 class="mb-2 text-sm font-bold text-foreground">目次</h2>
+  <ul class="space-y-1 text-sm">
+    {
+      items.map((h) => (
+        <li class={h.depth === 3 ? "ml-4" : ""}>
+          <a
+            href={`#${h.slug}`}
+            class="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {h.text}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  /* 追従目次の現在地リンク（PHASE1C-009）。sky-deep は AA を満たす文字用トークン。
+     印の aria-current は PostLayout のスクリプトが付ける */
+  [data-toc-sidebar] a[aria-current="location"] {
+    color: var(--color-hibari-sky-deep);
+    font-weight: 700;
+  }
+</style>
