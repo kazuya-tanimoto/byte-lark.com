@@ -1,8 +1,8 @@
 # 訪問者は「コンテナの中の Claude Code を herdr のサイドバーに出した話」（tech）を読める
 
-Status: InProgress
+Status: Done
 Started: 2026-09-20
-Completed: -
+Completed: 2026-10-01
 
 ## 誰が
 - 訪問者
@@ -19,25 +19,25 @@ Completed: -
 - 関連: docs/article-backlog.md T10 / docs/writing-workflow.md / site-plan Phase 1e
 
 ## 受け入れ条件
-- [ ] ヒアリング（writing-workflow §3〜5）の結果から、構成 `docs/article-interviews/herdr-container-agents.outline.md` と材料 `docs/article-interviews/herdr-container-agents.notes.md` を作業ツリーに作る（git 管理外。worktree を消すと消える）
-- [ ] 雛形を `yarn new-post --slug herdr-container-agents` で生成し、frontmatter を埋める（`draft: true`、category: tech、title は `| byte-lark.com` サフィックス無し、description 80〜120 字、本文冒頭に `# タイトル` を重複させない）
-- [ ] 初稿は `scripts/draft-compare.sh` で作り、運営者が選んだ 1 本を採用する。実際は 4 モデル比較を 3 回 → 方針転換（2026-09-22）後に 2 本を伏せて比較し A を採用（経緯は実装ログ。2026-09-27 運営者 OK で書き換え）
-- [ ] 数えた結果・かかった秒数・対応表・運営者の選択・§6 の決まりのうち破った / 迷った / 読み飛ばしたものを実装ログに残す（比較期間の記録。手順 6）
-- [ ] 本文に次の 5 点を含める：① コンテナの Claude Code がサイドバーに出ない症状と原因（herdr は Mac のプロセスしか見えない） ② `HERDR_AGENT=claude` の付け方と、Mac 側のコマンドに付ける理由 ③ 実機（Mac の herdr 0.9.0）で確かめた 4 点 ④ 公式の手段を見落とした経緯（バージョンと日付） ⑤ 約7週間使った自作の仕組み（検討した 2 案と、ソケットを渡す案をやめた理由）（2026-09-27 運営者 OK で差し替え。方針転換前の 6 点は git 履歴にある）
-- [ ] 連作の位置づけを本文で示す：公開済みの `/blog/claude-code-devcontainer`（隔離編）と `/blog/ghostty-herdr-migration`（乗り換え編）へ内部リンクを張る。未公開記事の予告は書かない（profile.md「避ける表現」）
-- [ ] 材料に無いことを書かない（writing-workflow「材料に無いことの扱い」）。【要確認】は 3 件まで、【要写真】は書式どおり。`yarn posts:check` が通る
-- [ ] レビュー 1 回目：subagent で `/article-review` を実行し、指摘を自分で反映して総評「公開可能」にしてから運営者に渡す（writing-workflow §7）
-- [ ] 運営者がレビュー・リライト（writing-workflow §8）
-- [ ] レビュー 2 回目：`/article-review` を実行し、3 つに仕分けたうえで承認された指摘だけを反映（writing-workflow §9）。承認内容を実装ログに記録
-- [ ] cover 画像を cover-image skill で生成・配置（`cover: ./cover.png`、2000×1050）。描き方は直近の記事と変える（skill のデザイン方針）。候補の選定は運営者（実装ログに記録）
-- [ ] `draft: false` の直前に `yarn fonts` でフォントを作り直し、生成物も一緒にコミット（writing-workflow §10）
-- [ ] `yarn build` 成功 / `yarn check` / `yarn check:ts` エラーなし
-- [ ] テスト追加：N/A（記事のみで、サイトの振る舞いは変えないため）
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL: `https://post-herdr-container-agents-byte-lark.tanimoto-a49.workers.dev`）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests / Quality Checks が success）（CLAUDE.md §7）
-- [ ] `draft: false` のコミットを打つセッションで Done 化（Status + INDEX 同期 + マージ）まで終える（README §5.4 外形が変わるコミットの例外）
-- [ ] 公開後、docs/article-backlog.md から T10 の行を削除（backlog「使い方」のルール）
+- [x] ヒアリング（writing-workflow §3〜5）の結果から、構成 `docs/article-interviews/herdr-container-agents.outline.md` と材料 `docs/article-interviews/herdr-container-agents.notes.md` を作業ツリーに作る（git 管理外。worktree を消すと消える）
+- [x] 雛形を `yarn new-post --slug herdr-container-agents` で生成し、frontmatter を埋める（`draft: true`、category: tech、title は `| byte-lark.com` サフィックス無し、description 80〜120 字、本文冒頭に `# タイトル` を重複させない）
+- [x] 初稿は `scripts/draft-compare.sh` で作り、運営者が選んだ 1 本を採用する。実際は 4 モデル比較を 3 回 → 方針転換（2026-09-22）後に 2 本を伏せて比較し A を採用（経緯は実装ログ。2026-09-27 運営者 OK で書き換え）
+- [x] 数えた結果・かかった秒数・対応表・運営者の選択・§6 の決まりのうち破った / 迷った / 読み飛ばしたものを実装ログに残す（比較期間の記録。手順 6）
+- [x] 本文に次の 5 点を含める：① コンテナの Claude Code がサイドバーに出ない症状と原因（herdr は Mac のプロセスしか見えない） ② `HERDR_AGENT=claude` の付け方と、Mac 側のコマンドに付ける理由 ③ 実機（Mac の herdr 0.9.0）で確かめた 4 点 ④ 公式の手段を見落とした経緯（バージョンと日付） ⑤ 約7週間使った自作の仕組み（検討した 2 案と、ソケットを渡す案をやめた理由）（2026-09-27 運営者 OK で差し替え。方針転換前の 6 点は git 履歴にある）
+- [x] 連作の位置づけを本文で示す：公開済みの `/blog/claude-code-devcontainer`（隔離編）と `/blog/ghostty-herdr-migration`（乗り換え編）へ内部リンクを張る。未公開記事の予告は書かない（profile.md「避ける表現」）
+- [x] 材料に無いことを書かない（writing-workflow「材料に無いことの扱い」）。【要確認】は 3 件まで、【要写真】は書式どおり。`yarn posts:check` が通る
+- [x] レビュー 1 回目：subagent で `/article-review` を実行し、指摘を自分で反映して総評「公開可能」にしてから運営者に渡す（writing-workflow §7）
+- [x] 運営者がレビュー・リライト（writing-workflow §8）
+- [x] レビュー 2 回目：`/article-review` を実行し、3 つに仕分けたうえで承認された指摘だけを反映（writing-workflow §9）。承認内容を実装ログに記録
+- [x] cover 画像を cover-image skill で生成・配置（`cover: ./cover.png`、2000×1050）。描き方は直近の記事と変える（skill のデザイン方針）。候補の選定は運営者（実装ログに記録）
+- [x] `draft: false` の直前に `yarn fonts` でフォントを作り直し、生成物も一緒にコミット（writing-workflow §10）
+- [x] `yarn build` 成功 / `yarn check` / `yarn check:ts` エラーなし
+- [x] テスト追加：N/A（記事のみで、サイトの振る舞いは変えないため）
+- [x] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL: `https://post-herdr-container-agents-byte-lark.tanimoto-a49.workers.dev`）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests / Quality Checks が success）（CLAUDE.md §7）
+- [x] `draft: false` のコミットを打つセッションで Done 化（Status + INDEX 同期 + マージ）まで終える（README §5.4 外形が変わるコミットの例外）
+- [x] 公開後、docs/article-backlog.md から T10 の行を削除（backlog「使い方」のルール）
 
 ## 技術メモ
 - 想定セッション数: 1（ヒアリング → 初稿 4 本 → 採用 → レビュー 1 回目。運営者リライト待ちは実装フェーズ外）
@@ -156,3 +156,18 @@ Completed: -
 - 受け入れ条件の見直し（運営者 OK）：本文の 6 点を今の記事の 5 点に差し替え、初稿の条件を実際の経緯に書き換え、「何をできる」の回復手段を差し替え
 - 学び：修正案で足した文（`devcontainer up` の文、「公式ドキュメントは読んでいなかった」の文）が、既存の `ccd` の説明と 0.7.3 ドキュメントの文と食い違いを生んだ。足した文だけでなく、同じ事柄に触れている他の行と突き合わせてから出す
 - カバー画像（2026-09-28〜29）：方針（切り絵風・淡いアプリコット背景・木箱の羊と外側の名札・看板の新しい 1 行。ghostty-herdr の羊と看板を引き継ぎ、描き方と背景色は変える）を運営者 OK。運営者の指示で、案出しは agy（Antigravity CLI、1376×768、API 費用なし）、清書は API（`generate_image.py -r` に選んだ案を参照画像として渡す）で行った。agy で 3 案（箱の羊と看板／柵の羊の群れと箱の羊／手が名札を掛ける）→ 運営者が No.1 を選択（No.2 は「柵と箱のどちらもコンテナに見え、Mac とコンテナの区別がパッと見で分からない」）→ Flash で 2 枚清書（約 30 円）。2 枚とも参照画像の構図・配色をそのまま保った（参照画像での清書が効くことを確認）。1 枚目を 2000×1050 に縮小して配置。プロンプトは `tools/imagegen/prompt_herdr-container-agents.txt`
+
+### 2026-09-30〜10-01 セッション（写真・公開・Done）
+- やったこと：【要写真】No.1 を運営者が撮影（CleanShot。保存フォルダはコンテナにマウント済みで、元のパスのまま読めた）。サイドバーだけではどちらの行がコンテナか分からないため、運営者 OK のうえで ImageMagick で 2 色の枠と文字を入れた（赤 `#D74F4A` = コンテナ、水色 `#4FC3D9` = Mac。赤は ghostty-herdr-migration の注釈と同じ色）。サイドバーの行とペインを同じ色で囲み、窓の範囲で切り出した。ホスト名・他の repo 名・上のペインの文章（撮影についての Claude の返答）はそのまま公開（運営者 OK）
+- やったこと：カバー（木箱の羊）と画面写真を運営者 OK。公開日 2026-10-01、`yarn fonts` → `draft: false`。バックログから T10 の行と「3 連作の公開順」の注記を削除（3 本とも公開済みで注記の役目が終わったため）
+- 想定外：2026-09-30 に undici の high の勧告が出て、Quality Checks の監査が commit と無関係に失敗した。記事とは別の作業なので、運営者の判断で別セッションに依頼し PR #114（+ #116・#117）で修正。main を取り込んで解消
+- 想定外：`yarn install` の後、動いていた dev サーバーが sharp を見失い、全画像が 500 になった（`MissingSharp`）。`yarn build` は成功していたので dev サーバーだけを起動し直して解消
+- 学び：「コンテナから読めない」をファイルの場所を確かめずに書き、運営者に指摘された。読めるかどうかは `ls` で確かめてから書く
+- 学び：コミットの拒否（`git add -A` は `.claude/settings.json` の deny）を、理由を確かめずに「止められた」と報告し、運営者が止めたように読ませた。拒否の文面を見たら、まず deny 設定を確かめる
+
+## 検証報告
+- テスト追加：N/A（記事のみで、サイトの振る舞いは変えないため）
+- ローカル確認：`yarn dev` で記事ページと /blog を desktop（1280）・mobile（iPhone 14）で撮影。カバー・画面写真の表示、一覧の先頭が本記事、公開日 2026年10月1日を確認。`yarn fonts:check`・`posts:check`・`check`・`check:ts`・`build` 成功
+- CF preview 確認：`https://post-herdr-container-agents-byte-lark.tanimoto-a49.workers.dev/blog/herdr-container-agents` を desktop・mobile で撮影。HTTP 200、画面写真の読み込み成功、/blog の先頭カードが本記事
+- E2E/CI 確認：`ci-status.sh --wait`（31e6bca）で Quality Checks success / UI Tests success
+- 未検証項目：本番（main マージ後）の表示はマージ後に確認する
