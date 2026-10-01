@@ -68,7 +68,8 @@
    - 未検証項目: （あれば正直に書く）
    ```
 8. Done: check all 受け入れ条件 → Status: Done + Completed → sync INDEX.md → commit → push → **README §10.6 のとおり `gh pr ready` → `gh pr merge --merge` まで実行**（マージまでが完了フロー。マージだけを運営者判断に委ねない）
-   - 完了フロー：CI green を確認 → `gh pr ready` → `gh pr merge --merge` → worktree を片付ける → `git branch -d <ブランチ名>`
+   - 完了フロー：CI green を確認 → `gh pr ready` → `gh pr merge --merge` → worktree を片付ける → `git branch -d <ブランチ名>` → 本番の表示確認
+   - **本番の表示確認**：記事・UI の変更は、マージ後に変更したページを本番（`https://byte-lark.com`）で開いて反映を確かめ、運営者に報告する（README §10.6）。Done の条件ではない（Done はマージ前に CF preview までの確認で確定済み）。結果は PBI に書かない（書くと PR がもう 1 本要る）。docs だけの変更は対象外
    - **`--delete-branch` は付けない**。head ブランチのリモート削除は repo 設定「Automatically delete head branches」に任せている（Settings → General → Pull Requests）。`--delete-branch` はローカルも消そうとするため、worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まり、リモート削除まで到達しない
    - ローカルブランチは merge 後に自分で消す。worktree を消しても残るため、1 PR ごとに溜まる。`-d` はマージ済みでないと拒否するので `-D` は使わない
 
@@ -119,7 +120,7 @@ Stop hook（PBI Done 宣言の検証ゲート監査）でレスポンスがブ�
 ## Related Docs
 - docs/site-plan.md           Site construction plan (current: v3.18)
 - docs/site-plan-decisions.md Decision Log 本体（site-plan §8 は誘導スタブ。改訂履歴は site-plan-history.md / pbi/INDEX-history.md に分割）
-- docs/pbi/README.md          PBI format spec (v3.16) including §10 branch ops
+- docs/pbi/README.md          PBI format spec (v3.17) including §10 branch ops
 - docs/pbi/INDEX.md           PBI status overview
 - docs/writing-workflow.md    Article writing process（Phase 1a 冒頭で作成）
 - docs/operation-manual.md    運営者向け運用マニュアル（シーン別フレーズ / リカバリー / トラブルシューティング）
