@@ -1,6 +1,7 @@
 # 訪問者は問い合わせの入力が長すぎることを送信前に知れる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-10-01
 
 ## 誰が
 
