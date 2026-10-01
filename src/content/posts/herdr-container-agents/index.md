@@ -3,8 +3,8 @@ title: "コンテナの中のClaude Codeをherdrのサイドバーに出す"
 description: "devcontainerで隔離したClaude Codeは、herdrのサイドバーに出ません。Mac側の起動コマンドにHERDR_AGENT=claudeを付ければ、隔離を崩さずに状態と通知が出ます。約7週間使った自作の仕組みも紹介します。"
 category: tech
 tags: ["herdr", "claude code", "devcontainer"]
-publishedAt: 2026-09-20
-draft: true
+publishedAt: 2026-10-01
+draft: false
 slug: herdr-container-agents
 cover: ./cover.png
 ---
