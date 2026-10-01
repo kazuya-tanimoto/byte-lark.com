@@ -1,6 +1,8 @@
 # 運営者は使っていない依存パッケージの更新に付き合わずに済む
 
-Status: NotStarted
+Status: Done
+Started: 2026-10-01
+Completed: 2026-10-01
 
 ## 誰が
 
@@ -26,23 +28,28 @@ Status: NotStarted
 ## 受け入れ条件
 
 <!-- PBI 固有 -->
-- [ ] `package.json` から `lucide-react` / `tw-animate-css` / `pixelmatch` / `pngjs` の 4 つが消え、
+- [x] `package.json` から `lucide-react` / `tw-animate-css` / `pixelmatch` / `pngjs` の 4 つが消え、
       `yarn.lock` も更新されている。外す操作は `yarn remove lucide-react tw-animate-css pixelmatch pngjs`
       で、母艦ではサンドボックスでレジストリに届かないため、**運営者が Claude Code 外のターミナルで実行する**か、
       コンテナ内のセッションで実行する（CLAUDE.md「Sandbox 制約」）
-- [ ] 外したあと `git grep -n "lucide\|tw-animate\|pixelmatch\|pngjs" -- . ':!yarn.lock' ':!docs'` の結果が
+      → コンテナ内で `yarn remove` を実行。`package.json` から 4 行、`yarn.lock` から 42 行が消えた
+- [x] 外したあと `git grep -n "lucide\|tw-animate\|pixelmatch\|pngjs" -- . ':!yarn.lock' ':!docs'` の結果が
       `components.json` の `"iconLibrary": "lucide"` 1 件だけになる（この行は残す。理由は備考）
-- [ ] ビルド結果が変わらない：変更前の `dist/` を別ディレクトリへ保存し、変更後の `dist/` とファイル名のハッシュを正規化して
+      → `components.json:13` の 1 件だけ
+- [x] ビルド結果が変わらない：変更前の `dist/` を別ディレクトリへ保存し、変更後の `dist/` とファイル名のハッシュを正規化して
       `diff -rq` で比べ、HTML・CSS・JS がすべて一致する（PHASE1D-012 実装ログ。astro-island の識別子だけの差は許す。PHASE1D-012 で CF preview と比べたときに出た。2 回のローカルビルドで出るかは未確認）。
       それ以外の差分が出たら原因を実装ログに書く
-- [ ] `yarn npm audit` がエラーなし
-- [ ] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
+      → ハッシュの正規化なしで `diff -rq` が差分 0（exit 0）。200 ファイルがファイル名も中身も一致し、astro-island の識別子の差も出なかった
+- [x] `yarn npm audit` がエラーなし → `No audit suggestions`
+- [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
+      → build 16 ページ、check 62 files / No fixes、check:ts 0 errors、test:run 7 files 50 passed
 <!-- 定型（削除禁止。該当しないものは [x] N/A（理由）） -->
-- [ ] テスト追加：N/A（振る舞いを変えない。読み込まれていない依存を外すだけで、変わらないことは `dist/` の一致で確かめる）
-- [ ] ローカル スクショ確認（desktop + mobile）：N/A（画面を変えない。`dist/` の一致で代える）（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）：N/A（同上）（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。
+- [x] テスト追加：N/A（振る舞いを変えない。読み込まれていない依存を外すだけで、変わらないことは `dist/` の一致で確かめる）
+- [x] ローカル スクショ確認（desktop + mobile）：N/A（画面を変えない。`dist/` の一致で代える）（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）：N/A（同上）（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。
       画面は変えないが、依存の変更はインストールとビルドを壊しうるので CI は必ず通す）
+      → PR #123、`e8da58f` で Quality Checks / UI Tests とも success
 
 ## 技術メモ
 
@@ -64,3 +71,18 @@ Status: NotStarted
   同じ点検で挙げたリファクタリングは PHASE1E-015〜017 に分けて起票した
 
 ## 実装ログ（着手後に追記、中断時は必須）
+
+### 2026-10-01 セッション 1
+- 作業場所：コンテナ内の worktree `.claude/worktrees/chore-unused-deps-removal`、ブランチ `chore/unused-deps-removal`
+  （main `edd6a0a` から分岐）。PHASE1E-015 / 016 が別 clone で並行中のため、触ったのは `package.json`・`yarn.lock`・
+  本 PBI・INDEX.md の自分の行だけ
+- 前提確認（README §5.3）：4 つへの参照が `package.json` 以外に無いこと（受け入れ条件の grep）と、
+  `yarn why` で 4 つとも root からしか依存されていないこと（`pngjs` は `pixelmatch` からも依存されるが、
+  `pixelmatch` ごと外す）を確認。PBI 本文との乖離なし
+- 変更前の `dist/` を `yarn install --immutable` → `yarn build` で作って別ディレクトリへ保存し、
+  `yarn remove lucide-react tw-animate-css pixelmatch pngjs` の後に `yarn build` し直して `diff -rq` で比べた。
+  差分 0 で、ハッシュの正規化は要らなかった。ファイル名のハッシュは中身から決まるため、
+  使っていない依存を外しても変わらない
+- 学び：PHASE1D-012 の実装ログにある「JS brotli +888 B（radix-ui と lucide-react の分）」は、
+  今回の `dist/` 完全一致から見て lucide-react の分ではなかったと考えられる（推測。当時の内訳は分けて測っていない）
+- 想定外：なし
