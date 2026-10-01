@@ -1,6 +1,7 @@
 # Claude は目次・ヘッダーのナビ・経歴の表示を 1 箇所直せば両方に反映できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-10-01
 
 ## 誰が
 
