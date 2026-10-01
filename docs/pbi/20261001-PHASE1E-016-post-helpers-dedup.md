@@ -75,3 +75,34 @@ Started: 2026-10-01
 - 出所：2026-09-30 のリファクタリング点検（PHASE1E-014 備考と同じ）
 
 ## 実装ログ（着手後に追記、中断時は必須）
+
+### 2026-10-01 セッション 1
+- 作業場所：コンテナ内の worktree `.claude/worktrees/feat-post-helpers-dedup`、ブランチ `feat/post-helpers-dedup`
+  （main `edd6a0a` から分岐）。PHASE1E-014 / 015 が別 worktree で同時進行中のため、PBI 本文の対象ファイル以外は触っていない
+- まとめた先：
+  - `src/lib/posts.ts`：`sortPostsByNewest`（新しい配列を返す。元の `.sort` は配列をその場で並べ替えていたが、
+    どの呼び出し側も元の配列を使い回していないので結果は同じ）、`postSlug`、`formatPostDate`、`toIsoDate`
+  - `src/lib/categories.ts`（新設）：`PostCategory` 型（`content.config.ts` の enum から導出）と `categoryLabels`。
+    はじめは `posts.ts` に置いたが、`CategoryFilter.tsx` のブラウザ用 JS に `posts.ts` の
+    `new Intl.DateTimeFormat(...)` が巻き込まれた（モジュール直下の呼び出しは tree-shaking で消えない）ので別ファイルにした
+  - `src/components/PostChips.astro`（新設）：カテゴリのチップと draft チップ。色のクラスと PHASE1C-008 のコメントは BlogCard のものをそのまま移した
+  - `src/lib/og.ts`：`requireSiteOrigin`（`site` 未設定なら throw）と `buildPageUrls`（canonical・OG 画像 URL）。
+    OG 画像は元の三項演算子と同じく空文字も「指定なし」扱いにするため `||` にした
+  - RSS は `isVisiblePost` を使わず `draft !== true` のまま（理由をコメントに書いた）。並べ替えは `getTime()` 版に統一（`valueOf()` と同値）
+- ビルド結果の比較：変更前の `dist/` を scratchpad に保存し、変更前のまま 2 回ビルドして `diff -rq` が 0 件（ローカルでは astro-island の
+  識別子は揺れなかった）。変更後はファイル名のハッシュを正規化して HTML / XML を比べ、差は記事ページ 7 本のカテゴリチップ 1 個ずつだけ：
+  `<span class="… bg-muted text-hibari-sky" data-astro-cid-ssdmjifj>Tech</span>` → 属性 `data-astro-cid-ssdmjifj` が消える。
+  チップが PostLayout の中から別部品に移り、PostLayout の scoped style の印が付かなくなったため。PostLayout の scoped セレクタは
+  `.post-body[data-astro-cid-ssdmjifj] …` と `[data-toc-sidebar] a[…][aria-current=location]` だけで、どれもヘッダーのチップに
+  当たらない（dist の CSS を grep して確認）ので表示は変わらない。CSS ファイルは一致。JS は `CategoryFilter.*.js` だけ変わり、
+  中身の差はラベルを `categoryLabels` から読むようになった分だけ。`rss.xml`・sitemap は一致
+- `site` 未設定の確認：`astro.config.mjs` の `site` 行を一時的に消して `yarn build` → `/404` の描画で
+  「astro.config.mjs の site が未設定です」で exit 1。`git checkout -- astro.config.mjs` で戻して再ビルド成功
+- draft チップの確認：dev で `incorporating-bytelark` を一時的に `draft: true` にし、記事ページ・`/blog` に PostChips の draft チップが出て、
+  `/rss.xml` には出ないこと（dev でも）を curl で確認。`git checkout` で戻した
+- テスト追加：`src/lib/posts.test.ts` +7 件（並べ替え 3・slug 2・日付 2）、`src/lib/og.test.ts` +6 件（`requireSiteOrigin` 2・`buildPageUrls` 4）、
+  `src/lib/categories.test.ts` 新設 1 件。unit 50 → 64 件
+- 検証結果：`yarn check` 65 files / No fixes、`yarn check:ts` 0 errors、`yarn test:run` 8 files 64 passed、`yarn build` 成功、
+  `yarn test:e2e` 63 passed（コンテナ内で実行）。ローカル スクショ（`scripts/capture-screenshots.mjs`）でトップ・`/blog`・記事詳細を desktop + mobile で確認
+- 学び：コンテナの `yarn test:e2e` は webServer の `yarn preview` が裏に回って即終了するため「exited early」で落ちる。
+  裏に残った preview を `reuseExistingServer` が拾うので、もう一度実行すると通る（終わったら `yarn astro preview stop`）

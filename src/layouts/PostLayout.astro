@@ -1,6 +1,10 @@
 ---
 import ImageLightbox from "../components/ImageLightbox.astro";
+import PostChips from "../components/PostChips.astro";
 import { buildArticleJsonLd } from "../lib/jsonld";
+import type { PostCategory } from "../lib/categories";
+import { buildPageUrls, requireSiteOrigin } from "../lib/og";
+import { formatPostDate, toIsoDate } from "../lib/posts";
 import BaseLayout from "./BaseLayout.astro";
 
 interface Heading {
@@ -14,7 +18,7 @@ interface Props {
   description: string;
   publishedAt: Date;
   updatedAt?: Date;
-  category: "tech" | "life";
+  category: PostCategory;
   tags: string[];
   /** 下書き。dev サーバーでのみ表示され、目印のチップを付ける（src/lib/posts.ts） */
   draft?: boolean;
@@ -38,11 +42,13 @@ const {
   headings,
 } = Astro.props;
 
-const siteUrl = Astro.site?.origin ?? "https://byte-lark.com";
-const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
-const ogImageUrl = ogImage
-  ? new URL(ogImage, siteUrl).href
-  : new URL("/og-default.png", siteUrl).href;
+const siteUrl = requireSiteOrigin(Astro.site);
+const { canonicalUrl, ogImageUrl } = buildPageUrls({
+  siteOrigin: siteUrl,
+  pathname: Astro.url.pathname,
+  canonical,
+  ogImage,
+});
 
 const jsonLd = buildArticleJsonLd({
   origin: siteUrl,
@@ -54,20 +60,7 @@ const jsonLd = buildArticleJsonLd({
   dateModified: updatedAt,
 });
 
-const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
-const categoryLabel = category === "tech" ? "Tech" : "Life";
-// カテゴリチップの色分けは BlogCard と揃える（PHASE1C-008）
-const categoryChipClass =
-  category === "tech"
-    ? "bg-muted text-hibari-sky"
-    : "bg-secondary text-secondary-foreground";
-
 const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
-const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 ---
 
 <BaseLayout
@@ -83,15 +76,12 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
       <slot name="cover" />
       <header class="mb-8 border-b border-border pb-6">
         <div class="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-          <span
-            class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}
-          >{categoryLabel}</span>
-          {draft && <span class="rounded-full bg-hibari-amber-chip px-2.5 py-0.5 font-bold text-hibari-amber-chip-text">draft</span>}
-          <time datetime={isoDate(publishedAt)}>{dateFormatter.format(publishedAt)} 公開</time>
+          <PostChips category={category} draft={draft} />
+          <time datetime={toIsoDate(publishedAt)}>{formatPostDate(publishedAt)} 公開</time>
           {
             updatedAt && (
-              <time datetime={isoDate(updatedAt)}>
-                （{dateFormatter.format(updatedAt)} 更新）
+              <time datetime={toIsoDate(updatedAt)}>
+                （{formatPostDate(updatedAt)} 更新）
               </time>
             )
           }

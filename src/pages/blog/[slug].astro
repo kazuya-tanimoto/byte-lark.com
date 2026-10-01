@@ -3,12 +3,12 @@ import { getImage, Image } from "astro:assets";
 import { getCollection, render } from "astro:content";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import PostLayout from "../../layouts/PostLayout.astro";
-import { isVisiblePost } from "../../lib/posts";
+import { isVisiblePost, postSlug } from "../../lib/posts";
 
 export const getStaticPaths = (async () => {
   const posts = await getCollection("posts", ({ data }) => isVisiblePost(data));
   return posts.map((post) => ({
-    params: { slug: post.data.slug ?? post.id },
+    params: { slug: postSlug(post) },
     props: { post },
   }));
 }) satisfies GetStaticPaths;

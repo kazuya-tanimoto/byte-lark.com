@@ -1,0 +1,22 @@
+---
+import { categoryLabels, type PostCategory } from "../lib/categories";
+
+interface Props {
+  category: PostCategory;
+  /** 下書き。dev サーバーでのみ表示される記事に目印を付ける（src/lib/posts.ts） */
+  draft?: boolean;
+}
+
+const { category, draft } = Astro.props;
+// カテゴリチップの色分け（PHASE1C-008）。Tech = 空の面 + sky 文字（4.7:1）、
+// Life = 草原の面 + green 文字（6.2:1）。どちらも AA を満たす組合せに限る
+const categoryChipClass =
+  category === "tech"
+    ? "bg-muted text-hibari-sky"
+    : "bg-secondary text-secondary-foreground";
+---
+
+<span class={`rounded-full px-2.5 py-0.5 font-bold ${categoryChipClass}`}>
+  {categoryLabels[category]}
+</span>
+{draft && <span class="rounded-full bg-hibari-amber-chip px-2.5 py-0.5 font-bold text-hibari-amber-chip-text">draft</span>}

@@ -1,11 +1,10 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
 import { buildPersonJsonLd } from "../lib/jsonld";
+import { requireSiteOrigin } from "../lib/og";
 
 // Q2: 文体 = ですます調 / 構成 = 見出し整理型（運営者選定 2026-06-12）
-const personJsonLd = buildPersonJsonLd(
-  Astro.site?.origin ?? "https://byte-lark.com",
-);
+const personJsonLd = buildPersonJsonLd(requireSiteOrigin(Astro.site));
 ---
 
 <PageLayout
