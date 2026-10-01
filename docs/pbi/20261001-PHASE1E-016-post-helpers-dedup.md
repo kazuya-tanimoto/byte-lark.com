@@ -1,6 +1,7 @@
 # Claude は記事の並べ方・URL・カテゴリ表示を 1 箇所直せば全ページに反映できる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-10-01
 
 ## 誰が
 
