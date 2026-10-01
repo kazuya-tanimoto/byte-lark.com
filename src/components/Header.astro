@@ -11,6 +11,12 @@ const navItems = [
 ];
 
 const currentPath = Astro.url.pathname;
+
+// 今いるページのリンクを色で示す。PC 用・スマホ用のナビで共通
+const stateClass = (href: string) =>
+  currentPath === href || (href !== "/" && currentPath.startsWith(href))
+    ? "bg-primary/10 text-hibari-sky-deep"
+    : "text-muted-foreground hover:bg-muted hover:text-foreground";
 ---
 
 <header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
@@ -27,9 +33,7 @@ const currentPath = Astro.url.pathname;
             href={href}
             class:list={[
               "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
-              currentPath === href || (href !== "/" && currentPath.startsWith(href))
-                ? "bg-primary/10 text-hibari-sky-deep"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              stateClass(href),
             ]}
           >
             {label}
@@ -59,9 +63,7 @@ const currentPath = Astro.url.pathname;
             href={href}
             class:list={[
               "block rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
-              currentPath === href || (href !== "/" && currentPath.startsWith(href))
-                ? "bg-primary/10 text-hibari-sky-deep"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              stateClass(href),
             ]}
           >
             {label}

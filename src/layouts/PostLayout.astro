@@ -1,6 +1,7 @@
 ---
 import ImageLightbox from "../components/ImageLightbox.astro";
 import PostChips from "../components/PostChips.astro";
+import TableOfContents from "../components/TableOfContents.astro";
 import { buildArticleJsonLd } from "../lib/jsonld";
 import type { PostCategory } from "../lib/categories";
 import { buildPageUrls, requireSiteOrigin } from "../lib/og";
@@ -100,26 +101,11 @@ const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
 
       {
         toc.length > 0 && (
-          <nav
-            aria-label="目次"
-            data-toc
-            data-toc-mobile
+          <TableOfContents
+            items={toc}
+            variant="mobile"
             class="mb-8 scroll-mt-20 rounded-lg bg-card p-4 shadow-card xl:hidden"
-          >
-            <h2 class="mb-2 text-sm font-bold text-foreground">目次</h2>
-            <ul class="space-y-1 text-sm">
-              {toc.map((h) => (
-                <li class={h.depth === 3 ? "ml-4" : ""}>
-                  <a
-                    href={`#${h.slug}`}
-                    class="text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          />
         )
       }
 
@@ -131,26 +117,11 @@ const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
     {
       toc.length > 0 && (
         <aside class="hidden xl:block xl:w-60 xl:shrink-0">
-          <nav
-            aria-label="目次"
-            data-toc
-            data-toc-sidebar
+          <TableOfContents
+            items={toc}
+            variant="sidebar"
             class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg bg-card p-4 shadow-card"
-          >
-            <h2 class="mb-2 text-sm font-bold text-foreground">目次</h2>
-            <ul class="space-y-1 text-sm">
-              {toc.map((h) => (
-                <li class={h.depth === 3 ? "ml-4" : ""}>
-                  <a
-                    href={`#${h.slug}`}
-                    class="text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          />
         </aside>
       )
     }
@@ -162,7 +133,7 @@ const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
 </BaseLayout>
 
 <script>
-  // 追従目次の現在地ハイライト（PHASE1C-009）。
+  // 追従目次の現在地ハイライト（PHASE1C-009。色と太さは src/components/TableOfContents.astro）。
   // 「上端がオフセット線（sticky ヘッダー分。scroll-margin-top: 5rem と整合）を過ぎた
   // 最後の見出し」を現在地とする。ページ末尾に達したときは最後の見出しを現在地にする
   // ——末端の節は短いとオフセット線まで届かず、目次から移動したのに前の節が
@@ -255,12 +226,6 @@ const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
 </script>
 
 <style>
-  /* 追従目次の現在地リンク（PHASE1C-009）。sky-deep は AA を満たす文字用トークン */
-  [data-toc-sidebar] a[aria-current="location"] {
-    color: var(--color-hibari-sky-deep);
-    font-weight: 700;
-  }
-
   /* 記事本文のタイポグラフィ（PHASE1C-003 で確定。docs/design-direction.md §3）。
      節見出し h2 は 24px / 500 — ページの節見出し（700）より軽くして、読み進める流れを切らない */
   .post-body :global(h2) {
