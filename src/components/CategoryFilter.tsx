@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { categoryLabels, type PostCategory } from "@/lib/categories";
 
-type Category = "all" | "tech" | "life";
+type Category = "all" | PostCategory;
 
 const options: { value: Category; label: string }[] = [
   { value: "all", label: "全て" },
-  { value: "tech", label: "Tech" },
-  { value: "life", label: "Life" },
+  { value: "tech", label: categoryLabels.tech },
+  { value: "life", label: categoryLabels.life },
 ];
 
 export function CategoryFilter() {

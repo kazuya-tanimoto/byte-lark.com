@@ -1,5 +1,56 @@
 import { describe, expect, it } from "vitest";
-import { buildOgMeta } from "./og";
+import { buildOgMeta, buildPageUrls, requireSiteOrigin } from "./og";
+
+describe("requireSiteOrigin", () => {
+  it("site の origin を返す", () => {
+    expect(requireSiteOrigin(new URL("https://byte-lark.com/"))).toBe(
+      "https://byte-lark.com",
+    );
+  });
+
+  it("site が未設定ならエラーにしてビルドを止める", () => {
+    expect(() => requireSiteOrigin(undefined)).toThrow("site が未設定");
+  });
+});
+
+describe("buildPageUrls", () => {
+  const siteOrigin = "https://byte-lark.com";
+
+  it("canonical の指定が無ければページのパスから作る", () => {
+    const { canonicalUrl } = buildPageUrls({
+      siteOrigin,
+      pathname: "/blog/test/",
+    });
+
+    expect(canonicalUrl).toBe("https://byte-lark.com/blog/test/");
+  });
+
+  it("canonical の指定があればそれを使う", () => {
+    const { canonicalUrl } = buildPageUrls({
+      siteOrigin,
+      pathname: "/blog/test/",
+      canonical: "https://example.com/original/",
+    });
+
+    expect(canonicalUrl).toBe("https://example.com/original/");
+  });
+
+  it("OG 画像の相対パスを絶対 URL にする", () => {
+    const { ogImageUrl } = buildPageUrls({
+      siteOrigin,
+      pathname: "/blog/test/",
+      ogImage: "/_astro/cover.HASH.webp",
+    });
+
+    expect(ogImageUrl).toBe("https://byte-lark.com/_astro/cover.HASH.webp");
+  });
+
+  it("OG 画像の指定が無ければサイト共通の画像を使う", () => {
+    const { ogImageUrl } = buildPageUrls({ siteOrigin, pathname: "/" });
+
+    expect(ogImageUrl).toBe("https://byte-lark.com/og-default.png");
+  });
+});
 
 const baseMeta = {
   title: "テスト記事",

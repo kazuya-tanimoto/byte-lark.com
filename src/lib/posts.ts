@@ -9,3 +9,33 @@ export function isVisiblePost(
 ) {
   return data.draft !== true || isDev;
 }
+
+/** 記事を新しい順に並べた新しい配列を返す。同じ日付の記事は渡された順を保つ */
+export function sortPostsByNewest<T extends { data: { publishedAt: Date } }>(
+  posts: T[],
+): T[] {
+  return [...posts].sort(
+    (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+  );
+}
+
+/** 記事 URL の末尾（/blog/<slug>/）。frontmatter の slug が無ければフォルダ名を使う */
+export function postSlug(post: { id: string; data: { slug?: string } }) {
+  return post.data.slug ?? post.id;
+}
+
+const postDateFormatter = new Intl.DateTimeFormat("ja-JP", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+/** 記事の日付の表示（2026年10月1日） */
+export function formatPostDate(date: Date) {
+  return postDateFormatter.format(date);
+}
+
+/** <time datetime> 用の日付（YYYY-MM-DD） */
+export function toIsoDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
