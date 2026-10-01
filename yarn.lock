@@ -6525,19 +6525,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^1.48.0":
-  version: 1.49.0
-  resolution: "lucide-react@npm:1.49.0"
-  peerDependencies:
-    "@types/react": "*"
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10c0/9b1836d423be7a0272671b7db61758bc2aeb532faaa08af28a4b5a746a45e0f638a7815eb02871d04a887acde856c2bfe6317df6ae6b37578a8b3f7fc06940f7
-  languageName: node
-  linkType: hard
-
 "lz-string@npm:^1.5.0":
   version: 1.5.0
   resolution: "lz-string@npm:1.5.0"
@@ -7213,17 +7200,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pixelmatch@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "pixelmatch@npm:7.2.0"
-  dependencies:
-    pngjs: "npm:^7.0.0"
-  bin:
-    pixelmatch: bin/pixelmatch
-  checksum: 10c0/d8a2454ecf3a977738d6050ed087effa0a9f1b53a0da92d37381a74bb04db5c21e14cfcd41965fbdac4a5967aa5ff2525e2afe9826a77eae043b8339dafc53b6
-  languageName: node
-  linkType: hard
-
 "pkce-challenge@npm:^5.0.0":
   version: 5.0.1
   resolution: "pkce-challenge@npm:5.0.1"
@@ -7248,13 +7224,6 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: 10c0/d1fd048a89be27c9aba6757dc4f70eff4a5163b49f439ad691767be8b2a482327d0dd1928b4f73c8fe0d8b33aab2c9dc2670424ab60f112d9e98e91b94e3b090
-  languageName: node
-  linkType: hard
-
-"pngjs@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "pngjs@npm:7.0.0"
-  checksum: 10c0/0d4c7a0fd476a9c33df7d0a2a73e1d56537628a668841f6995c2bca070cf30819f9254a64363266bc14ef2fee47659dd3b4f2b18eec7ab65143015139f497b38
   languageName: node
   linkType: hard
 
@@ -7508,9 +7477,6 @@ __metadata:
     clsx: "npm:^2.1.1"
     jsdom: "npm:^30.1.1"
     lefthook: "npm:^2.1.12"
-    lucide-react: "npm:^1.48.0"
-    pixelmatch: "npm:^7.2.0"
-    pngjs: "npm:^7.0.0"
     radix-ui: "npm:^1.6.7"
     react: "npm:^19.3.0"
     react-dom: "npm:^19.3.0"
@@ -7518,7 +7484,6 @@ __metadata:
     subset-font: "npm:^2.9.0"
     tailwind-merge: "npm:^3.7.0"
     tailwindcss: "npm:^4.3.3"
-    tw-animate-css: "npm:^1.4.0"
     typescript: "npm:^6.0.3"
     vitest: "npm:^5.0.0"
   languageName: unknown
@@ -8577,13 +8542,6 @@ __metadata:
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
-  languageName: node
-  linkType: hard
-
-"tw-animate-css@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "tw-animate-css@npm:1.4.0"
-  checksum: 10c0/6cfbc19ccc73883ec80ef1f9147f43e736cb01ee99c8172968b37eb81b720523d30e38b1a96aef92db3c586d864204db5510b51744ddacbbf0ad8e3c7fb56ec7
   languageName: node
   linkType: hard
 

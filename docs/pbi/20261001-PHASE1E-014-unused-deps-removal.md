@@ -1,6 +1,7 @@
 # 運営者は使っていない依存パッケージの更新に付き合わずに済む
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-10-01
 
 ## 誰が
 
