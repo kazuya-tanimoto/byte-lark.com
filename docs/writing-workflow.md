@@ -220,7 +220,7 @@ yarn fonts
 - 記事は画像の有無によらず常にフォルダ形式で作る: `src/content/posts/<slug>/index.md`（`yarn new-post` がこの形式で生成。posts 直下にフラットな `<slug>.md` を置かない）。画像は同じフォルダに同居（loader は `**/*.{md,mdx}` なのでフォルダ化しても収集される。URL は frontmatter の `slug` で決まるため変わらない）
 - 本文からは相対パスで参照する（`![説明](./figure.png)`）。Astro のビルド時最適化（圧縮・ハッシュ名・width/height 自動付与）が効く。`public/` 置きは最適化が効かないため記事画像には使わない
 - アイキャッチは frontmatter の `cover: ./cover.png`。ブログ一覧カード・記事ページ冒頭・og:image（1200×630 に自動変換）の 3 か所に自動反映される。元画像は縦横比 40:21（1200×630 以上）で作る
-- AI 生成イラストを使う場合は、確定パレット「春空」（docs/design-direction.md §2）の世界観に寄せる。描き方は記事ごとに変え、直近の記事と同じテイストにしない（正本は `.claude/skills/cover-image/SKILL.md` のデザイン方針。2026-09-16 改定）
+- AI 生成イラストを使う場合は、確定パレット「春空」（docs/design-direction.md §2）の世界観に寄せる。描き方は記事ごとに変え、直近の記事と同じテイストにしない（正本は `.claude/skills/cover-image/SKILL.md` のデザイン方針）
 - PDF など画像以外の添付は最適化対象外のため `public/files/<slug>/` に置き、絶対パスでリンクする（`[資料](/files/<slug>/xxx.pdf)`）
 
 ## 記事テンプレート
