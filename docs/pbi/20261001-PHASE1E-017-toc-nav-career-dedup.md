@@ -1,7 +1,8 @@
 # Claude は目次・ヘッダーのナビ・経歴の表示を 1 箇所直せば両方に反映できる
 
-Status: InProgress
+Status: Done
 Started: 2026-10-01
+Completed: 2026-10-01
 
 ## 誰が
 
@@ -29,27 +30,27 @@ Started: 2026-10-01
 ## 受け入れ条件
 
 <!-- PBI 固有 -->
-- [ ] 目次を Astro の部品 1 つ（例：`src/components/TableOfContents.astro`）に切り出し、`PostLayout.astro` の 2 箇所がそれを使う。
+- [x] 目次を Astro の部品 1 つ（例：`src/components/TableOfContents.astro`）に切り出し、`PostLayout.astro` の 2 箇所がそれを使う。
       `nav` の `aria-label="目次"` と `data-toc` / `data-toc-mobile` / `data-toc-sidebar` は今と同じに出す
       （`PostLayout.astro:183, 237` のスクリプトと `tests/e2e/blog.spec.ts` がこれらの属性で目次を探している）
-- [ ] 追従目次の現在地の色付けが消えない：今は `PostLayout.astro:267-272` の `<style>`（PostLayout の中だけに効く書き方）で
+- [x] 追従目次の現在地の色付けが消えない：今は `PostLayout.astro:267-272` の `<style>`（PostLayout の中だけに効く書き方）で
       `[data-toc-sidebar] a[aria-current="location"]` に色と太さを付けている。目次を別の部品に移すとこのスタイルが届かなくなるので、
       スタイルを部品側へ移すか、届く書き方に変える。xl 幅で記事を下へ送り、右カラムの現在地のリンクが太字・sky-deep 色になることを確かめる
-- [ ] ヘッダーのナビで、今いるページかの判定を関数 1 つにまとめ、PC 用・スマホ用の両方がそれを使う。表示は変えない
-- [ ] 経歴の新しい順の並べ替えを関数 1 つ（例：`src/lib/career.ts`）にまとめ、`index.astro` と `CareerTimeline.astro` がそれを使う
-- [ ] `employmentClass` の型を `Record<Employment, string>` にする。確かめ方：一時的に 1 種類の色を消すと `yarn check:ts` が落ち、
+- [x] ヘッダーのナビで、今いるページかの判定を関数 1 つにまとめ、PC 用・スマホ用の両方がそれを使う。表示は変えない
+- [x] 経歴の新しい順の並べ替えを関数 1 つ（例：`src/lib/career.ts`）にまとめ、`index.astro` と `CareerTimeline.astro` がそれを使う
+- [x] `employmentClass` の型を `Record<Employment, string>` にする。確かめ方：一時的に 1 種類の色を消すと `yarn check:ts` が落ち、
       戻すと通る。確かめた事実を実装ログに書き、**元に戻してから** commit する
-- [ ] ビルド結果が変わらない：変更前の `dist/` を別ディレクトリへ保存し、変更後とファイル名のハッシュを正規化して `diff -rq` で比べる
+- [x] ビルド結果が変わらない：変更前の `dist/` を別ディレクトリへ保存し、変更後とファイル名のハッシュを正規化して `diff -rq` で比べる
       （PHASE1D-012 実装ログ。astro-island の識別子だけの差は許す。PHASE1D-012 で CF preview と比べたときに出た。2 回のローカルビルドで出るかは未確認）。
       部品を切り出すと Astro がスタイル用に付ける属性（`data-astro-cid-*`）が変わりうるので、差分が出たら、それが表示を変えないことを実装ログに書く
-- [ ] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
+- [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
 <!-- 定型（削除禁止。該当しないものは [x] N/A（理由）） -->
-- [ ] テスト追加：経歴の並べ替えの unit（`src/lib/career.test.ts` を新設）と、追従目次の現在地の E2E を
+- [x] テスト追加：経歴の並べ替えの unit（`src/lib/career.test.ts` を新設）と、追従目次の現在地の E2E を
       `tests/e2e/blog.spec.ts` に 1 件足す（記事を下へ送ると、右カラムのどれか 1 つのリンクに `aria-current="location"` が付き、
       その文字が太字になる）。現在地の表示は今どのテストも見ておらず、上記のスタイルが届かなくなっても CI が落ちないため（README §4.6 ルール 9）
-- [ ] ローカル スクショ確認（desktop + mobile）：記事詳細（xl 幅で右カラムの目次、mobile で本文先頭の目次）・ヘッダー（スマホのメニューを開いた状態）・`/career`（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）：同上（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] ローカル スクショ確認（desktop + mobile）：記事詳細（xl 幅で右カラムの目次、mobile で本文先頭の目次）・ヘッダー（スマホのメニューを開いた状態）・`/career`（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）：同上（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 
@@ -104,3 +105,8 @@ Started: 2026-10-01
 - ローカル スクショ：`yarn dev` に対し、記事を下へ送って撮る一時スクリプト（scratchpad。`@playwright/test` の chromium、repo には置かない）で撮影。
   xl（1280×900）で記事を半分まで送ると、右カラムの「手続きは詰まらなかった」が太字・sky-deep（`oklch(0.443 0.1 240.8)`）になる。
   mobile（iPhone 14）で本文先頭の目次、スマホのメニューを開いた状態（`/career` で Career に色が付く）、`/career` の desktop / mobile 全体を確認
+- CI（PR #125、head `3c27ce3`）：`bash ~/.claude/bin/ci-status.sh --wait` で Quality Checks / UI Tests とも completed/success
+- CF preview：`https://feat-toc-nav-career-dedup-byte-lark.tanimoto-a49.workers.dev` に `3c27ce3` が載ったこと（記事ページの目次に
+  `data-astro-cid-p33bl5ka` が付いている）を curl で確かめてから、同じ一時スクリプトを `BASE_URL` 付きで実行。
+  右カラムの現在地（「手続きは詰まらなかった」が太字・sky-deep）、本文先頭の目次、スマホのメニュー（記事ページで Blog に色が付く）、
+  `/career` の desktop / mobile ともローカルと同じ表示
