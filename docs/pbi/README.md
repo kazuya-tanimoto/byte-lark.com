@@ -1,4 +1,4 @@
-# PBI フォーマット規約 (v3.16)
+# PBI フォーマット規約 (v3.17)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
@@ -195,6 +195,7 @@ PBI を更新する時は、必ず以下を**同一コミット内**で同期：
 6. 完了：受け入れ条件全 check → Status: Done + Completed 追記 → INDEX.md 同期
 7. コミット（後述のメッセージ規約に従う）
 8. push → **§10.6 に従い main へマージまで実行する**（`gh pr ready` → `gh pr merge --merge` → `git branch -d <type>/<short>`）。コミットで完了フローは終わらない。マージ＝本番公開だが、§7 検証ゲート通過が公開判断そのものであり、マージだけを運営者判断に委ねない（委ねてフロー違反となった実例：PHASE1E-004）
+9. マージ後、サイトに出る変更（記事・UI）があれば**本番で表示を確かめて運営者に報告する**（§10.6）。Done の条件ではない：Done は 6 で CF preview（本番と同じビルド）までの確認で確定しており、本番で見るのは反映されたかどうかだけ
 
 ### 5.4 中断時の手順
 
@@ -385,7 +386,11 @@ gh pr merge --merge   # merge commit を残す（--no-ff 相当）
 
 # マージ後：worktree を片付けてからローカルブランチを消す
 git branch -d <type>/<short>
+
+# マージ後：サイトに出る変更なら、本番で表示を確かめて運営者に報告する
 ```
+
+- **本番の表示確認**：記事・UI の変更は、マージ後に変更したページを `https://byte-lark.com` で開き、反映されたことを確かめて運営者に報告する（desktop + mobile のスクショ。コンテナは `scripts/capture-screenshots.mjs`）。docs だけの変更は対象外。PBI は Done にしたコミットごとマージ済みなので、結果は PBI に書かない（書くと PR がもう 1 本要る）。Done の条件でもない（§5.3 の 9）。反映されていなければ原因を調べて報告する（CF が push を取りこぼした場合は §10.8 の Deploy Hook で焼き直せる）
 
 - `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash ~/.claude/bin/ci-status.sh`（`--wait` で完了待ち）で確認してから実行する
 - **`--delete-branch` は付けない**。head ブランチのリモート削除は repo 設定「Automatically delete head branches」に任せている（Settings → General → Pull Requests。`gh api repos/kazuya-tanimoto/byte-lark.com --jq .delete_branch_on_merge` で確認できる）。`--delete-branch` はローカルも消そうとするため、worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まる。GitHub 側のマージは成功するがリモート削除まで到達せず、壊れ方がメイン作業ツリーの HEAD 状態に依存して非決定的になる
@@ -467,3 +472,4 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 | 2026-09-03 | v3.14 | §10.6 の main マージ手順から `--delete-branch` を外した：worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まり、GitHub 側のマージは成功するのにリモートブランチの削除まで到達しない（メイン作業ツリーが detached HEAD なら成功、main を checkout していれば失敗と、壊れ方が HEAD 状態に依存して非決定的）。リモート削除は repo 設定「Automatically delete head branches」（`delete_branch_on_merge: true`）に任せ、ローカルブランチは merge 後に `git branch -d <type>/<short>` で自分で消す運用に変更。worktree を消してもローカルブランチは残り 1 PR ごとに 1 本溜まるため。初出は monotrip.jp（PR #61、2026-09-01）で踏んだ事象。CLAUDE.md 手順 8 / operation-manual §1 も連動更新 |
 | 2026-09-04 | v3.15 | §10.1 / §10.2 に `archive/*` の削除禁止を明記：`archive/vite-react-chakra` は旧 Vite/React/Chakra 実装の参照元で、取り戻し手順（`git checkout archive/vite-react-chakra -- <path>`）が PHASE0-001 に書かれている。ただし main にマージ済みのため `git branch --merged main` では削除候補に見え、実際に v3.14 の作業中、残骸ブランチの点検で削除候補として挙がった。役割は site-plan §2 / §6.7 と PHASE0-001 / 003 に散在していたが、ブランチ運用の節に「消さない」が無かったのが原因。`feat/phase-0` も同様に残す |
 | 2026-09-04 | v3.16 | `feat/phase-0` をリモートから削除し（`c12e0d3`）、§10.1 のブランチ階層を実在するブランチだけに整理。v3.15 で「歴史の目印として残す」と書いたが、`archive/*` と違って参照手順がどこにも無く、中身は main の履歴にあるため残す理由が無い。`feat/phase-1` はすでにリモートに無いのに階層図へ残っており、図が実態とずれていた。残すのは `archive/*` だけと §10.2 に明記。経緯は §10.6 の歴史節に残る |
+| 2026-10-01 | v3.17 | マージ後の本番の表示確認を手順に追加（§5.3 の 9、§10.6）：記事・UI の変更は、マージ後に本番で表示を確かめて運営者に報告する。Done の条件にはしない——Done はマージ前のコミットで CF preview（本番と同じビルド）までの確認で確定しており、本番で見るのは反映されたかどうかだけ。結果も PBI には書かない（書くと PR がもう 1 本要る）。これまでは本番確認がどこにも書かれておらず、PHASE1E-013（PR #106）のマージ後に「本番確認が Done の条件か」「結果を PBI に書くか」で迷った。CLAUDE.md 手順 8 / operation-manual §1 も連動更新 |
