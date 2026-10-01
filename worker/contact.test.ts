@@ -70,6 +70,14 @@ describe("validateContactPayload", () => {
     expect(r.errors).toContain("name_too_long");
     expect(r.errors).toContain("message_too_long");
   });
+
+  it("長すぎるメールアドレスは形式違いと同じ email_invalid", () => {
+    const r = validateContactPayload({
+      ...validInput,
+      email: `${"a".repeat(243)}@example.com`,
+    });
+    expect(r.errors).toEqual(["email_invalid"]);
+  });
 });
 
 describe("verifyTurnstile", () => {

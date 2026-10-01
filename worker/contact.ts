@@ -2,6 +2,12 @@
 // Worker エントリ（worker/index.ts）から分離し、外部 I/O（fetch）を引数で差し替えられる
 // 純粋関数として書くことで Vitest 単体テスト可能にしている。
 
+import {
+  type ContactField,
+  type ContactFieldIssue,
+  checkContactFields,
+} from "../src/lib/contact-validation";
+
 export interface ContactPayload {
   name: string;
   email: string;
@@ -15,12 +21,13 @@ export interface ValidationResult {
   data?: ContactPayload;
 }
 
-const MAX_NAME = 100;
-const MAX_EMAIL = 254;
-const MAX_MESSAGE = 5000;
-// 厳密な RFC 準拠ではなく「空白なしの local@domain.tld」程度の存在チェック。
-// 過剰に弾くと正当な送信を取りこぼすため緩めに留める（最終判定は実送信時のエラーで担保）。
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// 欄ごとの判定は画面と共通（src/lib/contact-validation.ts）。ここではエラーコードに直す。
+// メールは長すぎても形式違いと同じ email_invalid にする（/api/contact の返り値を変えないため）。
+// invalid はメールにしか出ないので、残りは name_too_long のように欄名と問題をつなげる
+function issueCode(field: ContactField, issue: ContactFieldIssue): string {
+  if (field === "email" && issue !== "required") return "email_invalid";
+  return `${field}_${issue}`;
+}
 
 export function validateContactPayload(input: unknown): ValidationResult {
   if (typeof input !== "object" || input === null) {
@@ -32,15 +39,10 @@ export function validateContactPayload(input: unknown): ValidationResult {
   const message = typeof obj.message === "string" ? obj.message.trim() : "";
   const token = typeof obj.token === "string" ? obj.token : "";
 
-  const errors: string[] = [];
-  if (!name) errors.push("name_required");
-  else if (name.length > MAX_NAME) errors.push("name_too_long");
-  if (!email) errors.push("email_required");
-  else if (email.length > MAX_EMAIL || !EMAIL_RE.test(email)) {
-    errors.push("email_invalid");
-  }
-  if (!message) errors.push("message_required");
-  else if (message.length > MAX_MESSAGE) errors.push("message_too_long");
+  const issues = checkContactFields({ name, email, message });
+  const errors = (
+    Object.entries(issues) as [ContactField, ContactFieldIssue][]
+  ).map(([field, issue]) => issueCode(field, issue));
   if (!token) errors.push("token_required");
 
   if (errors.length > 0) return { ok: false, errors };

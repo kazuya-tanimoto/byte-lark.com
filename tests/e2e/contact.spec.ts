@@ -192,6 +192,37 @@ test.describe("Contact フォーム", () => {
     await expect(page.getByText("以下の内容で送信します")).toBeHidden();
   });
 
+  test("本文が上限超え：確認へ進めず、本文の欄に上限の字数が出る", async ({
+    page,
+  }) => {
+    await stubTurnstile(page, true);
+    let posted = false;
+    await page.route("**/api/contact", async (route) => {
+      posted = true;
+      await route.fulfill({ status: 200, body: "{}" });
+    });
+
+    await page.goto("/contact");
+    await waitHydrated(page);
+
+    await fillForm(page, {
+      name: "テスト",
+      email: "test@example.com",
+      message: "あ".repeat(5001),
+    });
+    await page.getByRole("button", { name: "確認する" }).click();
+
+    await expect(page.locator("#contact-message-error")).toHaveText(
+      "本文は 5000 字以内で入力してください。",
+    );
+    await expect(page.getByLabel("本文")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    await expect(page.getByText("以下の内容で送信します")).toBeHidden();
+    expect(posted).toBe(false);
+  });
+
   test("Turnstile 失敗時：トークン未取得だと送信が拒否される", async ({
     page,
   }) => {
