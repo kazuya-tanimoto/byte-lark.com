@@ -1,7 +1,8 @@
 # 訪問者は問い合わせの入力が長すぎることを送信前に知れる
 
-Status: InProgress
+Status: Done
 Started: 2026-10-01
+Completed: 2026-10-01
 
 ## 誰が
 
@@ -27,28 +28,28 @@ Started: 2026-10-01
 ## 受け入れ条件
 
 <!-- PBI 固有 -->
-- [ ] 入力チェックを 1 つのファイルにまとめ、`ContactForm.tsx` と `worker/contact.ts` の両方がそれを使う。
+- [x] 入力チェックを 1 つのファイルにまとめ、`ContactForm.tsx` と `worker/contact.ts` の両方がそれを使う。
       `EMAIL_RE` と上限の字数（100 / 254 / 5000）を定義している箇所が `src/` と `worker/` で 1 箇所だけになる
       （`git grep -n "EMAIL_RE =\|5000" -- src worker ':!*.test.ts'` で確認。テストは字数を直に書くので除く）
-- [ ] お名前 101 字で「確認へ進む」を押すと確認画面へ進まず、お名前の欄に
+- [x] お名前 101 字で「確認へ進む」を押すと確認画面へ進まず、お名前の欄に
       「お名前は 100 字以内で入力してください。」と出る。メールアドレス（255 字）・本文（5001 字）も同じ形で、
       それぞれ「254 字以内」「5000 字以内」と出る
-- [ ] 上限ちょうど（本文 5000 字）は確認画面へ進める
-- [ ] 前後の空白は字数に数えない（サーバーが前後の空白を除いてから数えている `worker/contact.ts:31-33` に合わせる）
-- [ ] 空欄とメール形式のエラー文は今と変えない（`ContactForm.tsx:138-142`）
-- [ ] サーバーの返すエラーコード（`name_too_long` / `message_too_long` / `email_invalid` など）と
+- [x] 上限ちょうど（本文 5000 字）は確認画面へ進める
+- [x] 前後の空白は字数に数えない（サーバーが前後の空白を除いてから数えている `worker/contact.ts:31-33` に合わせる）
+- [x] 空欄とメール形式のエラー文は今と変えない（`ContactForm.tsx:138-142`）
+- [x] サーバーの返すエラーコード（`name_too_long` / `message_too_long` / `email_invalid` など）と
       `/api/contact` の入出力は変えない。`worker/contact.test.ts` の `validateContactPayload` の既存ケースが
       中身を変えずに通る（import 先の変更だけは可）
-- [ ] Worker が共通化したファイルを読み込んでビルドできる：`wrangler.jsonc` の `main`（`worker/index.ts`）から
+- [x] Worker が共通化したファイルを読み込んでビルドできる：`wrangler.jsonc` の `main`（`worker/index.ts`）から
       相対パスで読み込み、wrangler のビルドが通ることを確かめる（確かめ方のコマンドは着手時に wrangler の公式 docs で確認し、
       実装ログに書く）。CF preview で実際に 1 回送信して届くことまでは求めない（送信先が本番の通知先のため）
-- [ ] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
+- [x] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
 <!-- 定型（削除禁止。該当しないものは [x] N/A（理由）） -->
-- [ ] テスト追加：共通化したチェックの unit（vitest。上限ちょうど・1 字超え・前後の空白・各エラー文）を新設し、
+- [x] テスト追加：共通化したチェックの unit（vitest。上限ちょうど・1 字超え・前後の空白・各エラー文）を新設し、
       `tests/e2e/contact.spec.ts` に「本文が上限を超えると確認へ進めず、欄にエラーが出る」を 1 件足す（README §4.6 ルール 9）
-- [ ] ローカル スクショ確認（desktop + mobile）：上限超過のエラーが出た状態の `/contact`（CLAUDE.md §7）
-- [ ] CF preview スクショ確認（branch alias URL）：同上（CLAUDE.md §7）
-- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
+- [x] ローカル スクショ確認（desktop + mobile）：上限超過のエラーが出た状態の `/contact`（CLAUDE.md §7）
+- [x] CF preview スクショ確認（branch alias URL）：同上（CLAUDE.md §7）
+- [x] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7）
 
 ## 技術メモ
 
@@ -81,3 +82,15 @@ Started: 2026-10-01
 - 出所：2026-09-30 のリファクタリング点検（PHASE1E-014 備考と同じ）
 
 ## 実装ログ（着手後に追記、中断時は必須）
+
+### 2026-10-01 セッション 1（コンテナ）
+- やったこと：`src/lib/contact-validation.ts` を新設。上限の字数・`EMAIL_RE`・欄ごとの判定（`checkContactFields`。返り値は欄ごとの `required` / `too_long` / `invalid`）と、画面用の文言への変換（`contactFieldMessages`）を置いた。文言も同じファイルに置いたのは、上限の数字を文言に埋めるのに定数を 1 箇所で済ませるためと、unit で文言まで確かめるため。Worker は `checkContactFields` だけを読み、エラーコードに直す（長すぎるメールは従来どおり `email_invalid`）
+- やったこと：`git grep -n "EMAIL_RE =\|5000" -- src worker ':!*.test.ts'` の結果は `src/lib/contact-validation.ts` の 2 行だけ
+- やったこと：テスト追加。`src/lib/contact-validation.test.ts`（9 件）、`worker/contact.test.ts` に「長すぎるメールは `email_invalid`」1 件（既存ケースは無変更）、`tests/e2e/contact.spec.ts` に「本文が上限超え」1 件。vitest 60 件・E2E 64 件（コンテナで `yarn test:e2e`）とも通過
+- Worker のビルド確認：wrangler 公式 docs（https://developers.cloudflare.com/workers/wrangler/commands/workers/ の `deploy`）で `--dry-run`（デプロイせずにまとめるだけ）と `--outdir`（まとめた成果物の出力先）を確認し、`yarn build` の後に `npx wrangler deploy --dry-run --outdir <一時ディレクトリ>` を実行（wrangler 4.145.0、exit 0、ログイン不要）。出力の `index.js` に `checkContactFields` が入り、画面用の文言（「字以内」）は入っていない（使わない export は落ちる）
+- スクショ：入力して撮る必要があるので、`@playwright/test` の chromium で入力 → 「確認する」→ フォームを撮る一時スクリプトを scratchpad に書いて撮った（repo には置かない）。ローカル（`yarn dev`）・CF preview（https://feat-contact-validation-shared-byte-lark.tanimoto-a49.workers.dev/contact ）とも desktop / mobile で 3 欄の上限エラーが出て確認画面へ進まないこと、上限ちょうど + 前後の空白で確認画面へ進むことを確認
+- CI：PR #124 で Quality Checks / UI Tests とも success
+- 学び：受け入れ条件の「確認へ進む」ボタンは、実際の文言が「確認する」。振る舞いの条件としてはそのまま満たしている
+- 想定外：コンテナで `yarn test:e2e` を叩いたら、Playwright の webServer（`yarn preview`）が「exited early」で止まった。Astro 6 の `astro preview` / `astro dev` は起動後に自分を裏へ回して（`--json` 付きの別プロセスで常駐し、`astro dev stop` で止める形）コマンド自体はすぐ終わるため、Playwright が終了と見なしたと推測。常駐した preview が 4321 で応答していたので、2 回目は `reuseExistingServer` で通った。CI（`CI=true`、reuse しない）は緑なので CI 側には影響なし。PHASE1D-012 のロックの件と同じ根の可能性があるが未調査
+- 想定外：CF preview のスクショは、和文が端末側の書体で描かれていた（ローカルは Noto Sans JP）。`yarn fonts:check` は「文字カバー OK」で、新しい文言の字はサブセットに入っている。初回読み込みで web フォントが間に合わなかっただけと推測（未確認）
+- 残タスク：マージ後に運営者が本番のフォームから 1 回送信し、info@byte-lark.com に届くことを確かめる（備考どおり。Done の条件ではない）
