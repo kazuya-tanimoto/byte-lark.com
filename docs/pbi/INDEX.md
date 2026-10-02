@@ -375,7 +375,7 @@ PHASE1D-009 (Phase 1d Retrospective Gate)
 | PHASE1E-015 | [contact-validation-shared](20261001-PHASE1E-015-contact-validation-shared.md) | Done |
 | PHASE1E-016 | [post-helpers-dedup](20261001-PHASE1E-016-post-helpers-dedup.md) | Done |
 | PHASE1E-017 | [toc-nav-career-dedup](20261001-PHASE1E-017-toc-nav-career-dedup.md) | Done |
-| PHASE1E-018 | [header-nav-aria-current](20261001-PHASE1E-018-header-nav-aria-current.md) | NotStarted |
+| PHASE1E-018 | [header-nav-aria-current](20261001-PHASE1E-018-header-nav-aria-current.md) | InProgress |
 
 ### 起票済み・起票予定
 

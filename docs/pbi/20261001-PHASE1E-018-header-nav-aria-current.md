@@ -1,6 +1,7 @@
 # 訪問者はスクリーンリーダーでもヘッダーのナビから今いるページを聞き取れる
 
-Status: NotStarted
+Status: InProgress
+Started: 2026-10-02
 
 ## 誰が
 
