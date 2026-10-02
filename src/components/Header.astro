@@ -1,5 +1,6 @@
 ---
 import Logo from "../assets/logo-badge.svg";
+import { navCurrent } from "../lib/nav";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -10,13 +11,14 @@ const navItems = [
   { href: "/contact", label: "Contact" },
 ];
 
-const currentPath = Astro.url.pathname;
-
-// 今いるページのリンクを色で示す。PC 用・スマホ用のナビで共通
-const stateClass = (href: string) =>
-  currentPath === href || (href !== "/" && currentPath.startsWith(href))
+// 今いるページのリンクを色と aria-current で示す。PC 用・スマホ用のナビで共通
+const links = navItems.map(({ href, label }) => {
+  const current = navCurrent(Astro.url.pathname, href);
+  const stateClass = current
     ? "bg-primary/10 text-hibari-sky-deep"
     : "text-muted-foreground hover:bg-muted hover:text-foreground";
+  return { href, label, current, stateClass };
+});
 ---
 
 <header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
@@ -27,13 +29,14 @@ const stateClass = (href: string) =>
     </a>
 
     <ul class="hidden gap-1 md:flex">
-      {navItems.map(({ href, label }) => (
+      {links.map(({ href, label, current, stateClass }) => (
         <li>
           <a
             href={href}
+            aria-current={current}
             class:list={[
               "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
-              stateClass(href),
+              stateClass,
             ]}
           >
             {label}
@@ -57,13 +60,14 @@ const stateClass = (href: string) =>
 
   <div class="hidden border-t border-border md:hidden" data-mobile-menu>
     <ul class="space-y-1 px-4 py-3">
-      {navItems.map(({ href, label }) => (
+      {links.map(({ href, label, current, stateClass }) => (
         <li>
           <a
             href={href}
+            aria-current={current}
             class:list={[
               "block rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
-              stateClass(href),
+              stateClass,
             ]}
           >
             {label}
