@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 /** 主要ページの path と、表示確認に使う h1 テキスト。 */
 const pages = [
@@ -59,6 +59,55 @@ test.describe("Header ナビゲーション", () => {
       .getByRole("link", { name: "byte-lark" })
       .click();
     await expect(page).toHaveURL(/\/$/);
+  });
+});
+
+// PHASE1E-018：今いるページを色だけでなく aria-current でも示す。
+// Header には PC 用・スマホ用の 2 つのリストがあるので、PC 幅で見たあと
+// スマホ幅でメニューを開き、見えている方のリストを読む
+test.describe("Header ナビの aria-current", () => {
+  /** 見えているナビのリストの、ラベルごとの aria-current（無ければ null） */
+  const readCurrent = (page: Page) =>
+    page
+      .getByRole("banner")
+      .getByRole("listitem")
+      .getByRole("link")
+      .locator("visible=true")
+      .evaluateAll((links) =>
+        links.map((a) => [
+          a.textContent?.trim(),
+          a.getAttribute("aria-current"),
+        ]),
+      );
+
+  const expectCurrent = async (
+    page: Page,
+    path: string,
+    expected: Record<string, string>,
+  ) => {
+    const all = ["Home", "About", "Career", "Skills", "Blog", "Contact"].map(
+      (label) => [label, expected[label] ?? null],
+    );
+    await page.goto(path);
+    expect(await readCurrent(page)).toEqual(all);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.getByRole("button", { name: "メニューを開く" }).click();
+    expect(await readCurrent(page)).toEqual(all);
+  };
+
+  test("/about では About だけが page になる", async ({ page }) => {
+    await expectCurrent(page, "/about", { About: "page" });
+  });
+
+  test("記事ページでは Blog だけが true になる", async ({ page }) => {
+    await expectCurrent(page, "/blog/building-this-blog-with-claude-code", {
+      Blog: "true",
+    });
+  });
+
+  test("ナビに無いページではどの項目にも付かない", async ({ page }) => {
+    await expectCurrent(page, "/privacy", {});
   });
 });
 
