@@ -16,7 +16,8 @@
     "new-post": "node --experimental-strip-types scripts/new-post.ts",
     "fonts": "astro build && node scripts/subset-fonts.mjs && astro build",
     "fonts:check": "node scripts/subset-fonts.mjs --check",
-    "posts:check": "node --experimental-strip-types scripts/check-draft-questions.ts"
+    "posts:check": "node --experimental-strip-types scripts/check-draft-questions.ts",
+    "audit:ignores": "node --experimental-strip-types scripts/check-audit-ignores.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.2",
