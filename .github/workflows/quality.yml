@@ -56,6 +56,17 @@ jobs:
       # feat/* に積み上げた依存は main マージまで誰も見ない状態だった。
       # ゲートは本番に入る依存の high 以上に絞る（dev 専用の勧告で赤くしない）。
       # 更新で直せない勧告が high で出た場合だけ --ignore に勧告 ID を理由付きで並べ、
-      # GitHub 側で dismiss した内容と 1 対 1 に保つ（現時点では該当なし）。
+      # GitHub 側で dismiss した内容と 1 対 1 に保つ。
+      # 除外中の勧告（scripts/check-audit-ignores.ts の表と 1 対 1 に保つ）:
+      # - 1240991 = GHSA-ch52-4w7c-c8xp（http-cache-semantics <=4.2.0、high）。2026-10-03 除外。
+      #   修正版がまだ無く、astro 7.3.5（最新）が ^4.2.0 に依存していて更新で直せない。
+      #   astro がこれを使うのは build 時のリモート画像の取得（astro/dist/assets/build/remote.js）
       - name: Audit dependencies
-        run: yarn npm audit --all --recursive --severity high --environment production
+        run: yarn npm audit --all --recursive --severity high --environment production --ignore 1240991
+      # 除外した勧告に修正版が出たら止める。--ignore は audit を黙って通すので、
+      # 外し忘れると古い版が残り続ける。勧告が取り下げられたときと、
+      # --ignore と表が食い違ったときも止まる
+      - name: Audit ignores
+        run: yarn audit:ignores
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
