@@ -88,7 +88,7 @@ Claude は回答を見て、浅い・具体性が足りない箇所に追加質�
 
 モデルは当面 Gemini Flash で試す（2026-09-21 運営者決定）。PHASE1E-013 で 4 つのモデル（Gemini Pro・Gemini Flash・Opus・Fable）を 3 回比べ、1 位は毎回別のモデルだった。構成から任せた回は Fable と Gemini Flash が上位で、運営者の評価は「甲乙つけ難い」だった。主力の確定ではない。確定したら Decision Log（`docs/site-plan-decisions.md`）に記録する。
 
-モデルの呼び出しは `scripts/draft-compare.sh` が行う。出力先・実行する場所・モデルに渡すオプション・文体の指示と見本の選び方はスクリプトが固定しているので、手順には書かない（理由はスクリプト冒頭のコメント）。
+モデルの呼び出しは、1 本を作るときは `~/.claude/bin/article-draft.sh`（dotfiles 管理。コンテナの起動時に写される）、4 つのモデルを比べるときは `scripts/draft-compare.sh` が行う。出力先・実行する場所・モデルに渡すオプション・文体の指示と見本の選び方はスクリプトが固定しているので、手順には書かない（理由は各スクリプト冒頭のコメント）。
 
 1. 雛形と frontmatter：今までどおり Claude が `yarn new-post --slug <slug>` で雛形を生成し、frontmatter を埋める（`draft: true`）
 2. 材料と依頼：Claude が §2〜§5 の結果から次の 2 つを作り、作業中の worktree の `docs/article-interviews/`（git 管理外）に置く。worktree にはこのフォルダが無いので作る
@@ -99,11 +99,11 @@ Claude は回答を見て、浅い・具体性が足りない箇所に追加質�
 3. 1 本を作る：worktree の root で次を実行する。Bash ツールの timeout は最大にする
 
    ```bash
-   bash scripts/draft-compare.sh --single gemini-flash <slug>
+   bash ~/.claude/bin/article-draft.sh <slug>
    ```
 
    - 本文は `<slug>.gemini-flash.md` にできる。`NG` と出たら理由を読んで同じコマンドでやり直す
-   - モデルを比べ直すときは `--single` を付けずに呼ぶ。4 つのモデルの本文と、モデル名を伏せた `<slug>.draft-A.md`〜`draft-D.md` ができる。対応表 `<slug>.mapping.txt` とモデル名の付いたファイルは、運営者が選ぶまで開かない。作り直すと前回の A〜D と対応表は消えるので、残したい回は先に別のフォルダへ写す
+   - モデルを比べ直すときは `bash scripts/draft-compare.sh <slug>` を呼ぶ。4 つのモデルの本文と、モデル名を伏せた `<slug>.draft-A.md`〜`draft-D.md` ができる。対応表 `<slug>.mapping.txt` とモデル名の付いたファイルは、運営者が選ぶまで開かない。作り直すと前回の A〜D と対応表は消えるので、残したい回は先に別のフォルダへ写す
 4. 長さを見る：コードブロック・表・frontmatter を除いた本文の字数を数え、profile.md の分量の既定と公開済みの記事に照らす。コンテナではロケールが設定できず `wc -m` がバイト数を返すので、Python の `len()` で数える（PHASE1E-013 でバイト数を字数として報告した実測）。材料の項目が本文にいくつ入ったかは数えない。全部入れるほど読みにくくなる
 5. 入れる：本文を雛形の frontmatter の下に入れる。【要写真】の行が無ければ Claude が足す
 6. 記録と片付け：かかった秒数（`<slug>.<モデル名>.seconds`）・字数・比べた回は運営者の選択と対応表を、記事 PBI の実装ログに残す。この節の決まりのうち、破ったもの・迷ったもの・読み飛ばしたものも同じ実装ログに書く。残したら、`docs/article-interviews/` の `<slug>.` で始まるファイルを、outline と notes を除いて消す。outline と notes は、手順 7 からのやり直しに使うので worktree を消すまで残す

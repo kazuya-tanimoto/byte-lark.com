@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 # 記事本文の初稿を 4 つのモデルに書かせ、モデル名を伏せた A〜D のコピーを作る
 # （docs/writing-workflow.md §6 の比較期間用）。
+# 比べずに 1 本だけ作るときは、このスクリプトではなく ~/.claude/bin/article-draft.sh（dotfiles 管理）を呼ぶ。
 #
-# 読んで守る決まりを減らすため、次のことをこのスクリプトが固定する。呼ぶ側は気にしなくてよい。
+# プロンプトの書き出し、Gemini の 2 本、出力を採用するかの判定は article-draft.sh に任せる。
+# このスクリプトが持つのは、Claude の 2 本を呼ぶことと、4 本を A〜D に並べることだけ。
+#
+# 読んで守る決まりを減らすため、次のことをスクリプトが固定する。呼ぶ側は気にしなくてよい。
 # - 出力先は docs/article-interviews/（git 管理外）。posts 以下に .md を置くと記事として
 #   読み込まれ、frontmatter が無いので yarn build が InvalidContentEntryDataError で止まる
-# - モデルは記事のフォルダから呼ぶ。agy は実行ディレクトリを索引するので repo 直下だと遅い
-# - 4 つのモデルに同じプロンプトを渡す。文体の指示として、natural-japanese スキルの執筆時の決まり
-#   （writing-constitution.md の 12 条）と docs/writing-style/*.md を、この順で入れる。12 条を書く段階で
+# - Claude の 2 本は記事のフォルダから呼ぶ（切り出す前と同じ場所）。Gemini の 2 本は article-draft.sh が
+#   空の一時フォルダから呼ぶ。agy は実行ディレクトリを索引するので repo 直下だと遅い
+# - 4 つのモデルに同じプロンプトを渡す。article-draft.sh が書き出した <slug>.prompt.md を、Claude の
+#   2 本にもそのまま読ませる。文体の指示は、natural-japanese スキルの執筆時の決まり
+#   （writing-constitution.md の 12 条）と docs/writing-style/*.md が、この順で入る。12 条を書く段階で
 #   渡すのは、スキル自身が「事後修正より生成時制約」を設計思想にしているため。12 条と食い違う箇所は
 #   profile.md を優先する（profile.md の冒頭に書いてある）
 # - claude -p のオプション。--setting-sources local と --system-prompt は、Claude Code の設定を
@@ -15,43 +21,41 @@
 #   足さない。足すと思考のトークンが 0 になり、Fable が考えた過程を本文の前に書く（2026-09-17 に 7 回中 7 回）
 # - 考える量。Claude の 2 本は --effort high（公式の既定と同じ段階）を明示する。環境変数
 #   CLAUDE_CODE_EFFORT_LEVEL は --effort より優先されるので外して呼ぶ（2026-09-19 に API への要求の中身で確認）。
-#   Gemini の 2 本は -high の版を使う。Pro には medium の版が無く、Flash と段階をそろえるため
+#   Gemini の 2 本は article-draft.sh が -high の版を使う。Pro には medium の版が無く、Flash と段階をそろえるため
 # - Claude の 2 本は、応答したモデルの名前を確かめる。頼んだモデルが JSON の modelUsage に無ければ失敗にする
 # - 前置きや考えた過程が入った出力は採用しない。記事は見出し無しの導入から始まるので（profile.md
-#   「構成の癖」）、1 行目が本文の文であること、本文に ## の見出しがあることの 2 つで見る
-# - 文体の見本として、公開済みの新しい記事 2 本を渡す。CLAUDE.md が執筆の直前に直近 1〜2 本を
-#   読み直すよう求めているのに合わせる（2026-09-20、見本を渡さないまま 4 本中 1 本が「だ・である」
-#   で書かれ、3 本が「導入に見出しが無い」で弾かれた）
+#   「構成の癖」）、1 行目が本文の文であること、本文に ## の見出しがあることの 2 つで見る。
+#   判定は article-draft.sh が持ち、Claude の 2 本にも --judge で同じものを当てる
+# - 文体の見本として、公開済みの新しい記事 2 本が渡る（選ぶのは article-draft.sh）。CLAUDE.md が執筆の
+#   直前に直近 1〜2 本を読み直すよう求めているのに合わせる（2026-09-20、見本を渡さないまま 4 本中
+#   1 本が「だ・である」で書かれ、3 本が「導入に見出しが無い」で弾かれた）
 # - 対応表（<slug>.mapping.txt）の中身は画面に出さない。運営者が選ぶまで開かない
 #
 # 前提: コンテナの中で、作業中の worktree から呼ぶ。agy と claude が PATH にあること。
-# natural-japanese プラグインが入っていること。
+# natural-japanese プラグインが入っていること。~/.claude/bin/article-draft.sh があること
+# （コンテナの起動時に dotfiles から写される）。
 # <slug>.outline.md と <slug>.notes.md を docs/article-interviews/ に置いておく。
+# article-draft.sh は <slug>/outline.md のフォルダ置きも読むが、このスクリプトは平置きだけを扱う。
 #
 # 使い方:
 #   bash scripts/draft-compare.sh <slug>                 4 本を作り、A〜D のコピーを作る
 #   bash scripts/draft-compare.sh --only <model> <slug>  1 本だけ作り直し、A〜D を作り直す
 #                                                        （model: gemini-pro | gemini-flash | opus | fable）
-#   bash scripts/draft-compare.sh --single <model> <slug> 1 つのモデルで 1 本だけ作って終える。A〜D と対応表は作らない
-#                                                        （比べずに 1 本で進める記事用。出力は <slug>.<model>.md）
 #   bash scripts/draft-compare.sh --dry-run <slug>       入力の確認とプロンプトの書き出しだけ行う
 #
 # 4 本で 10 分を超えることがあるので、Bash ツールから呼ぶときは timeout を最大にする。
 set -euo pipefail
 
 MODELS=(gemini-pro gemini-flash opus fable)
-GEMINI_DRAFT="${HOME}/.claude/bin/gemini-draft.sh"
-PLUGINS_JSON="${HOME}/.claude/plugins/installed_plugins.json"
+ARTICLE_DRAFT="${HOME}/.claude/bin/article-draft.sh"
 
 only=""
-single=""
 dry_run=0
 slug=""
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --only) only="$2"; shift 2 ;;
-    --single) single="$2"; shift 2 ;;
     --dry-run) dry_run=1; shift ;;
     -*) echo "ERROR: 不明なオプション: $1" >&2; exit 2 ;;
     *)
@@ -74,14 +78,6 @@ if [ -n "$only" ]; then
   esac
 fi
 
-if [ -n "$single" ]; then
-  [ -z "$only" ] || { echo "ERROR: --only と --single は同時に指定できない" >&2; exit 2; }
-  case " ${MODELS[*]} " in
-    *" $single "*) ;;
-    *) echo "ERROR: --single に指定できるのは ${MODELS[*]}" >&2; exit 2 ;;
-  esac
-fi
-
 root="$(git rev-parse --show-toplevel)"
 dir="$root/docs/article-interviews"
 post="$root/src/content/posts/$slug"
@@ -90,45 +86,31 @@ notes="$dir/$slug.notes.md"
 prompt="$dir/$slug.prompt.md"
 
 [ -d "$post" ] || { echo "ERROR: 記事のフォルダが無い: $post（先に yarn new-post）" >&2; exit 2; }
-for f in "$outline" "$notes" "$GEMINI_DRAFT"; do
+for f in "$outline" "$notes" "$ARTICLE_DRAFT"; do
   [ -f "$f" ] || { echo "ERROR: ファイルが無い: $f" >&2; exit 2; }
 done
+# article-draft.sh は <slug>/outline.md があるとフォルダ置きとして扱い、出力を <slug>/draft/ に書く。
+# このスクリプトは平置きの場所を読むので、両方あると食い違う
+[ ! -f "$dir/$slug/outline.md" ] || {
+  echo "ERROR: $dir/$slug/outline.md がある。このスクリプトは平置きだけを扱う" >&2; exit 2
+}
 for c in agy claude shuf jq; do
   command -v "$c" >/dev/null 2>&1 || { echo "ERROR: $c が PATH に無い" >&2; exit 1; }
 done
 
-# 版が上がるとフォルダ名が変わるので、入っている版のパスをプラグインの一覧から引く
-nj_root="$(jq -r '.plugins["natural-japanese@natural-japanese"][0].installPath // empty' "$PLUGINS_JSON" 2>/dev/null || true)"
-constitution="$nj_root/skills/natural-japanese/references/writing-constitution.md"
-[ -n "$nj_root" ] && [ -f "$constitution" ] || {
-  echo "ERROR: natural-japanese の 12 条が見つからない: ${nj_root:-（$PLUGINS_JSON に natural-japanese が無い）}" >&2
-  exit 2
-}
-
-# gemini-draft.sh は --style を 1 つでも渡すと docs/writing-style/*.md を自動で足さないので、ここで全部渡す
-styles=(--style "$constitution")
-while IFS= read -r f; do styles+=(--style "$f"); done < <(find "$root/docs/writing-style" -maxdepth 1 -name '*.md' | sort)
-
-# 文体の見本。CLAUDE.md は執筆の直前に直近 1〜2 本を読み直すよう求めているので、
-# 初稿を書く 4 モデルにも同じものを渡す。公開済み（draft: true でない）のうち新しい 2 本を選ぶ
-samples=()
-while IFS= read -r f; do samples+=(--sample "$f"); done < <(
-  for f in "$root"/src/content/posts/*/index.md; do
-    grep -q '^draft: true' "$f" && continue
-    printf '%s %s\n' "$(sed -n 's/^publishedAt: *//p' "$f" | head -n 1)" "$f"
-  done | sort -r | head -n 2 | cut -d' ' -f2-
-)
-if [ ${#samples[@]} -eq 0 ]; then
-  echo "ERROR: 文体の見本にする公開済みの記事が見つからない" >&2
-  exit 2
-fi
-
 cd "$post"
-bash "$GEMINI_DRAFT" --dry-run "${styles[@]}" "${samples[@]}" --notes "$notes" "$outline" > "$prompt"
+# プロンプトは article-draft.sh に書き出させる。1 本だけ作るときと同じ中身になる。
+# article-draft.sh の INFO は「対象: gemini-flash」と出るので、成功したときは出さずに言い直す
+rc=0
+msg="$(bash "$ARTICLE_DRAFT" --dry-run "$slug" 2>&1)" || rc=$?
+if [ "$rc" -ne 0 ]; then
+  echo "$msg" >&2
+  exit "$rc"
+fi
 echo "INFO: プロンプトを書き出した: $prompt（$(wc -c < "$prompt") バイト）" >&2
 
 if [ "$dry_run" -eq 1 ]; then
-  echo "INFO: --dry-run なのでモデルは呼ばない。対象: ${single:-${only:-${MODELS[*]}}}" >&2
+  echo "INFO: --dry-run なのでモデルは呼ばない。対象: ${only:-${MODELS[*]}}" >&2
   exit 0
 fi
 
@@ -152,12 +134,19 @@ run_claude() {
 
 # $1 = モデルの呼び名。失敗したら <slug>.<model>.failed を残す
 run_model() {
-  local name="$1" out="$dir/$slug.$1.md" failed="$dir/$slug.$1.failed" start rc=0
+  local name="$1" out="$dir/$slug.$1.md" failed="$dir/$slug.$1.failed" start rc=0 why=""
+  case "$name" in
+    gemini-pro|gemini-flash)
+      # 秒数と .failed は article-draft.sh が書く。OK／NG の行は下でまとめて出すので、ここでは出さない。
+      # 不採用でも 1 を返すので、ここで止めずに受ける。.failed を書く前に止まったときだけ、ここで書く
+      # （前回の本文が残っていると、作れていないのに OK に見えるため）
+      bash "$ARTICLE_DRAFT" --model "$name" "$slug" > /dev/null || rc=$?
+      [ "$rc" -eq 0 ] || [ -f "$failed" ] || echo "exit $rc" > "$failed"
+      return 0 ;;
+  esac
   rm -f "$failed"
   start=$(date +%s)
   case "$name" in
-    gemini-pro) bash "$GEMINI_DRAFT" --model gemini-3.1-pro-high "${styles[@]}" "${samples[@]}" --notes "$notes" --out "$out" "$outline" || rc=$? ;;
-    gemini-flash) bash "$GEMINI_DRAFT" --model gemini-3.8-flash-high "${styles[@]}" "${samples[@]}" --notes "$notes" --out "$out" "$outline" || rc=$? ;;
     opus) run_claude claude-opus-5 "$out" || rc=$? ;;
     fable) run_claude claude-fable-5-1 "$out" || rc=$? ;;
   esac
@@ -165,31 +154,9 @@ run_model() {
   if [ "$rc" -ne 0 ]; then
     echo "exit $rc" > "$failed"
   else
-    local why=""
-    if ! grep -q '^## ' "$out"; then
-      why="## の見出しが 1 つも無い"
-    elif head -n 1 "$out" | grep -qE '^[[:space:]]*$|^#|^```|^[-*][[:space:]]|^[0-9]+\.[[:space:]]'; then
-      why="1 行目が本文の文でない（題名・箇条書き・コードブロック・空行のいずれか）"
-    fi
-    if [ -n "$why" ]; then
-      mv "$out" "$out.rejected"
-      echo "$why。出力は $out.rejected" > "$failed"
-    fi
+    why="$(bash "$ARTICLE_DRAFT" --judge "$out")" || echo "$why" > "$failed"
   fi
 }
-
-# --single は 1 本だけ作って終える。比べないので A〜D と対応表は作らず、前回のものにも触らない
-if [ -n "$single" ]; then
-  run_model "$single"
-  secs="$(cat "$dir/$slug.$single.seconds")"
-  if [ -f "$dir/$slug.$single.failed" ]; then
-    echo "NG  $single ${secs}s: $(cat "$dir/$slug.$single.failed")"
-    exit 1
-  fi
-  echo "OK  $single ${secs}s"
-  echo "本文を作った: $dir/$slug.$single.md"
-  exit 0
-fi
 
 # agy は localhost に bind するので、Gemini の 2 本は同時に動かさない。Claude の 2 本とは並べる
 if [ -n "$only" ]; then
