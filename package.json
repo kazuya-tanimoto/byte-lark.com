@@ -20,35 +20,35 @@
     "audit:ignores": "node --experimental-strip-types scripts/check-audit-ignores.ts"
   },
   "dependencies": {
-    "@astrojs/mdx": "^8.0.3",
-    "@astrojs/react": "^7.0.0",
+    "@astrojs/mdx": "^8.1.0",
+    "@astrojs/react": "^7.1.0",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "astro": "^7.3.8",
+    "astro": "^7.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "radix-ui": "^1.7.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "@axe-core/playwright": "^4.13.0",
+    "@axe-core/playwright": "^4.14.0",
     "@biomejs/biome": "^2.5.15",
     "@playwright/test": "^1.64.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
-    "jsdom": "^30.1.2",
+    "jsdom": "^30.1.3",
     "lefthook": "^2.2.1",
     "shadcn": "^4.21.4",
     "subset-font": "^2.9.0",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.5"
   },
   "resolutions": {
     "stream-replace-string@npm:^2.0.0": "patch:stream-replace-string@npm%3A2.0.0#~/.yarn/patches/stream-replace-string-npm-2.0.0-2e7e10c117.patch",
