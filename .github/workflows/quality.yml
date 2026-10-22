@@ -26,6 +26,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      # CLAUDE.md は毎回のセッションで全文が読み込まれ、量が増えるほど決まりが守られにくくなる。
+      # 2026-10-22 に縮めた後の量に 2 割ほど足した値を上限にした（仮の値・根拠なし）。
+      # 文の数でなくバイト数で見るのは、文をつないで数を減らす抜け道が無いため
+      - name: CLAUDE.md size
+        run: |
+          n=$(wc -c < CLAUDE.md)
+          if [ "$n" -gt 5000 ]; then
+            echo "::error::CLAUDE.md が $n バイトで、上限 5000 を超えた。足すなら同じ分を削るかまとめ、作業のときだけ要る手順は docs や skill に移す"
+            exit 1
+          fi
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
