@@ -481,7 +481,7 @@ Phase 0 〜 1d は完了（2026-08-08 公開、1d Gate は 2026-08-10 通過）�
 3. 記事が 10 本に届いたらカテゴリ別一覧 + 前後記事リンクを Phase 1e に追加起票（FR-19）
 4. 記事 30 本以上で Phase 2（広告収益化）を起票
 
-PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.18 を参照。
+PBI フォーマット規約・状態管理・コミット規約・ブランチ運用は `docs/pbi/README.md` v3.19 を参照。
 PBI 全体の状態は `docs/pbi/INDEX.md` を参照。
 **運営者向け運用マニュアル**（シーン別フレーズ / リカバリー / トラブルシューティング）は `docs/operation-manual.md` を参照。
 
@@ -520,7 +520,7 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 
 | パターン | 想定箇所 | 確認コマンド |
 |---|---|---|
-| `v3.x` | site-plan.md タイトル / 改訂履歴（分割先 docs/site-plan-history.md）/ 自己参照 / §6.7 既存資産取扱表 / §12 次アクション / §14 自身の予防策説明 / **INDEX.md ロードマップ参照（line 74 周辺）** / **INDEX.md セッション開始時必須チェック注記** / **PHASE0-005 内 CLAUDE.md テンプレ（current: v3.x 行）** / **PHASE0-010 「計画書 v3.x と実態の差分」（line 30, 85 周辺）** / **operation-manual.md（v3.x 連動言及がある場合）** / **CLAUDE.md ヘッダー（v3.x 連動言及がある場合）** / **README.md の version（タイトル + v3.0 以降の改訂履歴）+ CLAUDE.md / site-plan §12 の README 参照 — README は v3.0 で v3.x 名前空間に移行したため本パターンで site-plan 自身の version と混在する。想定箇所列で「site-plan の version」と「README の version」を仕分けること** | `grep -rn "v3\." docs/ CLAUDE.md` |
+| `v3.x` | site-plan.md タイトル / 改訂履歴（分割先 docs/site-plan-history.md）/ 自己参照 / §6.7 既存資産取扱表 / §12 次アクション / §14 自身の予防策説明 / **INDEX.md ロードマップ参照（line 74 周辺）** / **INDEX.md セッション開始時必須チェック注記** / **PHASE0-005 内 CLAUDE.md テンプレ（current: v3.x 行）** / **PHASE0-010 「計画書 v3.x と実態の差分」（line 30, 85 周辺）** / **operation-manual.md（v3.x 連動言及がある場合）** / **CLAUDE.md Related Docs（v3.x 連動言及がある場合）** / **README.md の version（タイトル + v3.0 以降の改訂履歴）+ CLAUDE.md / site-plan §12 の README 参照 — README は v3.0 で v3.x 名前空間に移行したため本パターンで site-plan 自身の version と混在する。想定箇所列で「site-plan の version」と「README の version」を仕分けること** | `grep -rn "v3\." docs/ CLAUDE.md` |
 | `v2.x` | **過去事実の記録のみ**（v2.9 以前の README 改訂履歴行 / 各 Done PBI 内の当時の README 参照、例: PHASE0-005・PHASE0-002・PHASE1A-008）。**現行参照はもう v2.x に無い**（README は v3.0 で v3.x へ移行）→ grep ヒットは書き換えず歴史として残す | `grep -rn "v2\." docs/` |
 | PHASE0-NNN 件数 / 範囲 | INDEX.md 表 / §7 ロードマップ / §7 フロー図（`PHASE0-001〜<N>`） / §12 次アクション / PHASE0-009 受け入れ条件 / PHASE0-010 受け入れ条件 | `grep -rn "PHASE0-\|<件数> 件" docs/`（`<件数>` は実値、例：`10 件`）|
 | 新規 PBI 追加時のリンク | INDEX.md 表 + 推奨着手順序図 / 関連 PBI の依存表記 | INDEX.md および関連 PBI を Read |
@@ -528,8 +528,8 @@ site-plan / README / PBI のバージョンや件数を更新する時、以下�
 | writing-workflow.md 作成タイミング | site-plan §6.4 ディレクトリ構成 + §11 + R-01 リスク対応 | `grep -rn "writing-workflow" docs/` |
 | 法人化関連の表記 / Phase 名 | site-plan §13 + 関連 PBI（Phase 1e 以降） | `grep -rn "法人化\|byte-lark 株式会社" docs/` |
 | Phase 再編（v3.9）の読み替え | 現参照（§7 / FR / Decision / R / Q / CLAUDE.md / INDEX.md / ドラフト PBI）は新 Phase 名。**Done 済み PBI 内の旧表記は書き換えず**「旧 1b → 新 1c、旧 1c → 新 1e」と読む | `grep -rn "Phase 1[b-e]" docs/ CLAUDE.md` |
-| 運営者向けプロトコル変更（フレーズ / リカバリー / トラブルシューティング） | operation-manual.md + CLAUDE.md ヘッダー + INDEX.md 着手ルール | `grep -rn "operation-manual\|中断 signal\|セッション開始時の必須チェック" docs/ CLAUDE.md` |
-| ブランチ運用 / worktree / Phase ブランチ命名 | README.md §10 + operation-manual.md §1 §3 §4 + PHASE0-008（CF Pages filter）+ PHASE0-010（main マージ手順）+ CLAUDE.md ヘッダー | `grep -rn "feat/phase-\|worktree\|sub-branch\|merge --no-ff" docs/ CLAUDE.md` |
+| 運営者向けプロトコル変更（フレーズ / リカバリー / トラブルシューティング） | operation-manual.md + CLAUDE.md「PBI と PR」節 + INDEX.md 着手ルール | `grep -rn "operation-manual\|中断 signal\|セッション開始時の必須チェック" docs/ CLAUDE.md` |
+| ブランチ運用 / worktree / Phase ブランチ命名 | README.md §10 + operation-manual.md §1 §3 §4 + PHASE0-008（CF Pages filter）+ PHASE0-010（main マージ手順）+ CLAUDE.md「PBI と PR」節 | `grep -rn "feat/phase-\|worktree\|sub-branch\|merge --no-ff" docs/ CLAUDE.md` |
 | Cloudflare Pages branch filter 設定 | PHASE0-008 + operation-manual.md §3 + README §10.8 | `grep -rn "Branch Filter\|Custom branches\|Preview branch" docs/` |
 
 ### 運用ルール

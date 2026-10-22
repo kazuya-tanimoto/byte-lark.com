@@ -63,6 +63,6 @@ cd tools/imagegen
 
 ## 検証と既知の罠
 
-- CLAUDE.md §7 の検証ゲートを全て実施（ローカル + CF preview のデスクトップ/モバイル表示、CI green）
+- docs/pbi/README.md §5.9 の検証ゲートを全て実施（ローカル + CF preview のデスクトップ/モバイル表示、CI green）
 - カバー付き記事のパス変更（改名・フォルダ化）は CF ビルドキャッシュで ImageNotFound になる既知パターン。CF が赤になったら Clear Cache
 - サブディレクトリ起点のセッションは repo 本体への Bash 書き込み（git 含む）が sandbox で塞がれる。その場合は bash スクリプトを書き出して運営者ターミナルで実行してもらう

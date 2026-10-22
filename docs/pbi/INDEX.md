@@ -32,7 +32,7 @@
 
 **PBI 選択ロジック**（下の要約） + **着手・中断・完了の手順**（[docs/pbi/README.md](README.md) §5）の 2 つを組合せて完結します。
 
-PHASE0-005 完了後は `CLAUDE.md` の "How to start/end/draft" セクションに同等の protocol が inline で入り、SoT が CLAUDE.md に移行します（PHASE0-005 完了前は本ファイル + README §5 が SoT）。
+手順の正本は README §5（着手・中断・完了・検証ゲート）・§9（起票）・§10（ブランチと PR）です。CLAUDE.md には入口の要約だけを置きます（2026-10-22、README v3.19 で CLAUDE.md から一本化）。
 
 ### PBI 選択ロジック（要約）
 - InProgress な PBI が存在すれば、その実装ログを読んで再開
@@ -56,20 +56,20 @@ done
 
 # (2) 常設条件（README §4.6 ルール 7 / 9）：着手対象 PBI に検証 3 行 + テスト追加行が無い＝起票漏れ
 for f in $(grep -lE "^Status: (NotStarted|InProgress)" docs/pbi/*PHASE*.md); do
-  grep -q "スクショ確認" "$f" || echo "WARNING: §7 スクショ検証が受け入れ条件に無い（テンプレ常設漏れ）→ $f"
-  grep -q "ci-status" "$f"     || echo "WARNING: §7 E2E/CI 検証が受け入れ条件に無い（テンプレ常設漏れ）→ $f"
+  grep -q "スクショ確認" "$f" || echo "WARNING: §5.9 スクショ検証が受け入れ条件に無い（テンプレ常設漏れ）→ $f"
+  grep -q "ci-status" "$f"     || echo "WARNING: §5.9 E2E/CI 検証が受け入れ条件に無い（テンプレ常設漏れ）→ $f"
   grep -q "テスト追加" "$f"     || echo "WARNING: テスト追加が受け入れ条件に無い（README §4.6 ルール 9）→ $f"
 done
 
 # (3) 常設条件：Done なのに常設行が未 check [ ] のまま＝検証せず Done 化
 for f in $(grep -l "^Status: Done" docs/pbi/*PHASE*.md); do
-  grep -qE '^- \[ \].*スクショ確認' "$f" && echo "WARNING: §7 スクショ検証が未 check のまま Done → $f"
-  grep -qE '^- \[ \].*ci-status'   "$f" && echo "WARNING: §7 E2E/CI 検証が未 check のまま Done → $f"
+  grep -qE '^- \[ \].*スクショ確認' "$f" && echo "WARNING: §5.9 スクショ検証が未 check のまま Done → $f"
+  grep -qE '^- \[ \].*ci-status'   "$f" && echo "WARNING: §5.9 E2E/CI 検証が未 check のまま Done → $f"
   grep -qE '^- \[ \].*テスト追加'   "$f" && echo "WARNING: テスト追加が未 check のまま Done → $f"
 done
 ```
 
-(1) に該当があれば、運営者に「<該当 PBI> が InProgress ですが実装ログが空です。前回の状況を覚えていますか？」と確認してから再開する（運営者操作の詳細は [docs/operation-manual.md](../operation-manual.md) §2 参照）。(2)(3) に該当があれば、受け入れ条件に §7 検証 3 項目（ローカル / CF preview スクショ + E2E/CI green）とテスト追加（README §4.6 ルール 9）を追加（非該当なら `[x] …：N/A（理由）`）してから着手・完了する。
+(1) に該当があれば、運営者に「<該当 PBI> が InProgress ですが実装ログが空です。前回の状況を覚えていますか？」と確認してから再開する（運営者操作の詳細は [docs/operation-manual.md](../operation-manual.md) §2 参照）。(2)(3) に該当があれば、受け入れ条件に README §5.9 の検証 3 項目（ローカル / CF preview スクショ + E2E/CI green）とテスト追加（README §4.6 ルール 9）を追加（非該当なら `[x] …：N/A（理由）`）してから着手・完了する。
 
 ---
 

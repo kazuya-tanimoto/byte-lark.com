@@ -1,8 +1,8 @@
-# PBI フォーマット規約 (v3.18)
+# PBI フォーマット規約 (v3.19)
 
 本プロジェクト（byte-lark.com）の Product Backlog Item (PBI) はすべて本規約に従う。
 
-最終更新: 2026-10-02
+最終更新: 2026-10-22
 
 ---
 
@@ -58,9 +58,9 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 - [ ] エラー / エッジケース条件
 - [ ] `yarn build` / `yarn check` / `yarn check:ts` / `yarn test:run` がエラーなし
 - [ ] テスト追加：新しい振る舞いに E2E / unit を足す（§4.6 ルール 9。追加不要な PBI は `[x] …：N/A（理由）`）
-- [ ] ローカル スクショ確認（desktop + mobile）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
-- [ ] CF preview スクショ確認（branch alias URL）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
-- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（CLAUDE.md §7。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [ ] ローカル スクショ確認（desktop + mobile）（§5.9。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [ ] CF preview スクショ確認（branch alias URL）（§5.9。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（§5.9。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 
 ## 技術メモ（任意）
 - 関連ファイル / 配置先パス
@@ -121,7 +121,7 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 4. **自動検証可能な条件**は明示する（`yarn check:ts` がエラーなし、Lighthouse Accessibility 90+ 等）
 5. ユーザー操作可能な機能は Playwright で検証可能な粒度に書く
 6. 受け入れ条件の項目数は**網羅性の目安**（観測条件・エッジケース・自動検証を漏らさないための確認用）であって、PBI のサイズ基準ではない。サイズ判定は §7 のスコープ基準（触るファイル群 × 外部依存・概ね 1 セッション）で行う。項目が 20+ に膨らむ場合は分割を検討する合図
-7. **§7 検証ゲート（必須・常設）**：CLAUDE.md §7 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する。運営者の手作業（DNS・外部ダッシュボード操作）や preview で確認できない項目（SNS カード・本番 apex のヘッダ等）が条件に含まれるときは、誰が何で確認するかを条件の行に書く
+7. **検証ゲート（必須・常設）**：§5.9 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する。運営者の手作業（DNS・外部ダッシュボード操作）や preview で確認できない項目（SNS カード・本番 apex のヘッダ等）が条件に含まれるときは、誰が何で確認するかを条件の行に書く
 8. **Gate PBI の申し送り棚卸し（必須）**：Retrospective Gate PBI の受け入れ条件には「当該 Phase 全 PBI の実装ログにある申し送り・積み残しを項目単位で列挙し、各項目を **PBI 化（起票先を明記）/ 持ち越し（本 Gate の申し送りセクションに記載）/ 破棄（理由を明記）** のいずれかに判定する」を必ず置く。前 Gate から持ち越された未消化項目も同じ表に含めて再判定する（どの Phase にも属さない項目——例：ダークモード実表示検証——が Gate の網から漏れる経路を塞ぐ）。これにより次 Phase の起票者は全実装ログを再走査せず、直前 Gate の棚卸し表を一次資料にできる。「全ログを読む」だけでは項目が黙って落ちる余地があった（2026-08-01 の棚卸しで、実装ログ内にのみ存在する申し送り 7 件が grep で初めて可視化された経験を規約化）
 9. **テスト追加（必須・常設）**：受け入れ条件に「テスト追加」の行を必ず置く（テンプレ §3 に常設済み）。新しい振る舞い——UI 操作・分岐・データ変換・エンドポイント——を足す PBI は `tests/e2e/` か vitest に検証を足し、**追加・更新したテストファイル名を条件の行に書く**。既存テストが通る確認（`yarn test:run` がエラーなし）は別行で、**テスト追加の代わりにならない**（既存テストは新しい振る舞いを何も見ていない）。記事・docs のみの PBI や、運営者の外部操作だけの PBI は行を削除せず `[x] テスト追加：N/A（理由）` と明記する。INDEX.md のセッション開始チェックがこの行の有無と未 check 残りを機械検出する。（規約化の経緯：PHASE1E-010「記事内画像のクリック拡大」は新しい対話機能なのに受け入れ条件にテスト追加の行が無く、`tests/e2e/blog.spec.ts` への検証追加は実装時の判断で入っただけだった。テスト行がテンプレの「テスト・Lint・型チェック等の自動検証条件」という曖昧な 1 行しか無く、実際の PBI では `yarn test:run` がエラーなしに落ちて、テストを書いたかどうかが条件から消えていた）
 
@@ -187,14 +187,16 @@ PBI を更新する時は、必ず以下を**同一コミット内**で同期：
 
 ### 5.3 着手時の手順
 
+着手の前に、docs/site-plan.md で現在の Phase を、INDEX.md で PBI の状態を読み、INDEX.md の「PBI 選択ロジック」で PBI を選ぶ。InProgress の PBI があれば実装ログを先に読み、再開するのは引き継ぎが明示されているときだけ。どの PBI を進めるかは運営者の指示に従う。
+
 1. PBI 全文を読む
 2. **PBI 本文の前提を一次情報で確認**（コマンド、依存 version、ツール挙動、外部リソース、**および scaffold / migration / setup の "approach" 自体**）。乖離があれば実装に入る前に PBI ファイルを update して commit する（メッセージ例：`docs(pbi): correct PHASE0-NNN spec for ...`）。Don't Guess の PBI 着手時版。`yarn --version` / `<cli> --help` / `git ls-tree archive/...` 等で empirical 確認。**「approach 自体」も対象**とは：PBI が CLI A を使うと書いていても、CLI A の公式 docs に該当 use case が無い／別 path（例：Manual Setup 節）を案内している場合は、コマンドや version だけでなく approach そのものを書き換える（PHASE0-002 セッション 1 で `yarn create astro@latest .` が既存 repo 後付けに非対応で、Astro 公式 Manual Setup 節への切替が必要だった経験を規約化）
 3. PBI の Status を `InProgress` に変更、Started に今日の日付追記
 4. INDEX.md の該当エントリを `[InProgress]` に更新
 5. 実装する
-6. 完了：受け入れ条件全 check → Status: Done + Completed 追記 → INDEX.md 同期
+6. 完了：§5.9 の検証ゲートを通し、受け入れ条件全 check → Status: Done + Completed 追記 → INDEX.md 同期
 7. コミット（後述のメッセージ規約に従う）
-8. push → **§10.6 に従い main へマージまで実行する**（`gh pr ready` → `gh pr merge --merge` → `git branch -d <type>/<short>`）。コミットで完了フローは終わらない。マージ＝本番公開だが、§7 検証ゲート通過が公開判断そのものであり、マージだけを運営者判断に委ねない（委ねてフロー違反となった実例：PHASE1E-004）
+8. push → **§10.6 に従い main へマージまで実行する**（`gh pr ready` → `gh pr merge --merge` → `git branch -d <type>/<short>`）。コミットで完了フローは終わらない。マージ＝本番公開だが、§5.9 の検証ゲート通過が公開判断そのものであり、マージだけを運営者判断に委ねない（委ねてフロー違反となった実例：PHASE1E-004）
 9. マージ後、サイトに出る変更（記事・UI）があれば**本番で表示を確かめて運営者に報告する**（§10.6）。Done の条件ではない：Done は 6 で CF preview（本番と同じビルド）までの確認で確定しており、本番で見るのは反映されたかどうかだけ
 
 ### 5.4 中断時の手順
@@ -244,6 +246,30 @@ done
 
 該当ファイルは前セッションの記入漏れの可能性。再開前に状況を git log や運営者ヒアリングで確認する。
 
+### 5.9 Done 前の検証ゲート
+
+PBI を Done にする前に、以下を**すべて**実施して結果を出す（v3.19 で CLAUDE.md から移した。それまでの PBI や記録にある「CLAUDE.md §7」はここを指す）。スクショ 2 種は UI/フロントエンド変更がある場合、テスト追加は振る舞いが変わる場合に必須。非該当なら受け入れ条件に `N/A（理由）` を書く（§4.6 ルール 7 / 9）。
+
+- **ローカル検証**：`yarn dev` を起動し、スクリーンショットで確認する（デスクトップ + モバイル幅）。母艦は MCP Playwright、コンテナは `scripts/capture-screenshots.mjs`
+- **CF preview 検証**：push 後に CF の branch alias URL を開いてスクリーンショットで確認する
+  - branch alias URL は作業ブランチ名から決まる：`https://<ブランチ名の / と英数字以外を - に置換>-byte-lark.tanimoto-a49.workers.dev`（例：`fix/rss-alternate` → `https://fix-rss-alternate-byte-lark.tanimoto-a49.workers.dev`。§10.8）
+  - version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行にある
+- **E2E / CI 検証**：E2E スイート（`tests/e2e/`）は母艦の Bash サンドボックスでは Chromium が起動できない（Mach port 権限拒否）ので、母艦では `yarn test:e2e` を叩かず、CI（`.github/workflows/ui-tests.yml`）の結果で見る。CI は draft PR が無いと 1 度も走らない（§10.4）。`bash ~/.claude/bin/ci-status.sh`（完了まで待つなら `--wait`）で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確かめる（緑になるまで Done 不可）。直すときは同じブランチに push し直す（PR を作り直さない）
+- **テスト追加**：新しい振る舞いを足したなら `tests/e2e/` か vitest に検証を足す（§4.6 ルール 9）。既存テストが通ることは追加の代わりにならない。UI 変更が無くても、振る舞いが変われば対象
+
+検証報告の型：
+
+```
+## 検証報告
+- テスト追加: （追加・更新した spec ファイルと件数 / 不要なら N/A の理由）
+- ローカル確認: （dev server で確認した内容）
+- CF preview 確認: （作業ブランチの branch alias URL）（スクリーンショットまたは観察事実）
+- E2E/CI 確認: `~/.claude/bin/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
+- 未検証項目: （あれば正直に書く）
+```
+
+`.claude/settings.json` の Stop hook が、Done を宣言したターンにこの 4 工程が済んでいるかを検査する。
+
 ## 6. コミットメッセージ規約
 
 PBI 関連のコミットは以下の prefix を使う：
@@ -278,7 +304,7 @@ PBI を作るのが既定で、PBI なしで済ませてよいのは次の作業
 - 記事やページの文言の typo 修正
 - ローカル開発環境の個人設定
 
-サイトの出力に関わるファイル（`src/`・`worker/`・`public/`・`astro.config.mjs`・`wrangler.jsonc`）を変える作業と、依存の追加・削除は、1 行の修正でも PBI を作る。§7 の検証（スクショ・CI・テスト追加）を PBI の受け入れ条件で必ず通すため。
+サイトの出力に関わるファイル（`src/`・`worker/`・`public/`・`astro.config.mjs`・`wrangler.jsonc`）を変える作業と、依存の追加・削除は、1 行の修正でも PBI を作る。§5.9 の検証ゲート（スクショ・CI・テスト追加）を PBI の受け入れ条件で必ず通すため。
 
 PBI なしで済ませる作業も、短命ブランチ → PR → CI 緑 → マージの流れ（§10.3〜§10.6）は変わらない。
 
@@ -344,12 +370,12 @@ git checkout -b <type>/<short>
 ```
 
 - PBI 1 件につき 1 ブランチが基本。docs だけの小さな修正も同じ形（main は直接 push できない）
-- ブランチ名は CF の branch alias URL になる（`/` と英数字以外は `-` に置換）。preview ビルドはブランチ名を問わず走る（PR #34 の `chore/article-ideas-2026-08` で実測）ので、§7 の CF preview 検証はどの名前でも成立する
+- ブランチ名は CF の branch alias URL になる（`/` と英数字以外は `-` に置換）。preview ビルドはブランチ名を問わず走る（PR #34 の `chore/article-ideas-2026-08` で実測）ので、§5.9 の CF preview 検証はどの名前でも成立する
 - 並行作業は別名 clone の別作業ツリーで（§9 並行運用）。同一作業ツリーの 2 セッション同時作業は禁止
 
 ### 10.4 PBI 着手時
 
-§10.3 で切ったブランチで作業し、commit / push する（sub-branch・worktree は使わない）。**最初の push の直後に draft PR を作る**。
+§10.3 で切ったブランチで作業し、commit / push する（sub-branch は使わない。worktree は母艦では使わず、コンテナではグローバル CLAUDE.md のとおり EnterWorktree で入る）。**最初の push の直後に draft PR を作る**。
 
 ```bash
 git add <files>
@@ -360,7 +386,9 @@ git push -u origin <type>/<short>
 gh pr create --draft --base main --head <type>/<short> --title "<title>" --body "<body>"
 ```
 
-CI（`quality` / `e2e`）は短命ブランチへの push では走らず、**PR がある状態でのみ走る**（`.github/workflows/*.yml` の trigger。PHASE1E-002）。draft PR を先に作っておくことで、CI と CF の preview ビルドが同時に始まり、§7 の検証を待たせずに済む。draft のあいだは GitHub がマージを止めるので、緑になった瞬間の誤マージも防げる。
+CI（`quality` / `e2e`）は短命ブランチへの push では走らず、**PR がある状態でのみ走る**（`.github/workflows/*.yml` の trigger。PHASE1E-002）。draft PR を先に作っておくことで、CI と CF の preview ビルドが同時に始まり、§5.9 の検証を待たせずに済む。draft のあいだは GitHub がマージを止めるので、緑になった瞬間の誤マージも防げる。
+
+**push のたびに `bash ~/.claude/bin/ci-status.sh --wait` で結果を確かめ、赤なら次の工程より先に原因を特定して報告する**。§5.9（Done 直前）の確認だけでは遅い。audit のように commit の中身と関係なく新しい勧告で落ちる検査があり、放置すると失敗が積もってから見つかる。
 
 修正が要る場合も**同じブランチに push し直すだけ**でよい。PR の head が動いて CI と preview が再実行される。PR を閉じて作り直すのは、作業自体を取りやめるときだけ。branch alias URL はブランチ名から決まるので、やり直しても preview の URL は変わらない。
 
@@ -385,7 +413,7 @@ main は ruleset で保護されており **直接 push できない**（§10.9�
 # 最後の push（Done 化した PBI と INDEX.md を含む）
 git push origin <type>/<short>
 
-# CI green + §7 の検証が済んでから draft を外す → マージ
+# CI green + §5.9 の検証が済んでから draft を外す → マージ
 gh pr ready
 gh pr merge --merge   # merge commit を残す（--no-ff 相当）
 
@@ -400,7 +428,7 @@ git branch -d <type>/<short>
 - `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash ~/.claude/bin/ci-status.sh`（`--wait` で完了待ち）で確認してから実行する
 - **`--delete-branch` は付けない**。head ブランチのリモート削除は repo 設定「Automatically delete head branches」に任せている（Settings → General → Pull Requests。`gh api repos/kazuya-tanimoto/byte-lark.com --jq .delete_branch_on_merge` で確認できる）。`--delete-branch` はローカルも消そうとするため、worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まる。GitHub 側のマージは成功するがリモート削除まで到達せず、壊れ方がメイン作業ツリーの HEAD 状態に依存して非決定的になる
 - ローカルブランチは merge 後に自分で消す。worktree を消しても残るため、1 PR ごとに溜まる。`-d` はマージ済みでないと拒否するので `-D` は使わない
-- draft のままではマージできない。`gh pr ready` は「§7 の検証を全部終えた」という宣言として使う
+- draft のままではマージできない。`gh pr ready` は「§5.9 の検証を全部終えた」という宣言として使う
 - コンテナから実行する場合、PAT に Pull requests: Read and write が必要（PHASE1D-011 で付与済み）
 - **main へのマージ＝ byte-lark.com への公開**。マージした時点で本番が入れ替わる
 
@@ -423,7 +451,7 @@ git push --force-with-lease origin <type>/<short>
 
 ### 10.8 Cloudflare の preview ビルド
 
-preview ビルドは**ブランチ名を問わず走る**（PR #34 の `chore/article-ideas-2026-08` の check-run `Workers Builds: byte-lark` が success であることを 2026-08-10 に実測）。branch alias URL はブランチ名の `/` と英数字以外を `-` に置換したもので、`https://<alias>-byte-lark.tanimoto-a49.workers.dev` になる。§7 の CF preview 検証はどのブランチ名でも成立する。
+preview ビルドは**ブランチ名を問わず走る**（PR #34 の `chore/article-ideas-2026-08` の check-run `Workers Builds: byte-lark` が success であることを 2026-08-10 に実測）。branch alias URL はブランチ名の `/` と英数字以外を `-` に置換したもので、`https://<alias>-byte-lark.tanimoto-a49.workers.dev` になる。§5.9 の CF preview 検証はどのブランチ名でも成立する。
 
 Deploy Hooks は Worker の Settings → Build に「main manual rebuild」（対象ブランチ main）が 1 本だけある（PHASE1D-004）。CF 側が push を取りこぼしたとき、コードを変えずに URL を 1 回叩いて本番を焼き直すための保険。`feat/phase-1` 向けの 1 本（PHASE1C-012）は、統合ブランチを畳んだのに合わせて 2026-08-11 に削除した。短命ブランチは push のたびに preview ビルドが走るので、ブランチ別の hook は要らない。URL は認証ヘッダー不要で識別子そのものが鍵のため Bitwarden 保管とし、repo・PBI・ログには書かない。
 
@@ -479,3 +507,4 @@ main は GitHub の ruleset「main protection」で保護している（2026-08-
 | 2026-09-04 | v3.16 | `feat/phase-0` をリモートから削除し（`c12e0d3`）、§10.1 のブランチ階層を実在するブランチだけに整理。v3.15 で「歴史の目印として残す」と書いたが、`archive/*` と違って参照手順がどこにも無く、中身は main の履歴にあるため残す理由が無い。`feat/phase-1` はすでにリモートに無いのに階層図へ残っており、図が実態とずれていた。残すのは `archive/*` だけと §10.2 に明記。経緯は §10.6 の歴史節に残る |
 | 2026-10-01 | v3.17 | マージ後の本番の表示確認を手順に追加（§5.3 の 9、§10.6）：記事・UI の変更は、マージ後に本番で表示を確かめて運営者に報告する。Done の条件にはしない——Done はマージ前のコミットで CF preview（本番と同じビルド）までの確認で確定しており、本番で見るのは反映されたかどうかだけ。結果も PBI には書かない（書くと PR がもう 1 本要る）。これまでは本番確認がどこにも書かれておらず、PHASE1E-013（PR #106）のマージ後に「本番確認が Done の条件か」「結果を PBI に書くか」で迷った。CLAUDE.md 手順 8 / operation-manual §1 も連動更新 |
 | 2026-10-02 | v3.18 | §8 PBI を書かない場合を、実際の運用に合わせて書き直した：これまでは typo・依存の更新・個人設定の 3 つだけだったが、2026-08 中旬以降、docs・執筆ルール・hook・devcontainer・脆弱性対応などの PR が 25 本ほど PBI なしでマージされていた。PBI を作るのを既定にしたまま、PBI なしでよいのを「サイトの出力に関わるファイルに触らない作業」に広げた。サイトの出力に関わるファイルを変える作業は 1 行でも PBI を作る（例：PR #116 は表示を変えたのに PBI なしで出ていた）。「1 セッションで終わる作業は PBI なし」という線引きは採らなかった——§7 で PBI 自体を 1 セッションの大きさに分けているので、ほぼすべてが PBI なしになる（運営者指摘）。CLAUDE.md / site-plan の版の参照も連動更新 |
+| 2026-10-22 | v3.19 | CLAUDE.md を毎回要る判断だけに縮めた（123 文 → 31 文）のに合わせ、CLAUDE.md にしか無かった手順をここへ移した：Done 前の検証ゲートと検証報告の型を §5.9 に新設（旧 CLAUDE.md §7。§3 テンプレ・§4.6 ルール 7・§8・§10 の参照を §5.9 に付け替え）、着手前に site-plan と INDEX を読んで PBI を選ぶ手順を §5.3 冒頭に、push のたびの ci-status 確認を §10.4 に追加 |
