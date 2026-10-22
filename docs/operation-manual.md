@@ -4,7 +4,7 @@
 
 本ファイルは byte-lark.com プロジェクトの**運営者（人間ユーザー）向け運用マニュアル**です。Claude Code との多セッション運用において、運営者が「何を / いつ / どう言えばいいか」をまとめます。
 
-Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（PHASE0-005 完了後）に書かれているので、本ファイルは**運営者が主語の操作のみ**を扱います。
+Claude 側のプロトコル本体は `docs/pbi/README.md` §5・§9・§10 に書かれている（CLAUDE.md は入口の要約だけ。2026-10-22 から）ので、本ファイルは**運営者が主語の操作のみ**を扱います。
 
 ---
 
@@ -25,7 +25,7 @@ Claude 側のプロトコル本体は `docs/pbi/README.md` §5 と CLAUDE.md（P
 
 セッションを no-warning で閉じてしまった場合：
 
-1. 次セッション開始時、CLAUDE.md ヘッダー / INDEX.md 着手ルールの指示に従い、Claude が **README §5.8 の検出スクリプトを必ず実行**する（v3.6 から必須化）
+1. 次セッション開始時、INDEX.md「セッション開始時の必須チェック」に従い、Claude が **README §5.8 の検出スクリプトを必ず実行**する（v3.6 から必須化）
 2. InProgress なのに実装ログが空の PBI が検出されると、Claude が `WARNING: 実装ログ entry 無し → <PBI ファイル>` と報告
 3. Claude が「PHASE0-NNN が InProgress ですが実装ログが空です。前回の状況を覚えていますか？」と運営者に確認
 4. 運営者が記憶を頼りに状況説明 → Claude が実装ログを補完して再開
@@ -97,7 +97,7 @@ Claude Code をコンテナ内で全権限自走させるための環境（PHASE
 
 - 「`devcontainer up` が success ＝ firewall 有効」ではない（firewall 初期化が失敗してもコンテナは走り続け、次回 up は既存コンテナ検出だけで success を返す）。ccd は claude 起動前に firewall チェックを行い、コンテナ内から example.com に到達できたら起動を拒否する。`devcontainer exec` を直接使うときは `curl -m 5 https://example.com` が**失敗する**ことを確認してから自走させる
 - `.devcontainer/init-firewall.sh` 等イメージ焼き込みのファイルを修正したら、`ccd --rebuild`（= `devcontainer up --workspace-folder . --remove-existing-container`）で再ビルドしないと反映されない
-- PAT は fine-grained（この repo 限定 / Contents read+write / 無期限運用）。GitHub の fine-grained PAT 一覧で last used を時々確認し、使わなくなったら失効させる
+- PAT は fine-grained（この repo 限定 / Contents read+write と Pull requests read+write（PHASE1D-011）/ 無期限運用）。GitHub の fine-grained PAT 一覧で last used を時々確認し、使わなくなったら失効させる
 - コンテナから母艦の設定（`~/dotfiles`、`~/.claude` 等）への書き戻しは禁止。グローバル CLAUDE.md は read-only mount からのコピー持ち込みのみ、コンテナ内の Claude 設定は volume 内に閉じる
 
 ## 6. サイト監視（health-check.sh）の設置と運用
@@ -260,7 +260,7 @@ Claude に「月次ネタ出しルーチンの頻度を変えて」「プロン�
 | `docs/devcontainer-plan.md` | devcontainer 環境の設計・実施手順（PHASE1B-016） | Claude / 運営者 |
 | `docs/incident-response.md` | 監視の方針・インシデント初動フロー・ケース別手順 | 運営者 |
 | **本ファイル** | **運営者向け運用マニュアル** | **運営者** |
-| `CLAUDE.md` | プロジェクト規約 + 多セッション運用プロトコル（PHASE0-005 で全面書き換え） | Claude |
+| `CLAUDE.md` | プロジェクト規約の要約（毎回読まれる。手順の本体は `docs/pbi/README.md`。2026-10-22 に縮小） | Claude |
 
 ## 10. 改訂履歴
 

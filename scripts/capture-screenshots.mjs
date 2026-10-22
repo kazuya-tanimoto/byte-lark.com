@@ -1,5 +1,5 @@
 // 主要ページのスクリーンショットをデスクトップ幅とモバイル幅で撮る。用途は 2 つ。
-// 1. コンテナ内セッションのローカル / CF preview スクショ確認（CLAUDE.md §7）。
+// 1. コンテナ内セッションのローカル / CF preview スクショ確認（docs/pbi/README.md §5.9）。
 //    コンテナには MCP Playwright が無いので、コンテナ内の headless Chromium で撮り、
 //    出力画像を Read で確認する（PHASE1E-001 以降の運用）。
 // 2. CI（.github/workflows/ui-tests.yml）から実行して成果物として持ち出す逃げ道。
