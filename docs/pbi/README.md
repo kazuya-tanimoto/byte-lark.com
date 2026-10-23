@@ -60,7 +60,7 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 - [ ] テスト追加：新しい振る舞いに E2E / unit を足す（§4.6 ルール 9。追加不要な PBI は `[x] …：N/A（理由）`）
 - [ ] ローカル スクショ確認（desktop + mobile）（§5.9。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 - [ ] CF preview スクショ確認（branch alias URL）（§5.9。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
-- [ ] E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）（§5.9。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
+- [ ] E2E / CI green 確認（push 後 `ci-status.sh` で UI Tests=success）（§5.9。UI/フロントエンド変更が無い PBI は `[x] …：N/A（理由）`）
 
 ## 技術メモ（任意）
 - 関連ファイル / 配置先パス
@@ -121,7 +121,7 @@ Completed: YYYY-MM-DD   ← Done 化時に追記
 4. **自動検証可能な条件**は明示する（`yarn check:ts` がエラーなし、Lighthouse Accessibility 90+ 等）
 5. ユーザー操作可能な機能は Playwright で検証可能な粒度に書く
 6. 受け入れ条件の項目数は**網羅性の目安**（観測条件・エッジケース・自動検証を漏らさないための確認用）であって、PBI のサイズ基準ではない。サイズ判定は §7 のスコープ基準（触るファイル群 × 外部依存・概ね 1 セッション）で行う。項目が 20+ に膨らむ場合は分割を検討する合図
-7. **検証ゲート（必須・常設）**：§5.9 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `bash ~/.claude/bin/ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する。運営者の手作業（DNS・外部ダッシュボード操作）や preview で確認できない項目（SNS カード・本番 apex のヘッダ等）が条件に含まれるときは、誰が何で確認するかを条件の行に書く
+7. **検証ゲート（必須・常設）**：§5.9 の ① ローカル スクショ確認（desktop + mobile）② CF preview スクショ確認（branch alias URL）③ E2E / CI green 確認（push 後 `ci-status.sh` で UI Tests=success）の 3 項目を、**全 PBI の受け入れ条件に必ず置く**（テンプレ §3 に常設済み）。UI/フロントエンド変更を伴う PBI は実検証で check、**変更が無い PBI は項目を削除せず `[x] …：N/A（理由）` と明記**（黙って欠落させない）。E2E スイートは Bash サンドボックスで Chromium 起動不可のため `yarn test:e2e` をローカル実行せず、push 後に CI（`.github/workflows/ui-tests.yml`、ubuntu コンテナ）で検証する。UI 変更を伴う PBI は CF preview 確認 + CI green まで完了して初めて Done。INDEX.md のセッション開始チェックがこの 3 行の有無と未 check 残りを機械検出する。運営者の手作業（DNS・外部ダッシュボード操作）や preview で確認できない項目（SNS カード・本番 apex のヘッダ等）が条件に含まれるときは、誰が何で確認するかを条件の行に書く
 8. **Gate PBI の申し送り棚卸し（必須）**：Retrospective Gate PBI の受け入れ条件には「当該 Phase 全 PBI の実装ログにある申し送り・積み残しを項目単位で列挙し、各項目を **PBI 化（起票先を明記）/ 持ち越し（本 Gate の申し送りセクションに記載）/ 破棄（理由を明記）** のいずれかに判定する」を必ず置く。前 Gate から持ち越された未消化項目も同じ表に含めて再判定する（どの Phase にも属さない項目——例：ダークモード実表示検証——が Gate の網から漏れる経路を塞ぐ）。これにより次 Phase の起票者は全実装ログを再走査せず、直前 Gate の棚卸し表を一次資料にできる。「全ログを読む」だけでは項目が黙って落ちる余地があった（2026-08-01 の棚卸しで、実装ログ内にのみ存在する申し送り 7 件が grep で初めて可視化された経験を規約化）
 9. **テスト追加（必須・常設）**：受け入れ条件に「テスト追加」の行を必ず置く（テンプレ §3 に常設済み）。新しい振る舞い——UI 操作・分岐・データ変換・エンドポイント——を足す PBI は `tests/e2e/` か vitest に検証を足し、**追加・更新したテストファイル名を条件の行に書く**。既存テストが通る確認（`yarn test:run` がエラーなし）は別行で、**テスト追加の代わりにならない**（既存テストは新しい振る舞いを何も見ていない）。記事・docs のみの PBI や、運営者の外部操作だけの PBI は行を削除せず `[x] テスト追加：N/A（理由）` と明記する。INDEX.md のセッション開始チェックがこの行の有無と未 check 残りを機械検出する。（規約化の経緯：PHASE1E-010「記事内画像のクリック拡大」は新しい対話機能なのに受け入れ条件にテスト追加の行が無く、`tests/e2e/blog.spec.ts` への検証追加は実装時の判断で入っただけだった。テスト行がテンプレの「テスト・Lint・型チェック等の自動検証条件」という曖昧な 1 行しか無く、実際の PBI では `yarn test:run` がエラーなしに落ちて、テストを書いたかどうかが条件から消えていた）
 
@@ -254,7 +254,7 @@ PBI を Done にする前に、以下を**すべて**実施して結果を出す
 - **CF preview 検証**：push 後に CF の branch alias URL を開いてスクリーンショットで確認する
   - branch alias URL は作業ブランチ名から決まる：`https://<ブランチ名の / と英数字以外を - に置換>-byte-lark.tanimoto-a49.workers.dev`（例：`fix/rss-alternate` → `https://fix-rss-alternate-byte-lark.tanimoto-a49.workers.dev`。§10.8）
   - version ごとの URL は CF ビルドログ末尾の `Version Preview URL:` 行にある
-- **E2E / CI 検証**：E2E スイート（`tests/e2e/`）は母艦の Bash サンドボックスでは Chromium が起動できない（Mach port 権限拒否）ので、母艦では `yarn test:e2e` を叩かず、CI（`.github/workflows/ui-tests.yml`）の結果で見る。CI は draft PR が無いと 1 度も走らない（§10.4）。`bash ~/.claude/bin/ci-status.sh`（完了まで待つなら `--wait`）で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確かめる（緑になるまで Done 不可）。直すときは同じブランチに push し直す（PR を作り直さない）
+- **E2E / CI 検証**：E2E スイート（`tests/e2e/`）は母艦の Bash サンドボックスでは Chromium が起動できない（Mach port 権限拒否）ので、母艦では `yarn test:e2e` を叩かず、CI（`.github/workflows/ui-tests.yml`）の結果で見る。CI は draft PR が無いと 1 度も走らない（§10.4）。`ci-status.sh`（完了まで待つなら `--wait`）で `UI Tests`(e2e) と `Quality Checks` が `success` になったことを確かめる（緑になるまで Done 不可）。直すときは同じブランチに push し直す（PR を作り直さない）
 - **テスト追加**：新しい振る舞いを足したなら `tests/e2e/` か vitest に検証を足す（§4.6 ルール 9）。既存テストが通ることは追加の代わりにならない。UI 変更が無くても、振る舞いが変われば対象
 
 検証報告の型：
@@ -264,7 +264,7 @@ PBI を Done にする前に、以下を**すべて**実施して結果を出す
 - テスト追加: （追加・更新した spec ファイルと件数 / 不要なら N/A の理由）
 - ローカル確認: （dev server で確認した内容）
 - CF preview 確認: （作業ブランチの branch alias URL）（スクリーンショットまたは観察事実）
-- E2E/CI 確認: `~/.claude/bin/ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
+- E2E/CI 確認: `ci-status.sh` の結果（UI Tests / Quality Checks の conclusion）
 - 未検証項目: （あれば正直に書く）
 ```
 
@@ -388,7 +388,7 @@ gh pr create --draft --base main --head <type>/<short> --title "<title>" --body 
 
 CI（`quality` / `e2e`）は短命ブランチへの push では走らず、**PR がある状態でのみ走る**（`.github/workflows/*.yml` の trigger。PHASE1E-002）。draft PR を先に作っておくことで、CI と CF の preview ビルドが同時に始まり、§5.9 の検証を待たせずに済む。draft のあいだは GitHub がマージを止めるので、緑になった瞬間の誤マージも防げる。
 
-**push のたびに `bash ~/.claude/bin/ci-status.sh --wait` で結果を確かめ、赤なら次の工程より先に原因を特定して報告する**。§5.9（Done 直前）の確認だけでは遅い。audit のように commit の中身と関係なく新しい勧告で落ちる検査があり、放置すると失敗が積もってから見つかる。
+**push のたびに `ci-status.sh --wait` で結果を確かめ、赤なら次の工程より先に原因を特定して報告する**。§5.9（Done 直前）の確認だけでは遅い。audit のように commit の中身と関係なく新しい勧告で落ちる検査があり、放置すると失敗が積もってから見つかる。
 
 修正が要る場合も**同じブランチに push し直すだけ**でよい。PR の head が動いて CI と preview が再実行される。PR を閉じて作り直すのは、作業自体を取りやめるときだけ。branch alias URL はブランチ名から決まるので、やり直しても preview の URL は変わらない。
 
@@ -425,7 +425,7 @@ git branch -d <type>/<short>
 
 - **本番の表示確認**：記事・UI の変更は、マージ後に変更したページを `https://byte-lark.com` で開き、反映されたことを確かめて運営者に報告する（desktop + mobile のスクショ。コンテナは `scripts/capture-screenshots.mjs`）。docs だけの変更は対象外。PBI は Done にしたコミットごとマージ済みなので、結果は PBI に書かない（書くと PR がもう 1 本要る）。Done の条件でもない（§5.3 の 9）。反映されていなければ原因を調べて報告する（CF が push を取りこぼした場合は §10.8 の Deploy Hook で焼き直せる）
 
-- `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`bash ~/.claude/bin/ci-status.sh`（`--wait` で完了待ち）で確認してから実行する
+- `gh pr merge` は必須チェック（`quality` / `e2e`）が success になるまで通らない。`ci-status.sh`（`--wait` で完了待ち）で確認してから実行する
 - **`--delete-branch` は付けない**。head ブランチのリモート削除は repo 設定「Automatically delete head branches」に任せている（Settings → General → Pull Requests。`gh api repos/kazuya-tanimoto/byte-lark.com --jq .delete_branch_on_merge` で確認できる）。`--delete-branch` はローカルも消そうとするため、worktree の中から実行すると `fatal: 'main' is already checked out at '/workspace'` で止まる。GitHub 側のマージは成功するがリモート削除まで到達せず、壊れ方がメイン作業ツリーの HEAD 状態に依存して非決定的になる
 - ローカルブランチは merge 後に自分で消す。worktree を消しても残るため、1 PR ごとに溜まる。`-d` はマージ済みでないと拒否するので `-D` は使わない
 - draft のままではマージできない。`gh pr ready` は「§5.9 の検証を全部終えた」という宣言として使う
