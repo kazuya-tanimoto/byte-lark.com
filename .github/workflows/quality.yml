@@ -28,12 +28,14 @@ jobs:
         uses: actions/checkout@v4
       # CLAUDE.md は毎回のセッションで全文が読み込まれ、量が増えるほど決まりが守られにくくなる。
       # 2026-10-22 に縮めた後の量に 2 割ほど足した値を上限にした（仮の値・根拠なし）。
+      # 後から公開例と比べると、約 39 文に当たり、公開されている CLAUDE.md / AGENTS.md 24 本の少ない側に入る（2026-10-23）。
+      # 書き足すときの基準は、dotfiles の claude/rules/claude-md.md（CLAUDE.md を開いたときに読み込まれる）。
       # 文の数でなくバイト数で見るのは、文をつないで数を減らす抜け道が無いため
       - name: CLAUDE.md size
         run: |
           n=$(wc -c < CLAUDE.md)
           if [ "$n" -gt 5000 ]; then
-            echo "::error::CLAUDE.md が $n バイトで、上限 5000 を超えた。足すなら同じ分を削るかまとめ、作業のときだけ要る手順は docs や skill に移す"
+            echo "::error::CLAUDE.md が $n バイトで、上限 5000 を超えた。共通の CLAUDE.md（~/.claude/CLAUDE.md）と同じ文、作業のときだけ要る手順（docs や skill に移す）、テストや CI で確かめられる文から削る"
             exit 1
           fi
       - name: Setup Node
