@@ -21,7 +21,7 @@
 ## PBI と PR
 - PBI に関わる作業の前に、docs/pbi/README.md の該当する節（選ぶ・着手は §5.3 と §10.3・§10.4、中断は §5.4、完了は §5.9 と §10.6、起票は §9）を読み、その手順で進める。
 - 作業は main から短命ブランチを切って進め、最初の push の直後に draft PR を作る。CI は PR があるときしか走らないため。
-- push のたびに `bash ~/.claude/bin/ci-status.sh --wait` で結果を見て、赤なら次の工程より先に原因を調べて報告する。
+- push のたびに `ci-status.sh --wait` で結果を見て、赤なら次の工程より先に原因を調べて報告する。
 - PBI を Done にする前に README §5.9 の検証ゲートをすべて通し、検証報告を出す。
 - commit の確認はグローバル CLAUDE.md のとおり merge・片付け・本番の表示確認まで 1 回で取り、その OK の後に merge だけを改めて運営者に回さない。merge は本番公開だが、その可否は検証ゲートの通過で決まっているため。
 - commit メッセージは README §6 の規約（`feat(pbi): PHASEn-NNN <desc>` など）に従う。
